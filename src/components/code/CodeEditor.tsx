@@ -477,6 +477,8 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
     const lines = content.split('\n')
     return lines.map((_, index) => index + 1)
   }
+
+  const syntaxHighlight = (code: string, language: string) => {
     // Basic syntax highlighting
     const keywords: { [key: string]: string[] } = {
       python: ['def', 'class', 'if', 'else', 'elif', 'for', 'while', 'import', 'from', 'return', 'try', 'except', 'with', 'as'],
@@ -501,7 +503,8 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
     highlighted = highlighted.replace(/#(.*)$/gm, '<span class="text-gray-500">#$1</span>')
     highlighted = highlighted.replace(/\/\/(.*)$/gm, '<span class="text-gray-500">//$1</span>')
 
-  const syntaxHighlight = (code: string, language: string) => {
+    return highlighted
+  }
 
   if (!currentFile) {
     return (
