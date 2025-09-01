@@ -79,24 +79,40 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
     let combined: any[] = []
     
     if (activeTab === 'feeds' || activeTab === 'threats') {
-      combined = [...combined, ...threatFeeds.map(item => ({ ...item, type: 'threat' }))]
+      combined = [...combined, ...threatFeeds.map(item => ({ 
+        ...item, 
+        type: 'threat',
+        tags: Array.isArray(item.tags) ? item.tags : []
+      }))]
     }
     if (activeTab === 'feeds' || activeTab === 'bounties') {
-      combined = [...combined, ...bugBountyPrograms.map(item => ({ ...item, type: 'bounty' }))]
+      combined = [...combined, ...bugBountyPrograms.map(item => ({ 
+        ...item, 
+        type: 'bounty',
+        scope: Array.isArray(item.scope) ? item.scope : []
+      }))]
     }
     if (activeTab === 'feeds' || activeTab === 'intel') {
-      combined = [...combined, ...threatIntel.map(item => ({ ...item, type: 'intel' }))]
+      combined = [...combined, ...threatIntel.map(item => ({ 
+        ...item, 
+        type: 'intel',
+        indicators: Array.isArray(item.indicators) ? item.indicators : []
+      }))]
     }
     if (activeTab === 'feeds' || activeTab === 'news') {
-      combined = [...combined, ...cyberNews.map(item => ({ ...item, type: 'news' }))]
+      combined = [...combined, ...cyberNews.map(item => ({ 
+        ...item, 
+        type: 'news',
+        tags: Array.isArray(item.tags) ? item.tags : []
+      }))]
     }
 
     // Apply filters
     if (searchQuery) {
       combined = combined.filter(item => 
-        item.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.company?.toLowerCase().includes(searchQuery.toLowerCase())
+        (item.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (item.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (item.company || '').toLowerCase().includes(searchQuery.toLowerCase())
       )
     }
 
@@ -176,7 +192,7 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
             <div className="flex flex-wrap gap-2 mb-3">
               {item.cve && <Badge variant="secondary">CVE: {item.cve}</Badge>}
               {item.cvss && <Badge variant="secondary">CVSS: {item.cvss}</Badge>}
-              {item.tags?.slice(0, 3).map((tag: string) => (
+              {Array.isArray(item.tags) && item.tags.slice(0, 3).map((tag: string) => (
                 <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
               ))}
             </div>
@@ -195,10 +211,10 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
                 </div>
               </div>
               <div className="flex flex-wrap gap-1">
-                {item.scope?.slice(0, 2).map((scope: string) => (
+                {Array.isArray(item.scope) && item.scope.slice(0, 2).map((scope: string) => (
                   <Badge key={scope} variant="outline" className="text-xs">{scope}</Badge>
                 ))}
-                {item.scope?.length > 2 && (
+                {Array.isArray(item.scope) && item.scope.length > 2 && (
                   <Badge variant="outline" className="text-xs">+{item.scope.length - 2} more</Badge>
                 )}
               </div>
@@ -213,7 +229,7 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
                 </Badge>
                 <Badge variant="secondary" className="text-xs">{item.type?.toUpperCase()}</Badge>
               </div>
-              {item.indicators && (
+              {Array.isArray(item.indicators) && (
                 <div className="text-xs text-muted-foreground">
                   {item.indicators.length} indicators available
                 </div>

@@ -333,7 +333,7 @@ export function BugBountyPlatform({ currentUserId }: BugBountyPlatformProps) {
                       <p className="text-sm text-muted-foreground mb-3">{threat.description}</p>
                       
                       <div className="flex gap-1 flex-wrap">
-                        {threat.tags.slice(0, 3).map((tag, idx) => (
+                        {Array.isArray(threat.tags) && threat.tags.slice(0, 3).map((tag, idx) => (
                           <Badge key={idx} variant="secondary" className="text-xs glass-button">
                             #{tag}
                           </Badge>

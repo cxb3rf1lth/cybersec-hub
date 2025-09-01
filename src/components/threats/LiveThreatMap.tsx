@@ -462,7 +462,7 @@ export function LiveThreatMap() {
               <div>
                 <span className="text-sm text-muted-foreground">Tags:</span>
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {selectedThreat.tags.map((tag, index) => (
+                  {Array.isArray(selectedThreat.tags) && selectedThreat.tags.map((tag, index) => (
                     <Badge key={index} variant="outline" className="text-xs">
                       #{tag}
                     </Badge>
