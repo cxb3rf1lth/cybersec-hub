@@ -10,13 +10,14 @@ import { TeamsView } from '@/components/teams/TeamsView'
 import { TeamInvitationsView } from '@/components/teams/TeamInvitationsView'
 import { MarketplaceView } from '@/components/marketplace/MarketplaceView'
 import { LoadingAnimationsDemo } from '@/components/views/LoadingAnimationsDemo'
+import { ThreatIntelligenceFeed } from '@/components/feeds/ThreatIntelligenceFeed'
 import { User } from '@/types/user'
 
 interface MainContentProps {
   currentUser: User
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations'
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats'
   onUserUpdate: (user: User) => void
-  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations') => void
+  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats') => void
 }
 
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
@@ -30,6 +31,11 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
     <div className="flex-1 overflow-hidden">
       {activeTab === 'feed' && (
         <FeedView currentUser={currentUser} />
+      )}
+      {activeTab === 'threats' && (
+        <div className="p-6">
+          <ThreatIntelligenceFeed />
+        </div>
       )}
       {activeTab === 'messages' && (
         <MessagesView currentUser={currentUser} />

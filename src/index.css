@@ -171,6 +171,14 @@
   animation: glitch 0.3s;
 }
 
+/* Add line-clamp utility classes */
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
 /* Cyberpunk Loading Animations */
 
 /* Hexagonal Spinner */
