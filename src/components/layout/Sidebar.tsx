@@ -1,18 +1,31 @@
-import { Shield, Home, Compass, User, Code, LogOut } from '@phosphor-icons/react'
+import { Shield, Home, Compass, User, Code, LogOut, ChatCircle } from '@phosphor-icons/react'
+import { useKV } from '@github/spark/hooks'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { User as UserType } from '@/types/user'
+import { Badge } from '@/components/ui/badge'
+import { User as UserType, Conversation } from '@/types/user'
 
 interface SidebarProps {
   currentUser: UserType
-  activeTab: 'feed' | 'explore' | 'profile'
-  onTabChange: (tab: 'feed' | 'explore' | 'profile') => void
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages'
+  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages') => void
   onLogout: () => void
 }
 
 export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: SidebarProps) {
+  const [conversations] = useKV<Conversation[]>('conversations', [])
+  
+  // Calculate total unread messages
+  const totalUnread = conversations.reduce((total, conv) => {
+    if (conv.participants.includes(currentUser.id)) {
+      return total + conv.unreadCount
+    }
+    return total
+  }, 0)
+
   const navigationItems = [
     { id: 'feed' as const, label: 'Feed', icon: Home },
+    { id: 'messages' as const, label: 'Messages', icon: ChatCircle, badge: totalUnread },
     { id: 'explore' as const, label: 'Explore', icon: Compass },
     { id: 'profile' as const, label: 'Profile', icon: User },
   ]
@@ -51,11 +64,19 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
               <Button
                 key={item.id}
                 variant={activeTab === item.id ? 'secondary' : 'ghost'}
-                className="w-full justify-start"
+                className="w-full justify-start relative"
                 onClick={() => onTabChange(item.id)}
               >
                 <Icon className="w-5 h-5 mr-3" />
                 {item.label}
+                {item.badge && item.badge > 0 && (
+                  <Badge 
+                    variant="destructive" 
+                    className="ml-auto text-xs min-w-[20px] h-5 flex items-center justify-center"
+                  >
+                    {item.badge > 99 ? '99+' : item.badge}
+                  </Badge>
+                )}
               </Button>
             )
           })}

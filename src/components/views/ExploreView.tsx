@@ -5,11 +5,12 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Search, Users, Code, TrendingUp } from '@phosphor-icons/react'
-import { User, Post, Specialization } from '@/types/user'
+import { Search, Users, Code, TrendingUp, ChatCircle } from '@phosphor-icons/react'
+import { User, Post, Specialization, Conversation } from '@/types/user'
 
 interface ExploreViewProps {
   currentUser: User
+  onNavigateToMessages?: (userId: string) => void
 }
 
 const TRENDING_TOPICS = [
@@ -17,12 +18,13 @@ const TRENDING_TOPICS = [
   'Threat Hunting', 'Incident Response', 'Social Engineering', 'Network Forensics'
 ]
 
-export function ExploreView({ currentUser }: ExploreViewProps) {
+export function ExploreView({ currentUser, onNavigateToMessages }: ExploreViewProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<Specialization | 'All'>('All')
   const [users] = useKV<User[]>('allUsers', [])
   const [posts] = useKV<Post[]>('posts', [])
   const [following, setFollowing] = useKV<string[]>(`following-${currentUser.id}`, currentUser.following)
+  const [conversations, setConversations] = useKV<Conversation[]>('conversations', [])
 
   const categories: (Specialization | 'All')[] = [
     'All', 'Red Team', 'Blue Team', 'Bug Bounty', 'Penetration Testing',
@@ -53,6 +55,33 @@ export function ExploreView({ currentUser }: ExploreViewProps) {
       : [...following, userId]
     
     setFollowing(newFollowing)
+  }
+
+  const handleStartMessage = (userId: string) => {
+    // Check if conversation already exists
+    const existingConversation = conversations.find(conv => 
+      conv.participants.includes(currentUser.id) && 
+      conv.participants.includes(userId) &&
+      !conv.isGroup
+    )
+
+    if (!existingConversation) {
+      // Create new conversation
+      const newConversation: Conversation = {
+        id: `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        participants: [currentUser.id, userId],
+        lastMessageAt: new Date().toISOString(),
+        isGroup: false,
+        unreadCount: 0
+      }
+
+      setConversations((prevConversations) => [...prevConversations, newConversation])
+    }
+
+    // Navigate to messages with this user
+    if (onNavigateToMessages) {
+      onNavigateToMessages(userId)
+    }
   }
 
   return (
@@ -119,13 +148,22 @@ export function ExploreView({ currentUser }: ExploreViewProps) {
                             </div>
                           </div>
                         </div>
-                        <Button
-                          size="sm"
-                          variant={following.includes(user.id) ? 'secondary' : 'default'}
-                          onClick={() => handleFollow(user.id)}
-                        >
-                          {following.includes(user.id) ? 'Following' : 'Follow'}
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleStartMessage(user.id)}
+                          >
+                            <ChatCircle className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant={following.includes(user.id) ? 'secondary' : 'default'}
+                            onClick={() => handleFollow(user.id)}
+                          >
+                            {following.includes(user.id) ? 'Following' : 'Follow'}
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>

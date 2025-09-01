@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useKV } from '@github/spark/hooks'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -19,6 +20,7 @@ const SPECIALIZATIONS: Specialization[] = [
 ]
 
 export function AuthModal({ onClose, onLogin }: AuthModalProps) {
+  const [allUsers, setAllUsers] = useKV<User[]>('allUsers', [])
   const [isSignUp, setIsSignUp] = useState(false)
   const [formData, setFormData] = useState({
     username: '',
@@ -41,18 +43,46 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
     
     if (!formData.username || !formData.email) return
 
-    const user: User = {
-      id: Date.now().toString(),
-      username: formData.username,
-      email: formData.email,
-      bio: formData.bio,
-      specializations: formData.specializations,
-      followers: [],
-      following: [],
-      joinedAt: new Date().toISOString()
-    }
+    if (isSignUp) {
+      // Check if user already exists
+      const existingUser = allUsers.find(user => 
+        user.username === formData.username || user.email === formData.email
+      )
+      
+      if (existingUser) {
+        // User exists, log them in
+        onLogin(existingUser)
+        return
+      }
 
-    onLogin(user)
+      // Create new user
+      const user: User = {
+        id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        username: formData.username,
+        email: formData.email,
+        bio: formData.bio,
+        specializations: formData.specializations,
+        followers: [],
+        following: [],
+        joinedAt: new Date().toISOString()
+      }
+
+      // Add to global users list
+      setAllUsers((prevUsers) => [...prevUsers, user])
+      onLogin(user)
+    } else {
+      // Sign in - find existing user
+      const existingUser = allUsers.find(user => 
+        user.username === formData.username || user.email === formData.email
+      )
+      
+      if (existingUser) {
+        onLogin(existingUser)
+      } else {
+        // If user doesn't exist, switch to sign up
+        setIsSignUp(true)
+      }
+    }
   }
 
   return (

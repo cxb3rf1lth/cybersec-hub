@@ -64,3 +64,26 @@ export interface Activity {
   content?: string
   createdAt: string
 }
+
+export interface Message {
+  id: string
+  senderId: string
+  receiverId: string
+  content: string
+  type: 'text' | 'code' | 'file'
+  codeLanguage?: string
+  fileName?: string
+  isRead: boolean
+  createdAt: string
+  status?: 'sending' | 'sent' | 'delivered' | 'read'
+}
+
+export interface Conversation {
+  id: string
+  participants: string[]
+  lastMessage?: Message
+  lastMessageAt: string
+  isGroup: boolean
+  name?: string
+  unreadCount: number
+}
