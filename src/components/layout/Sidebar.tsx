@@ -1,4 +1,4 @@
-import { Shield, Home, Compass, User, Code, LogOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront } from '@phosphor-icons/react'
+import { Shield, Home, Compass, User, Code, LogOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, Loading } from '@phosphor-icons/react'
 import { useKV } from '@github/spark/hooks'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -8,8 +8,8 @@ import { TeamInvitation } from '@/types/teams'
 
 interface SidebarProps {
   currentUser: UserType
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace'
-  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace') => void
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations'
+  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations') => void
   onLogout: () => void
 }
 
@@ -42,6 +42,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
     { id: 'earnings' as const, label: 'Earnings', icon: CurrencyDollar },
     { id: 'code' as const, label: 'Code', icon: Code },
     { id: 'templates' as const, label: 'Templates', icon: FolderOpen },
+    { id: 'animations' as const, label: 'Animations', icon: Loading },
     { id: 'explore' as const, label: 'Explore', icon: Compass },
     { id: 'profile' as const, label: 'Profile', icon: User },
   ]

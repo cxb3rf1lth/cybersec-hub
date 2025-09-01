@@ -170,3 +170,230 @@
 .glitch-effect:hover {
   animation: glitch 0.3s;
 }
+
+/* Cyberpunk Loading Animations */
+
+/* Hexagonal Spinner */
+.hex-spinner {
+  position: relative;
+  display: inline-block;
+}
+
+.hex-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+  animation: hex-rotate 2s linear infinite;
+}
+
+.hex-side {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, oklch(0.65 0.22 15), transparent);
+  border-radius: 2px;
+  transform-origin: center;
+}
+
+.hex-side:nth-child(1) { transform: rotate(0deg) translateY(-50%); }
+.hex-side:nth-child(2) { transform: rotate(60deg) translateY(-50%); }
+.hex-side:nth-child(3) { transform: rotate(120deg) translateY(-50%); }
+.hex-side:nth-child(4) { transform: rotate(180deg) translateY(-50%); }
+.hex-side:nth-child(5) { transform: rotate(240deg) translateY(-50%); }
+.hex-side:nth-child(6) { transform: rotate(300deg) translateY(-50%); }
+
+@keyframes hex-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Matrix Dots Animation */
+.matrix-pulse {
+  animation: matrix-pulse 1.4s ease-in-out infinite;
+  box-shadow: 0 0 5px oklch(0.55 0.18 15 / 0.5);
+}
+
+@keyframes matrix-pulse {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+    box-shadow: 0 0 5px oklch(0.55 0.18 15 / 0.3);
+  }
+  40% {
+    transform: scale(1.2);
+    opacity: 1;
+    box-shadow: 0 0 15px oklch(0.55 0.18 15 / 0.8), 0 0 25px oklch(0.55 0.18 15 / 0.4);
+  }
+}
+
+/* Cyberpunk Progress Bar */
+.cyber-progress-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 200px;
+}
+
+.cyber-progress-track {
+  position: relative;
+  height: 8px;
+  background: oklch(0.12 0.01 0);
+  border: 1px solid oklch(0.18 0.01 0);
+  border-radius: 2px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.cyber-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, 
+    oklch(0.45 0.15 15), 
+    oklch(0.65 0.22 15), 
+    oklch(0.55 0.18 15)
+  );
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px oklch(0.55 0.18 15 / 0.5);
+  animation: progress-glow 2s ease-in-out infinite alternate;
+}
+
+.cyber-progress-hexes {
+  position: absolute;
+  top: -2px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.cyber-hex {
+  width: 6px;
+  height: 6px;
+  background: oklch(0.18 0.01 0);
+  border: 1px solid oklch(0.3 0.02 0);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+  transition: all 0.3s ease;
+}
+
+.cyber-hex.active {
+  background: oklch(0.65 0.22 15);
+  border-color: oklch(0.75 0.25 15);
+  box-shadow: 0 0 8px oklch(0.55 0.18 15 / 0.7);
+  animation: hex-pulse 1s infinite;
+}
+
+@keyframes progress-glow {
+  0% { box-shadow: 0 0 5px oklch(0.55 0.18 15 / 0.3); }
+  100% { box-shadow: 0 0 20px oklch(0.55 0.18 15 / 0.7), 0 0 30px oklch(0.55 0.18 15 / 0.3); }
+}
+
+@keyframes hex-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+/* Hexagonal Grid Overlay */
+.hex-grid-overlay {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hex-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+
+.hex-cell {
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: 1px solid oklch(0.55 0.18 15 / 0.3);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+  animation: hex-grid-pulse 3s ease-in-out infinite;
+}
+
+@keyframes hex-grid-pulse {
+  0%, 100% {
+    border-color: oklch(0.55 0.18 15 / 0.2);
+    background: transparent;
+  }
+  50% {
+    border-color: oklch(0.65 0.22 15 / 0.8);
+    background: oklch(0.55 0.18 15 / 0.1);
+    box-shadow: 0 0 15px oklch(0.55 0.18 15 / 0.4);
+  }
+}
+
+/* Scanning Line Effect */
+.scan-line-container {
+  position: relative;
+  width: 300px;
+  height: 2px;
+  background: oklch(0.12 0.01 0);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.scan-line {
+  position: absolute;
+  top: 0;
+  left: -50px;
+  width: 50px;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent,
+    oklch(0.65 0.22 15 / 0.8),
+    oklch(0.75 0.25 15),
+    oklch(0.65 0.22 15 / 0.8),
+    transparent
+  );
+  animation: scan-sweep 2s linear infinite;
+  box-shadow: 0 0 10px oklch(0.55 0.18 15 / 0.6);
+}
+
+@keyframes scan-sweep {
+  0% { left: -50px; }
+  100% { left: 100%; }
+}
+
+/* Binary Rain Effect */
+.binary-rain-container {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+}
+
+.binary-column {
+  display: flex;
+  flex-direction: column;
+  animation: binary-fall 3s linear infinite;
+}
+
+.binary-char {
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+  color: oklch(0.55 0.18 15 / 0.7);
+  line-height: 1.2;
+  animation: binary-fade 0.5s ease-in-out infinite;
+}
+
+@keyframes binary-fall {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes binary-fade {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
