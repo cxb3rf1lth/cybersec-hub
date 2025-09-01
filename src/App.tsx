@@ -48,7 +48,7 @@ function App() {
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
+      <div className="min-h-screen bg-background network-pattern flex items-center justify-center relative overflow-hidden">
         <NeuralNetwork opacity={0.4} nodeCount={80} />
         <div className="text-center space-y-6 max-w-md mx-auto p-6 relative z-10">
           <div className="space-y-2">
@@ -77,7 +77,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+  <div className="min-h-screen bg-background network-pattern relative overflow-hidden">
       <NeuralNetwork opacity={0.2} nodeCount={60} />
       <div className="flex relative z-10">
         <Sidebar
