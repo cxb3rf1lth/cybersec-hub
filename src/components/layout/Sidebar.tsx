@@ -47,11 +47,11 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
   ]
 
   return (
-    <div className="w-64 bg-card border-r border-border h-screen flex flex-col">
-      <div className="p-4 border-b border-border">
+    <div className="w-64 bg-card border-r border-border h-screen flex flex-col grid-pattern">
+      <div className="p-4 border-b border-border hover-border-flow">
         <div className="flex items-center gap-2">
-          <Shield className="w-8 h-8 text-accent" />
-          <h1 className="text-xl font-bold text-foreground">CyberConnect</h1>
+          <Shield className="w-8 h-8 text-accent hover-red-glow glitch-effect" />
+          <h1 className="text-xl font-bold text-foreground terminal-cursor">CyberConnect</h1>
         </div>
       </div>
 
@@ -80,7 +80,9 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
               <Button
                 key={item.id}
                 variant={activeTab === item.id ? 'secondary' : 'ghost'}
-                className="w-full justify-start relative"
+                className={`w-full justify-start relative hover-red-glow transition-all duration-300 ${
+                  activeTab === item.id ? 'border-l-2 border-accent' : ''
+                }`}
                 onClick={() => onTabChange(item.id)}
               >
                 <Icon className="w-5 h-5 mr-3" />
@@ -99,10 +101,10 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
         </div>
       </nav>
 
-      <div className="p-4 border-t border-border">
+      <div className="p-4 border-t border-border hover-border-flow">
         <Button
           variant="ghost"
-          className="w-full justify-start text-muted-foreground hover:text-foreground"
+          className="w-full justify-start text-muted-foreground hover:text-destructive hover-red-glow transition-all duration-300"
           onClick={onLogout}
         >
           <LogOut className="w-5 h-5 mr-3" />

@@ -87,9 +87,9 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md bg-card border border-border">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="text-foreground terminal-cursor">
             {isSignUp ? 'Join CyberConnect' : 'Welcome Back'}
           </DialogTitle>
         </DialogHeader>
@@ -102,6 +102,7 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
               value={formData.username}
               onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
               placeholder="Enter your username"
+              className="hover-border-flow"
               required
             />
           </div>
@@ -114,6 +115,7 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
               value={formData.email}
               onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
               placeholder="Enter your email"
+              className="hover-border-flow"
               required
             />
           </div>
@@ -127,6 +129,7 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
                   value={formData.bio}
                   onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
                   placeholder="Tell us about your cybersecurity background..."
+                  className="hover-border-flow"
                   rows={3}
                 />
               </div>
@@ -138,7 +141,7 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
                     <Badge
                       key={spec}
                       variant={formData.specializations.includes(spec) ? 'default' : 'outline'}
-                      className="cursor-pointer"
+                      className="cursor-pointer hover-red-glow transition-all duration-300"
                       onClick={() => handleSpecializationToggle(spec)}
                     >
                       {spec}
@@ -150,7 +153,7 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
           )}
 
           <div className="flex flex-col gap-2 pt-4">
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full hover-red-glow">
               {isSignUp ? 'Create Account' : 'Sign In'}
             </Button>
             
@@ -158,7 +161,7 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
               type="button"
               variant="ghost"
               onClick={() => setIsSignUp(!isSignUp)}
-              className="text-sm"
+              className="text-sm hover:text-accent transition-colors duration-300"
             >
               {isSignUp 
                 ? 'Already have an account? Sign in' 

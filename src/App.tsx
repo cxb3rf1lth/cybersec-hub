@@ -37,17 +37,17 @@ function App() {
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center grid-pattern">
         <div className="text-center space-y-6 max-w-md mx-auto p-6">
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-foreground">CyberConnect</h1>
+            <h1 className="text-4xl font-bold text-foreground terminal-cursor glitch-effect">CyberConnect</h1>
             <p className="text-muted-foreground">
               The professional network for cybersecurity experts
             </p>
           </div>
           <button
             onClick={() => setShowAuthModal(true)}
-            className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+            className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover-red-glow transition-all duration-300 transform hover:scale-105"
           >
             Join the Community
           </button>
@@ -65,7 +65,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background grid-pattern">
       <div className="flex">
         <Sidebar
           currentUser={currentUser}
