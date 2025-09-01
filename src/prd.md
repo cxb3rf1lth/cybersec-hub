@@ -43,6 +43,11 @@ Complex Application with advanced messaging, networking, and comprehensive code 
 **Why it matters**: Accelerates development by providing proven starting points for common security tasks and centralized access to essential security tools, while enabling team-based development
 **Success criteria**: Users can discover, use, and contribute templates and tool collections; templates include complete setup instructions and usage examples; teams can collaborate on template development with version control
 
+### Specialized Team Marketplace with Expertise Showcase and Contract Management
+**What it does**: Comprehensive marketplace where cybersecurity teams can showcase their expertise, services, and track record to attract contracts and clients. Teams create detailed service listings with portfolios, pricing, certifications, and client reviews. Clients can search, filter, and engage teams based on specific requirements, budget, and project timelines
+**Why it matters**: Creates a professional marketplace for cybersecurity services that connects expert teams with organizations needing specialized security expertise. Provides transparency in team capabilities, pricing, and past performance while facilitating contract negotiations and project management
+**Success criteria**: Teams can create compelling service listings with portfolios and pricing, clients can easily discover and evaluate teams based on specific criteria, marketplace facilitates successful project matches between teams and clients, and integrated proposal system streamlines contract negotiation
+
 ### Specialized Cybersecurity Teams with Role-Based Permissions, Earnings Distribution, and Advanced Invitation System
 **What it does**: Advanced team formation system for specialized cybersecurity teams (red teams, blue teams, purple teams, bug bounty groups, research teams, incident response, forensics, compliance, education) with comprehensive role-based permission systems, structured earnings distribution based on roles and contributions, contract management, automated payment processing, and sophisticated invitation workflows with role-specific invitations and approval processes
 **Why it matters**: Cybersecurity work often requires specialized teams with clear role definitions, structured collaboration, and fair earnings distribution for contract work and bug bounty programs. Different team types have unique workflows and permission requirements. The invitation system ensures teams can efficiently recruit talent while maintaining proper access controls and role assignments
@@ -171,6 +176,21 @@ Complex Application with advanced messaging, networking, and comprehensive code 
 - AnalyticsView: Advanced earnings analytics with trends, growth metrics, and performance insights
 - EarningsGoalsView: Goal setting and tracking system with progress monitoring and achievement celebrations
 - PaymentMethodManager: Payment method setup and management for different payout options
+
+**Teams & Collaboration Components**:
+- TeamCard: Team overview with member count, skills, earnings, and invitation capabilities
+- TeamInvitationCard: Invitation display with role, message, expiration, and action buttons
+- EarningsCard: Individual and team earnings display with trend indicators
+- EarningsChart: Visual representation of earnings over time with project breakdowns
+- TeamAnalyticsChart: Performance metrics visualization for teams
+- PaymentMethodCard: Payment configuration display with security indicators
+
+**Marketplace Components**:
+- MarketplaceListingCard: Service listing display with team info, pricing, portfolios, and ratings
+- MarketplaceStats: Platform statistics and performance metrics
+- MarketplaceFilters: Advanced filtering interface for services, skills, pricing, and availability
+- ProposalCard: Project proposal display with budget, timeline, and status tracking
+- ReviewCard: Client feedback and rating display with verification indicators
 
 **Profile Components**:
 - Avatar: User profile images with fallback initials

@@ -10,7 +10,9 @@ import { CreateTeamModal } from './CreateTeamModal'
 import { TeamCard } from './TeamCard'
 import { TeamDetailsModal } from './TeamDetailsModal'
 import { JoinTeamModal } from './JoinTeamModal'
-import { Team, User } from '@/types'
+import { ProposalManagementView } from '@/components/marketplace/ProposalManagementView'
+import { Team } from '@/types/teams'
+import { User } from '@/types/user'
 import { useSampleTeamData } from '@/hooks/useSampleTeamData'
 import { Plus, Users, TrendingUp, Star, Filter } from '@phosphor-icons/react'
 
@@ -22,7 +24,7 @@ export function TeamsView({ currentUser }: TeamsViewProps) {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showJoinModal, setShowJoinModal] = useState(false)
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null)
-  const [filter, setFilter] = useState<'all' | 'my-teams' | 'recruiting'>('all')
+  const [filter, setFilter] = useState<'all' | 'my-teams' | 'recruiting' | 'proposals'>('all')
   
   const { teams } = useSampleTeamData()
   const [myTeams] = useKV<string[]>('userTeams', [])
@@ -157,6 +159,7 @@ export function TeamsView({ currentUser }: TeamsViewProps) {
           <h2 className="text-xl font-semibold text-foreground">
             {filter === 'my-teams' ? 'My Teams' : 
              filter === 'recruiting' ? 'Recruiting Teams' : 
+             filter === 'proposals' ? 'Team Proposals' :
              'All Teams'}
           </h2>
           <Tabs value={filter} onValueChange={(value) => setFilter(value as any)}>
@@ -164,39 +167,46 @@ export function TeamsView({ currentUser }: TeamsViewProps) {
               <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="my-teams">My Teams</TabsTrigger>
               <TabsTrigger value="recruiting">Recruiting</TabsTrigger>
+              <TabsTrigger value="proposals">Proposals</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-          {filteredTeams.map(team => (
-            <TeamCard
-              key={team.id}
-              team={team}
-              currentUser={currentUser}
-              onClick={() => setSelectedTeam(team)}
-            />
-          ))}
-        </div>
+        {filter === 'proposals' ? (
+          <ProposalManagementView currentUser={currentUser} userTeams={userTeams} />
+        ) : (
+          <>
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+              {filteredTeams.map(team => (
+                <TeamCard
+                  key={team.id}
+                  team={team}
+                  currentUser={currentUser}
+                  onClick={() => setSelectedTeam(team)}
+                />
+              ))}
+            </div>
 
-        {filteredTeams.length === 0 && (
-          <Card>
-            <CardContent className="p-8 text-center">
-              <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">
-                {filter === 'my-teams' ? 'No teams yet' : 'No teams found'}
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                {filter === 'my-teams' 
-                  ? 'Join or create a team to get started with collaborative cybersecurity work.'
-                  : 'Try adjusting your filters or create a new team.'}
-              </p>
-              <Button onClick={() => setShowCreateModal(true)}>
-                <Plus className="w-4 h-4 mr-2" />
-                Create Team
-              </Button>
-            </CardContent>
-          </Card>
+            {filteredTeams.length === 0 && (
+              <Card>
+                <CardContent className="p-8 text-center">
+                  <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                    {filter === 'my-teams' ? 'No teams yet' : 'No teams found'}
+                  </h3>
+                  <p className="text-muted-foreground mb-4">
+                    {filter === 'my-teams' 
+                      ? 'Join or create a team to get started with collaborative cybersecurity work.'
+                      : 'Try adjusting your filters or create a new team.'}
+                  </p>
+                  <Button onClick={() => setShowCreateModal(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Team
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </>
         )}
       </div>
 
