@@ -152,6 +152,59 @@ export function useSamplePartnerRequests() {
         applications: [],
         createdAt: '2024-01-10T09:30:00Z',
         updatedAt: '2024-01-10T09:30:00Z'
+      },
+      {
+        id: 'pr-7',
+        requesterId: 'user-11',
+        requesterName: 'Kai Zhang',
+        requesterAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=kai',
+        title: 'Threat Intelligence Platform Integration',
+        description: 'Building integrations with major threat intel sources like Shodan, Project Discovery, and ThreatFox. Need partner with API development skills and threat hunting experience.',
+        projectType: 'tool-development',
+        skillsOffered: ['Threat Intelligence', 'Data Analysis', 'OSINT', 'Python'],
+        skillsNeeded: ['API Development', 'System Integration', 'Database Design', 'Real-time Processing'],
+        experienceLevel: 'advanced',
+        commitment: 'project-based',
+        compensation: 'revenue-share',
+        estimatedDuration: '4-6 months',
+        tags: ['threat-intel', 'api', 'shodan', 'osint', 'automation'],
+        status: 'open',
+        applications: [],
+        createdAt: '2024-01-09T15:20:00Z',
+        updatedAt: '2024-01-09T15:20:00Z'
+      },
+      {
+        id: 'pr-8',
+        requesterId: 'user-12',
+        requesterName: 'Isabella Rodriguez',
+        requesterAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=isabella',
+        title: 'Bug Bounty Platform Automation Suite',
+        description: 'Creating automation tools for HackerOne, Bugcrowd, Intigriti, and YesWeHack. Need partner for advanced reconnaissance and vulnerability discovery automation.',
+        projectType: 'tool-development',
+        skillsOffered: ['Automation', 'Scripting', 'Platform APIs', 'Workflow Design'],
+        skillsNeeded: ['Reconnaissance', 'Vulnerability Research', 'Bash/Python', 'CI/CD'],
+        experienceLevel: 'expert',
+        commitment: 'ongoing',
+        compensation: 'revenue-share',
+        estimatedDuration: '6+ months',
+        tags: ['automation', 'bounty', 'recon', 'platforms', 'tools'],
+        status: 'open',
+        applications: [
+          {
+            id: 'pa-3',
+            applicantId: 'user-13',
+            applicantName: 'Phoenix Walker',
+            applicantAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=phoenix',
+            message: 'Expert in reconnaissance automation with custom tools for subdomain discovery, port scanning, and vulnerability assessment. Active on multiple bug bounty platforms.',
+            skillsHighlight: ['Subfinder', 'Nuclei', 'Custom Tooling', 'Bug Bounty'],
+            portfolioItems: ['ReconPipe Framework', '50+ Valid Bounties', 'HackerOne Top 100'],
+            availability: 'Full-time availability',
+            status: 'pending',
+            appliedAt: '2024-01-11T09:45:00Z'
+          }
+        ],
+        createdAt: '2024-01-08T12:00:00Z',
+        updatedAt: '2024-01-11T09:45:00Z'
       }
     ]
 

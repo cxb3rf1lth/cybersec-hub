@@ -137,12 +137,15 @@
   color: oklch(0.92 0.02 0);
 }
 
-/* Subtle grid pattern overlay for hacker aesthetic */
-.grid-pattern {
+/* Subtle network pattern overlay for hacker aesthetic */
+.network-pattern {
   background-image: 
-    linear-gradient(oklch(0.55 0.18 15 / 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(0.55 0.18 15 / 0.05) 1px, transparent 1px);
-  background-size: 20px 20px;
+    radial-gradient(circle at 20% 20%, oklch(0.55 0.18 15 / 0.03) 2px, transparent 2px),
+    radial-gradient(circle at 80% 80%, oklch(0.55 0.18 15 / 0.03) 2px, transparent 2px),
+    linear-gradient(oklch(0.55 0.18 15 / 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.55 0.18 15 / 0.02) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px, 20px 20px, 20px 20px;
+  background-position: 0 0, 20px 20px, 0 0, 0 0;
 }
 
 /* Glitch effect for special elements */

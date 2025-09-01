@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useThreatFeeds } from '@/hooks/useThreatFeeds'
 import { ThreatFeed, BugBountyProgram, ThreatIntelligence, CyberSecNews, FeedFilter } from '@/types/threat-feeds'
 import { ThreatSourceManager } from '@/components/feeds/ThreatSourceManager'
+import { ProductionThreatIntegration } from '@/components/threats/ProductionThreatIntegration'
 import { toast } from 'sonner'
 import { 
   RefreshCw, 
@@ -447,13 +448,14 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="feeds">Live Feeds</TabsTrigger>
           <TabsTrigger value="threats">Threats</TabsTrigger>
           <TabsTrigger value="bounties">Bug Bounties</TabsTrigger>
           <TabsTrigger value="intel">Intel</TabsTrigger>
           <TabsTrigger value="news">News</TabsTrigger>
           <TabsTrigger value="sources">Sources</TabsTrigger>
+          <TabsTrigger value="production">Production</TabsTrigger>
         </TabsList>
 
         <TabsContent value="feeds" className="space-y-4 mt-6">{renderFeedContent()}</TabsContent>
@@ -463,6 +465,9 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
         <TabsContent value="news" className="space-y-4 mt-6">{renderFeedContent()}</TabsContent>
         <TabsContent value="sources" className="space-y-4 mt-6">
           <ThreatSourceManager />
+        </TabsContent>
+        <TabsContent value="production" className="space-y-4 mt-6">
+          <ProductionThreatIntegration />
         </TabsContent>
       </Tabs>
       </div>

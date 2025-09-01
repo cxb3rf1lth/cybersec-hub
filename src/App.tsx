@@ -13,12 +13,13 @@ import { useSamplePartnerRequests } from '@/hooks/useSamplePartnerRequests'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MainContent } from '@/components/layout/MainContent'
 import { AuthModal } from '@/components/auth/AuthModal'
+import { NeuralNetwork } from '@/components/ui/NeuralNetwork'
 import { Toaster } from '@/components/ui/sonner'
 import { User } from '@/types/user'
 
 function App() {
   const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null)
-  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests'>('feed')
+  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map'>('feed')
   const [showAuthModal, setShowAuthModal] = useState(false)
 
   // Initialize sample data
@@ -45,8 +46,9 @@ function App() {
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center grid-pattern">
-        <div className="text-center space-y-6 max-w-md mx-auto p-6">
+      <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
+        <NeuralNetwork opacity={0.4} nodeCount={80} />
+        <div className="text-center space-y-6 max-w-md mx-auto p-6 relative z-10">
           <div className="space-y-2">
             <h1 className="text-4xl font-bold text-foreground terminal-cursor glitch-effect">CyberConnect</h1>
             <p className="text-muted-foreground">
@@ -73,8 +75,9 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background grid-pattern">
-      <div className="flex">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      <NeuralNetwork opacity={0.2} nodeCount={60} />
+      <div className="flex relative z-10">
         <Sidebar
           currentUser={currentUser}
           activeTab={activeTab}

@@ -13,13 +13,14 @@ import { LoadingAnimationsDemo } from '@/components/views/LoadingAnimationsDemo'
 import { ThreatIntelligenceFeed } from '@/components/feeds/ThreatIntelligenceFeed'
 import { BugBountyDashboard } from '@/components/bug-bounty/BugBountyDashboard'
 import { PartnerRequests } from '@/components/partner-requests/PartnerRequests'
+import { LiveThreatMap } from '@/components/threats/LiveThreatMap'
 import { User } from '@/types/user'
 
 interface MainContentProps {
   currentUser: User
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests'
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map'
   onUserUpdate: (user: User) => void
-  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests') => void
+  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map') => void
 }
 
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
@@ -37,6 +38,11 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
       {activeTab === 'threats' && (
         <div className="p-6">
           <ThreatIntelligenceFeed />
+        </div>
+      )}
+      {activeTab === 'threat-map' && (
+        <div className="p-6">
+          <LiveThreatMap />
         </div>
       )}
       {(activeTab === 'bug-bounty' || activeTab === 'team-hunts') && (
