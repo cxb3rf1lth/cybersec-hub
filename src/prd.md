@@ -48,10 +48,15 @@ Complex Application with advanced messaging, networking, and comprehensive code 
 **Why it matters**: Cybersecurity work often requires specialized teams with clear role definitions, structured collaboration, and fair earnings distribution for contract work and bug bounty programs. Different team types have unique workflows and permission requirements
 **Success criteria**: Users can form/join specialized teams with appropriate roles (team leader, senior engineer, analyst, etc.), team leaders can manage permissions and earnings distribution, contracts can be created and tracked with automatic earnings calculation, payment distribution is transparent and role-based
 
-### Bug Bounty Team Formation
-**What it does**: Specialized team creation for bug bounty programs with skill-based matching, reputation tracking, earnings distribution planning, and collaborative vulnerability research
-**Why it matters**: Bug bounty hunting often requires diverse skills and coordinated team efforts to tackle complex targets and maximize vulnerability discovery potential
-**Success criteria**: Users can create or join bug bounty teams, define skill requirements, track team performance, coordinate target research, and plan reward distribution
+### Earnings Tracking Dashboard with Payment History and Team Performance Analytics
+**What it does**: Comprehensive earnings management system with detailed payment history, team performance analytics, goal setting, and payment method management for bug bounty programs, consulting contracts, and team projects
+**Why it matters**: Security professionals often work across multiple teams, contracts, and platforms with complex earnings distribution. Clear tracking and analytics help professionals manage their income, set goals, understand their performance, and ensure fair payment distribution
+**Success criteria**: Users can track all earnings across individual and team projects, view detailed payment history with filters and exports, analyze team performance metrics, set and track earning goals, and manage multiple payment methods
+
+### Project Management with Milestones and Tasks
+**What it does**: Advanced project management system for cybersecurity projects with milestone tracking, task assignments, deadline management, progress monitoring, and integration with team earnings distribution
+**Why it matters**: Cybersecurity projects often involve complex, multi-phase work with strict deadlines and deliverables. Clear project structure ensures quality delivery and proper earnings attribution for team members
+**Success criteria**: Users can create detailed project plans with milestones and tasks, assign work to team members with clear deadlines, track progress against goals, and automatically calculate earnings distribution based on task completion
 
 ### Advanced Code Editor with Real-Time Collaboration
 **What it does**: Full-featured code editor with syntax highlighting for 15+ languages, real-time collaboration with live cursors and user presence indicators, file management, branch management, version control integration, auto-saving, and commit workflows with detailed history tracking
@@ -159,6 +164,14 @@ Complex Application with advanced messaging, networking, and comprehensive code 
 - Sidebar: Primary navigation with badge notifications for unread messages
 - TabSystem: Feed, Messages, Code, Explore, Profile navigation
 
+**Earnings Components**:
+- EarningsOverview: Dashboard with key metrics, recent earnings, and team performance summary
+- PaymentHistoryView: Detailed payment history with filtering, sorting, and CSV export capabilities
+- TeamPerformanceView: Team-specific earnings analytics with member performance and project breakdown
+- AnalyticsView: Advanced earnings analytics with trends, growth metrics, and performance insights
+- EarningsGoalsView: Goal setting and tracking system with progress monitoring and achievement celebrations
+- PaymentMethodManager: Payment method setup and management for different payout options
+
 **Profile Components**:
 - Avatar: User profile images with fallback initials
 - Badge: Specialization indicators (Red Team, Blue Team, Bug Bounty, etc.)
@@ -196,6 +209,10 @@ Complex Application with advanced messaging, networking, and comprehensive code 
 - Project templates with files, metadata, and usage statistics in `templates` array
 - Tool repositories with tool specifications and categories in `toolRepositories` array
 - Code editor sessions with collaborative state management
+- Earnings data with detailed transaction history and team attribution in `earnings` arrays
+- Team analytics and performance metrics stored in `teamAnalytics` arrays
+- User earning goals and tracking progress in `earningsGoals` arrays
+- Payment methods and payout configurations in `paymentMethods` arrays
 - Persistent state across sessions using Spark KV storage
 
 ### Security Considerations
