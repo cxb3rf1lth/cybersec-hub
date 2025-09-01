@@ -52,8 +52,8 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
   ]
 
   return (
-    <div className="w-64 bg-card border-r border-border h-screen flex flex-col grid-pattern">
-      <div className="p-4 border-b border-border hover-border-flow">
+    <div className="w-64 glass-panel h-screen flex flex-col relative overflow-hidden">
+      <div className="p-4 border-b border-border electric-border">
         <div className="flex items-center gap-2">
           <Shield className="w-8 h-8 text-accent hover-red-glow glitch-effect" />
           <h1 className="text-xl font-bold text-foreground terminal-cursor">CyberConnect</h1>
@@ -62,7 +62,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
 
       <div className="p-4 border-b border-border">
         <div className="flex items-center gap-3">
-          <Avatar>
+          <Avatar className="electric-glow">
             <AvatarImage src={currentUser.avatar} />
             <AvatarFallback>{currentUser.username[0].toUpperCase()}</AvatarFallback>
           </Avatar>
@@ -85,8 +85,8 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
               <Button
                 key={item.id}
                 variant={activeTab === item.id ? 'secondary' : 'ghost'}
-                className={`w-full justify-start relative hover-red-glow transition-all duration-300 ${
-                  activeTab === item.id ? 'border-l-2 border-accent' : ''
+                className={`w-full justify-start relative glass-button hover-red-glow transition-all duration-300 ${
+                  activeTab === item.id ? 'border-l-2 border-accent bg-accent/10' : ''
                 }`}
                 onClick={() => onTabChange(item.id)}
               >
@@ -95,7 +95,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
                 {item.badge && item.badge > 0 && (
                   <Badge 
                     variant="destructive" 
-                    className="ml-auto text-xs min-w-[20px] h-5 flex items-center justify-center"
+                    className="ml-auto text-xs min-w-[20px] h-5 flex items-center justify-center glass-card"
                   >
                     {item.badge > 99 ? '99+' : item.badge}
                   </Badge>
@@ -106,10 +106,10 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
         </div>
       </nav>
 
-      <div className="p-4 border-t border-border hover-border-flow">
+      <div className="p-4 border-t border-border electric-border">
         <Button
           variant="ghost"
-          className="w-full justify-start text-muted-foreground hover:text-destructive hover-red-glow transition-all duration-300"
+          className="w-full justify-start text-muted-foreground hover:text-destructive glass-button hover-red-glow transition-all duration-300"
           onClick={onLogout}
         >
           <LogOut className="w-5 h-5 mr-3" />

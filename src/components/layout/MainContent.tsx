@@ -12,6 +12,7 @@ import { MarketplaceView } from '@/components/marketplace/MarketplaceView'
 import { LoadingAnimationsDemo } from '@/components/views/LoadingAnimationsDemo'
 import { ThreatIntelligenceFeed } from '@/components/feeds/ThreatIntelligenceFeed'
 import { BugBountyDashboard } from '@/components/bug-bounty/BugBountyDashboard'
+import { BugBountyPlatform } from '@/components/features/BugBountyPlatform'
 import { PartnerRequests } from '@/components/partner-requests/PartnerRequests'
 import { LiveThreatMap } from '@/components/threats/LiveThreatMap'
 import { User } from '@/types/user'
@@ -47,10 +48,7 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
       )}
       {(activeTab === 'bug-bounty' || activeTab === 'team-hunts') && (
         <div className="p-6">
-          <BugBountyDashboard 
-            currentUser={currentUser} 
-            onTabChange={(tab) => onTabChange && onTabChange(tab as any)}
-          />
+          <BugBountyPlatform currentUserId={currentUser.id} />
         </div>
       )}
       {activeTab === 'messages' && (

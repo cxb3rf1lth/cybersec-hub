@@ -81,7 +81,7 @@ export function FeedView({ currentUser }: FeedViewProps) {
 
           {isLoading ? (
             <div className="space-y-6">
-              <Card className="bg-card/50 backdrop-blur-sm border-border">
+              <Card className="glass-card border-border">
                 <CardContent className="p-8 text-center space-y-4">
                   <ScanLine />
                   <div className="flex justify-center">
@@ -95,7 +95,7 @@ export function FeedView({ currentUser }: FeedViewProps) {
               
               {/* Loading skeleton posts */}
               {Array.from({ length: 3 }).map((_, i) => (
-                <Card key={i} className="bg-card/30 border-border animate-pulse">
+                <Card key={i} className="glass-card border-border animate-pulse">
                   <CardHeader className="space-y-3">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-muted rounded-full" />
@@ -114,7 +114,7 @@ export function FeedView({ currentUser }: FeedViewProps) {
               ))}
             </div>
           ) : feedPosts.length === 0 ? (
-            <Card>
+            <Card className="glass-card glass-hover">
               <CardContent className="p-8 text-center">
                 <Code className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-lg font-semibold mb-2">Welcome to CyberConnect!</h3>
@@ -150,7 +150,7 @@ export function FeedView({ currentUser }: FeedViewProps) {
       </div>
 
       {/* Threat Intelligence Sidebar */}
-      <div className="w-80 border-l border-border p-6 overflow-y-auto space-y-6">
+      <div className="w-80 border-l border-border electric-border p-6 overflow-y-auto space-y-6 glass-panel">
         <SecurityDashboardWidget />
         <LiveThreatFeedWidget />
         <BugBountyAlertsWidget />

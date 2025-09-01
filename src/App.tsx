@@ -8,6 +8,7 @@ import { useUserInvitations } from '@/hooks/useUserInvitations'
 import { useSampleMarketplaceData } from '@/hooks/useSampleMarketplaceData'
 import { useSampleThreatSources } from '@/hooks/useSampleThreatSources'
 import { useBugBountyPlatforms } from '@/hooks/useBugBountyPlatforms'
+import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
 import { useTeamHunts } from '@/hooks/useTeamHunts'
 import { useSamplePartnerRequests } from '@/hooks/useSamplePartnerRequests'
 import { Sidebar } from '@/components/layout/Sidebar'
@@ -30,6 +31,7 @@ function App() {
   useSampleMarketplaceData()
   useSampleThreatSources()
   useBugBountyPlatforms()
+  useBugBountyIntegration()
   useTeamHunts()
   useSamplePartnerRequests()
   useUserInvitations(currentUser)

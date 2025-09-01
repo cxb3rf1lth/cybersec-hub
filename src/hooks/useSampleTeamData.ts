@@ -3,9 +3,9 @@ import { useEffect } from 'react'
 import { Team, TeamRole, Permission, TeamType } from '@/types/teams'
 
 export function useSampleTeamData() {
-  const [teams, setTeams] = useKV<Team[]>('teams', [])
-  const [teamRoles, setTeamRoles] = useKV<TeamRole[]>('teamRoles', [])
-  const [permissions, setPermissions] = useKV<Permission[]>('permissions', [])
+  const [teams = [], setTeams] = useKV<Team[]>('teams', [])
+  const [teamRoles = [], setTeamRoles] = useKV<TeamRole[]>('teamRoles', [])
+  const [permissions = [], setPermissions] = useKV<Permission[]>('permissions', [])
 
   useEffect(() => {
     if (permissions.length === 0) {
@@ -45,12 +45,7 @@ export function useSampleTeamData() {
           id: 'team-leader',
           name: 'Team Leader',
           description: 'Overall team leadership and strategic direction',
-          permissions: [
-            'create-project', 'edit-project', 'delete-project', 'assign-tasks', 'review-work',
-            'invite-members', 'remove-members', 'manage-roles', 'view-applications', 'approve-applications',
-            'view-earnings', 'manage-distribution', 'process-payments', 'view-contracts',
-            'team-settings', 'delete-team', 'transfer-ownership', 'view-analytics'
-          ],
+          permissions: permissions,
           defaultEarningsPercentage: 25,
           priority: 100,
           color: '#FFD700'
