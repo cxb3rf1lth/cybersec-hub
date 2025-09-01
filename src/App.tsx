@@ -6,6 +6,7 @@ import { useSampleTeamData } from '@/hooks/useSampleTeamData'
 import { useSampleEarningsData } from '@/hooks/useSampleEarningsData'
 import { useUserInvitations } from '@/hooks/useUserInvitations'
 import { useSampleMarketplaceData } from '@/hooks/useSampleMarketplaceData'
+import { useSampleThreatSources } from '@/hooks/useSampleThreatSources'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MainContent } from '@/components/layout/MainContent'
 import { AuthModal } from '@/components/auth/AuthModal'
@@ -23,6 +24,7 @@ function App() {
   useSampleTeamData()
   useSampleEarningsData()
   useSampleMarketplaceData()
+  useSampleThreatSources()
   useUserInvitations(currentUser)
 
   const handleLogin = (user: User) => {

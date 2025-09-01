@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { ThreatFeed, BugBountyProgram, ThreatIntelligence, CyberSecNews } from '@/types/threat-feeds'
+import { useThreatSources } from './useThreatSources'
 
 export function useThreatFeeds() {
   const [threatFeeds, setThreatFeeds] = useKV<ThreatFeed[]>('threat-feeds', [])
@@ -10,7 +11,74 @@ export function useThreatFeeds() {
   const [lastUpdate, setLastUpdate] = useKV<string>('feeds-last-update', '')
   const [isUpdating, setIsUpdating] = useState(false)
 
-  // Simulated real-time feed generation
+  const { sources, fetchFromSource } = useThreatSources()
+
+  // Fetch data from active custom sources
+  const fetchFromCustomSources = async () => {
+    const activeSources = sources.filter(source => source.isActive)
+    
+    for (const source of activeSources) {
+      try {
+        const data = await fetchFromSource(source)
+        
+        // Process and categorize data based on source category
+        switch (source.category) {
+          case 'vulnerability':
+            const newThreats = data.map(item => ({
+              ...item,
+              category: 'vulnerability' as const,
+              tags: [...(item.tags || []), `source:${source.name}`]
+            }))
+            setThreatFeeds(current => [...newThreats, ...current.slice(0, 47)])
+            break
+            
+          case 'bug-bounty':
+            const newBounties = data.map(item => ({
+              ...item,
+              platform: source.name,
+              minReward: item.minReward || 100,
+              maxReward: item.maxReward || 5000,
+              scope: item.scope || ['*.example.com'],
+              inScope: true,
+              difficulty: item.difficulty || 'intermediate',
+              participants: item.participants || Math.floor(Math.random() * 500) + 50,
+              lastUpdated: item.timestamp || new Date().toISOString()
+            }))
+            setBugBountyPrograms(current => [...newBounties, ...current.slice(0, 23)])
+            break
+            
+          case 'threat-intel':
+            const newIntel = data.map(item => ({
+              ...item,
+              type: item.type || 'ioc',
+              confidence: item.confidence || 'medium',
+              tlpLevel: item.tlpLevel || 'white',
+              indicators: item.indicators || []
+            }))
+            setThreatIntel(current => [...newIntel, ...current.slice(0, 19)])
+            break
+            
+          case 'news':
+            const newNews = data.map(item => ({
+              ...item,
+              summary: item.description,
+              content: item.description,
+              author: item.author || 'Unknown',
+              publishedAt: item.timestamp || new Date().toISOString(),
+              category: item.category || 'general',
+              readTime: Math.ceil((item.description?.length || 500) / 200),
+              tags: [...(item.tags || []), `source:${source.name}`]
+            }))
+            setCyberNews(current => [...newNews, ...current.slice(0, 23)])
+            break
+        }
+      } catch (error) {
+        console.error(`Failed to fetch from source ${source.name}:`, error)
+      }
+    }
+  }
+
+  // Enhanced feed generation combining mock data and custom sources
   const generateMockFeeds = async () => {
     setIsUpdating(true)
     
@@ -19,7 +87,10 @@ export function useThreatFeeds() {
 
     const currentTime = new Date().toISOString()
 
-    // Mock Threat Feeds
+    // Fetch from custom sources first
+    await fetchFromCustomSources()
+
+    // Then add some mock data to supplement
     const newThreatFeeds: ThreatFeed[] = [
       {
         id: `tf-${Date.now()}-1`,
@@ -143,7 +214,7 @@ export function useThreatFeeds() {
       }
     ]
 
-    // Update feeds with new data while preserving existing
+    // Update feeds with new data while preserving existing (from custom sources)
     setThreatFeeds(current => [...newThreatFeeds, ...current.slice(0, 47)]) // Keep last 50 items
     setBugBountyPrograms(current => [...newBugBountyPrograms, ...current.slice(0, 23)]) // Keep last 25 items
     setThreatIntel(current => [...newThreatIntel, ...current.slice(0, 19)]) // Keep last 20 items

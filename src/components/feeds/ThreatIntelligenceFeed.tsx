@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useThreatFeeds } from '@/hooks/useThreatFeeds'
 import { ThreatFeed, BugBountyProgram, ThreatIntelligence, CyberSecNews, FeedFilter } from '@/types/threat-feeds'
+import { ThreatSourceManager } from '@/components/feeds/ThreatSourceManager'
 import { 
   RefreshCw, 
   AlertTriangle, 
@@ -19,7 +20,9 @@ import {
   DollarSign,
   Users,
   TrendingUp,
-  Zap
+  Zap,
+  Settings,
+  Database
 } from '@phosphor-icons/react'
 import { useState, useMemo } from 'react'
 import { formatDistanceToNow } from 'date-fns'
@@ -39,7 +42,7 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
     refreshFeeds 
   } = useThreatFeeds()
 
-  const [activeTab, setActiveTab] = useState('all')
+  const [activeTab, setActiveTab] = useState('feeds')
   const [searchQuery, setSearchQuery] = useState('')
   const [severityFilter, setSeverityFilter] = useState<string>('all')
   const [showFilters, setShowFilters] = useState(false)
@@ -48,16 +51,16 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
   const allFeeds = useMemo(() => {
     let combined: any[] = []
     
-    if (activeTab === 'all' || activeTab === 'threats') {
+    if (activeTab === 'feeds' || activeTab === 'threats') {
       combined = [...combined, ...threatFeeds.map(item => ({ ...item, type: 'threat' }))]
     }
-    if (activeTab === 'all' || activeTab === 'bounties') {
+    if (activeTab === 'feeds' || activeTab === 'bounties') {
       combined = [...combined, ...bugBountyPrograms.map(item => ({ ...item, type: 'bounty' }))]
     }
-    if (activeTab === 'all' || activeTab === 'intel') {
+    if (activeTab === 'feeds' || activeTab === 'intel') {
       combined = [...combined, ...threatIntel.map(item => ({ ...item, type: 'intel' }))]
     }
-    if (activeTab === 'all' || activeTab === 'news') {
+    if (activeTab === 'feeds' || activeTab === 'news') {
       combined = [...combined, ...cyberNews.map(item => ({ ...item, type: 'news' }))]
     }
 
@@ -216,6 +219,53 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
     )
   }
 
+  const renderFeedContent = () => (
+    <>
+      {isUpdating && (
+        <Card className="border-primary/20">
+          <CardContent className="py-8">
+            <div className="flex items-center justify-center space-x-3">
+              <div className="hex-spinner w-8 h-8">
+                <div className="hex-inner">
+                  <div className="hex-side"></div>
+                  <div className="hex-side"></div>
+                  <div className="hex-side"></div>
+                  <div className="hex-side"></div>
+                  <div className="hex-side"></div>
+                  <div className="hex-side"></div>
+                </div>
+              </div>
+              <span className="text-primary font-medium">Updating threat intelligence feeds...</span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="grid gap-4">
+        {allFeeds.length > 0 ? (
+          allFeeds.map(renderFeedItem)
+        ) : (
+          <Card>
+            <CardContent className="py-8 text-center">
+              <Shield className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold mb-2">No feeds available</h3>
+              <p className="text-muted-foreground mb-4">
+                {searchQuery || severityFilter !== 'all' 
+                  ? 'No feeds match your current filters' 
+                  : 'Threat intelligence feeds will appear here when available'
+                }
+              </p>
+              <Button onClick={refreshFeeds} variant="outline" className="hover-red-glow">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refresh Feeds
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </>
+  )
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -309,57 +359,22 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="all">All Feeds</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-6">
+          <TabsTrigger value="feeds">Live Feeds</TabsTrigger>
           <TabsTrigger value="threats">Threats</TabsTrigger>
           <TabsTrigger value="bounties">Bug Bounties</TabsTrigger>
           <TabsTrigger value="intel">Intel</TabsTrigger>
           <TabsTrigger value="news">News</TabsTrigger>
+          <TabsTrigger value="sources">Sources</TabsTrigger>
         </TabsList>
 
-        <TabsContent value={activeTab} className="space-y-4 mt-6">
-          {isUpdating && (
-            <Card className="border-primary/20">
-              <CardContent className="py-8">
-                <div className="flex items-center justify-center space-x-3">
-                  <div className="hex-spinner w-8 h-8">
-                    <div className="hex-inner">
-                      <div className="hex-side"></div>
-                      <div className="hex-side"></div>
-                      <div className="hex-side"></div>
-                      <div className="hex-side"></div>
-                      <div className="hex-side"></div>
-                      <div className="hex-side"></div>
-                    </div>
-                  </div>
-                  <span className="text-primary font-medium">Updating threat intelligence feeds...</span>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          <div className="grid gap-4">
-            {allFeeds.length > 0 ? (
-              allFeeds.map(renderFeedItem)
-            ) : (
-              <Card>
-                <CardContent className="py-8 text-center">
-                  <Shield className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No feeds available</h3>
-                  <p className="text-muted-foreground mb-4">
-                    {searchQuery || severityFilter !== 'all' 
-                      ? 'No feeds match your current filters' 
-                      : 'Threat intelligence feeds will appear here when available'
-                    }
-                  </p>
-                  <Button onClick={refreshFeeds} variant="outline" className="hover-red-glow">
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    Refresh Feeds
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-          </div>
+        <TabsContent value="feeds" className="space-y-4 mt-6">{renderFeedContent()}</TabsContent>
+        <TabsContent value="threats" className="space-y-4 mt-6">{renderFeedContent()}</TabsContent>
+        <TabsContent value="bounties" className="space-y-4 mt-6">{renderFeedContent()}</TabsContent>
+        <TabsContent value="intel" className="space-y-4 mt-6">{renderFeedContent()}</TabsContent>
+        <TabsContent value="news" className="space-y-4 mt-6">{renderFeedContent()}</TabsContent>
+        <TabsContent value="sources" className="space-y-4 mt-6">
+          <ThreatSourceManager />
         </TabsContent>
       </Tabs>
     </div>
