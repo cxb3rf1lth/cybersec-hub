@@ -1,4 +1,4 @@
-import { Shield, Home, Compass, User, Code, LogOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, Loading, Eye, Target, BugBeetle, Handshake, Globe } from '@phosphor-icons/react'
+import { Shield, Home, Compass, User, Code, LogOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, Loading, Eye, Target, BugBeetle, Handshake, Globe, DesktopTower } from '@phosphor-icons/react'
 import { useKV } from '@github/spark/hooks'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -8,8 +8,8 @@ import { TeamInvitation } from '@/types/teams'
 
 interface SidebarProps {
   currentUser: UserType
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map'
-  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map') => void
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab'
+  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab') => void
   onLogout: () => void
 }
 
@@ -36,6 +36,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
     { id: 'feed' as const, label: 'Feed', icon: Home },
     { id: 'threats' as const, label: 'Threat Intel', icon: Eye },
     { id: 'threat-map' as const, label: 'Threat Map', icon: Globe },
+  { id: 'virtual-lab' as const, label: 'Virtual Lab', icon: DesktopTower },
     { id: 'bug-bounty' as const, label: 'Bug Bounty', icon: BugBeetle },
     { id: 'partner-requests' as const, label: 'Partners', icon: Handshake },
     { id: 'messages' as const, label: 'Messages', icon: ChatCircle, badge: totalUnread },
