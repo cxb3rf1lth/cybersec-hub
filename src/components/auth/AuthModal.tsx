@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { HexSpinner, CyberProgress } from '@/components/ui/loading-animations'
+import { MatrixDots, CyberProgress } from '@/components/ui/loading-animations'
 import { User, Specialization } from '@/types/user'
 
 interface AuthModalProps {
@@ -168,7 +168,7 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
             {isLoading ? (
               <div className="space-y-4">
                 <div className="flex justify-center">
-                  <HexSpinner size="md" />
+                  <MatrixDots size="md" />
                 </div>
                 <CyberProgress progress={75} showPercentage={false} />
                 <p className="text-center text-sm text-muted-foreground font-mono">

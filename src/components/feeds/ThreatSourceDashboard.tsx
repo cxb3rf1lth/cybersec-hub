@@ -1,5 +1,5 @@
+import { BinaryRain } from '@/components/ui/loading-animations'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useThreatSources } from '@/hooks/useThreatSources'
 import { useState, useEffect } from 'react'
@@ -66,7 +66,20 @@ export function ThreatSourceDashboard() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      {/* Background Binary Rain Effect for Threat Dashboard */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-10">
+        <div className="grid grid-cols-8 gap-6 h-full">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="flex flex-col h-full">
+              <BinaryRain />
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Content */}
+      <div className="relative z-10">
       <div>
         <h3 className="text-lg font-semibold text-foreground mb-2">Source Overview</h3>
         <p className="text-sm text-muted-foreground">
@@ -246,6 +259,7 @@ export function ThreatSourceDashboard() {
           )}
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 }

@@ -120,21 +120,29 @@ export function ScanLine({ className }: { className?: string }) {
 
 // Binary rain loading effect
 export function BinaryRain({ className }: { className?: string }) {
+  const binaryChars = ['0', '1', '|', '/', '\\', '-', '_', '.', ':', ';']
+  
   return (
     <div className={cn('binary-rain-container', className)}>
-      {Array.from({ length: 8 }).map((_, i) => (
+      {Array.from({ length: 10 }).map((_, i) => (
         <div
           key={i}
           className="binary-column"
-          style={{ animationDelay: `${i * 0.3}s` }}
+          style={{ 
+            animationDelay: `${i * 0.4}s`,
+            animationDuration: `${3 + Math.random() * 2}s`
+          }}
         >
-          {Array.from({ length: 10 }).map((_, j) => (
+          {Array.from({ length: 15 }).map((_, j) => (
             <span
               key={j}
               className="binary-char"
-              style={{ animationDelay: `${j * 0.1}s` }}
+              style={{ 
+                animationDelay: `${j * 0.15}s`,
+                animationDuration: `${0.8 + Math.random() * 0.4}s`
+              }}
             >
-              {Math.random() > 0.5 ? '1' : '0'}
+              {binaryChars[Math.floor(Math.random() * binaryChars.length)]}
             </span>
           ))}
         </div>
@@ -157,10 +165,7 @@ export function CyberpunkLoader({
     <div className="fixed inset-0 bg-background/95 backdrop-blur-sm z-50 flex items-center justify-center">
       <div className="text-center space-y-8">
         <div className="relative">
-          <HexSpinner size="lg" />
-          <div className="absolute inset-0 animate-ping">
-            <HexSpinner size="lg" className="opacity-20" />
-          </div>
+          <MatrixDots size="lg" />
         </div>
         
         <div className="space-y-4">

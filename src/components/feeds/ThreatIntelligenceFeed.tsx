@@ -1,5 +1,5 @@
+import { BinaryRain } from '@/components/ui/loading-animations'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
@@ -224,17 +224,8 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
       {isUpdating && (
         <Card className="border-primary/20">
           <CardContent className="py-8">
-            <div className="flex items-center justify-center space-x-3">
-              <div className="hex-spinner w-8 h-8">
-                <div className="hex-inner">
-                  <div className="hex-side"></div>
-                  <div className="hex-side"></div>
-                  <div className="hex-side"></div>
-                  <div className="hex-side"></div>
-                  <div className="hex-side"></div>
-                  <div className="hex-side"></div>
-                </div>
-              </div>
+            <div className="flex items-center justify-center space-x-6">
+              <BinaryRain />
               <span className="text-primary font-medium">Updating threat intelligence feeds...</span>
             </div>
           </CardContent>

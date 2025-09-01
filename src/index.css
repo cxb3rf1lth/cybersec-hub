@@ -385,23 +385,30 @@
 .binary-column {
   display: flex;
   flex-direction: column;
-  animation: binary-fall 3s linear infinite;
+  animation: binary-fall 4s linear infinite;
 }
 
 .binary-char {
   font-family: 'Fira Code', monospace;
-  font-size: 12px;
-  color: oklch(0.55 0.18 15 / 0.7);
-  line-height: 1.2;
-  animation: binary-fade 0.5s ease-in-out infinite;
+  font-size: 11px;
+  color: oklch(0.55 0.18 15 / 0.8);
+  line-height: 1.1;
+  animation: binary-fade 1s ease-in-out infinite;
+  text-shadow: 0 0 5px oklch(0.55 0.18 15 / 0.4);
+}
+
+.binary-char:nth-child(odd) {
+  animation-delay: 0.5s;
 }
 
 @keyframes binary-fall {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
+  0% { transform: translateY(-120%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(120%); opacity: 0; }
 }
 
 @keyframes binary-fade {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
+  0%, 100% { opacity: 0.4; color: oklch(0.45 0.15 15 / 0.6); }
+  50% { opacity: 1; color: oklch(0.65 0.22 15 / 0.9); }
 }

@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Code, FileText, X } from '@phosphor-icons/react'
-import { HexSpinner } from '@/components/ui/loading-animations'
+import { MatrixDots } from '@/components/ui/loading-animations'
 import { User, Post } from '@/types/user'
 
 interface CreatePostModalProps {
@@ -195,7 +195,7 @@ export function CreatePostModal({ currentUser, onClose, onCreatePost }: CreatePo
             <Button type="submit" disabled={!content.trim() || isPublishing} className="hover-red-glow">
               {isPublishing ? (
                 <div className="flex items-center gap-2">
-                  <HexSpinner size="sm" />
+                  <MatrixDots size="sm" />
                   Publishing...
                 </div>
               ) : (

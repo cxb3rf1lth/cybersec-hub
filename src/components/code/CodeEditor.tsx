@@ -9,8 +9,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { BinaryRain } from '@/components/ui/loading-animations'
 import { ArrowLeft, Play, Save, Share, Users, GitBranch, Clock, Download, Copy, Bug, GitCommit, History, Eye, EyeClosed } from '@phosphor-icons/react'
-import { Repository, User, RepositoryFile, CodeEditor as CodeEditorType, EditorCollaborator, Commit } from '@/types/user'
 import { toast } from 'sonner'
 
 interface CodeEditorProps {
@@ -529,7 +529,20 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
   const lineNumbers = getLineNumbers()
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col relative">
+      {/* Background Binary Rain Effect */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-10">
+        <div className="grid grid-cols-12 gap-4 h-full p-4">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={i} className="flex flex-col">
+              <BinaryRain />
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Content */}
+      <div className="relative z-10 h-full flex flex-col">
       {/* Header */}
       <div className="p-4 border-b border-border bg-card">
         <div className="flex items-center justify-between mb-4">
@@ -794,6 +807,7 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
           </div>
         </div>
       )}
+      </div>
     </div>
   )
 }

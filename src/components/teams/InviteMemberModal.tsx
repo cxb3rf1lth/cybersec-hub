@@ -21,8 +21,8 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Team, User, TeamInvitation, TeamRole } from '@/types'
+import { MatrixDots } from '@/components/ui/loading-animations'
 import { Search, UserPlus, Send } from '@phosphor-icons/react'
-import { toast } from 'sonner'
 
 interface InviteMemberModalProps {
   team: Team
@@ -297,7 +297,7 @@ export function InviteMemberModal({ team, currentUser, onClose, onInvitationSent
             onClick={handleSendInvitation}
             disabled={!selectedUser || !selectedRole || isLoading || team.members.length >= team.maxMembers}
           >
-            <Send className="w-4 h-4 mr-2" />
+            {isLoading ? <MatrixDots size="sm" /> : <Send className="w-4 h-4 mr-2" />}
             {isLoading ? 'Sending...' : 'Send Invitation'}
           </Button>
         </DialogFooter>
