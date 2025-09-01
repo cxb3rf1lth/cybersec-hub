@@ -54,12 +54,14 @@ export function useSampleTeamData() {
           id: 'senior-security-engineer',
           name: 'Senior Security Engineer',
           description: 'Advanced technical expertise and mentorship',
-          permissions: [
-            'create-project', 'edit-project', 'assign-tasks', 'review-work',
-            'invite-members', 'view-applications',
-            'view-earnings', 'view-contracts',
-            'view-analytics'
-          ],
+          permissions: permissions.filter(p =>
+            [
+              'create-project', 'edit-project', 'assign-tasks', 'review-work',
+              'invite-members', 'view-applications',
+              'view-earnings', 'view-contracts',
+              'view-analytics'
+            ].includes(p.id)
+          ),
           defaultEarningsPercentage: 20,
           priority: 80,
           color: '#9B59B6'
@@ -68,10 +70,12 @@ export function useSampleTeamData() {
           id: 'security-engineer',
           name: 'Security Engineer',
           description: 'Core security implementation and analysis',
-          permissions: [
-            'edit-project', 'assign-tasks',
-            'view-earnings', 'view-contracts'
-          ],
+          permissions: permissions.filter(p =>
+            [
+              'edit-project', 'assign-tasks',
+              'view-earnings', 'view-contracts'
+            ].includes(p.id)
+          ),
           defaultEarningsPercentage: 15,
           priority: 60,
           color: '#3498DB'
@@ -80,10 +84,12 @@ export function useSampleTeamData() {
           id: 'penetration-tester',
           name: 'Penetration Tester',
           description: 'Specialized in offensive security testing',
-          permissions: [
-            'edit-project',
-            'view-earnings', 'view-contracts'
-          ],
+          permissions: permissions.filter(p =>
+            [
+              'edit-project',
+              'view-earnings', 'view-contracts'
+            ].includes(p.id)
+          ),
           defaultEarningsPercentage: 15,
           priority: 60,
           color: '#E74C3C'
@@ -92,9 +98,11 @@ export function useSampleTeamData() {
           id: 'security-analyst',
           name: 'Security Analyst',
           description: 'Analysis and investigation of security issues',
-          permissions: [
-            'view-earnings', 'view-contracts'
-          ],
+          permissions: permissions.filter(p =>
+            [
+              'view-earnings', 'view-contracts'
+            ].includes(p.id)
+          ),
           defaultEarningsPercentage: 12,
           priority: 40,
           color: '#27AE60'
@@ -103,9 +111,11 @@ export function useSampleTeamData() {
           id: 'junior-security-engineer',
           name: 'Junior Security Engineer',
           description: 'Entry-level security engineer role',
-          permissions: [
-            'view-earnings', 'view-contracts'
-          ],
+          permissions: permissions.filter(p =>
+            [
+              'view-earnings', 'view-contracts'
+            ].includes(p.id)
+          ),
           defaultEarningsPercentage: 8,
           priority: 20,
           color: '#F39C12'
@@ -114,9 +124,11 @@ export function useSampleTeamData() {
           id: 'security-researcher',
           name: 'Security Researcher',
           description: 'Research-focused security specialist',
-          permissions: [
-            'view-earnings', 'view-contracts'
-          ],
+          permissions: permissions.filter(p =>
+            [
+              'view-earnings', 'view-contracts'
+            ].includes(p.id)
+          ),
           defaultEarningsPercentage: 10,
           priority: 50,
           color: '#8E44AD'
