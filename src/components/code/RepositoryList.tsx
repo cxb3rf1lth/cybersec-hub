@@ -53,37 +53,181 @@ export function RepositoryList({ currentUser, onRepositorySelect }: RepositoryLi
         stars: ['user-1', 'user-2'],
         forks: ['user-3'],
         watchers: ['user-1', 'user-2', 'user-3'],
-        collaborators: [currentUser.id],
+        collaborators: [currentUser.id, 'user_sample_2', 'user_sample_3'],
         files: [
           {
             id: 'file-1',
             name: 'main.py',
             path: '/main.py',
-            content: '#!/usr/bin/env python3\n\n"""CyberSec Toolkit - Main Entry Point"""\n\nimport argparse\nimport sys\nfrom modules import scanner, analyzer, reporter\n\ndef main():\n    parser = argparse.ArgumentParser(description="CyberSec Toolkit")\n    parser.add_argument("--scan", help="Scan target")\n    parser.add_argument("--analyze", help="Analyze results")\n    \n    args = parser.parse_args()\n    \n    if args.scan:\n        scanner.run_scan(args.scan)\n    elif args.analyze:\n        analyzer.analyze(args.analyze)\n    else:\n        print("Please specify an action")\n\nif __name__ == "__main__":\n    main()',
+            content: '#!/usr/bin/env python3\n\n"""CyberSec Toolkit - Main Entry Point"""\n\nimport argparse\nimport sys\nfrom modules import scanner, analyzer, reporter\n\ndef main():\n    parser = argparse.ArgumentParser(description="CyberSec Toolkit")\n    parser.add_argument("--scan", help="Scan target")\n    parser.add_argument("--analyze", help="Analyze results")\n    parser.add_argument("--report", help="Generate report")\n    \n    args = parser.parse_args()\n    \n    if args.scan:\n        print(f"Scanning target: {args.scan}")\n        scanner.run_scan(args.scan)\n    elif args.analyze:\n        print(f"Analyzing: {args.analyze}")\n        analyzer.analyze(args.analyze)\n    elif args.report:\n        print("Generating security report...")\n        reporter.generate_report(args.report)\n    else:\n        print("CyberSec Toolkit v2.1.0")\n        print("Usage: python main.py [--scan|--analyze|--report] <target>")\n\nif __name__ == "__main__":\n    main()',
             language: 'python',
-            size: 512,
-            lastModified: new Date().toISOString(),
-            lastCommit: 'commit-1',
+            size: 812,
+            lastModified: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+            lastCommit: 'abc123f',
             isDirectory: false
           },
           {
             id: 'file-2',
             name: 'README.md',
             path: '/README.md',
-            content: '# CyberSec Toolkit\n\nA comprehensive toolkit for cybersecurity professionals.\n\n## Features\n\n- Network scanning\n- Vulnerability analysis\n- Security reporting\n\n## Installation\n\n```bash\npip install -r requirements.txt\n```\n\n## Usage\n\n```bash\npython main.py --scan target.com\n```',
+            content: '# CyberSec Toolkit\n\nA comprehensive toolkit for cybersecurity professionals.\n\n## Features\n\n- 🔍 Network scanning and enumeration\n- 🛡️ Vulnerability analysis and assessment\n- 📊 Security reporting and documentation\n- 🔗 Integration with popular security tools\n- 🌐 Web application security testing\n\n## Installation\n\n```bash\ngit clone https://github.com/cybersec/toolkit.git\ncd toolkit\npip install -r requirements.txt\n```\n\n## Usage\n\n### Network Scanning\n```bash\npython main.py --scan 192.168.1.0/24\n```\n\n### Vulnerability Analysis\n```bash\npython main.py --analyze scan_results.json\n```\n\n### Generate Report\n```bash\npython main.py --report vulnerability_data.json\n```\n\n## Contributing\n\nWe welcome contributions! Please see CONTRIBUTING.md for guidelines.\n\n## License\n\nMIT License - see LICENSE file for details.',
             language: 'markdown',
-            size: 256,
-            lastModified: new Date().toISOString(),
-            lastCommit: 'commit-1',
+            size: 1024,
+            lastModified: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(), // 1 hour ago
+            lastCommit: 'def456a',
+            isDirectory: false
+          },
+          {
+            id: 'file-3',
+            name: 'scanner.py',
+            path: '/modules/scanner.py',
+            content: '"""Network Scanner Module"""\n\nimport socket\nimport threading\nfrom concurrent.futures import ThreadPoolExecutor\n\nclass NetworkScanner:\n    def __init__(self, target, threads=100):\n        self.target = target\n        self.threads = threads\n        self.open_ports = []\n        \n    def scan_port(self, port):\n        try:\n            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n            sock.settimeout(1)\n            result = sock.connect_ex((self.target, port))\n            if result == 0:\n                self.open_ports.append(port)\n                print(f"Port {port}: Open")\n            sock.close()\n        except Exception as e:\n            pass\n            \n    def run_scan(self, port_range=(1, 1000)):\n        print(f"Scanning {self.target}...")\n        \n        with ThreadPoolExecutor(max_workers=self.threads) as executor:\n            for port in range(port_range[0], port_range[1] + 1):\n                executor.submit(self.scan_port, port)\n                \n        return self.open_ports\n\ndef run_scan(target):\n    scanner = NetworkScanner(target)\n    return scanner.run_scan()',
+            language: 'python',
+            size: 1256,
+            lastModified: new Date(Date.now() - 30 * 60 * 1000).toISOString(), // 30 minutes ago
+            lastCommit: 'ghi789b',
             isDirectory: false
           }
         ],
-        commits: [],
-        branches: [{ id: 'branch-1', name: 'main', lastCommit: 'commit-1', createdAt: new Date().toISOString(), isDefault: true, isProtected: false }],
-        issues: [],
-        pullRequests: [],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        commits: [
+          {
+            id: 'ghi789b',
+            message: 'Add concurrent scanning support and improve error handling',
+            authorId: 'user_sample_2',
+            authorName: 'maya_defense',
+            authorEmail: 'maya@cyberconnect.com',
+            hash: 'ghi789b',
+            parentHash: 'def456a',
+            branch: 'main',
+            filesChanged: [
+              {
+                path: '/modules/scanner.py',
+                type: 'modified',
+                additions: 15,
+                deletions: 5
+              }
+            ],
+            additions: 15,
+            deletions: 5,
+            createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString()
+          },
+          {
+            id: 'def456a',
+            message: 'Update documentation with new features and examples',
+            authorId: currentUser.id,
+            authorName: currentUser.username,
+            authorEmail: currentUser.email,
+            hash: 'def456a',
+            parentHash: 'abc123f',
+            branch: 'main',
+            filesChanged: [
+              {
+                path: '/README.md',
+                type: 'modified',
+                additions: 25,
+                deletions: 8
+              }
+            ],
+            additions: 25,
+            deletions: 8,
+            createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: 'abc123f',
+            message: 'Add reporting functionality and improve CLI interface',
+            authorId: currentUser.id,
+            authorName: currentUser.username,
+            authorEmail: currentUser.email,
+            hash: 'abc123f',
+            parentHash: 'initial',
+            branch: 'main',
+            filesChanged: [
+              {
+                path: '/main.py',
+                type: 'modified',
+                additions: 12,
+                deletions: 3
+              }
+            ],
+            additions: 12,
+            deletions: 3,
+            createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+          }
+        ],
+        branches: [
+          { 
+            id: 'branch-1', 
+            name: 'main', 
+            lastCommit: 'ghi789b', 
+            createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), 
+            isDefault: true, 
+            isProtected: false 
+          },
+          { 
+            id: 'branch-2', 
+            name: 'feature/web-scanner', 
+            lastCommit: 'abc123f', 
+            createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), 
+            isDefault: false, 
+            isProtected: false 
+          }
+        ],
+        issues: [
+          {
+            id: 'issue-1',
+            title: 'Add support for IPv6 scanning',
+            description: 'The current scanner only supports IPv4 addresses. We should add IPv6 support for modern network environments.',
+            authorId: 'user_sample_3',
+            assigneeId: currentUser.id,
+            labels: ['enhancement', 'networking'],
+            status: 'open',
+            priority: 'medium',
+            createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+            updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+            comments: [
+              {
+                id: 'comment-1',
+                authorId: currentUser.id,
+                content: 'Good point! I\'ll look into adding IPv6 support in the next release.',
+                createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+              }
+            ]
+          }
+        ],
+        pullRequests: [
+          {
+            id: 'pr-1',
+            title: 'Implement web application security testing module',
+            description: 'This PR adds a new module for testing web application security, including SQL injection and XSS detection.',
+            authorId: 'user_sample_2',
+            sourceBranch: 'feature/web-scanner',
+            targetBranch: 'main',
+            status: 'open',
+            reviewers: [currentUser.id, 'user_sample_3'],
+            reviews: [
+              {
+                id: 'review-1',
+                reviewerId: currentUser.id,
+                status: 'approved',
+                comment: 'Looks great! The code is well-structured and the tests are comprehensive.',
+                createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
+              }
+            ],
+            filesChanged: [
+              {
+                path: '/modules/web_scanner.py',
+                type: 'added',
+                additions: 150,
+                deletions: 0
+              }
+            ],
+            commits: ['abc123f'],
+            createdAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+            updatedAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
+          }
+        ],
+        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        updatedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
         cloneUrl: `https://github.com/${currentUser.username}/cybersec-toolkit.git`,
         defaultBranch: 'main'
       }
