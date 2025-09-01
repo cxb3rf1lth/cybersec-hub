@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Plus, Code } from '@phosphor-icons/react'
 import { PostCard } from '@/components/posts/PostCard'
 import { CreatePostModal } from '@/components/posts/CreatePostModal'
+import { MatrixDots, ScanLine } from '@/components/ui/loading-animations'
 import { User, Post, Activity } from '@/types/user'
 
 interface FeedViewProps {
@@ -15,6 +16,13 @@ export function FeedView({ currentUser }: FeedViewProps) {
   const [showCreatePost, setShowCreatePost] = useState(false)
   const [posts, setPosts] = useKV<Post[]>('posts', [])
   const [activities, setActivities] = useKV<Activity[]>('activities', [])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    // Simulate initial loading
+    const timer = setTimeout(() => setIsLoading(false), 1500)
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleCreatePost = (newPost: Post) => {
     setPosts(current => [newPost, ...current])

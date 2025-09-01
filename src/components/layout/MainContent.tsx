@@ -9,13 +9,14 @@ import { EarningsView } from '@/components/views/EarningsView'
 import { TeamsView } from '@/components/teams/TeamsView'
 import { TeamInvitationsView } from '@/components/teams/TeamInvitationsView'
 import { MarketplaceView } from '@/components/marketplace/MarketplaceView'
+import { LoadingAnimationsDemo } from '@/components/views/LoadingAnimationsDemo'
 import { User } from '@/types/user'
 
 interface MainContentProps {
   currentUser: User
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace'
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations'
   onUserUpdate: (user: User) => void
-  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace') => void
+  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations') => void
 }
 
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
@@ -56,6 +57,9 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
           currentUser={currentUser} 
           onTabChange={(tab) => onTabChange && onTabChange(tab as any)}
         />
+      )}
+      {activeTab === 'animations' && (
+        <LoadingAnimationsDemo />
       )}
       {activeTab === 'explore' && (
         <ExploreView 
