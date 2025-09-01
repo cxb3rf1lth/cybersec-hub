@@ -82,8 +82,8 @@ export function useThreatFeeds() {
   const generateMockFeeds = async () => {
     setIsUpdating(true)
     
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // Simulate realistic API delay for threat intelligence feeds (demonstrate binary rain)
+    await new Promise(resolve => setTimeout(resolve, 3000))
 
     const currentTime = new Date().toISOString()
 

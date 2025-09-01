@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useThreatFeeds } from '@/hooks/useThreatFeeds'
 import { ThreatFeed, BugBountyProgram, ThreatIntelligence, CyberSecNews, FeedFilter } from '@/types/threat-feeds'
 import { ThreatSourceManager } from '@/components/feeds/ThreatSourceManager'
+import { toast } from 'sonner'
 import { 
   RefreshCw, 
   AlertTriangle, 
@@ -25,7 +26,7 @@ import {
   Settings,
   Database
 } from '@phosphor-icons/react'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 
 interface ThreatIntelligenceFeedProps {
@@ -47,6 +48,30 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
   const [searchQuery, setSearchQuery] = useState('')
   const [severityFilter, setSeverityFilter] = useState<string>('all')
   const [showFilters, setShowFilters] = useState(false)
+  
+  const handleRefresh = async () => {
+    toast.info('Refreshing threat intelligence feeds...', {
+      description: 'Experience the immersive binary rain animations while data updates',
+      duration: 3000
+    })
+    await refreshFeeds()
+    toast.success('Threat intelligence feeds updated successfully', {
+      description: 'Latest cybersecurity data has been synchronized'
+    })
+  }
+
+  // Add keyboard shortcut for easy testing (Ctrl+R or F5)
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if ((event.ctrlKey && event.key === 'r') || event.key === 'F5') {
+        event.preventDefault()
+        handleRefresh()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [])
 
   // Combine and filter all feeds
   const allFeeds = useMemo(() => {
@@ -223,11 +248,19 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
   const renderFeedContent = () => (
     <>
       {isUpdating && (
-        <Card className="border-primary/20">
-          <CardContent className="py-8">
-            <div className="flex items-center justify-center space-x-6">
-              <BinaryRain columns={3} speed="fast" density="dense" variant="cyber" />
-              <span className="text-primary font-medium">Updating threat intelligence feeds...</span>
+        <Card className="border-primary/20 bg-background/50 backdrop-blur-sm">
+          <CardContent className="py-12">
+            <div className="flex flex-col items-center justify-center space-y-6">
+              <div className="relative">
+                <BinaryRain columns={5} speed="fast" density="dense" variant="cyber" />
+              </div>
+              <div className="text-center space-y-2">
+                <span className="text-primary font-medium terminal-cursor">Synchronizing threat intelligence feeds</span>
+                <p className="text-sm text-muted-foreground max-w-md">
+                  Processing real-time cybersecurity data from multiple sources including CVE databases, 
+                  threat intelligence feeds, and bug bounty platforms...
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -247,7 +280,7 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
                   : 'Threat intelligence feeds will appear here when available'
                 }
               </p>
-              <Button onClick={refreshFeeds} variant="outline" className="hover-red-glow">
+              <Button onClick={handleRefresh} variant="outline" className="hover-red-glow">
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Refresh Feeds
               </Button>
@@ -322,7 +355,12 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-foreground">Threat Intelligence Feed</h2>
-          <p className="text-muted-foreground">Real-time cybersecurity threat intelligence and bug bounty data</p>
+          <p className="text-muted-foreground">
+            Real-time cybersecurity threat intelligence and bug bounty data
+            <span className="ml-2 text-xs bg-primary/20 text-primary px-2 py-1 rounded-md font-mono">
+              Press Ctrl+R or F5 to test binary rain animations
+            </span>
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -337,12 +375,12 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
           <Button 
             variant="outline" 
             size="sm" 
-            onClick={refreshFeeds}
+            onClick={handleRefresh}
             disabled={isUpdating}
             className="hover-red-glow"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${isUpdating ? 'animate-spin' : ''}`} />
-            Refresh
+            {isUpdating ? 'Updating...' : 'Refresh'}
           </Button>
         </div>
       </div>
