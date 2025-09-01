@@ -58,6 +58,20 @@ export type Specialization =
   | 'Security Research'
   | 'OSINT'
   | 'Reverse Engineering'
+  | 'Web Application Security'
+  | 'Mobile Security'
+  | 'API Security'
+  | 'Cloud Security'
+  | 'Network Security'
+  | 'Cryptography'
+  | 'Social Engineering'
+  | 'Physical Security'
+  | 'IoT Security'
+  | 'Automotive Security'
+  | 'Binary Analysis'
+  | 'Forensics'
+  | 'Threat Intelligence'
+  | 'DevSecOps'
 
 export interface Activity {
   id: string
