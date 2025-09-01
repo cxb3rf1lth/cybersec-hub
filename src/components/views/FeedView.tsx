@@ -65,13 +65,47 @@ export function FeedView({ currentUser }: FeedViewProps) {
       <div className="max-w-2xl mx-auto p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-foreground">Your Feed</h2>
-          <Button onClick={() => setShowCreatePost(true)}>
+          <Button onClick={() => setShowCreatePost(true)} disabled={isLoading}>
             <Plus className="w-4 h-4 mr-2" />
             New Post
           </Button>
         </div>
 
-        {feedPosts.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-6">
+            <Card className="bg-card/50 backdrop-blur-sm border-border">
+              <CardContent className="p-8 text-center space-y-4">
+                <ScanLine />
+                <div className="flex justify-center">
+                  <MatrixDots size="md" />
+                </div>
+                <p className="text-muted-foreground font-mono">
+                  Loading cybersecurity feed...
+                </p>
+              </CardContent>
+            </Card>
+            
+            {/* Loading skeleton posts */}
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Card key={i} className="bg-card/30 border-border animate-pulse">
+                <CardHeader className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-muted rounded-full" />
+                    <div className="space-y-2">
+                      <div className="h-4 bg-muted rounded w-24" />
+                      <div className="h-3 bg-muted rounded w-16" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="h-4 bg-muted rounded" />
+                  <div className="h-4 bg-muted rounded w-3/4" />
+                  <div className="h-20 bg-muted rounded" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : feedPosts.length === 0 ? (
           <Card>
             <CardContent className="p-8 text-center">
               <Code className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
+import { HexSpinner, CyberProgress } from '@/components/ui/loading-animations'
 import { User, Specialization } from '@/types/user'
 
 interface AuthModalProps {
@@ -22,6 +23,7 @@ const SPECIALIZATIONS: Specialization[] = [
 export function AuthModal({ onClose, onLogin }: AuthModalProps) {
   const [allUsers, setAllUsers] = useKV<User[]>('allUsers', [])
   const [isSignUp, setIsSignUp] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     username: '',
     email: '',
