@@ -9,7 +9,7 @@
 
 :root {
   --background: oklch(0.04 0 0);
-  --foreground: oklch(0.92 0.02 0);
+  --foreground: oklch(70.4% 0.191 22.216);
   
   --card: oklch(0.08 0.01 0);
   --card-foreground: oklch(0.88 0.02 0);
@@ -19,20 +19,26 @@
   --primary: oklch(14.7% 0.004 49.25);
   --primary-foreground: oklch(37% 0.013 285.805);
   --secondary: oklch(0.12 0.01 0);
-  --secondary-foreground: oklch(0.85 0.02 0);
+  --secondary-foreground: oklch(70.4% 0.191 22.216);
   --accent: oklch(14.5% 0 0);
   --accent-foreground: oklch(0.04 0 0);
   
   --muted: oklch(0.12 0.01 0);
   --muted-foreground: oklch(0.6 0.02 0);
-  --destructive: oklch(0.6 0.25 15);
-  --destructive-foreground: oklch(0.92 0.02 0);
+  --destructive: oklch(88.5% 0.062 18.334);
+  --destructive-foreground: oklch(20.5% 0 0);
   
   --border: oklch(0.18 0.01 0);
   --input: oklch(0.18 0.01 0);
   --ring: oklch(0.55 0.18 15);
   
   --radius: 0.375rem;
+  
+  --font-sans: IBM Plex Sans;
+  
+  --font-serif: IBM Plex Serif;
+  
+  --font-mono: "IBM Plex Mono";
 }
 
 @theme {
@@ -823,4 +829,7 @@
   backdrop-filter: blur(40px) saturate(1.5) contrast(1.2);
   -webkit-backdrop-filter: blur(40px) saturate(1.5) contrast(1.2);
   border: 1px solid oklch(0.25 0.03 0 / 0.4);
+}
+body{
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
