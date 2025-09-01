@@ -40,10 +40,15 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     if (!formData.username || !formData.email) return
+
+    setIsLoading(true)
+
+    // Simulate authentication delay
+    await new Promise(resolve => setTimeout(resolve, 2000))
 
     if (isSignUp) {
       // Check if user already exists
@@ -54,6 +59,7 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
       if (existingUser) {
         // User exists, log them in
         onLogin(existingUser)
+        setIsLoading(false)
         return
       }
 
@@ -83,8 +89,12 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
       } else {
         // If user doesn't exist, switch to sign up
         setIsSignUp(true)
+        setIsLoading(false)
+        return
       }
     }
+    
+    setIsLoading(false)
   }
 
   return (
@@ -155,21 +165,35 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
           )}
 
           <div className="flex flex-col gap-2 pt-4">
-            <Button type="submit" className="w-full hover-red-glow">
-              {isSignUp ? 'Create Account' : 'Sign In'}
-            </Button>
-            
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-sm hover:text-accent transition-colors duration-300"
-            >
-              {isSignUp 
-                ? 'Already have an account? Sign in' 
-                : "Don't have an account? Sign up"
-              }
-            </Button>
+            {isLoading ? (
+              <div className="space-y-4">
+                <div className="flex justify-center">
+                  <HexSpinner size="md" />
+                </div>
+                <CyberProgress progress={75} showPercentage={false} />
+                <p className="text-center text-sm text-muted-foreground font-mono">
+                  {isSignUp ? 'Creating secure account...' : 'Authenticating credentials...'}
+                </p>
+              </div>
+            ) : (
+              <>
+                <Button type="submit" className="w-full hover-red-glow">
+                  {isSignUp ? 'Create Account' : 'Sign In'}
+                </Button>
+                
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setIsSignUp(!isSignUp)}
+                  className="text-sm hover:text-accent transition-colors duration-300"
+                >
+                  {isSignUp 
+                    ? 'Already have an account? Sign in' 
+                    : "Don't have an account? Sign up"
+                  }
+                </Button>
+              </>
+            )}
           </div>
         </form>
       </DialogContent>

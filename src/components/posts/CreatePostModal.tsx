@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Code, FileText, X } from '@phosphor-icons/react'
+import { HexSpinner } from '@/components/ui/loading-animations'
 import { User, Post } from '@/types/user'
 
 interface CreatePostModalProps {
@@ -33,6 +34,7 @@ export function CreatePostModal({ currentUser, onClose, onCreatePost }: CreatePo
   const [codeLanguage, setCodeLanguage] = useState('python')
   const [tags, setTags] = useState<string[]>([])
   const [newTag, setNewTag] = useState('')
+  const [isPublishing, setIsPublishing] = useState(false)
 
   const handleAddTag = (tag: string) => {
     if (tag && !tags.includes(tag)) {
@@ -45,10 +47,15 @@ export function CreatePostModal({ currentUser, onClose, onCreatePost }: CreatePo
     setTags(tags.filter(tag => tag !== tagToRemove))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     if (!content.trim()) return
+
+    setIsPublishing(true)
+    
+    // Simulate posting delay
+    await new Promise(resolve => setTimeout(resolve, 1500))
 
     const post: Post = {
       id: Date.now().toString(),
@@ -64,6 +71,7 @@ export function CreatePostModal({ currentUser, onClose, onCreatePost }: CreatePo
     }
 
     onCreatePost(post)
+    setIsPublishing(false)
   }
 
   return (
@@ -181,11 +189,18 @@ export function CreatePostModal({ currentUser, onClose, onCreatePost }: CreatePo
           </div>
 
           <div className="flex justify-end gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={onClose} disabled={isPublishing}>
               Cancel
             </Button>
-            <Button type="submit" disabled={!content.trim()}>
-              Publish Post
+            <Button type="submit" disabled={!content.trim() || isPublishing} className="hover-red-glow">
+              {isPublishing ? (
+                <div className="flex items-center gap-2">
+                  <HexSpinner size="sm" />
+                  Publishing...
+                </div>
+              ) : (
+                'Publish Post'
+              )}
             </Button>
           </div>
         </form>
