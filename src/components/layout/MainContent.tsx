@@ -16,12 +16,13 @@ import { BugBountyPlatform } from '@/components/features/BugBountyPlatform'
 import { PartnerRequests } from '@/components/partner-requests/PartnerRequests'
 import { LiveThreatMap } from '@/components/threats/LiveThreatMap'
 import { User } from '@/types/user'
+import { VirtualLabView } from '@/components/views/VirtualLabView'
 
 interface MainContentProps {
   currentUser: User
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map'
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab'
   onUserUpdate: (user: User) => void
-  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map') => void
+  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab') => void
 }
 
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
@@ -77,6 +78,9 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
           currentUser={currentUser} 
           onTabChange={(tab) => onTabChange && onTabChange(tab as any)}
         />
+      )}
+      {activeTab === 'virtual-lab' && (
+        <VirtualLabView currentUser={currentUser} />
       )}
       {activeTab === 'animations' && (
         <LoadingAnimationsDemo />

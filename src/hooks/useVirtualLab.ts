@@ -67,6 +67,10 @@ export function useVirtualLab(currentUserId: string) {
 
   function updateNotes(id: string, notes?: string) {
     const now = new Date().toISOString()
+    if (!state || !Array.isArray(state.vms)) {
+      setState({ vms: [], lastSync: now })
+      return
+    }
     setState({
       ...state,
       vms: state.vms.map(v => (v.id === id ? { ...v, notes, updatedAt: now } : v)),

@@ -1,4 +1,4 @@
-import { Shield, Home, Compass, User, Code, LogOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, Loading, Eye, Target, BugBeetle, Handshake, Globe, DesktopTower } from '@phosphor-icons/react'
+import { Shield, House, Compass, User, Code, SignOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, CircleNotch, Eye, Target, BugBeetle, Handshake, Globe, DesktopTower } from '@phosphor-icons/react'
 import { useKV } from '@github/spark/hooks'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -18,7 +18,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
   const [teamInvitations] = useKV<TeamInvitation[]>('teamInvitations', [])
   
   // Calculate total unread messages
-  const totalUnread = conversations.reduce((total, conv) => {
+  const totalUnread = (conversations ?? []).reduce((total, conv) => {
     if (conv.participants.includes(currentUser.id)) {
       return total + conv.unreadCount
     }
@@ -26,14 +26,14 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
   }, 0)
 
   // Calculate pending team invitations
-  const pendingInvitations = teamInvitations.filter(inv => 
+  const pendingInvitations = (teamInvitations ?? []).filter(inv => 
     inv.targetUserId === currentUser.id && 
     inv.status === 'pending' && 
     new Date(inv.expiresAt) > new Date()
   ).length
 
   const navigationItems = [
-    { id: 'feed' as const, label: 'Feed', icon: Home },
+  { id: 'feed' as const, label: 'Feed', icon: House },
     { id: 'threats' as const, label: 'Threat Intel', icon: Eye },
     { id: 'threat-map' as const, label: 'Threat Map', icon: Globe },
   { id: 'virtual-lab' as const, label: 'Virtual Lab', icon: DesktopTower },
@@ -47,7 +47,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
     { id: 'earnings' as const, label: 'Earnings', icon: CurrencyDollar },
     { id: 'code' as const, label: 'Code', icon: Code },
     { id: 'templates' as const, label: 'Templates', icon: FolderOpen },
-    { id: 'animations' as const, label: 'Animations', icon: Loading },
+  { id: 'animations' as const, label: 'Animations', icon: CircleNotch },
     { id: 'explore' as const, label: 'Explore', icon: Compass },
     { id: 'profile' as const, label: 'Profile', icon: User },
   ]
@@ -113,7 +113,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
           className="w-full justify-start text-muted-foreground hover:text-destructive glass-button hover-red-glow transition-all duration-300"
           onClick={onLogout}
         >
-          <LogOut className="w-5 h-5 mr-3" />
+          <SignOut className="w-5 h-5 mr-3" />
           Logout
         </Button>
       </div>

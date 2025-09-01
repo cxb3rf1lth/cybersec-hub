@@ -34,7 +34,7 @@ function App() {
   useBugBountyIntegration()
   useTeamHunts()
   useSamplePartnerRequests()
-  useUserInvitations(currentUser)
+  useUserInvitations(currentUser ?? null)
 
   const handleLogin = (user: User) => {
     setCurrentUser(user)
