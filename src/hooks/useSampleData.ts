@@ -14,6 +14,7 @@ const SAMPLE_USERS: User[] = [
   {
     id: 'user_sample_1',
     username: 'alex_hunter',
+    displayName: 'Alex Hunter',
     email: 'alex@cyberconnect.com',
     bio: 'Penetration tester with 5+ years experience in web application security',
     specializations: ['Penetration Testing', 'Bug Bounty', 'Ethical Hacking'],
@@ -27,6 +28,7 @@ const SAMPLE_USERS: User[] = [
   {
     id: 'user_sample_2',
     username: 'maya_defense',
+    displayName: 'Maya Defense',
     email: 'maya@cyberconnect.com',
     bio: 'Blue team specialist focused on incident response and threat hunting',
     specializations: ['Blue Team', 'Incident Response', 'Threat Hunting'],
@@ -40,6 +42,7 @@ const SAMPLE_USERS: User[] = [
   {
     id: 'user_sample_3',
     username: 'code_ninja',
+    displayName: 'Code Ninja',
     email: 'ninja@cyberconnect.com',
     bio: 'Malware researcher and reverse engineering expert',
     specializations: ['Malware Analysis', 'Reverse Engineering', 'Security Research'],

@@ -1,19 +1,21 @@
-import { Shield, Home, Compass, User, Code, LogOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar } from '@phosphor-icons/react'
+import { Shield, Home, Compass, User, Code, LogOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple } from '@phosphor-icons/react'
 import { useKV } from '@github/spark/hooks'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { User as UserType, Conversation } from '@/types/user'
+import { TeamInvitation } from '@/types/teams'
 
 interface SidebarProps {
   currentUser: UserType
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'earnings'
-  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'earnings') => void
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings'
+  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings') => void
   onLogout: () => void
 }
 
 export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: SidebarProps) {
   const [conversations] = useKV<Conversation[]>('conversations', [])
+  const [teamInvitations] = useKV<TeamInvitation[]>('teamInvitations', [])
   
   // Calculate total unread messages
   const totalUnread = conversations.reduce((total, conv) => {
@@ -23,9 +25,17 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
     return total
   }, 0)
 
+  // Calculate pending team invitations
+  const pendingInvitations = teamInvitations.filter(inv => 
+    inv.targetUserId === currentUser.id && 
+    inv.status === 'pending' && 
+    new Date(inv.expiresAt) > new Date()
+  ).length
+
   const navigationItems = [
     { id: 'feed' as const, label: 'Feed', icon: Home },
     { id: 'messages' as const, label: 'Messages', icon: ChatCircle, badge: totalUnread },
+    { id: 'invitations' as const, label: 'Invitations', icon: EnvelopeSimple, badge: pendingInvitations },
     { id: 'projects' as const, label: 'Projects', icon: Kanban },
     { id: 'teams' as const, label: 'Teams', icon: Users },
     { id: 'earnings' as const, label: 'Earnings', icon: CurrencyDollar },

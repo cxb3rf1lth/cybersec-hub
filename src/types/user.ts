@@ -3,6 +3,7 @@ export interface User {
   username: string
   email: string
   avatar?: string
+  displayName?: string
   bio?: string
   specializations: Specialization[]
   followers: string[]

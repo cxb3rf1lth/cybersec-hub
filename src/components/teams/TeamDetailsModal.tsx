@@ -24,9 +24,12 @@ import {
   UserPlus,
   DollarSign,
   Trophy,
-  Clock
+  Clock,
+  Mail
 } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { InviteMemberModal } from './InviteMemberModal'
+import { InvitationManagerModal } from './InvitationManagerModal'
 
 interface TeamDetailsModalProps {
   team: Team
@@ -38,6 +41,8 @@ export function TeamDetailsModal({ team, currentUser, onClose }: TeamDetailsModa
   const [activeTab, setActiveTab] = useState('overview')
   const [applications] = useKV<TeamApplication[]>('teamApplications', [])
   const [invitations] = useKV<TeamInvitation[]>('teamInvitations', [])
+  const [showInviteModal, setShowInviteModal] = useState(false)
+  const [showInvitationManager, setShowInvitationManager] = useState(false)
   
   const isMember = team.members.some(member => member.userId === currentUser.id)
   const isLeader = team.leaderId === currentUser.id
@@ -48,7 +53,10 @@ export function TeamDetailsModal({ team, currentUser, onClose }: TeamDetailsModa
   )
 
   const canManageTeam = isLeader || (currentMember && 
-    currentMember.permissions.includes('team-settings'))
+    currentMember.permissions.some(p => p === 'team-settings'))
+
+  const canInviteMembers = isLeader || (currentMember && 
+    currentMember.permissions.some(p => p === 'invite-members'))
 
   const handleJoinTeam = () => {
     if (team.applicationRequired) {
@@ -91,11 +99,23 @@ export function TeamDetailsModal({ team, currentUser, onClose }: TeamDetailsModa
                   Leave Team
                 </Button>
               )}
-              {canManageTeam && (
-                <Button variant="outline">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Manage
+              {canInviteMembers && (
+                <Button variant="outline" onClick={() => setShowInviteModal(true)}>
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Invite
                 </Button>
+              )}
+              {canManageTeam && (
+                <>
+                  <Button variant="outline" onClick={() => setShowInvitationManager(true)}>
+                    <Mail className="w-4 h-4 mr-2" />
+                    Invitations
+                  </Button>
+                  <Button variant="outline">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Manage
+                  </Button>
+                </>
               )}
             </div>
           </div>
@@ -394,6 +414,24 @@ export function TeamDetailsModal({ team, currentUser, onClose }: TeamDetailsModa
             </TabsContent>
           )}
         </Tabs>
+
+        {/* Modals */}
+        {showInviteModal && (
+          <InviteMemberModal
+            team={team}
+            currentUser={currentUser}
+            onClose={() => setShowInviteModal(false)}
+            onInvitationSent={() => {}}
+          />
+        )}
+
+        {showInvitationManager && (
+          <InvitationManagerModal
+            team={team}
+            currentUser={currentUser}
+            onClose={() => setShowInvitationManager(false)}
+          />
+        )}
       </DialogContent>
     </Dialog>
   )

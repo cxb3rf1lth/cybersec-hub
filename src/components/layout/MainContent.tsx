@@ -7,13 +7,14 @@ import { TemplatesView } from '@/components/views/TemplatesView'
 import { ProjectsView } from '@/components/views/ProjectsView'
 import { EarningsView } from '@/components/views/EarningsView'
 import { TeamsView } from '@/components/teams/TeamsView'
+import { TeamInvitationsView } from '@/components/teams/TeamInvitationsView'
 import { User } from '@/types/user'
 
 interface MainContentProps {
   currentUser: User
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'earnings'
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings'
   onUserUpdate: (user: User) => void
-  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'earnings') => void
+  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings') => void
 }
 
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
@@ -42,6 +43,9 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
       )}
       {activeTab === 'teams' && (
         <TeamsView currentUser={currentUser} />
+      )}
+      {activeTab === 'invitations' && (
+        <TeamInvitationsView currentUser={currentUser} />
       )}
       {activeTab === 'earnings' && (
         <EarningsView currentUser={currentUser} />
