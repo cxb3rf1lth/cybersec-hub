@@ -9,7 +9,7 @@ import { User } from '@/types/user'
 
 function App() {
   const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null)
-  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages'>('feed')
+  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code'>('feed')
   const [showAuthModal, setShowAuthModal] = useState(false)
 
   // Initialize sample data

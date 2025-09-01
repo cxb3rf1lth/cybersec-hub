@@ -7,8 +7,8 @@ import { User as UserType, Conversation } from '@/types/user'
 
 interface SidebarProps {
   currentUser: UserType
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages'
-  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages') => void
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code'
+  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code') => void
   onLogout: () => void
 }
 
@@ -26,6 +26,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
   const navigationItems = [
     { id: 'feed' as const, label: 'Feed', icon: Home },
     { id: 'messages' as const, label: 'Messages', icon: ChatCircle, badge: totalUnread },
+    { id: 'code' as const, label: 'Code', icon: Code },
     { id: 'explore' as const, label: 'Explore', icon: Compass },
     { id: 'profile' as const, label: 'Profile', icon: User },
   ]

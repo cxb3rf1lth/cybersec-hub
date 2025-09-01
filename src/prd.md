@@ -3,32 +3,45 @@
 ## Core Purpose & Success
 
 ### Mission Statement
-CyberConnect is a professional social network designed specifically for cybersecurity experts to connect, collaborate, share knowledge, and advance their careers through secure real-time communication and code sharing.
+CyberConnect is a professional social network designed specifically for cybersecurity experts to connect, collaborate, share knowledge, and advance their careers through secure real-time communication, comprehensive code development tools, and GitHub-like repository management.
 
 ### Success Indicators
 - Active daily conversations between security professionals
-- Regular code snippet sharing and collaboration
-- User retention through meaningful professional connections
-- Growth in specialized cybersecurity discussions and knowledge sharing
+- Regular code snippet sharing, collaborative development, and repository contributions
+- User retention through meaningful professional connections and code collaboration
+- Growth in specialized cybersecurity discussions, knowledge sharing, and open-source security tools
+- Successful code repository management with version control and collaborative features
 
 ### Experience Qualities
-- **Professional**: Clean, focused interface that respects users' expertise
-- **Secure**: Communication platform that security professionals can trust
-- **Collaborative**: Seamless knowledge and code sharing capabilities
+- **Professional**: Clean, focused interface that respects users' expertise and development workflows
+- **Secure**: Communication and code sharing platform that security professionals can trust
+- **Collaborative**: Seamless knowledge sharing, code development, and repository management capabilities
 
 ## Project Classification & Approach
 
 ### Complexity Level
-Light Application with advanced messaging and networking features
-- Multiple interconnected features (profiles, messaging, discovery)
+Complex Application with advanced messaging, networking, and comprehensive code development features
+- Multiple interconnected features (profiles, messaging, discovery, code editing)
 - Real-time messaging with code sharing capabilities
+- Full repository management with version control, issues, and pull requests
 - User relationship management (following/followers)
 - Content discovery and algorithmic matching
+- GitHub-like code collaboration tools
 
 ### Primary User Activity
-**Interacting** - Users engage in direct communication, share expertise, and build professional networks within the cybersecurity community.
+**Creating & Interacting** - Users engage in direct communication, develop and share code through repositories, collaborate on security tools, and build professional networks within the cybersecurity community.
 
 ## Essential Features
+
+### GitHub-like Code Repository System
+**What it does**: Complete repository management with file tree navigation, code editing, version control, branches, commits, issues, and pull requests
+**Why it matters**: Enables cybersecurity professionals to develop, share, and collaborate on security tools, scripts, and research in a familiar Git-like environment
+**Success criteria**: Users can create repositories, edit code with syntax highlighting, manage issues, create pull requests, and collaborate on security tools
+
+### Advanced Code Editor
+**What it does**: Full-featured code editor with syntax highlighting for 15+ languages, real-time collaboration, file management, and code execution capabilities
+**Why it matters**: Provides a professional development environment for creating security tools, scripts, and proof-of-concept exploits
+**Success criteria**: Users can edit code with full syntax highlighting, share editing sessions, save/load files, and execute code safely
 
 ### Real-Time Messaging System
 **What it does**: Direct message communication between users with support for text and code snippets
@@ -41,28 +54,28 @@ Light Application with advanced messaging and networking features
 **Success criteria**: Users can filter by specializations and initiate conversations with discovered professionals
 
 ### Professional Profiles
-**What it does**: Detailed profiles showcasing cybersecurity specializations, bio, and expertise areas
+**What it does**: Detailed profiles showcasing cybersecurity specializations, bio, expertise areas, and contributed repositories
 **Why it matters**: Establishes professional credibility and helps users find the right experts for collaboration
-**Success criteria**: Profiles clearly communicate user expertise and enable professional networking
+**Success criteria**: Profiles clearly communicate user expertise and showcase code contributions
 
 ### Feed & Content Sharing
-**What it does**: Timeline for sharing security insights, code snippets, and professional updates
+**What it does**: Timeline for sharing security insights, code snippets, repository updates, and professional updates
 **Why it matters**: Creates a knowledge-sharing community where professionals can learn from each other
 **Success criteria**: Users regularly share and engage with cybersecurity-related content
 
 ## Design Direction
 
 ### Visual Tone & Identity
-**Emotional Response**: The design should evoke trust, professionalism, and technical sophistication while maintaining approachability for collaboration.
+**Emotional Response**: The design should evoke trust, professionalism, and technical sophistication while maintaining approachability for collaboration and development work.
 
-**Design Personality**: Professional yet approachable - balancing the serious nature of cybersecurity work with the collaborative spirit of a learning community.
+**Design Personality**: Professional yet approachable - balancing the serious nature of cybersecurity work with the collaborative spirit of a learning and development community.
 
-**Visual Metaphors**: Digital security elements (shields, locks, networks) used subtly, with emphasis on clean code aesthetics and terminal-inspired typography.
+**Visual Metaphors**: Digital security elements (shields, locks, networks) used subtly, with emphasis on clean code aesthetics, terminal-inspired typography, and familiar version control interfaces.
 
-**Simplicity Spectrum**: Minimal interface that doesn't distract from content and conversations, with progressive disclosure of advanced features.
+**Simplicity Spectrum**: Minimal interface that doesn't distract from code and conversations, with progressive disclosure of advanced development features.
 
 ### Color Strategy
-**Color Scheme Type**: Custom dark palette inspired by terminal interfaces and security tools
+**Color Scheme Type**: Custom dark palette inspired by terminal interfaces, code editors, and security tools
 
 **Primary Color**: Deep purple-blue (oklch(0.45 0.15 264)) - conveys trust and technical expertise
 **Secondary Colors**: Dark grays and muted blues for interface elements
@@ -95,13 +108,21 @@ Light Application with advanced messaging and networking features
 ### Visual Hierarchy & Layout
 **Attention Direction**: Primary actions use accent green, secondary actions use muted colors, with progressive disclosure preventing cognitive overload
 
-**White Space Philosophy**: Generous padding and margins create breathing room essential for text-heavy technical content
+**White Space Philosophy**: Generous padding and margins create breathing room essential for text-heavy technical content and code
 
-**Grid System**: 4-column responsive grid with 24px gaps, allowing for sidebar + main content layouts typical of communication apps
+**Grid System**: 4-column responsive grid with 24px gaps, allowing for sidebar + main content layouts typical of communication and development apps
 
-**Content Density**: Balanced approach - dense enough for information-rich profiles and conversations, spacious enough for comfortable reading
+**Content Density**: Balanced approach - dense enough for information-rich profiles, conversations, and code, spacious enough for comfortable reading
 
 ### UI Elements & Component Selection
+
+**Code Development Components**:
+- RepositoryList: Grid/list view of repositories with creation, search, and filtering
+- FileTree: Hierarchical file browser with expand/collapse and file type icons
+- CodeEditor: Full-featured editor with syntax highlighting, line numbers, and collaboration cursors
+- CommitHistory: Timeline of commits with file changes and diff views
+- IssueTracker: Issue creation, status management, and commenting system
+- PullRequestManager: PR creation, review, and merge workflows
 
 **Messaging Components**:
 - ConversationList: Left sidebar showing active chats with unread indicators
@@ -110,61 +131,78 @@ Light Application with advanced messaging and networking features
 
 **Navigation Components**:
 - Sidebar: Primary navigation with badge notifications for unread messages
-- TabSystem: Feed, Messages, Explore, Profile navigation
+- TabSystem: Feed, Messages, Code, Explore, Profile navigation
 
 **Profile Components**:
 - Avatar: User profile images with fallback initials
 - Badge: Specialization indicators (Red Team, Blue Team, Bug Bounty, etc.)
-- Card: Content containers for posts, user profiles, and message previews
+- Card: Content containers for posts, user profiles, repositories, and message previews
 
 **Form Components**:
-- Textarea: Multi-line input for messages with auto-resize
-- Select: Dropdown for code language selection
-- Input: Search fields with icons
-- Button: Primary, secondary, and ghost variants
+- Textarea: Multi-line input for messages and code with auto-resize
+- Select: Dropdown for code language selection and branch switching
+- Input: Search fields with icons for repositories and users
+- Button: Primary, secondary, and ghost variants for various actions
 
 ### Animation & Interaction
-**Purposeful Motion**: Subtle transitions on message sending (0.2s ease-out), smooth tab switching (0.3s ease-in-out)
+**Purposeful Motion**: Subtle transitions on message sending (0.2s ease-out), smooth tab switching (0.3s ease-in-out), file tree expansion (0.15s ease-out)
 
-**Message Feedback**: Immediate visual feedback on message send with status indicators (sent/delivered/read)
+**Code Editor Feedback**: Immediate visual feedback on code saving, syntax error highlighting, and collaborative cursor movements
 
-**Hover States**: Gentle brightening on interactive elements, ensuring accessibility
+**Repository Interaction**: Smooth transitions between file views, repository navigation, and commit history browsing
+
+**Hover States**: Gentle brightening on interactive elements, ensuring accessibility across all components
 
 ## Implementation Considerations
 
 ### Technical Architecture
 - React-based component system with TypeScript for type safety
-- Persistent storage using useKV hooks for messages and user data
-- Real-time updates through state management
+- Persistent storage using useKV hooks for messages, user data, and repositories
+- Real-time updates through state management for collaborative editing
 - Responsive design supporting desktop and mobile use
+- Git-like version control simulation for educational and collaboration purposes
 
 ### Data Storage Strategy
 - User profiles and relationships in `allUsers` array
 - Messages stored in `messages` array with conversation grouping
 - Conversations tracked in `conversations` array with metadata
+- Repositories with full file trees, commits, issues, and pull requests
+- Code editor sessions with collaborative state management
 - Persistent state across sessions using Spark KV storage
 
 ### Security Considerations
-- Message content stored locally (no external transmission)
-- User data validation on input
+- Message content and code stored locally (no external transmission)
+- User data validation on input and code content
 - Secure conversation creation and participant verification
+- Code execution in sandboxed environment (simulated for safety)
 
 ## Edge Cases & Problem Scenarios
 
 ### Empty States
+- No repositories: Welcome screen with repository creation guidance
 - No conversations: Friendly prompt to discover users and start conversations
+- No files in repository: Clean interface with file creation options
 - No messages in conversation: Clean interface with input focus
 - No users found in search: Clear messaging with search tips
+
+### Code Development Edge Cases
+- Large files: Efficient rendering and scrolling for big codebases
+- Binary files: Appropriate handling and preview limitations
+- Merge conflicts: Clear visualization and resolution tools
+- Long commit histories: Pagination and efficient loading
+- Collaborative editing conflicts: Real-time conflict resolution
 
 ### User Experience Edge Cases
 - Long messages: Proper text wrapping and scrolling
 - Code snippet overflow: Horizontal scrolling with custom scrollbars
 - Multiple conversations: Unread indicators and sorting by activity
+- Repository access permissions: Clear ownership and collaboration indicators
 
 ### Performance Considerations
 - Message list virtualization for large conversation histories
-- Efficient filtering and search for user discovery
-- Optimized re-rendering for real-time message updates
+- Code editor performance for large files with syntax highlighting
+- Efficient filtering and search for user discovery and repository browsing
+- Optimized re-rendering for real-time message updates and collaborative editing
 
 ## Accessibility & Readability
 
@@ -173,30 +211,37 @@ WCAG AA compliance achieved across all color combinations:
 - Primary text: 14.2:1 contrast ratio
 - Secondary text: 9.8:1 contrast ratio
 - Interactive elements: Minimum 4.5:1 contrast ratio
+- Code syntax highlighting: Minimum 4.5:1 contrast for all color variants
 
 ### Keyboard Navigation
-- Full keyboard accessibility for message interface
-- Tab order follows logical conversation flow
+- Full keyboard accessibility for message interface and code editor
+- Tab order follows logical conversation and development workflow
+- Keyboard shortcuts for common code editor actions (save, search, etc.)
 - Escape key closes modals and returns focus appropriately
 
 ### Screen Reader Support
-- Semantic HTML structure for conversation threads
-- ARIA labels for message status indicators
-- Clear heading hierarchy for content organization
+- Semantic HTML structure for conversation threads and file trees
+- ARIA labels for message status indicators and code syntax elements
+- Clear heading hierarchy for content organization and repository structure
 
 ## Reflection
 
 ### Unique Approach
-This solution specifically addresses the cybersecurity community's need for secure, professional communication with built-in code sharing capabilities. The dark theme and terminal-inspired design creates familiarity for security professionals while the messaging system supports both casual networking and serious technical collaboration.
+This solution specifically addresses the cybersecurity community's need for secure, professional communication with comprehensive code development capabilities. The GitHub-like repository system combined with real-time messaging creates a complete development and collaboration platform tailored for security professionals. The dark theme and terminal-inspired design creates familiarity while the integrated code editor supports both learning and serious security tool development.
 
 ### Key Assumptions
-- Security professionals prefer direct, private communication over public forums for sensitive discussions
+- Security professionals need both communication and code development in one platform
+- Git-like workflows are familiar and preferred for code collaboration
+- Real-time collaborative editing enhances remote security team productivity
 - Code sharing is a primary collaboration method in cybersecurity work
-- Professional networking in cybersecurity benefits from specialization-based discovery
-- Users value both quick casual messages and detailed technical conversations
+- Professional networking in cybersecurity benefits from showcasing code contributions
+- Users value both quick casual messages and detailed technical discussions
 
 ### Exceptional Elements
+- Integrated repository management with full GitHub-like features
+- Real-time collaborative code editing with multi-user support
 - Specialized code language support for security tools and scripts
-- Specialization-based user discovery matching security domains
-- Professional-grade messaging with read receipts and status indicators
-- Integration between discovery and communication for seamless networking
+- Combined social networking and development platform approach
+- Professional-grade messaging with code snippet support
+- Issue tracking and pull request workflows tailored for security projects
+- Seamless integration between discovery, communication, and code collaboration
