@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { BinaryRain } from '@/components/ui/loading-animations'
+import { BinaryRain, ImmersiveBinaryRain } from '@/components/ui/loading-animations'
 import { ArrowLeft, Play, Save, Share, Users, GitBranch, Clock, Download, Copy, Bug, GitCommit, History, Eye, EyeClosed } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
@@ -41,6 +41,8 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
   const [currentTheme, setCurrentTheme] = useState<'dark' | 'light'>('dark')
   const [isAutoSaving, setIsAutoSaving] = useState(false)
   const [lastAutoSave, setLastAutoSave] = useState<Date | null>(null)
+  const [isRunningCode, setIsRunningCode] = useState(false)
+  const [codeOutput, setCodeOutput] = useState<string>('')
 
   // Find the current file
   const currentFile = repository.files.find(file => file.path === filePath)
@@ -337,15 +339,26 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
 
   const handleRunCode = () => {
     const language = getLanguageFromFilePath(filePath)
+    setIsRunningCode(true)
+    setCodeOutput('')
     
-    // Simulate code execution
-    if (language === 'python') {
-      toast.success('Python code executed successfully')
-    } else if (language === 'javascript') {
-      toast.success('JavaScript code executed successfully')
-    } else {
-      toast.info(`Code execution not supported for ${language}`)
-    }
+    // Simulate code execution with binary rain effect
+    setTimeout(() => {
+      if (language === 'python') {
+        setCodeOutput('Code executed successfully!\n\nOutput:\nHello, CyberConnect!\nProcess completed with exit code 0')
+        toast.success('Python code executed successfully')
+      } else if (language === 'javascript') {
+        setCodeOutput('Code executed successfully!\n\nOutput:\nconsole.log("Secure connection established")\nProcess completed with exit code 0')
+        toast.success('JavaScript code executed successfully')
+      } else if (language === 'bash' || language === 'sh') {
+        setCodeOutput('Script executed successfully!\n\nOutput:\nInitializing security scan...\nScan complete. No vulnerabilities found.\nProcess completed with exit code 0')
+        toast.success('Bash script executed successfully')
+      } else {
+        setCodeOutput(`Compilation successful!\n\nOutput:\nCode analysis complete for ${language}\nNo syntax errors detected.\nProcess completed with exit code 0`)
+        toast.info(`Code execution completed for ${language}`)
+      }
+      setIsRunningCode(false)
+    }, 2000 + Math.random() * 1000) // Random execution time between 2-3 seconds
   }
 
   const handleShare = () => {
@@ -530,14 +543,59 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
 
   return (
     <div className="h-full flex flex-col relative">
-      {/* Background Binary Rain Effect */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-10">
-        <div className="grid grid-cols-12 gap-4 h-full p-4">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div key={i} className="flex flex-col">
-              <BinaryRain />
-            </div>
-          ))}
+      {/* Immersive Background Binary Rain Effect */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {/* Primary rain columns */}
+        <div className="absolute inset-0 opacity-15">
+          <div className="grid grid-cols-20 gap-1 h-full w-full">
+            {Array.from({ length: 20 }).map((_, i) => (
+              <div key={`primary-${i}`} className="relative h-full">
+                <BinaryRain 
+                  columns={1} 
+                  speed="normal" 
+                  density="normal" 
+                  variant="matrix"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Secondary slower rain for depth */}
+        <div className="absolute inset-0 opacity-8">
+          <div className="grid grid-cols-15 gap-2 h-full w-full">
+            {Array.from({ length: 15 }).map((_, i) => (
+              <div 
+                key={`secondary-${i}`} 
+                className="relative h-full"
+              >
+                <BinaryRain 
+                  columns={1} 
+                  speed="slow" 
+                  density="sparse" 
+                  variant="cyber"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Accent streams on edges */}
+        <div className="absolute left-0 top-0 h-full w-8 opacity-20">
+          <BinaryRain 
+            columns={2} 
+            speed="fast" 
+            density="dense" 
+            variant="cyber"
+          />
+        </div>
+        <div className="absolute right-0 top-0 h-full w-8 opacity-20">
+          <BinaryRain 
+            columns={2} 
+            speed="fast" 
+            density="dense" 
+            variant="cyber"
+          />
         </div>
       </div>
       
@@ -804,6 +862,41 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
               </Badge>
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
             </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Code execution output panel */}
+      {(isRunningCode || codeOutput) && (
+        <div className="border-t border-border bg-card">
+          <div className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-foreground">Output</h3>
+              {codeOutput && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setCodeOutput('')}
+                >
+                  Clear
+                </Button>
+              )}
+            </div>
+            
+            {isRunningCode ? (
+              <div className="bg-background rounded-lg border border-border overflow-hidden">
+                <ImmersiveBinaryRain 
+                  message="Executing code..." 
+                  className="h-32"
+                />
+              </div>
+            ) : (
+              <div className="bg-background rounded-lg border border-border p-4">
+                <pre className="text-sm font-mono text-foreground whitespace-pre-wrap">
+                  {codeOutput}
+                </pre>
+              </div>
+            )}
           </div>
         </div>
       )}

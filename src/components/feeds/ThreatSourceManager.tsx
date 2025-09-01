@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
+import { ImmersiveBinaryRain } from '@/components/ui/loading-animations'
 import { useThreatSources } from '@/hooks/useThreatSources'
 import { ThreatSource, SourceTemplate } from '@/types/threat-sources'
 import { ThreatSourceDashboard } from '@/components/feeds/ThreatSourceDashboard'
@@ -61,6 +62,7 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [showTemplateDialog, setShowTemplateDialog] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState<SourceTemplate | null>(null)
+  const [testingSourceId, setTestingSourceId] = useState<string | null>(null)
 
   // Create source form state
   const [formData, setFormData] = useState({
@@ -171,12 +173,18 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
   }
 
   const handleTestSource = async (source: ThreatSource) => {
-    const result = await testSource(source)
-    if (result.success) {
-      toast.success(result.message)
-    } else {
-      toast.error(result.message)
-    }
+    setTestingSourceId(source.id)
+    
+    // Simulate testing with binary rain effect
+    setTimeout(async () => {
+      const result = await testSource(source)
+      if (result.success) {
+        toast.success(result.message)
+      } else {
+        toast.error(result.message)
+      }
+      setTestingSourceId(null)
+    }, 2000 + Math.random() * 1000) // Random test duration 2-3 seconds
   }
 
   const handleDeleteSource = async (sourceId: string) => {
@@ -499,7 +507,7 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
               {sources.map((source) => {
                 const stats = getSourceStats(source.id)
                 return (
-                  <Card key={source.id} className="hover-border-flow transition-all duration-300">
+                  <Card key={source.id} className="hover-border-flow transition-all duration-300 relative">
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="space-y-2">
@@ -589,6 +597,16 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
                         </div>
                       )}
                     </CardContent>
+                    
+                    {/* Show testing overlay when testing this source */}
+                    {testingSourceId === source.id && (
+                      <div className="absolute inset-0 bg-background/95 backdrop-blur-sm rounded-lg">
+                        <ImmersiveBinaryRain 
+                          message="Testing threat source connection..." 
+                          className="h-full"
+                        />
+                      </div>
+                    )}
                   </Card>
                 )
               })}

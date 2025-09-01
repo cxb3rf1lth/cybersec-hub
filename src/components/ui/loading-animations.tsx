@@ -119,27 +119,70 @@ export function ScanLine({ className }: { className?: string }) {
 }
 
 // Binary rain loading effect
-export function BinaryRain({ className }: { className?: string }) {
-  const binaryChars = ['0', '1', '|', '/', '\\', '-', '_', '.', ':', ';']
+export function BinaryRain({ 
+  className, 
+  columns = 10, 
+  speed = 'normal',
+  density = 'normal',
+  variant = 'standard'
+}: { 
+  className?: string
+  columns?: number
+  speed?: 'slow' | 'normal' | 'fast'
+  density?: 'sparse' | 'normal' | 'dense'
+  variant?: 'standard' | 'matrix' | 'cyber' | 'minimal'
+}) {
+  const getChars = () => {
+    switch (variant) {
+      case 'matrix':
+        return ['0', '1', '|', '/', '\\', '-', '_', '.', ':', ';', '▋', '▌', '▍', '▎']
+      case 'cyber':
+        return ['▊', '▋', '▌', '▍', '▎', '│', '┃', '┊', '┆', '╱', '╲', '╳', '※', '◈']
+      case 'minimal':
+        return ['0', '1', '•', '·', '‧']
+      default:
+        return ['0', '1', '|', '/', '\\', '-', '_', '.', ':', ';']
+    }
+  }
+
+  const getAnimationDuration = () => {
+    switch (speed) {
+      case 'slow': return { column: '5s', char: '1.2s' }
+      case 'fast': return { column: '2s', char: '0.6s' }
+      default: return { column: '3.5s', char: '0.8s' }
+    }
+  }
+
+  const getCharCount = () => {
+    switch (density) {
+      case 'sparse': return 8
+      case 'dense': return 20
+      default: return 15
+    }
+  }
+
+  const binaryChars = getChars()
+  const { column: columnDuration, char: charDuration } = getAnimationDuration()
+  const charCount = getCharCount()
   
   return (
     <div className={cn('binary-rain-container', className)}>
-      {Array.from({ length: 10 }).map((_, i) => (
+      {Array.from({ length: columns }).map((_, i) => (
         <div
           key={i}
           className="binary-column"
           style={{ 
             animationDelay: `${i * 0.4}s`,
-            animationDuration: `${3 + Math.random() * 2}s`
+            animationDuration: columnDuration
           }}
         >
-          {Array.from({ length: 15 }).map((_, j) => (
+          {Array.from({ length: charCount }).map((_, j) => (
             <span
               key={j}
               className="binary-char"
               style={{ 
                 animationDelay: `${j * 0.15}s`,
-                animationDuration: `${0.8 + Math.random() * 0.4}s`
+                animationDuration: `${parseFloat(charDuration) + Math.random() * 0.4}s`
               }}
             >
               {binaryChars[Math.floor(Math.random() * binaryChars.length)]}
@@ -147,6 +190,90 @@ export function BinaryRain({ className }: { className?: string }) {
           ))}
         </div>
       ))}
+    </div>
+  )
+}
+
+// Immersive binary rain showcase for special areas
+export function ImmersiveBinaryRain({ 
+  className,
+  message = "Processing...",
+  showMessage = true
+}: { 
+  className?: string
+  message?: string
+  showMessage?: boolean
+}) {
+  return (
+    <div className={cn('relative w-full h-64 overflow-hidden', className)}>
+      {/* Dense matrix rain background */}
+      <div className="absolute inset-0">
+        <div className="grid grid-cols-12 gap-1 h-full w-full">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={`main-${i}`} className="relative h-full">
+              <div className="binary-rain-container immersive h-full">
+                <BinaryRain 
+                  columns={1} 
+                  speed={i % 2 === 0 ? 'normal' : 'fast'} 
+                  density="dense" 
+                  variant="matrix"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Cyber accent columns */}
+      <div className="absolute inset-0 opacity-60">
+        <div className="grid grid-cols-8 gap-2 h-full w-full">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={`cyber-${i}`} className="relative h-full">
+              <div className="binary-rain-container immersive h-full">
+                <BinaryRain 
+                  columns={1} 
+                  speed="slow" 
+                  density="normal" 
+                  variant="cyber"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Edge glow streams */}
+      <div className="absolute left-0 top-0 h-full w-16 opacity-80">
+        <div className="binary-rain-container immersive h-full">
+          <BinaryRain 
+            columns={4} 
+            speed="fast" 
+            density="dense" 
+            variant="cyber"
+          />
+        </div>
+      </div>
+      <div className="absolute right-0 top-0 h-full w-16 opacity-80">
+        <div className="binary-rain-container immersive h-full">
+          <BinaryRain 
+            columns={4} 
+            speed="fast" 
+            density="dense" 
+            variant="cyber"
+          />
+        </div>
+      </div>
+      
+      {/* Message overlay */}
+      {showMessage && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="bg-background/80 backdrop-blur-sm border border-primary/20 rounded-lg px-6 py-4">
+            <p className="text-primary font-mono font-medium terminal-cursor">
+              {message}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

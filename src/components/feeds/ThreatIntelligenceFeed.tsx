@@ -225,7 +225,7 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
         <Card className="border-primary/20">
           <CardContent className="py-8">
             <div className="flex items-center justify-center space-x-6">
-              <BinaryRain />
+              <BinaryRain columns={3} speed="fast" density="dense" variant="cyber" />
               <span className="text-primary font-medium">Updating threat intelligence feeds...</span>
             </div>
           </CardContent>
@@ -258,7 +258,65 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
   )
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      {/* Immersive Background Binary Rain Effect */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        {/* Main cascading columns */}
+        <div className="absolute inset-0 opacity-12">
+          <div className="grid grid-cols-24 gap-1 h-full w-full">
+            {Array.from({ length: 24 }).map((_, i) => (
+              <div key={`main-${i}`} className="relative h-full">
+                <BinaryRain 
+                  columns={1} 
+                  speed={i % 3 === 0 ? 'fast' : i % 3 === 1 ? 'normal' : 'slow'} 
+                  density="normal" 
+                  variant="matrix"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Slower background layer for depth */}
+        <div className="absolute inset-0 opacity-6">
+          <div className="grid grid-cols-16 gap-3 h-full w-full">
+            {Array.from({ length: 16 }).map((_, i) => (
+              <div 
+                key={`bg-${i}`} 
+                className="relative h-full"
+              >
+                <BinaryRain 
+                  columns={1} 
+                  speed="slow" 
+                  density="sparse" 
+                  variant="minimal"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Edge accent streams */}
+        <div className="absolute left-0 top-0 h-full w-12 opacity-25">
+          <BinaryRain 
+            columns={3} 
+            speed="fast" 
+            density="dense" 
+            variant="cyber"
+          />
+        </div>
+        <div className="absolute right-0 top-0 h-full w-12 opacity-25">
+          <BinaryRain 
+            columns={3} 
+            speed="fast" 
+            density="dense" 
+            variant="cyber"
+          />
+        </div>
+      </div>
+      
+      {/* Content layer */}
+      <div className="relative z-10">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -368,6 +426,7 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
           <ThreatSourceManager />
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   )
 }
