@@ -54,7 +54,7 @@ export function CreateTaskModal({ project, currentUser, onClose, onCreateTask }:
     const taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'comments'> = {
       title: formData.title.trim(),
       description: formData.description.trim(),
-      assigneeId: formData.assigneeId || undefined,
+      assigneeId: formData.assigneeId && formData.assigneeId !== 'unassigned' ? formData.assigneeId : undefined,
       status: 'todo',
       priority: formData.priority,
       dueDate: formData.dueDate || undefined,
@@ -134,7 +134,7 @@ export function CreateTaskModal({ project, currentUser, onClose, onCreateTask }:
                   <SelectValue placeholder="Unassigned" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Unassigned</SelectItem>
+                  <SelectItem value="unassigned">Unassigned</SelectItem>
                   {teamMembers.map((user) => (
                     <SelectItem key={user.id} value={user.id}>
                       <div className="flex items-center gap-2">

@@ -52,7 +52,7 @@ export function CreateProjectModal({ currentUser, teams, onClose, onCreateProjec
       type: formData.type,
       status: 'planning',
       ownerId: currentUser.id,
-      teamId: formData.teamId || currentUser.id, // Use user ID if no team selected
+      teamId: formData.teamId && formData.teamId !== 'personal' ? formData.teamId : currentUser.id, // Use user ID if no team selected or personal selected
       milestones: [],
       tasks: [],
       startDate: formData.startDate,
@@ -152,7 +152,7 @@ export function CreateProjectModal({ currentUser, teams, onClose, onCreateProjec
                     <SelectValue placeholder="Personal project" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Personal Project</SelectItem>
+                    <SelectItem value="personal">Personal Project</SelectItem>
                     {teams.map((team) => (
                       <SelectItem key={team.id} value={team.id}>
                         {team.name}
