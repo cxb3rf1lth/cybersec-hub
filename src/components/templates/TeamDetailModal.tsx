@@ -244,14 +244,17 @@ export function TeamDetailModal({ team, currentUser, onClose, onTeamUpdated }: T
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Owner</span>
                     <div className="flex items-center gap-2">
-                      {team.members.find(m => m.role === 'owner') && (
-                        <>
-                          <Avatar className="w-4 h-4">
-                            <img src={team.members.find(m => m.role === 'owner')!.avatar} alt="" />
-                          </Avatar>
-                          <span>{team.members.find(m => m.role === 'owner')!.username}</span>
-                        </>
-                      )}
+                      {(() => {
+                        const owner = team.members.find(m => m.role === 'owner')
+                        return owner ? (
+                          <>
+                            <Avatar className="w-4 h-4">
+                              <img src={owner.avatar} alt="" />
+                            </Avatar>
+                            <span>{owner.username}</span>
+                          </>
+                        ) : null
+                      })()}
                     </div>
                   </div>
                 </div>

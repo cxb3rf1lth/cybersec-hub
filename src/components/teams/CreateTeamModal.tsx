@@ -75,7 +75,12 @@ export function CreateTeamModal({ currentUser, onClose }: CreateTeamModalProps) 
     setIsSubmitting(true)
     
     try {
-      const leaderRole = teamRoles.find(role => role.id === 'team-leader')!
+      const leaderRole = teamRoles.find(role => role.id === 'team-leader')
+      
+      if (!leaderRole) {
+        toast.error('Team leader role not found. Please try again.')
+        return
+      }
       
       const currentUserMember: TeamMember = {
         id: `member-${Date.now()}`,

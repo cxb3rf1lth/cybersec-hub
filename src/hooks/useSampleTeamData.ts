@@ -130,7 +130,17 @@ export function useSampleTeamData() {
       setTeamRoles(sampleRoles)
     }
 
-    if (teams.length === 0) {
+    if (teams.length === 0 && teamRoles.length > 0) {
+      const teamLeaderRole = teamRoles.find(r => r.id === 'team-leader')
+      const seniorEngineerRole = teamRoles.find(r => r.id === 'senior-security-engineer')
+      const penTesterRole = teamRoles.find(r => r.id === 'penetration-tester')
+      const securityAnalystRole = teamRoles.find(r => r.id === 'security-analyst')
+      const securityEngineerRole = teamRoles.find(r => r.id === 'security-engineer')
+
+      if (!teamLeaderRole || !seniorEngineerRole || !penTesterRole || !securityAnalystRole || !securityEngineerRole) {
+        return
+      }
+
       const sampleTeams: Team[] = [
         {
           id: 'cyber-hawks',
@@ -146,8 +156,8 @@ export function useSampleTeamData() {
               userId: 'user-1',
               username: 'alex_hunter',
               avatar: '/src/assets/images/avatars/avatar-1.jpg',
-              role: { ...teamRoles.find(r => r.id === 'team-leader')! },
-              permissions: teamRoles.find(r => r.id === 'team-leader')!.permissions,
+              role: { ...teamLeaderRole },
+              permissions: teamLeaderRole.permissions,
               earningsPercentage: 30,
               joinedAt: '2024-01-15',
               status: 'active',
@@ -159,8 +169,8 @@ export function useSampleTeamData() {
               userId: 'user-2',
               username: 'sarah_davis',
               avatar: '/src/assets/images/avatars/avatar-2.jpg',
-              role: { ...teamRoles.find(r => r.id === 'senior-security-engineer')! },
-              permissions: teamRoles.find(r => r.id === 'senior-security-engineer')!.permissions,
+              role: { ...seniorEngineerRole },
+              permissions: seniorEngineerRole.permissions,
               earningsPercentage: 25,
               joinedAt: '2024-01-20',
               status: 'active',
@@ -172,8 +182,8 @@ export function useSampleTeamData() {
               userId: 'user-3',
               username: 'mike_chen',
               avatar: '/src/assets/images/avatars/avatar-3.jpg',
-              role: { ...teamRoles.find(r => r.id === 'penetration-tester')! },
-              permissions: teamRoles.find(r => r.id === 'penetration-tester')!.permissions,
+              role: { ...penTesterRole },
+              permissions: penTesterRole.permissions,
               earningsPercentage: 20,
               joinedAt: '2024-02-01',
               status: 'active',
@@ -212,8 +222,8 @@ export function useSampleTeamData() {
               userId: 'user-4',
               username: 'lisa_wong',
               avatar: '/src/assets/images/avatars/avatar-4.jpg',
-              role: { ...teamRoles.find(r => r.id === 'team-leader')! },
-              permissions: teamRoles.find(r => r.id === 'team-leader')!.permissions,
+              role: { ...teamLeaderRole },
+              permissions: teamLeaderRole.permissions,
               earningsPercentage: 28,
               joinedAt: '2024-02-10',
               status: 'active',
@@ -225,8 +235,8 @@ export function useSampleTeamData() {
               userId: 'user-5',
               username: 'david_kim',
               avatar: '/src/assets/images/avatars/avatar-5.jpg',
-              role: { ...teamRoles.find(r => r.id === 'security-analyst')! },
-              permissions: teamRoles.find(r => r.id === 'security-analyst')!.permissions,
+              role: { ...securityAnalystRole },
+              permissions: securityAnalystRole.permissions,
               earningsPercentage: 18,
               joinedAt: '2024-02-15',
               status: 'active',
@@ -265,8 +275,8 @@ export function useSampleTeamData() {
               userId: 'user-6',
               username: 'emma_rodriguez',
               avatar: '/src/assets/images/avatars/avatar-6.jpg',
-              role: { ...teamRoles.find(r => r.id === 'team-leader')! },
-              permissions: teamRoles.find(r => r.id === 'team-leader')!.permissions,
+              role: { ...teamLeaderRole },
+              permissions: teamLeaderRole.permissions,
               earningsPercentage: 22,
               joinedAt: '2024-03-01',
               status: 'active',
@@ -278,8 +288,8 @@ export function useSampleTeamData() {
               userId: 'user-7',
               username: 'james_taylor',
               avatar: '/src/assets/images/avatars/avatar-7.jpg',
-              role: { ...teamRoles.find(r => r.id === 'security-engineer')! },
-              permissions: teamRoles.find(r => r.id === 'security-engineer')!.permissions,
+              role: { ...securityEngineerRole },
+              permissions: securityEngineerRole.permissions,
               earningsPercentage: 20,
               joinedAt: '2024-03-05',
               status: 'active',
@@ -291,8 +301,8 @@ export function useSampleTeamData() {
               userId: 'user-8',
               username: 'nina_patel',
               avatar: '/src/assets/images/avatars/avatar-8.jpg',
-              role: { ...teamRoles.find(r => r.id === 'security-engineer')! },
-              permissions: teamRoles.find(r => r.id === 'security-engineer')!.permissions,
+              role: { ...securityEngineerRole },
+              permissions: securityEngineerRole.permissions,
               earningsPercentage: 18,
               joinedAt: '2024-03-10',
               status: 'active',
