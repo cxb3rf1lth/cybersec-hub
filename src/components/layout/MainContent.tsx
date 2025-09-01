@@ -12,13 +12,14 @@ import { MarketplaceView } from '@/components/marketplace/MarketplaceView'
 import { LoadingAnimationsDemo } from '@/components/views/LoadingAnimationsDemo'
 import { ThreatIntelligenceFeed } from '@/components/feeds/ThreatIntelligenceFeed'
 import { BugBountyDashboard } from '@/components/bug-bounty/BugBountyDashboard'
+import { PartnerRequests } from '@/components/partner-requests/PartnerRequests'
 import { User } from '@/types/user'
 
 interface MainContentProps {
   currentUser: User
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts'
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests'
   onUserUpdate: (user: User) => void
-  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts') => void
+  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests') => void
 }
 
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
@@ -81,6 +82,11 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
           currentUser={currentUser} 
           onNavigateToMessages={handleNavigateToMessages}
         />
+      )}
+      {activeTab === 'partner-requests' && (
+        <div className="p-6">
+          <PartnerRequests currentUser={currentUser} />
+        </div>
       )}
       {activeTab === 'profile' && (
         <ProfileView currentUser={currentUser} onUserUpdate={onUserUpdate} />

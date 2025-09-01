@@ -9,6 +9,7 @@ import { useSampleMarketplaceData } from '@/hooks/useSampleMarketplaceData'
 import { useSampleThreatSources } from '@/hooks/useSampleThreatSources'
 import { useBugBountyPlatforms } from '@/hooks/useBugBountyPlatforms'
 import { useTeamHunts } from '@/hooks/useTeamHunts'
+import { useSamplePartnerRequests } from '@/hooks/useSamplePartnerRequests'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MainContent } from '@/components/layout/MainContent'
 import { AuthModal } from '@/components/auth/AuthModal'
@@ -17,7 +18,7 @@ import { User } from '@/types/user'
 
 function App() {
   const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null)
-  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts'>('feed')
+  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests'>('feed')
   const [showAuthModal, setShowAuthModal] = useState(false)
 
   // Initialize sample data
@@ -29,6 +30,7 @@ function App() {
   useSampleThreatSources()
   useBugBountyPlatforms()
   useTeamHunts()
+  useSamplePartnerRequests()
   useUserInvitations(currentUser)
 
   const handleLogin = (user: User) => {
