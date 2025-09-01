@@ -43,10 +43,10 @@ Complex Application with advanced messaging, networking, and comprehensive code 
 **Why it matters**: Accelerates development by providing proven starting points for common security tasks and centralized access to essential security tools, while enabling team-based development
 **Success criteria**: Users can discover, use, and contribute templates and tool collections; templates include complete setup instructions and usage examples; teams can collaborate on template development with version control
 
-### Project Management & Team Collaboration System
-**What it does**: Comprehensive project management with milestone tracking, task assignment, team formation including specialized bug bounty hacking teams, role-based permissions, deadline management, and progress visualization
-**Why it matters**: Cybersecurity projects require coordinated team efforts with clear deliverables, especially for complex initiatives like penetration testing campaigns, bug bounty programs, and security research projects
-**Success criteria**: Teams can create projects with milestones, assign tasks with deadlines, track progress through visual dashboards, form specialized bug bounty teams, and manage multi-phase security initiatives
+### Specialized Cybersecurity Teams with Role-Based Permissions and Earnings Distribution
+**What it does**: Advanced team formation system for specialized cybersecurity teams (red teams, blue teams, purple teams, bug bounty groups, research teams, incident response, forensics, compliance, education) with comprehensive role-based permission systems, structured earnings distribution based on roles and contributions, contract management, and automated payment processing
+**Why it matters**: Cybersecurity work often requires specialized teams with clear role definitions, structured collaboration, and fair earnings distribution for contract work and bug bounty programs. Different team types have unique workflows and permission requirements
+**Success criteria**: Users can form/join specialized teams with appropriate roles (team leader, senior engineer, analyst, etc.), team leaders can manage permissions and earnings distribution, contracts can be created and tracked with automatic earnings calculation, payment distribution is transparent and role-based
 
 ### Bug Bounty Team Formation
 **What it does**: Specialized team creation for bug bounty programs with skill-based matching, reputation tracking, earnings distribution planning, and collaborative vulnerability research

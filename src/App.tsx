@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { useSampleData } from '@/hooks/useSampleData'
 import { useSampleProjectData } from '@/hooks/useSampleProjectData'
+import { useSampleTeamData } from '@/hooks/useSampleTeamData'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MainContent } from '@/components/layout/MainContent'
 import { AuthModal } from '@/components/auth/AuthModal'
@@ -16,6 +17,7 @@ function App() {
   // Initialize sample data
   useSampleData()
   useSampleProjectData()
+  useSampleTeamData()
 
   const handleLogin = (user: User) => {
     setCurrentUser(user)

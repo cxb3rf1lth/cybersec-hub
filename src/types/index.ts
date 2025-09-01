@@ -2,3 +2,4 @@
 export * from './user'
 export * from './templates'
 export * from './projects'
+export * from './teams'

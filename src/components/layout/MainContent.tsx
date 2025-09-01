@@ -5,7 +5,7 @@ import { MessagesView } from '@/components/views/MessagesView'
 import { CodeView } from '@/components/views/CodeView'
 import { TemplatesView } from '@/components/views/TemplatesView'
 import { ProjectsView } from '@/components/views/ProjectsView'
-import { TeamsView } from '@/components/views/TeamsView'
+import { TeamsView } from '@/components/teams/TeamsView'
 import { User } from '@/types/user'
 
 interface MainContentProps {

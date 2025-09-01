@@ -1,5 +1,11 @@
 import { useState } from 'react'
-import { X, Users, Target, DollarSign } from '@phosphor-icons/react'
+import { useKV } from '@github/spark/hooks'
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle 
+} from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -8,45 +14,58 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
-import { Team, User, TeamSettings } from '@/types'
+import { Team, User, TeamType, TeamMember } from '@/types'
+import { useSampleTeamData } from '@/hooks/useSampleTeamData'
+import { X } from '@phosphor-icons/react'
+import { toast } from 'sonner'
 
 interface CreateTeamModalProps {
   currentUser: User
   onClose: () => void
-  onCreateTeam: (team: Omit<Team, 'id' | 'createdAt'>) => void
 }
 
-export function CreateTeamModal({ currentUser, onClose, onCreateTeam }: CreateTeamModalProps) {
+export function CreateTeamModal({ currentUser, onClose }: CreateTeamModalProps) {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    type: 'general' as Team['type'],
-    maxMembers: 10,
-    isPublic: true,
-    requiredSkills: [] as string[],
-    autoAcceptMembers: false,
-    requireSkillVerification: false,
-    earningsDistribution: 'equal' as TeamSettings['earningsDistribution'],
-    projectApprovalRequired: true,
-    maxProjectsPerMember: 3
+    type: 'red-team' as TeamType,
+    maxMembers: 8,
+    privacy: 'public' as 'public' | 'private' | 'invite-only',
+    specialization: [] as string[],
+    applicationRequired: true,
+    minExperience: 1,
+    requiredCertifications: [] as string[],
+    location: ''
   })
-  const [skillInput, setSkillInput] = useState('')
+  const [specializationInput, setSpecializationInput] = useState('')
+  const [certificationInput, setCertificationInput] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const teamTypes = [
-    { value: 'general', label: 'General Security Team', description: 'Multi-purpose cybersecurity team' },
-    { value: 'bug-bounty', label: 'Bug Bounty Team', description: 'Specialized in vulnerability research' },
-    { value: 'research', label: 'Research Team', description: 'Security research and analysis' },
-    { value: 'development', label: 'Development Team', description: 'Security tool and application development' },
+  const { teamRoles } = useSampleTeamData()
+  const [teams, setTeams] = useKV<Team[]>('teams', [])
+
+  const teamTypes: { value: TeamType; label: string; description: string }[] = [
     { value: 'red-team', label: 'Red Team', description: 'Offensive security and penetration testing' },
-    { value: 'blue-team', label: 'Blue Team', description: 'Defensive security and incident response' }
+    { value: 'blue-team', label: 'Blue Team', description: 'Defensive security and incident response' },
+    { value: 'purple-team', label: 'Purple Team', description: 'Combined offensive and defensive operations' },
+    { value: 'bug-bounty', label: 'Bug Bounty Team', description: 'Collaborative vulnerability research' },
+    { value: 'research', label: 'Security Research', description: 'Research and analysis focused' },
+    { value: 'incident-response', label: 'Incident Response', description: 'Emergency response and forensics' },
+    { value: 'forensics', label: 'Digital Forensics', description: 'Investigation and evidence analysis' },
+    { value: 'compliance', label: 'Compliance Team', description: 'Security compliance and auditing' },
+    { value: 'education', label: 'Education Team', description: 'Training and knowledge sharing' }
   ]
 
-  const commonSkills = [
-    'Penetration Testing', 'Vulnerability Assessment', 'Network Security', 'Web Application Security',
-    'Mobile Security', 'Cloud Security', 'Incident Response', 'Digital Forensics', 'Malware Analysis',
-    'Reverse Engineering', 'Social Engineering', 'Cryptography', 'OSINT', 'Bug Bounty',
-    'Python', 'JavaScript', 'Go', 'Rust', 'C/C++', 'PowerShell', 'Bash'
+  const commonSpecializations = [
+    'penetration-testing', 'vulnerability-assessment', 'network-security', 'web-application-security',
+    'mobile-security', 'cloud-security', 'incident-response', 'digital-forensics', 'malware-analysis',
+    'reverse-engineering', 'social-engineering', 'cryptography', 'osint', 'threat-hunting',
+    'security-monitoring', 'compliance-auditing', 'risk-assessment', 'security-training'
+  ]
+
+  const commonCertifications = [
+    'CISSP', 'CISM', 'CISA', 'CEH', 'OSCP', 'GSEC', 'GCIH', 'GIAC', 'Security+', 'CySA+',
+    'SANS', 'OWASP', 'PMP', 'ITIL', 'ISO 27001'
   ]
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,71 +74,105 @@ export function CreateTeamModal({ currentUser, onClose, onCreateTeam }: CreateTe
 
     setIsSubmitting(true)
     
-    const teamSettings: TeamSettings = {
-      autoAcceptMembers: formData.autoAcceptMembers,
-      requireSkillVerification: formData.requireSkillVerification,
-      earningsDistribution: formData.earningsDistribution,
-      projectApprovalRequired: formData.projectApprovalRequired,
-      maxProjectsPerMember: formData.maxProjectsPerMember
-    }
+    try {
+      const leaderRole = teamRoles.find(role => role.id === 'team-leader')!
+      
+      const currentUserMember: TeamMember = {
+        id: `member-${Date.now()}`,
+        userId: currentUser.id,
+        username: currentUser.username,
+        avatar: currentUser.avatar,
+        role: leaderRole,
+        permissions: leaderRole.permissions,
+        earningsPercentage: leaderRole.defaultEarningsPercentage,
+        joinedAt: new Date().toISOString(),
+        status: 'active',
+        specializations: formData.specialization,
+        contribution: 100
+      }
 
-    const teamData: Omit<Team, 'id' | 'createdAt'> = {
-      name: formData.name.trim(),
-      description: formData.description.trim(),
-      type: formData.type,
-      ownerId: currentUser.id,
-      members: [], // Will be populated with owner in parent
-      projects: [],
-      requiredSkills: formData.requiredSkills,
-      maxMembers: formData.maxMembers || undefined,
-      isPublic: formData.isPublic,
-      reputation: 0,
-      totalEarnings: formData.type === 'bug-bounty' ? 0 : undefined,
-      successfulProjects: 0,
-      settings: teamSettings
-    }
+      const newTeam: Team = {
+        id: `team-${Date.now()}`,
+        name: formData.name.trim(),
+        description: formData.description.trim(),
+        type: formData.type,
+        specialization: formData.specialization,
+        status: 'active',
+        privacy: formData.privacy,
+        members: [currentUserMember],
+        maxMembers: formData.maxMembers,
+        requiredRoles: ['team-leader'],
+        leaderId: currentUser.id,
+        moderators: [],
+        totalEarnings: 0,
+        activeContracts: 0,
+        completedBounties: 0,
+        averageRating: 0,
+        createdAt: new Date().toISOString(),
+        lastActive: new Date().toISOString(),
+        verified: false,
+        tags: [],
+        location: formData.location || undefined,
+        minExperience: formData.minExperience,
+        requiredCertifications: formData.requiredCertifications,
+        applicationRequired: formData.applicationRequired
+      }
 
-    onCreateTeam(teamData)
-    setIsSubmitting(false)
+      setTeams(prev => [...prev, newTeam])
+      
+      toast.success(`Team "${formData.name}" created successfully!`)
+      onClose()
+    } catch (error) {
+      toast.error('Failed to create team')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
-  const addSkill = (skill: string) => {
-    if (skill.trim() && !formData.requiredSkills.includes(skill.trim())) {
+  const addSpecialization = (spec: string) => {
+    if (spec.trim() && !formData.specialization.includes(spec.trim())) {
       setFormData(prev => ({
         ...prev,
-        requiredSkills: [...prev.requiredSkills, skill.trim()]
+        specialization: [...prev.specialization, spec.trim()]
       }))
-      setSkillInput('')
+      setSpecializationInput('')
     }
   }
 
-  const removeSkill = (skillToRemove: string) => {
+  const removeSpecialization = (specToRemove: string) => {
     setFormData(prev => ({
       ...prev,
-      requiredSkills: prev.requiredSkills.filter(skill => skill !== skillToRemove)
+      specialization: prev.specialization.filter(spec => spec !== specToRemove)
     }))
   }
 
-  const handleSkillInputKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      addSkill(skillInput)
+  const addCertification = (cert: string) => {
+    if (cert.trim() && !formData.requiredCertifications.includes(cert.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        requiredCertifications: [...prev.requiredCertifications, cert.trim()]
+      }))
+      setCertificationInput('')
     }
+  }
+
+  const removeCertification = (certToRemove: string) => {
+    setFormData(prev => ({
+      ...prev,
+      requiredCertifications: prev.requiredCertifications.filter(cert => cert !== certToRemove)
+    }))
   }
 
   const selectedTeamType = teamTypes.find(type => type.value === formData.type)
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-card rounded-lg border border-border w-full max-w-2xl max-h-[90vh] overflow-hidden">
-        <div className="flex items-center justify-between p-6 border-b border-border">
-          <h2 className="text-xl font-semibold text-foreground">Create New Team</h2>
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            <X className="w-4 h-4" />
-          </Button>
-        </div>
+    <Dialog open onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Create New Team</DialogTitle>
+        </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
             <div>
               <Label htmlFor="name">Team Name *</Label>
@@ -145,7 +198,7 @@ export function CreateTeamModal({ currentUser, onClose, onCreateTeam }: CreateTe
 
             <div>
               <Label htmlFor="type">Team Type</Label>
-              <Select value={formData.type} onValueChange={(value: Team['type']) => 
+              <Select value={formData.type} onValueChange={(value: TeamType) => 
                 setFormData(prev => ({ ...prev, type: value }))
               }>
                 <SelectTrigger>
@@ -170,12 +223,28 @@ export function CreateTeamModal({ currentUser, onClose, onCreateTeam }: CreateTe
             </div>
 
             <div>
+              <Label>Team Privacy</Label>
+              <Select value={formData.privacy} onValueChange={(value: any) => 
+                setFormData(prev => ({ ...prev, privacy: value }))
+              }>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="public">Public - Anyone can discover and apply</SelectItem>
+                  <SelectItem value="private">Private - Hidden from public view</SelectItem>
+                  <SelectItem value="invite-only">Invite Only - Members can only join by invitation</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
               <Label htmlFor="maxMembers">Maximum Members</Label>
               <div className="space-y-2">
                 <Slider
                   value={[formData.maxMembers]}
                   onValueChange={(value) => setFormData(prev => ({ ...prev, maxMembers: value[0] }))}
-                  max={50}
+                  max={20}
                   min={2}
                   step={1}
                   className="w-full"
@@ -183,48 +252,58 @@ export function CreateTeamModal({ currentUser, onClose, onCreateTeam }: CreateTe
                 <div className="flex justify-between text-sm text-muted-foreground">
                   <span>2 members</span>
                   <span className="font-medium">{formData.maxMembers} members</span>
-                  <span>50 members</span>
+                  <span>20 members</span>
                 </div>
               </div>
             </div>
 
             <div>
-              <Label htmlFor="skills">Required Skills</Label>
+              <Label htmlFor="location">Location (Optional)</Label>
+              <Input
+                id="location"
+                value={formData.location}
+                onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                placeholder="e.g., Remote, New York, Global"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="specializations">Specializations</Label>
               <div className="space-y-3">
                 <div className="flex gap-2">
                   <Input
-                    id="skills"
-                    value={skillInput}
-                    onChange={(e) => setSkillInput(e.target.value)}
-                    onKeyPress={handleSkillInputKeyPress}
-                    placeholder="Add a required skill"
+                    id="specializations"
+                    value={specializationInput}
+                    onChange={(e) => setSpecializationInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSpecialization(specializationInput))}
+                    placeholder="Add a specialization"
                   />
-                  <Button type="button" variant="outline" onClick={() => addSkill(skillInput)}>
+                  <Button type="button" variant="outline" onClick={() => addSpecialization(specializationInput)}>
                     Add
                   </Button>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-2">
-                  {commonSkills.map((skill) => (
+                  {commonSpecializations.map((spec) => (
                     <Button
-                      key={skill}
+                      key={spec}
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() => addSkill(skill)}
-                      disabled={formData.requiredSkills.includes(skill)}
+                      onClick={() => addSpecialization(spec)}
+                      disabled={formData.specialization.includes(spec)}
                       className="justify-start text-xs"
                     >
-                      + {skill}
+                      + {spec.replace('-', ' ')}
                     </Button>
                   ))}
                 </div>
 
-                {formData.requiredSkills.length > 0 && (
+                {formData.specialization.length > 0 && (
                   <div className="flex flex-wrap gap-2">
-                    {formData.requiredSkills.map((skill) => (
-                      <Badge key={skill} variant="secondary" className="cursor-pointer" onClick={() => removeSkill(skill)}>
-                        {skill} <X className="w-3 h-3 ml-1" />
+                    {formData.specialization.map((spec) => (
+                      <Badge key={spec} variant="secondary" className="cursor-pointer" onClick={() => removeSpecialization(spec)}>
+                        {spec.replace('-', ' ')} <X className="w-3 h-3 ml-1" />
                       </Badge>
                     ))}
                   </div>
@@ -233,61 +312,82 @@ export function CreateTeamModal({ currentUser, onClose, onCreateTeam }: CreateTe
             </div>
 
             <div className="space-y-4 border-t border-border pt-4">
-              <h3 className="font-semibold text-foreground">Team Settings</h3>
+              <h3 className="font-semibold text-foreground">Requirements</h3>
               
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="isPublic">Public Team</Label>
-                  <p className="text-sm text-muted-foreground">Allow others to discover and request to join</p>
+              <div>
+                <Label htmlFor="minExperience">Minimum Experience (Years)</Label>
+                <div className="space-y-2">
+                  <Slider
+                    value={[formData.minExperience]}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, minExperience: value[0] }))}
+                    max={10}
+                    min={0}
+                    step={1}
+                    className="w-full"
+                  />
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>No requirement</span>
+                    <span className="font-medium">{formData.minExperience} years</span>
+                    <span>10+ years</span>
+                  </div>
                 </div>
-                <Switch
-                  id="isPublic"
-                  checked={formData.isPublic}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isPublic: checked }))}
-                />
+              </div>
+
+              <div>
+                <Label htmlFor="certifications">Required Certifications</Label>
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <Input
+                      id="certifications"
+                      value={certificationInput}
+                      onChange={(e) => setCertificationInput(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCertification(certificationInput))}
+                      placeholder="Add a certification"
+                    />
+                    <Button type="button" variant="outline" onClick={() => addCertification(certificationInput)}>
+                      Add
+                    </Button>
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-2">
+                    {commonCertifications.map((cert) => (
+                      <Button
+                        key={cert}
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => addCertification(cert)}
+                        disabled={formData.requiredCertifications.includes(cert)}
+                        className="justify-start text-xs"
+                      >
+                        + {cert}
+                      </Button>
+                    ))}
+                  </div>
+
+                  {formData.requiredCertifications.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {formData.requiredCertifications.map((cert) => (
+                        <Badge key={cert} variant="secondary" className="cursor-pointer" onClick={() => removeCertification(cert)}>
+                          {cert} <X className="w-3 h-3 ml-1" />
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
-                  <Label htmlFor="autoAccept">Auto-accept Members</Label>
-                  <p className="text-sm text-muted-foreground">Automatically accept join requests</p>
+                  <Label htmlFor="applicationRequired">Application Required</Label>
+                  <p className="text-sm text-muted-foreground">Require applications instead of automatic join</p>
                 </div>
                 <Switch
-                  id="autoAccept"
-                  checked={formData.autoAcceptMembers}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, autoAcceptMembers: checked }))}
+                  id="applicationRequired"
+                  checked={formData.applicationRequired}
+                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, applicationRequired: checked }))}
                 />
               </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="skillVerification">Skill Verification</Label>
-                  <p className="text-sm text-muted-foreground">Require skill verification for new members</p>
-                </div>
-                <Switch
-                  id="skillVerification"
-                  checked={formData.requireSkillVerification}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, requireSkillVerification: checked }))}
-                />
-              </div>
-
-              {formData.type === 'bug-bounty' && (
-                <div>
-                  <Label htmlFor="earnings">Earnings Distribution</Label>
-                  <Select value={formData.earningsDistribution} onValueChange={(value: TeamSettings['earningsDistribution']) => 
-                    setFormData(prev => ({ ...prev, earningsDistribution: value }))
-                  }>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="equal">Equal Split</SelectItem>
-                      <SelectItem value="contribution-based">Contribution Based</SelectItem>
-                      <SelectItem value="manual">Manual Distribution</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
             </div>
           </div>
 
@@ -300,7 +400,7 @@ export function CreateTeamModal({ currentUser, onClose, onCreateTeam }: CreateTe
             </Button>
           </div>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   )
 }
