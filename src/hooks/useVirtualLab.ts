@@ -6,7 +6,8 @@ import type { VM, VMProvisionRequest, VirtualLabState } from '@/types/virtual-la
 const STORAGE_KEY = 'virtualLabState'
 
 export function useVirtualLab(currentUserId: string) {
-  const [state, setState] = useKV<VirtualLabState>(STORAGE_KEY, { vms: [] })
+  const [stateRaw, setState] = useKV<VirtualLabState>(STORAGE_KEY, { vms: [] })
+  const state: VirtualLabState = stateRaw ?? { vms: [] }
 
   // Auto-migrate old shapes if any
   useEffect(() => {
@@ -31,23 +32,25 @@ export function useVirtualLab(currentUserId: string) {
       notes: req.notes,
       network: { protocol: 'vnc' },
     }
-    setState({ ...state, vms: [vm, ...state.vms], lastSync: now })
+  setState({ ...state, vms: [vm, ...state.vms], lastSync: now })
     // Simulate startup and console URL assignment
     setTimeout(() => {
-      setState(prev => {
-        const updated = prev.vms.map(v =>
+      setState((prev0 => {
+        const prev = prev0 ?? { vms: [] }
+        const updated: VM[] = prev.vms.map(v =>
           v.id === id
             ? {
                 ...v,
                 status: 'running',
                 updatedAt: new Date().toISOString(),
                 network: { ...v.network, ip: '127.0.0.1', port: 6080, protocol: 'vnc' },
-                consoleUrl: `/novnc?vm=${id}`,
+                consoleUrl: `/novnc.html?vm=${id}`,
               }
             : v,
         )
-        return { ...prev, vms: updated, lastSync: new Date().toISOString() }
-      })
+        const result: VirtualLabState = { ...prev, vms: updated, lastSync: new Date().toISOString() }
+        return result
+      }) as any)
     }, 1200)
     return vm
   }
@@ -61,8 +64,8 @@ export function useVirtualLab(currentUserId: string) {
   }
 
   function destroy(id: string) {
-    const now = new Date().toISOString()
-    setState({ ...state, vms: state.vms.filter(v => v.id !== id), lastSync: now })
+  const now = new Date().toISOString()
+  setState({ ...state, vms: state.vms.filter(v => v.id !== id), lastSync: now })
   }
 
   function updateNotes(id: string, notes?: string) {
@@ -86,17 +89,18 @@ export function useVirtualLab(currentUserId: string) {
       lastSync: now,
     })
     setTimeout(() => {
-      setState(prev => ({
-        ...prev,
-        vms: prev.vms.map(v => (v.id === id ? { ...v, status: finalState, updatedAt: new Date().toISOString() } : v)),
-        lastSync: new Date().toISOString(),
-      }))
+      setState((prev0 => {
+        const prev = prev0 ?? { vms: [] }
+        const updated: VM[] = prev.vms.map(v => (v.id === id ? { ...v, status: finalState, updatedAt: new Date().toISOString() } : v))
+        const result: VirtualLabState = { ...prev, vms: updated, lastSync: new Date().toISOString() }
+        return result
+      }) as any)
     }, 800)
   }
 
   return {
     vms: myVMs,
-    all: state.vms,
+  all: state.vms,
     provision,
     start,
     stop,
