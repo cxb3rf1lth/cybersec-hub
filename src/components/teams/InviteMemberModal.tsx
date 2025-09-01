@@ -174,11 +174,11 @@ export function InviteMemberModal({ team, currentUser, onClose, onInvitationSent
                               <span className="text-sm text-muted-foreground">@{user.username}</span>
                             </div>
                             <div className="flex flex-wrap gap-1 mt-1">
-                              {user.specializations.slice(0, 3).map(spec => (
+                              {user.specializations?.slice(0, 3).map(spec => (
                                 <Badge key={spec} variant="outline" className="text-xs">
                                   {spec.replace('-', ' ')}
                                 </Badge>
-                              ))}
+                              )) || []}
                             </div>
                           </div>
                         </div>

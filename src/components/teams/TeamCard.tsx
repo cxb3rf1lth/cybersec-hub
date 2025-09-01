@@ -107,12 +107,12 @@ export function TeamCard({ team, currentUser, showMemberRole = false, onClick }:
 
         {/* Specializations */}
         <div className="flex flex-wrap gap-1">
-          {team.specialization.slice(0, 3).map(spec => (
+          {team.specialization?.slice(0, 3).map(spec => (
             <Badge key={spec} variant="secondary" className="text-xs">
               {spec.replace('-', ' ')}
             </Badge>
-          ))}
-          {team.specialization.length > 3 && (
+          )) || []}
+          {team.specialization && team.specialization.length > 3 && (
             <Badge variant="secondary" className="text-xs">
               +{team.specialization.length - 3} more
             </Badge>

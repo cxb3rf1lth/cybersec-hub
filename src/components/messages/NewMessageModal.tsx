@@ -87,12 +87,12 @@ export function NewMessageModal({ currentUser, onClose, onStartConversation }: N
                     </p>
                     
                     <div className="flex flex-wrap gap-1 mt-2">
-                      {user.specializations.slice(0, 2).map((spec) => (
+                      {user.specializations?.slice(0, 2).map((spec) => (
                         <Badge key={spec} variant="secondary" className="text-xs">
                           {spec}
                         </Badge>
-                      ))}
-                      {user.specializations.length > 2 && (
+                      )) || []}
+                      {user.specializations && user.specializations.length > 2 && (
                         <Badge variant="secondary" className="text-xs">
                           +{user.specializations.length - 2}
                         </Badge>

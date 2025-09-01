@@ -148,11 +148,11 @@ export function ProfileView({ currentUser, onUserUpdate }: ProfileViewProps) {
                         <div>
                           <p className="font-semibold">{user.username}</p>
                           <div className="flex flex-wrap gap-1 mt-1">
-                            {user.specializations.slice(0, 2).map(spec => (
+                            {user.specializations?.slice(0, 2).map(spec => (
                               <Badge key={spec} variant="outline" className="text-xs">
                                 {spec}
                               </Badge>
-                            ))}
+                            )) || []}
                           </div>
                         </div>
                       </div>
@@ -181,11 +181,11 @@ export function ProfileView({ currentUser, onUserUpdate }: ProfileViewProps) {
                         <div>
                           <p className="font-semibold">{user.username}</p>
                           <div className="flex flex-wrap gap-1 mt-1">
-                            {user.specializations.slice(0, 2).map(spec => (
+                            {user.specializations?.slice(0, 2).map(spec => (
                               <Badge key={spec} variant="outline" className="text-xs">
                                 {spec}
                               </Badge>
-                            ))}
+                            )) || []}
                           </div>
                         </div>
                       </div>
