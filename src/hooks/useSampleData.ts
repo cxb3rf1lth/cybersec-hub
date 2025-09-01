@@ -20,7 +20,9 @@ const SAMPLE_USERS: User[] = [
     followers: ['user_sample_2', 'user_sample_3'],
     following: ['user_sample_2'],
     joinedAt: '2023-01-15T10:00:00.000Z',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+    reputation: 125,
+    successfulFindings: 8
   },
   {
     id: 'user_sample_2',
@@ -31,7 +33,9 @@ const SAMPLE_USERS: User[] = [
     followers: ['user_sample_1', 'user_sample_3'],
     following: ['user_sample_1', 'user_sample_3'],
     joinedAt: '2023-02-20T14:30:00.000Z',
-    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face'
+    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+    reputation: 95,
+    successfulFindings: 3
   },
   {
     id: 'user_sample_3',
@@ -42,7 +46,9 @@ const SAMPLE_USERS: User[] = [
     followers: ['user_sample_1'],
     following: ['user_sample_2'],
     joinedAt: '2023-03-10T09:15:00.000Z',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+    reputation: 78,
+    successfulFindings: 5
   },
   {
     id: 'user_sample_4',
@@ -53,7 +59,9 @@ const SAMPLE_USERS: User[] = [
     followers: [],
     following: ['user_sample_1', 'user_sample_2'],
     joinedAt: '2023-04-05T16:45:00.000Z',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face'
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
+    reputation: 142,
+    successfulFindings: 12
   }
 ]
 

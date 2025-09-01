@@ -8,6 +8,8 @@ export interface User {
   followers: string[]
   following: string[]
   joinedAt: string
+  reputation?: number
+  successfulFindings?: number
 }
 
 export interface Post {

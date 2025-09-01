@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { useSampleData } from '@/hooks/useSampleData'
+import { useSampleProjectData } from '@/hooks/useSampleProjectData'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MainContent } from '@/components/layout/MainContent'
 import { AuthModal } from '@/components/auth/AuthModal'
@@ -9,11 +10,12 @@ import { User } from '@/types/user'
 
 function App() {
   const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null)
-  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates'>('feed')
+  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams'>('feed')
   const [showAuthModal, setShowAuthModal] = useState(false)
 
   // Initialize sample data
   useSampleData()
+  useSampleProjectData()
 
   const handleLogin = (user: User) => {
     setCurrentUser(user)
