@@ -19,7 +19,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { User } from '@/types/user'
 
 function App() {
-  const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null)
+  const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null as User | null)
   const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map'>('feed')
   const [showAuthModal, setShowAuthModal] = useState(false)
 
@@ -49,6 +49,13 @@ function App() {
   if (!currentUser) {
     return (
       <div className="min-h-screen bg-background network-pattern flex items-center justify-center relative overflow-hidden">
+        <div className="hex-grid-overlay" aria-hidden="true">
+          <div className="hex-grid">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="hex-cell" />
+            ))}
+          </div>
+        </div>
         <NeuralNetwork opacity={0.4} nodeCount={80} />
         <div className="text-center space-y-6 max-w-md mx-auto p-6 relative z-10">
           <div className="space-y-2">
@@ -77,7 +84,14 @@ function App() {
   }
 
   return (
-  <div className="min-h-screen bg-background network-pattern relative overflow-hidden">
+    <div className="min-h-screen bg-background network-pattern relative overflow-hidden">
+      <div className="hex-grid-overlay" aria-hidden>
+        <div className="hex-grid">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={i} className="hex-cell" />
+          ))}
+        </div>
+      </div>
       <NeuralNetwork opacity={0.2} nodeCount={60} />
       <div className="flex relative z-10">
         <Sidebar
