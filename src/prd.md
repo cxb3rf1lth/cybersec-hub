@@ -38,6 +38,11 @@ Complex Application with advanced messaging, networking, and comprehensive code 
 **Why it matters**: Enables cybersecurity professionals to develop, share, and collaborate on security tools, scripts, and research in a familiar Git-like environment
 **Success criteria**: Users can create repositories, edit code with syntax highlighting, manage issues, create pull requests, and collaborate on security tools
 
+### Project Templates & Tool Repositories
+**What it does**: Specialized cybersecurity project templates and curated tool repositories categorized by security domains (penetration testing, forensics, automation, etc.)
+**Why it matters**: Accelerates development by providing proven starting points for common security tasks and centralized access to essential security tools
+**Success criteria**: Users can discover, use, and contribute templates and tool collections; templates include complete setup instructions and usage examples
+
 ### Advanced Code Editor
 **What it does**: Full-featured code editor with syntax highlighting for 15+ languages, real-time collaboration, file management, and code execution capabilities
 **Why it matters**: Provides a professional development environment for creating security tools, scripts, and proof-of-concept exploits
@@ -116,6 +121,14 @@ Complex Application with advanced messaging, networking, and comprehensive code 
 
 ### UI Elements & Component Selection
 
+**Templates & Tool Repository Components**:
+- TemplateCard: Template preview with metadata, difficulty, and usage statistics
+- RepositoryCard: Tool repository showcase with tool counts and categories  
+- TemplateDetailModal: Complete template view with file browser, documentation, and usage instructions
+- RepositoryDetailModal: Tool repository browser with detailed tool information and installation guides
+- CreateTemplateModal: Multi-step template creation with file editor and metadata input
+- CreateRepositoryModal: Tool repository creation with tool specification and categorization
+
 **Code Development Components**:
 - RepositoryList: Grid/list view of repositories with creation, search, and filtering
 - FileTree: Hierarchical file browser with expand/collapse and file type icons
@@ -167,6 +180,8 @@ Complex Application with advanced messaging, networking, and comprehensive code 
 - Messages stored in `messages` array with conversation grouping
 - Conversations tracked in `conversations` array with metadata
 - Repositories with full file trees, commits, issues, and pull requests
+- Project templates with files, metadata, and usage statistics in `templates` array
+- Tool repositories with tool specifications and categories in `toolRepositories` array
 - Code editor sessions with collaborative state management
 - Persistent state across sessions using Spark KV storage
 
@@ -180,6 +195,8 @@ Complex Application with advanced messaging, networking, and comprehensive code 
 
 ### Empty States
 - No repositories: Welcome screen with repository creation guidance
+- No templates: Encouragement to create first cybersecurity template
+- No tool repositories: Getting started guide for building tool collections
 - No conversations: Friendly prompt to discover users and start conversations
 - No files in repository: Clean interface with file creation options
 - No messages in conversation: Clean interface with input focus
@@ -239,9 +256,11 @@ This solution specifically addresses the cybersecurity community's need for secu
 
 ### Exceptional Elements
 - Integrated repository management with full GitHub-like features
+- Specialized cybersecurity project templates with setup automation
+- Curated tool repositories organized by security domains
 - Real-time collaborative code editing with multi-user support
 - Specialized code language support for security tools and scripts
 - Combined social networking and development platform approach
 - Professional-grade messaging with code snippet support
 - Issue tracking and pull request workflows tailored for security projects
-- Seamless integration between discovery, communication, and code collaboration
+- Seamless integration between discovery, communication, templates, and code collaboration

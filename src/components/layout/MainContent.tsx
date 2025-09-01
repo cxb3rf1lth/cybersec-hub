@@ -3,13 +3,14 @@ import { ExploreView } from '@/components/views/ExploreView'
 import { ProfileView } from '@/components/views/ProfileView'
 import { MessagesView } from '@/components/views/MessagesView'
 import { CodeView } from '@/components/views/CodeView'
+import { TemplatesView } from '@/components/views/TemplatesView'
 import { User } from '@/types/user'
 
 interface MainContentProps {
   currentUser: User
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code'
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates'
   onUserUpdate: (user: User) => void
-  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code') => void
+  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates') => void
 }
 
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
@@ -29,6 +30,9 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
       )}
       {activeTab === 'code' && (
         <CodeView currentUser={currentUser} />
+      )}
+      {activeTab === 'templates' && (
+        <TemplatesView currentUser={currentUser} />
       )}
       {activeTab === 'explore' && (
         <ExploreView 
