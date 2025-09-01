@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Star, Download, Code, Copy, Eye } from '@phosphor-icons/react'
+import { Star, Download, Code, Copy, Eye, Users, GitBranch } from '@phosphor-icons/react'
 import { Template } from '@/types/templates'
 import { User } from '@/types/user'
 import { TemplateDetailModal } from './TemplateDetailModal'
@@ -145,6 +145,14 @@ export function TemplateCard({ template, currentUser }: TemplateCardProps) {
               <span className="text-sm text-muted-foreground">
                 {template.author.username}
               </span>
+              {template.team && (
+                <>
+                  <Badge variant="outline" className="text-xs gap-1">
+                    <Users className="w-3 h-3" />
+                    {template.team.name}
+                  </Badge>
+                </>
+              )}
             </div>
             
             <div className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -156,6 +164,12 @@ export function TemplateCard({ template, currentUser }: TemplateCardProps) {
                 <Download className="w-4 h-4" />
                 <span>{template.downloads}</span>
               </div>
+              {template.branches && template.branches.length > 1 && (
+                <div className="flex items-center gap-1">
+                  <GitBranch className="w-4 h-4" />
+                  <span>{template.branches.length}</span>
+                </div>
+              )}
             </div>
           </div>
           

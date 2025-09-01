@@ -1,7 +1,14 @@
 import { useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { User } from '@/types/user'
-import { Template, ToolRepository } from '@/types/templates'
+import { 
+  Template, 
+  ToolRepository, 
+  TeamInfo, 
+  TeamProject, 
+  TemplateBranch, 
+  TemplateCommit 
+} from '@/types/templates'
 
 const SAMPLE_USERS: User[] = [
   {
@@ -293,10 +300,168 @@ const SAMPLE_REPOSITORIES: ToolRepository[] = [
   }
 ]
 
+// Sample Teams
+const SAMPLE_TEAMS: TeamInfo[] = [
+  {
+    id: 'team_1',
+    name: 'CyberGuard Elite',
+    description: 'Advanced threat hunting and incident response specialists',
+    members: [
+      {
+        id: 'user_sample_1',
+        username: 'alex_hunter',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+        role: 'owner',
+        joinedAt: new Date('2023-01-15'),
+        lastActive: new Date('2024-01-15'),
+        permissions: {
+          canEdit: true,
+          canDelete: true,
+          canInvite: true,
+          canManagePermissions: true,
+          canCreateBranches: true,
+          canMergeBranches: true,
+          canPublish: true
+        }
+      },
+      {
+        id: 'user_sample_2',
+        username: 'maya_defense',
+        avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+        role: 'admin',
+        joinedAt: new Date('2023-02-01'),
+        lastActive: new Date('2024-01-14'),
+        permissions: {
+          canEdit: true,
+          canDelete: true,
+          canInvite: true,
+          canManagePermissions: true,
+          canCreateBranches: true,
+          canMergeBranches: true,
+          canPublish: true
+        }
+      },
+      {
+        id: 'user_sample_3',
+        username: 'code_ninja',
+        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+        role: 'developer',
+        joinedAt: new Date('2023-03-15'),
+        lastActive: new Date('2024-01-13'),
+        permissions: {
+          canEdit: true,
+          canDelete: false,
+          canInvite: false,
+          canManagePermissions: false,
+          canCreateBranches: true,
+          canMergeBranches: false,
+          canPublish: false
+        }
+      }
+    ],
+    createdAt: new Date('2023-01-15'),
+    isPublic: true
+  }
+]
+
+// Sample Team Projects
+const SAMPLE_TEAM_PROJECTS: TeamProject[] = [
+  {
+    id: 'project_1',
+    name: 'Enterprise Security Framework',
+    description: 'Comprehensive security framework for enterprise environments',
+    team: SAMPLE_TEAMS[0],
+    templates: [],
+    repositories: [],
+    createdAt: new Date('2023-06-01'),
+    isPublic: true,
+    status: 'active',
+    roadmap: [
+      {
+        id: 'milestone_1',
+        title: 'Authentication Module',
+        description: 'Implement multi-factor authentication system',
+        dueDate: new Date('2024-02-28'),
+        status: 'in_progress',
+        assignees: [SAMPLE_TEAMS[0].members[0], SAMPLE_TEAMS[0].members[1]],
+        tasks: [
+          {
+            id: 'task_1',
+            title: 'Implement OAuth integration',
+            description: 'Add OAuth 2.0 authentication flow',
+            assignee: SAMPLE_TEAMS[0].members[0],
+            status: 'in_progress',
+            priority: 'high',
+            labels: ['authentication', 'oauth'],
+            createdAt: new Date('2024-01-10'),
+            estimatedHours: 16
+          }
+        ],
+        progress: 40
+      }
+    ]
+  }
+]
+
+// Update existing templates with collaborative features
+const COLLABORATIVE_TEMPLATES: Template[] = SAMPLE_TEMPLATES.map((template, index) => ({
+  ...template,
+  version: '1.0.0',
+  collaboration: index < 2 ? {
+    isCollaborative: true,
+    allowedUsers: SAMPLE_TEAMS[0].members.map(m => m.id),
+    permissions: SAMPLE_TEAMS[0].members.reduce((acc, member) => ({
+      ...acc,
+      [member.id]: member.role === 'owner' || member.role === 'admin' ? 'admin' : 'write'
+    }), {}),
+    requireApproval: true,
+    maxCollaborators: 10
+  } : undefined,
+  team: index < 2 ? SAMPLE_TEAMS[0] : undefined,
+  branches: index === 0 ? [
+    {
+      id: 'branch_main',
+      name: 'main',
+      description: 'Main development branch',
+      createdBy: {
+        id: 'user_sample_1',
+        username: 'alex_hunter',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
+      },
+      createdAt: new Date('2023-12-01'),
+      lastModified: new Date('2024-01-15'),
+      isMain: true,
+      commits: [
+        {
+          id: 'commit_1',
+          message: 'Add SQL injection detection improvements',
+          author: {
+            id: 'user_sample_1',
+            username: 'alex_hunter',
+            avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
+          },
+          timestamp: new Date('2024-01-15'),
+          changes: [
+            {
+              type: 'modified',
+              filePath: 'src/scanner.py',
+              linesAdded: 15,
+              linesRemoved: 3
+            }
+          ]
+        }
+      ],
+      status: 'active'
+    }
+  ] : undefined
+}))
+
 export function useSampleData() {
   const [allUsers, setAllUsers] = useKV<User[]>('allUsers', [])
   const [templates, setTemplates] = useKV<Template[]>('templates', [])
   const [repositories, setRepositories] = useKV<ToolRepository[]>('toolRepositories', [])
+  const [teams, setTeams] = useKV<TeamInfo[]>('teams', [])
+  const [teamProjects, setTeamProjects] = useKV<TeamProject[]>('teamProjects', [])
 
   useEffect(() => {
     // Only initialize sample data if no users exist
@@ -304,14 +469,35 @@ export function useSampleData() {
       setAllUsers(SAMPLE_USERS)
     }
     
-    // Initialize templates if none exist
+    // Initialize templates with collaborative features
     if (templates.length === 0) {
-      setTemplates(SAMPLE_TEMPLATES)
+      setTemplates(COLLABORATIVE_TEMPLATES)
     }
     
     // Initialize repositories if none exist  
     if (repositories.length === 0) {
       setRepositories(SAMPLE_REPOSITORIES)
     }
-  }, [allUsers.length, templates.length, repositories.length, setAllUsers, setTemplates, setRepositories])
+    
+    // Initialize teams if none exist
+    if (teams.length === 0) {
+      setTeams(SAMPLE_TEAMS)
+    }
+    
+    // Initialize team projects if none exist
+    if (teamProjects.length === 0) {
+      setTeamProjects(SAMPLE_TEAM_PROJECTS)
+    }
+  }, [
+    allUsers.length, 
+    templates.length, 
+    repositories.length, 
+    teams.length, 
+    teamProjects.length,
+    setAllUsers, 
+    setTemplates, 
+    setRepositories,
+    setTeams,
+    setTeamProjects
+  ])
 }

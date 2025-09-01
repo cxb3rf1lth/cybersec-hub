@@ -6,10 +6,11 @@ import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Star, Download, Copy, Code, FileText, List, CalendarBlank } from '@phosphor-icons/react'
+import { Star, Download, Copy, Code, FileText, List, CalendarBlank, Users, GitBranch, Edit3 } from '@phosphor-icons/react'
 import { Template } from '@/types/templates'
 import { User } from '@/types/user'
 import { CodeBlock } from '@/components/code/CodeBlock'
+import { CollaborativeEditor } from './CollaborativeEditor'
 
 interface TemplateDetailModalProps {
   template: Template
@@ -20,6 +21,7 @@ interface TemplateDetailModalProps {
 
 export function TemplateDetailModal({ template, currentUser, onClose, onUse }: TemplateDetailModalProps) {
   const [activeFileIndex, setActiveFileIndex] = useState(0)
+  const [showCollaborativeEditor, setShowCollaborativeEditor] = useState(false)
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -100,11 +102,33 @@ export function TemplateDetailModal({ template, currentUser, onClose, onUse }: T
                     <CalendarBlank className="w-4 h-4" />
                     <span>{new Date(template.updatedAt).toLocaleDateString()}</span>
                   </div>
+                  {template.branches && template.branches.length > 1 && (
+                    <div className="flex items-center gap-1">
+                      <GitBranch className="w-4 h-4" />
+                      <span>{template.branches.length} branches</span>
+                    </div>
+                  )}
+                  {template.team && (
+                    <div className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      <span>{template.team.name}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
             
             <div className="flex gap-2 ml-4">
+              {template.collaboration?.isCollaborative && (
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowCollaborativeEditor(true)}
+                  className="gap-2"
+                >
+                  <Edit3 className="w-4 h-4" />
+                  Edit Collaboratively
+                </Button>
+              )}
               <Button variant="outline">
                 <Star className="w-4 h-4 mr-2" />
                 Star
@@ -250,6 +274,19 @@ export function TemplateDetailModal({ template, currentUser, onClose, onUse }: T
           </Tabs>
         </div>
       </DialogContent>
+      
+      {/* Collaborative Editor Modal */}
+      {showCollaborativeEditor && (
+        <CollaborativeEditor
+          template={template}
+          currentUser={currentUser}
+          onClose={() => setShowCollaborativeEditor(false)}
+          onTemplateUpdated={(updatedTemplate) => {
+            // Handle template updates
+            setShowCollaborativeEditor(false)
+          }}
+        />
+      )}
     </Dialog>
   )
 }

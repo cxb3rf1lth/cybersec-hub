@@ -7,13 +7,14 @@ import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
-import { MagnifyingGlass, Plus, Star, Download, Code, FolderOpen, Filter } from '@phosphor-icons/react'
+import { MagnifyingGlass, Plus, Star, Download, Code, FolderOpen, Filter, Users } from '@phosphor-icons/react'
 import { Template, ToolRepository, TemplateSearchFilters, RepositorySearchFilters } from '@/types/templates'
 import { User } from '@/types/user'
 import { TemplateCard } from '@/components/templates/TemplateCard'
 import { RepositoryCard } from '@/components/templates/RepositoryCard'
 import { CreateTemplateModal } from '@/components/templates/CreateTemplateModal'
 import { CreateRepositoryModal } from '@/components/templates/CreateRepositoryModal'
+import { TeamDashboard } from '@/components/templates/TeamDashboard'
 
 interface TemplatesViewProps {
   currentUser: User
@@ -23,7 +24,7 @@ export function TemplatesView({ currentUser }: TemplatesViewProps) {
   const [templates] = useKV<Template[]>('templates', [])
   const [repositories] = useKV<ToolRepository[]>('toolRepositories', [])
   const [searchQuery, setSearchQuery] = useState('')
-  const [activeTab, setActiveTab] = useState<'templates' | 'repositories'>('templates')
+  const [activeTab, setActiveTab] = useState<'templates' | 'repositories' | 'teams'>('templates')
   const [showCreateTemplate, setShowCreateTemplate] = useState(false)
   const [showCreateRepository, setShowCreateRepository] = useState(false)
   const [templateFilters, setTemplateFilters] = useState<TemplateSearchFilters>({
@@ -166,9 +167,9 @@ export function TemplatesView({ currentUser }: TemplatesViewProps) {
           />
         </div>
 
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'templates' | 'repositories')}>
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'templates' | 'repositories' | 'teams')}>
           <div className="flex items-center justify-between">
-            <TabsList className="grid w-fit grid-cols-2">
+            <TabsList className="grid w-fit grid-cols-3">
               <TabsTrigger value="templates" className="flex items-center gap-2">
                 <Code className="w-4 h-4" />
                 Templates ({filteredTemplates.length})
@@ -176,6 +177,10 @@ export function TemplatesView({ currentUser }: TemplatesViewProps) {
               <TabsTrigger value="repositories" className="flex items-center gap-2">
                 <FolderOpen className="w-4 h-4" />
                 Repositories ({filteredRepositories.length})
+              </TabsTrigger>
+              <TabsTrigger value="teams" className="flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                Teams
               </TabsTrigger>
             </TabsList>
             
@@ -319,6 +324,10 @@ export function TemplatesView({ currentUser }: TemplatesViewProps) {
                 ))}
               </div>
             )}
+          </TabsContent>
+
+          <TabsContent value="teams" className="mt-6">
+            <TeamDashboard currentUser={currentUser} />
           </TabsContent>
         </Tabs>
       </div>
