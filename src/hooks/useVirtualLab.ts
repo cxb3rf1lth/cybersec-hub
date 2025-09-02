@@ -77,12 +77,12 @@ export function useVirtualLab(currentUserId: string) {
   }
 
   function destroy(id: string) {
-  const now = new Date().toISOString()
-  setState({ ...state, vms: state.vms.filter(v => v.id !== id), lastSync: now })
+    const now = new Date().toISOString()
+    setState({ ...state, vms: state.vms.filter(v => v.id !== id), lastSync: now })
   }
 
-      return
-    }
+  function updateNotes(id: string, notes: string) {
+    const now = new Date().toISOString()
     setState({
       ...state,
       vms: state.vms.map(v => (v.id === id ? { ...v, notes, updatedAt: now } : v)),
