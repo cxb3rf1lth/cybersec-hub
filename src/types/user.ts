@@ -11,6 +11,89 @@ export interface User {
   joinedAt: string
   reputation?: number
   successfulFindings?: number
+  status?: UserStatus
+  badges?: SecurityBadge[]
+  certifications?: SecurityCertification[]
+  workHistory?: WorkExperience[]
+  securityClearance?: SecurityClearance
+}
+
+export interface UserStatus {
+  type: 'available' | 'busy' | 'away' | 'in-meeting' | 'on-hunt' | 'analyzing' | 'offline'
+  customMessage?: string
+  lastSeen?: string
+  isActivelyHunting?: boolean
+  currentProject?: string
+}
+
+export interface SecurityBadge {
+  id: string
+  type: BadgeType
+  name: string
+  description: string
+  icon: string
+  earnedAt: string
+  rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
+  metadata?: {
+    platform?: string
+    amount?: number
+    severity?: 'low' | 'medium' | 'high' | 'critical'
+    cveId?: string
+    bountyValue?: number
+    targetCompany?: string
+  }
+}
+
+export type BadgeType = 
+  | 'first-blood'
+  | 'hall-of-fame'
+  | 'bug-hunter'
+  | 'critical-finder'
+  | 'bounty-master'
+  | 'researcher'
+  | 'collaborator'
+  | 'mentor'
+  | 'community-leader'
+  | 'cve-publisher'
+  | 'zero-day'
+  | 'methodology-master'
+  | 'tool-creator'
+  | 'conference-speaker'
+  | 'certified-expert'
+  | 'team-player'
+  | 'rapid-responder'
+  | 'documentation-pro'
+  | 'knowledge-sharer'
+  | 'platform-champion'
+
+export interface SecurityCertification {
+  id: string
+  name: string
+  organization: string
+  dateEarned: string
+  expiryDate?: string
+  credentialId?: string
+  verificationUrl?: string
+  level: 'entry' | 'intermediate' | 'expert' | 'master'
+  category: 'penetration-testing' | 'incident-response' | 'forensics' | 'compliance' | 'cloud-security' | 'governance' | 'general'
+}
+
+export interface WorkExperience {
+  id: string
+  company: string
+  role: string
+  startDate: string
+  endDate?: string
+  description?: string
+  specializations: Specialization[]
+  isVerified: boolean
+}
+
+export interface SecurityClearance {
+  level: 'none' | 'confidential' | 'secret' | 'top-secret'
+  country: string
+  isActive: boolean
+  expiryDate?: string
 }
 
 export interface Post {

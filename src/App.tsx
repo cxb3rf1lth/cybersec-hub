@@ -11,6 +11,7 @@ import { useBugBountyPlatforms } from '@/hooks/useBugBountyPlatforms'
 import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
 import { useTeamHunts } from '@/hooks/useTeamHunts'
 import { useSamplePartnerRequests } from '@/hooks/useSamplePartnerRequests'
+import { useSampleStatusData } from '@/hooks/useSampleStatusData'
 import { useTheme } from '@/hooks/useTheme'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MainContent } from '@/components/layout/MainContent'
@@ -36,6 +37,7 @@ function App() {
   useBugBountyIntegration()
   useTeamHunts()
   useSamplePartnerRequests()
+  useSampleStatusData()
   useUserInvitations(currentUser ?? null)
   
   // Initialize theme system

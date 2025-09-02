@@ -23,7 +23,60 @@ const SAMPLE_USERS: User[] = [
     joinedAt: '2023-01-15T10:00:00.000Z',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
     reputation: 125,
-    successfulFindings: 8
+    successfulFindings: 8,
+    status: {
+      type: 'on-hunt',
+      customMessage: 'Analyzing HackerOne targets',
+      isActivelyHunting: true,
+      currentProject: 'Web App Pentest'
+    },
+    badges: [
+      {
+        id: 'badge1',
+        type: 'first-blood',
+        name: 'First Blood',
+        description: 'First to report a critical vulnerability on a major platform',
+        icon: '🩸',
+        earnedAt: '2024-01-15',
+        rarity: 'epic',
+        metadata: {
+          platform: 'HackerOne',
+          severity: 'critical',
+          bountyValue: 5000,
+          targetCompany: 'TechCorp'
+        }
+      },
+      {
+        id: 'badge2',
+        type: 'critical-finder',
+        name: 'Critical Hunter',
+        description: 'Found 10+ critical vulnerabilities',
+        icon: '⚡',
+        earnedAt: '2024-03-10',
+        rarity: 'rare',
+        metadata: {
+          amount: 12,
+          severity: 'critical'
+        }
+      }
+    ],
+    certifications: [
+      {
+        id: 'cert1',
+        name: 'OSCP',
+        organization: 'Offensive Security',
+        dateEarned: '2023-06-15',
+        credentialId: 'OS-12345',
+        level: 'expert',
+        category: 'penetration-testing'
+      }
+    ],
+    securityClearance: {
+      level: 'secret',
+      country: 'US',
+      isActive: true,
+      expiryDate: '2025-06-15'
+    }
   },
   {
     id: 'user_sample_2',
@@ -37,7 +90,35 @@ const SAMPLE_USERS: User[] = [
     joinedAt: '2023-02-20T14:30:00.000Z',
     avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
     reputation: 95,
-    successfulFindings: 3
+    successfulFindings: 3,
+    status: {
+      type: 'available',
+      customMessage: 'Ready for collaboration',
+      isActivelyHunting: false
+    },
+    badges: [
+      {
+        id: 'badge4',
+        type: 'collaborator',
+        name: 'Team Player',
+        description: 'Collaborated on 5+ successful team hunts',
+        icon: '🤝',
+        earnedAt: '2024-02-15',
+        rarity: 'rare'
+      }
+    ],
+    certifications: [
+      {
+        id: 'cert3',
+        name: 'CISSP',
+        organization: 'ISC²',
+        dateEarned: '2023-09-20',
+        expiryDate: '2026-09-20',
+        credentialId: 'ISC2-11111',
+        level: 'expert',
+        category: 'general'
+      }
+    ]
   },
   {
     id: 'user_sample_3',
@@ -51,7 +132,47 @@ const SAMPLE_USERS: User[] = [
     joinedAt: '2023-03-10T09:15:00.000Z',
     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
     reputation: 78,
-    successfulFindings: 5
+    successfulFindings: 5,
+    status: {
+      type: 'analyzing',
+      customMessage: 'Deep diving into binary analysis',
+      currentProject: 'Malware Research'
+    },
+    badges: [
+      {
+        id: 'badge6',
+        type: 'cve-publisher',
+        name: 'CVE Publisher',
+        description: 'Published a CVE',
+        icon: '🛡️',
+        earnedAt: '2024-01-05',
+        rarity: 'epic',
+        metadata: {
+          cveId: 'CVE-2024-1234'
+        }
+      },
+      {
+        id: 'badge7',
+        type: 'zero-day',
+        name: 'Zero Day',
+        description: 'Discovered a zero-day vulnerability',
+        icon: '💀',
+        earnedAt: '2024-03-01',
+        rarity: 'legendary'
+      }
+    ],
+    certifications: [
+      {
+        id: 'cert4',
+        name: 'GCIH',
+        organization: 'GIAC',
+        dateEarned: '2023-08-05',
+        expiryDate: '2027-08-05',
+        credentialId: 'GIAC-22222',
+        level: 'intermediate',
+        category: 'incident-response'
+      }
+    ]
   },
   {
     id: 'user_sample_4',
@@ -64,7 +185,53 @@ const SAMPLE_USERS: User[] = [
     joinedAt: '2023-04-05T16:45:00.000Z',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
     reputation: 142,
-    successfulFindings: 12
+    successfulFindings: 12,
+    status: {
+      type: 'busy',
+      customMessage: 'In critical vulnerability analysis',
+      currentProject: 'CVE Research'
+    },
+    badges: [
+      {
+        id: 'badge8',
+        type: 'mentor',
+        name: 'Mentor',
+        description: 'Mentored 10+ junior researchers',
+        icon: '👨‍🏫',
+        earnedAt: '2024-02-10',
+        rarity: 'rare'
+      },
+      {
+        id: 'badge11',
+        type: 'bounty-master',
+        name: 'Bounty Master',
+        description: 'Earned $100K+ in bounties',
+        icon: '👑',
+        earnedAt: '2024-03-15',
+        rarity: 'legendary',
+        metadata: {
+          bountyValue: 125000
+        }
+      }
+    ],
+    certifications: [
+      {
+        id: 'cert6',
+        name: 'CISM',
+        organization: 'ISACA',
+        dateEarned: '2023-05-18',
+        expiryDate: '2026-05-18',
+        credentialId: 'ISACA-44444',
+        level: 'master',
+        category: 'governance'
+      }
+    ],
+    securityClearance: {
+      level: 'top-secret',
+      country: 'US',
+      isActive: true,
+      expiryDate: '2025-05-18'
+    }
   }
 ]
 

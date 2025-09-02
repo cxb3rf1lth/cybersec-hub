@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { UserCard } from '@/components/ui/UserCard'
 import { Search, Users, Code, TrendingUp, ChatCircle } from '@phosphor-icons/react'
 import { User, Post, Specialization, Conversation } from '@/types/user'
 
@@ -116,7 +117,7 @@ export function ExploreView({ currentUser, onNavigateToMessages }: ExploreViewPr
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <Card>
+            <Card className="glass-card">
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5" />
@@ -131,28 +132,20 @@ export function ExploreView({ currentUser, onNavigateToMessages }: ExploreViewPr
                 ) : (
                   <div className="space-y-4">
                     {filteredUsers.slice(0, 10).map(user => (
-                      <div key={user.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                        <div className="flex items-center gap-3">
-                          <Avatar>
-                            <AvatarImage src={user.avatar} />
-                            <AvatarFallback>{user.username[0].toUpperCase()}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-semibold">{user.username}</p>
-                            <div className="flex flex-wrap gap-1 mt-1">
-                              {user.specializations?.slice(0, 2).map(spec => (
-                                <Badge key={spec} variant="outline" className="text-xs">
-                                  {spec}
-                                </Badge>
-                              )) || []}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
+                      <div key={user.id} className="relative">
+                        <UserCard 
+                          user={user} 
+                          variant="compact" 
+                          showBadges={true}
+                          showStatus={true}
+                          className="hover:shadow-lg transition-all duration-300"
+                        />
+                        <div className="absolute top-4 right-4 flex items-center gap-2">
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => handleStartMessage(user.id)}
+                            className="glass-button"
                           >
                             <ChatCircle className="w-4 h-4" />
                           </Button>
@@ -160,6 +153,7 @@ export function ExploreView({ currentUser, onNavigateToMessages }: ExploreViewPr
                             size="sm"
                             variant={following.includes(user.id) ? 'secondary' : 'default'}
                             onClick={() => handleFollow(user.id)}
+                            className="hover-red-glow"
                           >
                             {following.includes(user.id) ? 'Following' : 'Follow'}
                           </Button>
