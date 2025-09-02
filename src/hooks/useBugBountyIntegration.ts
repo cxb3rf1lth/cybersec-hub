@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
+import { apis, validateAPIKey } from '@/lib/api'
+import { toast } from 'sonner'
 
 export interface BugBountyProgram {
   id: string
@@ -103,231 +105,419 @@ export function useBugBountyIntegration() {
   const [integrations, setIntegrations] = useKV<PlatformIntegration[]>('platformIntegrations', [])
   const [isLoading, setIsLoading] = useState(false)
   const [lastUpdate, setLastUpdate] = useState<string>('')
+  const [apiKeys, setApiKeys] = useKV<Record<string, string>>('apiKeys', {})
 
-  // Initialize sample data
+  // Initialize real-time data streaming
   useEffect(() => {
-    if (programs.length === 0) {
-      initializeSampleData()
+    initializeIntegrations()
+    startRealTimeUpdates()
+    return () => {
+      apis.realtime.disconnect()
     }
-    startLiveDataStream()
   }, [])
 
-  const initializeSampleData = () => {
-    const samplePrograms: BugBountyProgram[] = [
-      {
-        id: 'hp-1',
-        platform: 'hackerone',
-        name: 'Shopify Bug Bounty',
-        company: 'Shopify',
-        bountyRange: '$500 - $25,000',
-        status: 'active',
-        scope: ['*.shopify.com', 'api.shopify.com', 'partners.shopify.com'],
-        type: 'web',
-        lastUpdated: new Date().toISOString(),
-        rewards: {
-          critical: '$15,000 - $25,000',
-          high: '$5,000 - $15,000',
-          medium: '$1,000 - $5,000',
-          low: '$500 - $1,000'
-        },
-        url: 'https://hackerone.com/shopify',
-        description: 'Help secure the commerce platform that powers millions of businesses worldwide.',
-        targets: ['shopify.com', 'shopifypartners.com', 'shopify.dev'],
-        outOfScope: ['*.blog.shopify.com', 'status.shopify.com'],
-        disclosed: 1247,
-        verified: 892
-      },
-      {
-        id: 'bc-1',
-        platform: 'bugcrowd',
-        name: 'Tesla Motors',
-        company: 'Tesla',
-        bountyRange: '$100 - $15,000',
-        status: 'active',
-        scope: ['*.tesla.com', 'owner-api.teslamotors.com'],
-        type: 'web',
-        lastUpdated: new Date().toISOString(),
-        rewards: {
-          critical: '$7,500 - $15,000',
-          high: '$2,500 - $7,500',
-          medium: '$500 - $2,500',
-          low: '$100 - $500'
-        },
-        url: 'https://bugcrowd.com/tesla',
-        description: 'Help us secure the future of sustainable transport.',
-        targets: ['tesla.com', 'teslamotors.com'],
-        outOfScope: ['*.blog.tesla.com'],
-        disclosed: 623,
-        verified: 456
-      },
-      {
-        id: 'int-1',
-        platform: 'intigriti',
-        name: 'European Banking Corp',
-        company: 'EBC',
-        bountyRange: '€200 - €10,000',
-        status: 'active',
-        scope: ['*.ebc-bank.eu', 'mobile.ebc-bank.eu'],
-        type: 'web',
-        lastUpdated: new Date().toISOString(),
-        rewards: {
-          critical: '€5,000 - €10,000',
-          high: '€1,500 - €5,000',
-          medium: '€500 - €1,500',
-          low: '€200 - €500'
-        },
-        url: 'https://app.intigriti.com/programs/ebc',
-        description: 'Secure European banking infrastructure.',
-        targets: ['ebc-bank.eu', 'api.ebc-bank.eu'],
-        outOfScope: ['careers.ebc-bank.eu'],
-        disclosed: 189,
-        verified: 134
-      }
-    ]
-
-    const sampleThreats: LiveThreatFeed[] = [
-      {
-        id: 'cve-2024-001',
-        source: 'cve',
-        title: 'Critical RCE in Apache Struts 2.5.x',
-        severity: 'critical',
-        cveId: 'CVE-2024-22234',
-        description: 'Remote code execution vulnerability in Apache Struts 2.5.x allowing attackers to execute arbitrary code.',
-        timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-        tags: ['rce', 'apache', 'struts', 'java'],
-        affectedProducts: ['Apache Struts 2.5.0-2.5.31'],
-        exploitation: 'in-the-wild',
-        references: ['https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-22234']
-      },
-      {
-        id: 'vuln-2024-002',
-        source: 'exploit-db',
-        title: 'WordPress Plugin SQLi Exploit Available',
-        severity: 'high',
-        description: 'SQL injection vulnerability in popular WordPress contact form plugin affecting 100k+ sites.',
-        timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
-        tags: ['sqli', 'wordpress', 'plugin', 'database'],
-        affectedProducts: ['Contact Form Builder 3.1.2'],
-        exploitation: 'poc-available',
-        references: ['https://exploit-db.com/exploits/51234']
-      }
-    ]
-
-    const sampleHunts: TeamHunt[] = [
-      {
-        id: 'hunt-1',
-        name: 'FinTech Security Sprint',
-        platform: 'hackerone',
-        targetCompany: 'PayFlow Inc',
-        startDate: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
-        endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toISOString(),
-        teamSize: 5,
-        currentMembers: ['user-1', 'user-2'],
-        maxMembers: 5,
-        skillsRequired: ['web-app-testing', 'api-security', 'mobile-security'],
-        bountyPool: '$50,000',
-        status: 'recruiting',
-        description: 'Team hunt focusing on payment processing security. Looking for skilled researchers.',
-        progress: {
-          vulnerabilities: 0,
-          payout: '$0',
-          leaderboard: []
-        }
-      }
-    ]
-
-    setPrograms(samplePrograms)
-    setThreatFeed(sampleThreats)
-    setTeamHunts(sampleHunts)
-    setIntegrations([
+  const initializeIntegrations = async () => {
+    // Initialize default integrations
+    const defaultIntegrations: PlatformIntegration[] = [
       {
         id: 'hackerone-int',
         name: 'HackerOne',
         type: 'bug-bounty',
-        connected: true,
-        lastSync: new Date().toISOString(),
+        connected: false,
+        lastSync: '',
         dataTypes: ['programs', 'submissions', 'payouts'],
-        rateLimits: { requests: 1000, period: 'hour', remaining: 856 }
+        rateLimits: { requests: 100, period: 'hour', remaining: 100 }
+      },
+      {
+        id: 'bugcrowd-int',
+        name: 'Bugcrowd',
+        type: 'bug-bounty',
+        connected: false,
+        lastSync: '',
+        dataTypes: ['programs', 'submissions', 'earnings'],
+        rateLimits: { requests: 1000, period: 'day', remaining: 1000 }
+      },
+      {
+        id: 'intigriti-int',
+        name: 'Intigriti',
+        type: 'bug-bounty',
+        connected: false,
+        lastSync: '',
+        dataTypes: ['programs', 'submissions'],
+        rateLimits: { requests: 500, period: 'hour', remaining: 500 }
+      },
+      {
+        id: 'yeswehack-int',
+        name: 'YesWeHack',
+        type: 'bug-bounty',
+        connected: false,
+        lastSync: '',
+        dataTypes: ['programs', 'submissions'],
+        rateLimits: { requests: 200, period: 'hour', remaining: 200 }
       },
       {
         id: 'shodan-int',
         name: 'Shodan',
         type: 'threat-intel',
-        connected: true,
-        lastSync: new Date().toISOString(),
+        connected: false,
+        lastSync: '',
         dataTypes: ['iot-devices', 'vulnerabilities', 'network-scan'],
-        rateLimits: { requests: 100, period: 'day', remaining: 78 }
+        rateLimits: { requests: 100, period: 'day', remaining: 100 }
+      },
+      {
+        id: 'projectdiscovery-int',
+        name: 'ProjectDiscovery',
+        type: 'security-tool',
+        connected: false,
+        lastSync: '',
+        dataTypes: ['nuclei-templates', 'scan-results', 'vulnerabilities'],
+        rateLimits: { requests: 1000, period: 'hour', remaining: 1000 }
+      },
+      {
+        id: 'cve-int',
+        name: 'CVE Database',
+        type: 'threat-intel',
+        connected: true, // Public API, no key required
+        lastSync: new Date().toISOString(),
+        dataTypes: ['cve-data', 'vulnerability-feeds'],
+        rateLimits: { requests: 2000, period: 'hour', remaining: 2000 }
       }
-    ])
+    ]
+
+    if (integrations.length === 0) {
+      setIntegrations(defaultIntegrations)
+    }
+
+    // Start loading real threat intelligence data
+    await loadThreatIntelligence()
   }
 
-  const startLiveDataStream = () => {
-    // Simulate live data updates
-    const interval = setInterval(() => {
-      updateThreatFeed()
-      updateProgramStats()
-      setLastUpdate(new Date().toISOString())
-    }, 30000) // Update every 30 seconds
+  const startRealTimeUpdates = () => {
+    // Connect to real-time threat intelligence feeds
+    apis.realtime.connect((data) => {
+      if (data.type === 'threat_update') {
+        handleRealTimeThreatUpdate(data.payload)
+      } else if (data.type === 'program_update') {
+        handleProgramUpdate(data.payload)
+      } else if (data.type === 'team_hunt_update') {
+        handleTeamHuntUpdate(data.payload)
+      }
+    })
+
+    // Subscribe to relevant channels
+    apis.realtime.subscribe('threat-intelligence')
+    apis.realtime.subscribe('bug-bounty-programs')
+    apis.realtime.subscribe('team-hunts')
+
+    // Set up periodic data refresh
+    const interval = setInterval(async () => {
+      await refreshAllData()
+    }, 300000) // Refresh every 5 minutes
 
     return () => clearInterval(interval)
   }
 
-  const updateThreatFeed = () => {
+  const handleRealTimeThreatUpdate = (threatData: any) => {
     const newThreat: LiveThreatFeed = {
-      id: `threat-${Date.now()}`,
-      source: ['cve', 'exploit-db', 'security-advisory'][Math.floor(Math.random() * 3)] as any,
-      title: generateThreatTitle(),
-      severity: ['critical', 'high', 'medium', 'low'][Math.floor(Math.random() * 4)] as any,
-      description: 'Newly discovered security vulnerability requiring immediate attention.',
-      timestamp: new Date().toISOString(),
-      tags: ['zero-day', 'rce', 'privilege-escalation', 'xss', 'sqli'][Math.floor(Math.random() * 5)],
-      affectedProducts: ['Various web applications'],
-      exploitation: ['in-the-wild', 'poc-available', 'theoretical'][Math.floor(Math.random() * 3)] as any,
-      references: ['https://security-advisory.example.com']
+      id: threatData.id || `threat-${Date.now()}`,
+      source: threatData.source || 'threat-intel',
+      title: threatData.title,
+      severity: threatData.severity || 'medium',
+      cveId: threatData.cve_id,
+      description: threatData.description,
+      timestamp: threatData.timestamp || new Date().toISOString(),
+      tags: threatData.tags || [],
+      affectedProducts: threatData.affected_products || [],
+      exploitation: threatData.exploitation_status || 'theoretical',
+      references: threatData.references || []
     }
 
-    setThreatFeed(current => [newThreat, ...current.slice(0, 49)]) // Keep last 50
+    setThreatFeed(current => {
+      const updated = [newThreat, ...current.slice(0, 499)] // Keep last 500 items
+      return updated
+    })
+
+    // Show notification for critical threats
+    if (threatData.severity === 'critical') {
+      toast.error(`Critical Threat Alert: ${threatData.title}`, {
+        description: 'New critical vulnerability detected',
+        duration: 10000
+      })
+    }
   }
 
-  const generateThreatTitle = () => {
-    const threats = [
-      'Zero-day RCE discovered in popular CMS',
-      'Critical authentication bypass in enterprise software',
-      'New malware campaign targeting financial institutions',
-      'Supply chain attack affects multiple organizations',
-      'Critical vulnerability in cloud infrastructure'
-    ]
-    return threats[Math.floor(Math.random() * threats.length)]
-  }
-
-  const updateProgramStats = () => {
+  const handleProgramUpdate = (programData: any) => {
     setPrograms(current => 
-      current.map(program => ({
-        ...program,
-        disclosed: program.disclosed + Math.floor(Math.random() * 3),
-        verified: program.verified + Math.floor(Math.random() * 2),
-        lastUpdated: new Date().toISOString()
-      }))
+      current.map(program => 
+        program.id === programData.id 
+          ? { ...program, ...programData, lastUpdated: new Date().toISOString() }
+          : program
+      )
     )
   }
 
-  const joinTeamHunt = (huntId: string, userId: string) => {
+  const handleTeamHuntUpdate = (huntData: any) => {
     setTeamHunts(current => 
       current.map(hunt => 
-        hunt.id === huntId && hunt.currentMembers.length < hunt.maxMembers
-          ? { ...hunt, currentMembers: [...hunt.currentMembers, userId] }
+        hunt.id === huntData.id 
+          ? { ...hunt, ...huntData }
           : hunt
       )
     )
   }
 
-  const createPartnerRequest = (request: Omit<PartnerRequest, 'id' | 'timestamp'>) => {
-    const newRequest: PartnerRequest = {
-      ...request,
-      id: `req-${Date.now()}`,
-      timestamp: new Date().toISOString()
+  const loadThreatIntelligence = async () => {
+    try {
+      setIsLoading(true)
+      
+      // Load CVE data
+      const cveData = await apis.threatIntel.getLatestCVEs(50)
+      
+      // Load ExploitDB data if available
+      let exploitData: LiveThreatFeed[] = []
+      try {
+        exploitData = await apis.threatIntel.getExploitDBItems()
+      } catch (error) {
+        console.log('ExploitDB data not available:', error)
+      }
+
+      const allThreats = [...cveData, ...exploitData]
+        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+
+      setThreatFeed(allThreats)
+      setLastUpdate(new Date().toISOString())
+    } catch (error) {
+      console.error('Failed to load threat intelligence:', error)
+      toast.error('Failed to load threat intelligence data')
+    } finally {
+      setIsLoading(false)
     }
-    setPartnerRequests(current => [newRequest, ...current])
+  }
+
+  const refreshAllData = async () => {
+    try {
+      const promises = []
+
+      // Refresh connected bug bounty platforms
+      const connectedIntegrations = integrations.filter(int => int.connected)
+      
+      for (const integration of connectedIntegrations) {
+        const apiKey = apiKeys[integration.id]
+        
+        if (integration.name === 'HackerOne' && apiKey) {
+          promises.push(loadHackerOneData(apiKey))
+        } else if (integration.name === 'Bugcrowd' && apiKey) {
+          promises.push(loadBugcrowdData(apiKey))
+        } else if (integration.name === 'Intigriti' && apiKey) {
+          promises.push(loadIntigritiData(apiKey))
+        } else if (integration.name === 'CVE Database') {
+          promises.push(loadThreatIntelligence())
+        }
+      }
+
+      await Promise.allSettled(promises)
+      setLastUpdate(new Date().toISOString())
+    } catch (error) {
+      console.error('Failed to refresh data:', error)
+    }
+  }
+
+  const loadHackerOneData = async (apiKey: string) => {
+    try {
+      apis.hackerone = new (await import('@/lib/api')).HackerOneAPI(apiKey)
+      const hackerOnePrograms = await apis.hackerone.getPrograms()
+      
+      setPrograms(current => {
+        const filtered = current.filter(p => p.platform !== 'hackerone')
+        return [...filtered, ...hackerOnePrograms]
+      })
+
+      toast.success('HackerOne data updated')
+    } catch (error) {
+      console.error('HackerOne sync failed:', error)
+      toast.error('Failed to sync HackerOne data')
+    }
+  }
+
+  const loadBugcrowdData = async (apiKey: string) => {
+    try {
+      apis.bugcrowd = new (await import('@/lib/api')).BugcrowdAPI(apiKey)
+      const bugcrowdPrograms = await apis.bugcrowd.getPrograms()
+      
+      setPrograms(current => {
+        const filtered = current.filter(p => p.platform !== 'bugcrowd')
+        return [...filtered, ...bugcrowdPrograms]
+      })
+
+      toast.success('Bugcrowd data updated')
+    } catch (error) {
+      console.error('Bugcrowd sync failed:', error)
+      toast.error('Failed to sync Bugcrowd data')
+    }
+  }
+
+  const loadIntigritiData = async (apiKey: string) => {
+    try {
+      apis.intigriti = new (await import('@/lib/api')).IntigritiAPI(apiKey)
+      const intigritiPrograms = await apis.intigriti.getPrograms()
+      
+      setPrograms(current => {
+        const filtered = current.filter(p => p.platform !== 'intigriti')
+        return [...filtered, ...intigritiPrograms]
+      })
+
+      toast.success('Intigriti data updated')
+    } catch (error) {
+      console.error('Intigriti sync failed:', error)
+      toast.error('Failed to sync Intigriti data')
+    }
+  }
+
+  const connectPlatform = async (platformId: string, apiKey?: string) => {
+    setIsLoading(true)
+    
+    try {
+      // Validate API key format
+      const platform = integrations.find(int => int.id === platformId)
+      if (!platform) {
+        throw new Error('Platform not found')
+      }
+
+      if (apiKey && !validateAPIKey(platform.name.toLowerCase(), apiKey)) {
+        throw new Error('Invalid API key format')
+      }
+
+      // Test connection by making a test API call
+      let testSuccessful = false
+      
+      if (platform.name === 'HackerOne' && apiKey) {
+        const hackerOneAPI = new (await import('@/lib/api')).HackerOneAPI(apiKey)
+        await hackerOneAPI.getPrograms()
+        testSuccessful = true
+        await loadHackerOneData(apiKey)
+      } else if (platform.name === 'Bugcrowd' && apiKey) {
+        const bugcrowdAPI = new (await import('@/lib/api')).BugcrowdAPI(apiKey)
+        await bugcrowdAPI.getPrograms()
+        testSuccessful = true
+        await loadBugcrowdData(apiKey)
+      } else if (platform.name === 'Intigriti' && apiKey) {
+        const intigritiAPI = new (await import('@/lib/api')).IntigritiAPI(apiKey)
+        await intigritiAPI.getPrograms()
+        testSuccessful = true
+        await loadIntigritiData(apiKey)
+      } else if (platform.name === 'Shodan' && apiKey) {
+        const shodanAPI = new (await import('@/lib/api')).ShodanAPI(apiKey)
+        await shodanAPI.searchVulnerabilities('vuln:')
+        testSuccessful = true
+      } else if (platform.name === 'CVE Database') {
+        testSuccessful = true // Public API
+      }
+
+      if (testSuccessful) {
+        // Update integration status
+        setIntegrations(current => 
+          current.map(integration => 
+            integration.id === platformId 
+              ? { 
+                  ...integration, 
+                  connected: true, 
+                  lastSync: new Date().toISOString(),
+                  ...(apiKey && { apiKey })
+                }
+              : integration
+          )
+        )
+
+        // Store API key securely
+        if (apiKey) {
+          setApiKeys(current => ({
+            ...current,
+            [platformId]: apiKey
+          }))
+        }
+
+        toast.success(`Successfully connected to ${platform.name}`)
+      }
+    } catch (error) {
+      console.error('Platform connection failed:', error)
+      toast.error(`Failed to connect: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const syncPlatformData = async (platformId: string) => {
+    setIsLoading(true)
+    
+    try {
+      const platform = integrations.find(int => int.id === platformId)
+      const apiKey = apiKeys[platformId]
+      
+      if (!platform?.connected) {
+        throw new Error('Platform not connected')
+      }
+
+      if (platform.name === 'HackerOne') {
+        await loadHackerOneData(apiKey)
+      } else if (platform.name === 'Bugcrowd') {
+        await loadBugcrowdData(apiKey)
+      } else if (platform.name === 'Intigriti') {
+        await loadIntigritiData(apiKey)
+      } else if (platform.name === 'CVE Database') {
+        await loadThreatIntelligence()
+      }
+
+      // Update last sync time
+      setIntegrations(current => 
+        current.map(integration => 
+          integration.id === platformId 
+            ? { ...integration, lastSync: new Date().toISOString() }
+            : integration
+        )
+      )
+
+      toast.success(`${platform.name} data synchronized`)
+    } catch (error) {
+      console.error('Sync failed:', error)
+      toast.error(`Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const joinTeamHunt = async (huntId: string, userId: string) => {
+    try {
+      const success = await apis.collaboration.joinHunt(huntId, userId)
+      
+      if (success) {
+        setTeamHunts(current => 
+          current.map(hunt => 
+            hunt.id === huntId && hunt.currentMembers.length < hunt.maxMembers
+              ? { ...hunt, currentMembers: [...hunt.currentMembers, userId] }
+              : hunt
+          )
+        )
+        toast.success('Successfully joined team hunt')
+      } else {
+        toast.error('Failed to join team hunt')
+      }
+    } catch (error) {
+      console.error('Join hunt failed:', error)
+      toast.error('Failed to join team hunt')
+    }
+  }
+
+  const createPartnerRequest = async (request: Omit<PartnerRequest, 'id' | 'timestamp'>) => {
+    try {
+      const newRequest = await apis.collaboration.createPartnerRequest(request)
+      setPartnerRequests(current => [newRequest, ...current])
+      toast.success('Partner request sent')
+      return newRequest
+    } catch (error) {
+      console.error('Create partner request failed:', error)
+      toast.error('Failed to send partner request')
+      throw error
+    }
   }
 
   const respondToPartnerRequest = (requestId: string, response: 'accepted' | 'declined') => {
@@ -336,36 +526,21 @@ export function useBugBountyIntegration() {
         req.id === requestId ? { ...req, status: response } : req
       )
     )
+
+    toast.success(`Partner request ${response}`)
   }
 
-  const connectPlatform = async (platformId: string, apiKey?: string) => {
-    setIsLoading(true)
-    // Simulate API connection
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    setIntegrations(current => 
-      current.map(integration => 
-        integration.id === platformId 
-          ? { ...integration, connected: true, apiKey, lastSync: new Date().toISOString() }
-          : integration
-      )
-    )
-    setIsLoading(false)
-  }
-
-  const syncPlatformData = async (platformId: string) => {
-    setIsLoading(true)
-    // Simulate data sync
-    await new Promise(resolve => setTimeout(resolve, 3000))
-    
-    setIntegrations(current => 
-      current.map(integration => 
-        integration.id === platformId 
-          ? { ...integration, lastSync: new Date().toISOString() }
-          : integration
-      )
-    )
-    setIsLoading(false)
+  const createTeamHunt = async (hunt: Omit<TeamHunt, 'id'>) => {
+    try {
+      const newHunt = await apis.collaboration.createTeamHunt(hunt)
+      setTeamHunts(current => [newHunt, ...current])
+      toast.success('Team hunt created successfully')
+      return newHunt
+    } catch (error) {
+      console.error('Create team hunt failed:', error)
+      toast.error('Failed to create team hunt')
+      throw error
+    }
   }
 
   return {
@@ -380,6 +555,9 @@ export function useBugBountyIntegration() {
     createPartnerRequest,
     respondToPartnerRequest,
     connectPlatform,
-    syncPlatformData
+    syncPlatformData,
+    createTeamHunt,
+    refreshAllData,
+    loadThreatIntelligence
   }
 }

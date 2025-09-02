@@ -12,6 +12,9 @@ import { useTeamHunts } from '@/hooks/useTeamHunts'
 import { useSamplePartnerRequests } from '@/hooks/useSamplePartnerRequests'
 import { useSampleStatusData } from '@/hooks/useSampleStatusData'
 import { useTheme } from '@/hooks/useTheme'
+import { useRealVirtualLab } from '@/hooks/useRealVirtualLab'
+import { useRealMessaging } from '@/hooks/useRealMessaging'
+import { useRealCodeCollaboration } from '@/hooks/useRealCodeCollaboration'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MainContent } from '@/components/layout/MainContent'
 import { AuthModal } from '@/components/auth/AuthModal'
@@ -40,6 +43,11 @@ function App() {
   
   // Initialize theme system
   useTheme()
+
+  // Initialize real production services
+  const virtualLab = useRealVirtualLab()
+  const messaging = useRealMessaging(currentUser?.id || '')
+  const codeCollaboration = useRealCodeCollaboration(currentUser?.id || '')
 
   const handleLogin = (user: User) => {
     setCurrentUser(user)
