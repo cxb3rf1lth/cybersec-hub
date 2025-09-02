@@ -232,9 +232,6 @@ export function ThemeSelector() {
             </div>
           </div>
         </div>
-            </div>
-          </div>
-        </div>
       </CardContent>
     </Card>
   )
