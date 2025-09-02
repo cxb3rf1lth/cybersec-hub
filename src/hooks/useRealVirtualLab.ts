@@ -423,7 +423,8 @@ export function useRealVirtualLab() {
   useEffect(() => {
     initializeProviders()
     initializeTemplates()
-    startStatusPolling()
+    const cleanup = startStatusPolling()
+    return cleanup
   }, [])
 
   const initializeProviders = () => {
@@ -606,7 +607,7 @@ apt-get update && apt-get upgrade -y
 
   const updateVMStatuses = async () => {
     setVMs(current => 
-      current.map(async vm => {
+      current.map(vm => {
         if (vm.status === 'running' || vm.status === 'creating') {
           let newStatus = vm.status
           

@@ -12,7 +12,7 @@ import { useTeamHunts } from '@/hooks/useTeamHunts'
 import { useSamplePartnerRequests } from '@/hooks/useSamplePartnerRequests'
 import { useSampleStatusData } from '@/hooks/useSampleStatusData'
 import { useTheme } from '@/hooks/useTheme'
-import { useRealVirtualLab } from '@/hooks/useRealVirtualLab'
+import { useVirtualLab } from '@/hooks/useVirtualLab'
 import { useRealMessaging } from '@/hooks/useRealMessaging'
 import { useRealCodeCollaboration } from '@/hooks/useRealCodeCollaboration'
 import { Sidebar } from '@/components/layout/Sidebar'
@@ -45,7 +45,7 @@ function App() {
   useTheme()
 
   // Initialize real production services
-  const virtualLab = useRealVirtualLab()
+  const virtualLab = useVirtualLab(currentUser?.id || '')
   const messaging = useRealMessaging(currentUser?.id || '')
   const codeCollaboration = useRealCodeCollaboration(currentUser?.id || '')
 
