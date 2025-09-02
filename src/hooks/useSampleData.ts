@@ -13,17 +13,17 @@ import {
 const SAMPLE_USERS: User[] = [
   {
     id: 'user_sample_1',
-    username: 'alex_hunter',
-    displayName: 'Alex Hunter',
-    email: 'alex@cyberconnect.com',
-    bio: 'Penetration tester with 5+ years experience in web application security',
-    specializations: ['Penetration Testing', 'Bug Bounty', 'Ethical Hacking'],
+    username: 'cxb3rf1lth',
+    displayName: 'CyberSec Admin',
+    email: 'admin@cyberconnect.com',
+    bio: 'Cybersecurity professional and platform administrator',
+    specializations: ['Platform Administration', 'Cybersecurity', 'Full Stack Development'],
     followers: ['user_sample_2', 'user_sample_3'],
     following: ['user_sample_2'],
     joinedAt: '2023-01-15T10:00:00.000Z',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-    reputation: 125,
-    successfulFindings: 8
+    reputation: 225,
+    successfulFindings: 15
   },
   {
     id: 'user_sample_2',
@@ -70,244 +70,192 @@ const SAMPLE_USERS: User[] = [
 
 const SAMPLE_TEMPLATES: Template[] = [
   {
-    id: 'template_1',
-    name: 'Web Vulnerability Scanner',
-    description: 'A comprehensive Python-based web application vulnerability scanner with support for OWASP Top 10',
+    id: 'template_cybersec_hub',
+    name: 'CyberSec Hub Template',
+    description: 'Professional cybersecurity networking platform template based on the main cxb3rf1lth repository',
     category: 'web-app',
-    tags: ['python', 'security', 'scanner', 'owasp', 'vulnerability-assessment'],
+    tags: ['react', 'typescript', 'cybersecurity', 'networking', 'platform'],
     difficulty: 'intermediate',
     files: [
       {
         id: 'file_1',
-        name: 'scanner.py',
-        path: 'src/scanner.py',
-        content: `#!/usr/bin/env python3
-import requests
-import urllib.parse
-from bs4 import BeautifulSoup
-import threading
-import argparse
+        name: 'app.tsx',
+        path: 'src/App.tsx',
+        content: `import { useState } from 'react'
+import { useKV } from '@github/spark/hooks'
+import { Sidebar } from '@/components/layout/Sidebar'
+import { MainContent } from '@/components/layout/MainContent'
+import { User } from '@/types/user'
 
-class WebVulnScanner:
-    def __init__(self, target_url):
-        self.target_url = target_url
-        self.session = requests.Session()
-        self.vulnerabilities = []
-    
-    def scan_sql_injection(self):
-        """Test for SQL injection vulnerabilities"""
-        payloads = ["'", '"', "1' OR '1'='1", "1\\" OR \\"1\\"=\\"1"]
-        
-        for payload in payloads:
-            test_url = f"{self.target_url}?id={payload}"
-            try:
-                response = self.session.get(test_url)
-                if "mysql" in response.text.lower() or "syntax error" in response.text.lower():
-                    self.vulnerabilities.append({
-                        'type': 'SQL Injection',
-                        'url': test_url,
-                        'payload': payload
-                    })
-            except Exception as e:
-                print(f"Error testing SQL injection: {e}")
-    
-    def run_scan(self):
-        """Run all vulnerability scans"""
-        print(f"Starting scan of {self.target_url}")
-        self.scan_sql_injection()
-        return self.vulnerabilities
+function App() {
+  const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null)
+  const [activeTab, setActiveTab] = useState<string>('feed')
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Web Vulnerability Scanner')
-    parser.add_argument('url', help='Target URL to scan')
-    args = parser.parse_args()
-    
-    scanner = WebVulnScanner(args.url)
-    vulnerabilities = scanner.run_scan()`,
-        language: 'python',
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="flex">
+        <Sidebar
+          currentUser={currentUser}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
+        <MainContent
+          currentUser={currentUser}
+          activeTab={activeTab}
+        />
+      </div>
+    </div>
+  )
+}
+
+export default App`,
+        language: 'typescript',
         isEntryPoint: true
       },
       {
         id: 'file_2',
-        name: 'requirements.txt',
-        path: 'requirements.txt',
-        content: `requests>=2.28.0
-beautifulsoup4>=4.11.0
-urllib3>=1.26.0`,
-        language: 'text'
+        name: 'package.json',
+        path: 'package.json',
+        content: `{
+  "name": "cybersec-hub",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.1"
+  }
+}`,
+        language: 'json'
       }
     ],
-    dependencies: ['requests>=2.28.0', 'beautifulsoup4>=4.11.0'],
-    setupInstructions: `1. Clone the repository
-2. Install dependencies: pip install -r requirements.txt
-3. Run the scanner: python src/scanner.py https://example.com`,
-    usageExample: 'python scanner.py https://testphp.vulnweb.com/',
+    dependencies: ['react>=18.3.1', 'typescript>=5.6.0'],
+    setupInstructions: `1. Clone the cxb3rf1lth/cybersec-hub repository
+2. Install dependencies: npm install
+3. Run development server: npm run dev`,
+    usageExample: 'npm run dev',
     author: {
       id: 'user_sample_1',
-      username: 'alex_hunter',
+      username: 'cxb3rf1lth',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
     },
-    stars: 142,
-    downloads: 89,
+    stars: 89,
+    downloads: 45,
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-02-01'),
     isPublic: true,
     license: 'MIT',
-    framework: 'python'
-  },
-  {
-    id: 'template_2',
-    name: 'Network Port Scanner',
-    description: 'Fast and efficient network port scanner with stealth scanning capabilities',
-    category: 'networking',
-    tags: ['python', 'networking', 'scanner', 'ports', 'reconnaissance'],
-    difficulty: 'beginner',
-    files: [
-      {
-        id: 'file_3',
-        name: 'port_scanner.py',
-        path: 'port_scanner.py',
-        content: `#!/usr/bin/env python3
-import socket
-import threading
-import argparse
-from datetime import datetime
-
-class PortScanner:
-    def __init__(self, target, timeout=1):
-        self.target = target
-        self.timeout = timeout
-        self.open_ports = []
-    
-    def scan_port(self, port):
-        """Scan a single port"""
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(self.timeout)
-            result = sock.connect_ex((self.target, port))
-            sock.close()
-            
-            if result == 0:
-                self.open_ports.append(port)
-                print(f"Port {port}: Open")
-        except Exception:
-            pass
-    
-    def scan_range(self, start_port, end_port):
-        """Scan a range of ports"""
-        print(f"Scanning {self.target}")
-        for port in range(start_port, end_port + 1):
-            self.scan_port(port)
-        return sorted(self.open_ports)
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Network Port Scanner')
-    parser.add_argument('target', help='Target IP address')
-    args = parser.parse_args()
-    
-    scanner = PortScanner(args.target)
-    open_ports = scanner.scan_range(1, 1000)`,
-        language: 'python',
-        isEntryPoint: true
-      }
-    ],
-    dependencies: [],
-    setupInstructions: `1. Download the script
-2. Make it executable: chmod +x port_scanner.py
-3. Run: python port_scanner.py <target_ip>`,
-    usageExample: 'python port_scanner.py 192.168.1.1',
-    author: {
-      id: 'user_sample_2',
-      username: 'maya_defense',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face'
-    },
-    stars: 78,
-    downloads: 156,
-    createdAt: new Date('2024-01-20'),
-    updatedAt: new Date('2024-01-25'),
-    isPublic: true,
-    license: 'GPL-3.0',
-    framework: 'python'
+    framework: 'react'
   }
 ]
 
 const SAMPLE_REPOSITORIES: ToolRepository[] = [
   {
-    id: 'repo_1',
-    name: 'Penetration Testing Toolkit',
-    description: 'A comprehensive collection of tools for penetration testing and security assessments',
+    id: 'repo_cxb3rf1lth',
+    name: 'cxb3rf1lth',
+    description: 'Main display repository for cybersecurity tools and resources',
+    category: 'automation',
+    tools: [
+      {
+        id: 'tool_main_1',
+        name: 'CyberSec Hub',
+        description: 'Cybersecurity professional networking platform',
+        version: '1.0.0',
+        installCommand: 'npm install',
+        usageExample: 'npm run dev',
+        documentation: 'https://github.com/cxb3rf1lth/cybersec-hub',
+        platform: ['linux', 'windows', 'macos'],
+        dependencies: ['node', 'npm'],
+        category: 'platform',
+        complexity: 'moderate'
+      }
+    ],
+    author: {
+      id: 'user_sample_1',
+      username: 'cxb3rf1lth',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
+    },
+    isPublic: true,
+    stars: 150,
+    forks: 25,
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-02-15'),
+    tags: ['cybersecurity', 'networking', 'platform', 'community']
+  },
+  {
+    id: 'repo_cyber_hub',
+    name: 'cyber-hub',
+    description: 'Cybersecurity resource hub with tools and educational content',
+    category: 'reconnaissance',
+    tools: [
+      {
+        id: 'tool_hub_1',
+        name: 'Security Scanner',
+        description: 'Comprehensive security scanning toolkit',
+        version: '2.1.0',
+        installCommand: 'pip install -r requirements.txt',
+        usageExample: 'python scanner.py --target example.com',
+        documentation: 'https://github.com/cxb3rf1lth/cyber-hub',
+        platform: ['linux', 'windows', 'macos'],
+        dependencies: ['python3', 'nmap'],
+        category: 'scanner',
+        complexity: 'moderate'
+      }
+    ],
+    author: {
+      id: 'user_sample_1',
+      username: 'cxb3rf1lth',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
+    },
+    isPublic: true,
+    stars: 89,
+    forks: 12,
+    createdAt: new Date('2024-01-15'),
+    updatedAt: new Date('2024-02-10'),
+    tags: ['cybersecurity', 'tools', 'scanning', 'education']
+  },
+  {
+    id: 'repo_hoaxshell_cheatsheet',
+    name: 'hoaxshell-cheatsheet',
+    description: 'Comprehensive cheatsheet for HoaxShell reverse shell toolkit',
     category: 'exploitation',
     tools: [
       {
-        id: 'tool_1',
-        name: 'Nmap',
-        description: 'Network exploration tool and security/port scanner',
-        version: '7.94',
-        installCommand: 'sudo apt install nmap',
-        usageExample: 'nmap -sV -O target.com',
-        documentation: 'https://nmap.org/docs.html',
-        platform: ['linux', 'windows', 'macos'],
-        dependencies: ['libpcap'],
-        category: 'scanner',
-        complexity: 'moderate'
-      },
-      {
-        id: 'tool_2',
-        name: 'Metasploit',
-        description: 'Advanced open-source penetration testing framework',
-        version: '6.3.0',
-        installCommand: 'curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall',
-        usageExample: 'msfconsole',
-        documentation: 'https://docs.metasploit.com/',
-        platform: ['linux', 'windows', 'macos'],
-        dependencies: ['ruby', 'postgresql'],
+        id: 'tool_hoax_1',
+        name: 'HoaxShell',
+        description: 'Windows reverse shell payload generator and handler',
+        version: '1.5.0',
+        installCommand: 'git clone https://github.com/t3l3machus/hoaxshell',
+        usageExample: 'python3 hoaxshell.py -s <your_ip>',
+        documentation: 'https://github.com/t3l3machus/hoaxshell',
+        platform: ['linux', 'windows'],
+        dependencies: ['python3'],
         category: 'exploit',
         complexity: 'complex'
       }
     ],
     author: {
       id: 'user_sample_1',
-      username: 'alex_hunter',
+      username: 'cxb3rf1lth',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
     },
     isPublic: true,
-    stars: 245,
-    forks: 67,
-    createdAt: new Date('2024-01-10'),
+    stars: 67,
+    forks: 8,
+    createdAt: new Date('2024-01-20'),
     updatedAt: new Date('2024-02-05'),
-    tags: ['penetration-testing', 'security', 'tools', 'vulnerability-assessment']
-  },
-  {
-    id: 'repo_2',
-    name: 'Digital Forensics Arsenal',
-    description: 'Essential tools for digital forensics investigations and incident response',
-    category: 'analysis',
-    tools: [
-      {
-        id: 'tool_3',
-        name: 'Volatility',
-        description: 'Advanced memory forensics framework',
-        version: '3.2.0',
-        installCommand: 'pip install volatility3',
-        usageExample: 'vol -f memory.dmp windows.info',
-        documentation: 'https://volatility3.readthedocs.io/',
-        platform: ['linux', 'windows', 'macos'],
-        dependencies: ['python3'],
-        category: 'analyzer',
-        complexity: 'complex'
-      }
-    ],
-    author: {
-      id: 'user_sample_3',
-      username: 'code_ninja',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'
-    },
-    isPublic: true,
-    stars: 123,
-    forks: 34,
-    createdAt: new Date('2024-01-25'),
-    updatedAt: new Date('2024-02-10'),
-    tags: ['forensics', 'incident-response', 'memory-analysis', 'investigation']
+    tags: ['reverse-shell', 'windows', 'exploitation', 'cheatsheet']
   }
 ]
 
@@ -315,12 +263,12 @@ const SAMPLE_REPOSITORIES: ToolRepository[] = [
 const SAMPLE_TEAMS: TeamInfo[] = [
   {
     id: 'team_1',
-    name: 'CyberGuard Elite',
-    description: 'Advanced threat hunting and incident response specialists',
+    name: 'CyberSec Hub Team',
+    description: 'Core team maintaining cybersecurity tools and platform',
     members: [
       {
         id: 'user_sample_1',
-        username: 'alex_hunter',
+        username: 'cxb3rf1lth',
         avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
         role: 'owner',
         joinedAt: new Date('2023-01-15'),
@@ -418,7 +366,7 @@ const SAMPLE_TEAM_PROJECTS: TeamProject[] = [
 const COLLABORATIVE_TEMPLATES: Template[] = SAMPLE_TEMPLATES.map((template, index) => ({
   ...template,
   version: '1.0.0',
-  collaboration: index < 2 ? {
+  collaboration: {
     isCollaborative: true,
     allowedUsers: SAMPLE_TEAMS[0].members.map(m => m.id),
     permissions: SAMPLE_TEAMS[0].members.reduce((acc, member) => ({
@@ -427,16 +375,16 @@ const COLLABORATIVE_TEMPLATES: Template[] = SAMPLE_TEMPLATES.map((template, inde
     }), {}),
     requireApproval: true,
     maxCollaborators: 10
-  } : undefined,
-  team: index < 2 ? SAMPLE_TEAMS[0] : undefined,
-  branches: index === 0 ? [
+  },
+  team: SAMPLE_TEAMS[0],
+  branches: [
     {
       id: 'branch_main',
       name: 'main',
       description: 'Main development branch',
       createdBy: {
         id: 'user_sample_1',
-        username: 'alex_hunter',
+        username: 'cxb3rf1lth',
         avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
       },
       createdAt: new Date('2023-12-01'),
@@ -445,26 +393,26 @@ const COLLABORATIVE_TEMPLATES: Template[] = SAMPLE_TEMPLATES.map((template, inde
       commits: [
         {
           id: 'commit_1',
-          message: 'Add SQL injection detection improvements',
+          message: 'Update cybersec hub platform with latest features',
           author: {
             id: 'user_sample_1',
-            username: 'alex_hunter',
+            username: 'cxb3rf1lth',
             avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
           },
           timestamp: new Date('2024-01-15'),
           changes: [
             {
               type: 'modified',
-              filePath: 'src/scanner.py',
-              linesAdded: 15,
-              linesRemoved: 3
+              filePath: 'src/App.tsx',
+              linesAdded: 25,
+              linesRemoved: 8
             }
           ]
         }
       ],
       status: 'active'
     }
-  ] : undefined
+  ]
 }))
 
 export function useSampleData() {

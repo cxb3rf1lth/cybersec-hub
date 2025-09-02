@@ -43,26 +43,26 @@ export function RepositoryList({ currentUser, onRepositorySelect }: RepositoryLi
   const initializeSampleRepositories = () => {
     const sampleRepos: Repository[] = [
       {
-        id: 'repo-1',
-        name: 'cybersec-toolkit',
-        description: 'A comprehensive toolkit for cybersecurity professionals',
+        id: 'repo-cxb3rf1lth',
+        name: 'cxb3rf1lth',
+        description: 'Main cybersecurity hub repository containing the platform code and resources',
         ownerId: currentUser.id,
         isPrivate: false,
-        language: 'Python',
-        tags: ['security', 'tools', 'python'],
-        stars: ['user-1', 'user-2'],
-        forks: ['user-3'],
-        watchers: ['user-1', 'user-2', 'user-3'],
+        language: 'TypeScript',
+        tags: ['cybersecurity', 'platform', 'react', 'typescript'],
+        stars: ['user-1', 'user-2', 'user-3'],
+        forks: ['user-4'],
+        watchers: ['user-1', 'user-2', 'user-3', 'user-4'],
         collaborators: [currentUser.id, 'user_sample_2', 'user_sample_3'],
         files: [
           {
             id: 'file-1',
-            name: 'main.py',
-            path: '/main.py',
-            content: '#!/usr/bin/env python3\n\n"""CyberSec Toolkit - Main Entry Point"""\n\nimport argparse\nimport sys\nfrom modules import scanner, analyzer, reporter\n\ndef main():\n    parser = argparse.ArgumentParser(description="CyberSec Toolkit")\n    parser.add_argument("--scan", help="Scan target")\n    parser.add_argument("--analyze", help="Analyze results")\n    parser.add_argument("--report", help="Generate report")\n    \n    args = parser.parse_args()\n    \n    if args.scan:\n        print(f"Scanning target: {args.scan}")\n        scanner.run_scan(args.scan)\n    elif args.analyze:\n        print(f"Analyzing: {args.analyze}")\n        analyzer.analyze(args.analyze)\n    elif args.report:\n        print("Generating security report...")\n        reporter.generate_report(args.report)\n    else:\n        print("CyberSec Toolkit v2.1.0")\n        print("Usage: python main.py [--scan|--analyze|--report] <target>")\n\nif __name__ == "__main__":\n    main()',
-            language: 'python',
-            size: 812,
-            lastModified: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+            name: 'App.tsx',
+            path: '/src/App.tsx',
+            content: 'import { useState } from \'react\'\nimport { useKV } from \'@github/spark/hooks\'\nimport { Sidebar } from \'@/components/layout/Sidebar\'\nimport { MainContent } from \'@/components/layout/MainContent\'\nimport { User } from \'@/types/user\'\n\nfunction App() {\n  const [currentUser, setCurrentUser] = useKV<User | null>(\'currentUser\', null)\n  const [activeTab, setActiveTab] = useState<string>(\'feed\')\n\n  return (\n    <div className="min-h-screen bg-background">\n      <div className="flex">\n        <Sidebar\n          currentUser={currentUser}\n          activeTab={activeTab}\n          onTabChange={setActiveTab}\n        />\n        <MainContent\n          currentUser={currentUser}\n          activeTab={activeTab}\n        />\n      </div>\n    </div>\n  )\n}\n\nexport default App',
+            language: 'typescript',
+            size: 892,
+            lastModified: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
             lastCommit: 'abc123f',
             isDirectory: false
           },
@@ -70,50 +70,18 @@ export function RepositoryList({ currentUser, onRepositorySelect }: RepositoryLi
             id: 'file-2',
             name: 'README.md',
             path: '/README.md',
-            content: '# CyberSec Toolkit\n\nA comprehensive toolkit for cybersecurity professionals.\n\n## Features\n\n- 🔍 Network scanning and enumeration\n- 🛡️ Vulnerability analysis and assessment\n- 📊 Security reporting and documentation\n- 🔗 Integration with popular security tools\n- 🌐 Web application security testing\n\n## Installation\n\n```bash\ngit clone https://github.com/cybersec/toolkit.git\ncd toolkit\npip install -r requirements.txt\n```\n\n## Usage\n\n### Network Scanning\n```bash\npython main.py --scan 192.168.1.0/24\n```\n\n### Vulnerability Analysis\n```bash\npython main.py --analyze scan_results.json\n```\n\n### Generate Report\n```bash\npython main.py --report vulnerability_data.json\n```\n\n## Contributing\n\nWe welcome contributions! Please see CONTRIBUTING.md for guidelines.\n\n## License\n\nMIT License - see LICENSE file for details.',
+            content: '# CyberSec Hub\n\nA professional networking platform for cybersecurity experts.\n\n## Features\n\n- 🔗 Professional networking for cybersec professionals\n- 🛠️ Tool sharing and collaboration\n- 📊 Threat intelligence feeds\n- 🎯 Bug bounty integration\n- 🏢 Team management and collaboration\n\n## Installation\n\n```bash\ngit clone https://github.com/cxb3rf1lth/cybersec-hub.git\ncd cybersec-hub\nnpm install\n```\n\n## Usage\n\n### Development\n```bash\nnpm run dev\n```\n\n### Build\n```bash\nnpm run build\n```\n\n## Contributing\n\nWe welcome contributions! Please see CONTRIBUTING.md for guidelines.\n\n## License\n\nMIT License - see LICENSE file for details.',
             language: 'markdown',
             size: 1024,
-            lastModified: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(), // 1 hour ago
+            lastModified: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
             lastCommit: 'def456a',
-            isDirectory: false
-          },
-          {
-            id: 'file-3',
-            name: 'scanner.py',
-            path: '/modules/scanner.py',
-            content: '"""Network Scanner Module"""\n\nimport socket\nimport threading\nfrom concurrent.futures import ThreadPoolExecutor\n\nclass NetworkScanner:\n    def __init__(self, target, threads=100):\n        self.target = target\n        self.threads = threads\n        self.open_ports = []\n        \n    def scan_port(self, port):\n        try:\n            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n            sock.settimeout(1)\n            result = sock.connect_ex((self.target, port))\n            if result == 0:\n                self.open_ports.append(port)\n                print(f"Port {port}: Open")\n            sock.close()\n        except Exception as e:\n            pass\n            \n    def run_scan(self, port_range=(1, 1000)):\n        print(f"Scanning {self.target}...")\n        \n        with ThreadPoolExecutor(max_workers=self.threads) as executor:\n            for port in range(port_range[0], port_range[1] + 1):\n                executor.submit(self.scan_port, port)\n                \n        return self.open_ports\n\ndef run_scan(target):\n    scanner = NetworkScanner(target)\n    return scanner.run_scan()',
-            language: 'python',
-            size: 1256,
-            lastModified: new Date(Date.now() - 30 * 60 * 1000).toISOString(), // 30 minutes ago
-            lastCommit: 'ghi789b',
             isDirectory: false
           }
         ],
         commits: [
           {
-            id: 'ghi789b',
-            message: 'Add concurrent scanning support and improve error handling',
-            authorId: 'user_sample_2',
-            authorName: 'maya_defense',
-            authorEmail: 'maya@cyberconnect.com',
-            hash: 'ghi789b',
-            parentHash: 'def456a',
-            branch: 'main',
-            filesChanged: [
-              {
-                path: '/modules/scanner.py',
-                type: 'modified',
-                additions: 15,
-                deletions: 5
-              }
-            ],
-            additions: 15,
-            deletions: 5,
-            createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString()
-          },
-          {
             id: 'def456a',
-            message: 'Update documentation with new features and examples',
+            message: 'Update documentation and add new features',
             authorId: currentUser.id,
             authorName: currentUser.username,
             authorEmail: currentUser.email,
@@ -134,7 +102,7 @@ export function RepositoryList({ currentUser, onRepositorySelect }: RepositoryLi
           },
           {
             id: 'abc123f',
-            message: 'Add reporting functionality and improve CLI interface',
+            message: 'Initial platform setup with React and TypeScript',
             authorId: currentUser.id,
             authorName: currentUser.username,
             authorEmail: currentUser.email,
@@ -143,14 +111,14 @@ export function RepositoryList({ currentUser, onRepositorySelect }: RepositoryLi
             branch: 'main',
             filesChanged: [
               {
-                path: '/main.py',
-                type: 'modified',
-                additions: 12,
-                deletions: 3
+                path: '/src/App.tsx',
+                type: 'added',
+                additions: 35,
+                deletions: 0
               }
             ],
-            additions: 12,
-            deletions: 3,
+            additions: 35,
+            deletions: 0,
             createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
           }
         ],
@@ -158,77 +126,17 @@ export function RepositoryList({ currentUser, onRepositorySelect }: RepositoryLi
           { 
             id: 'branch-1', 
             name: 'main', 
-            lastCommit: 'ghi789b', 
+            lastCommit: 'def456a', 
             createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), 
             isDefault: true, 
             isProtected: false 
-          },
-          { 
-            id: 'branch-2', 
-            name: 'feature/web-scanner', 
-            lastCommit: 'abc123f', 
-            createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), 
-            isDefault: false, 
-            isProtected: false 
           }
         ],
-        issues: [
-          {
-            id: 'issue-1',
-            title: 'Add support for IPv6 scanning',
-            description: 'The current scanner only supports IPv4 addresses. We should add IPv6 support for modern network environments.',
-            authorId: 'user_sample_3',
-            assigneeId: currentUser.id,
-            labels: ['enhancement', 'networking'],
-            status: 'open',
-            priority: 'medium',
-            createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-            updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-            comments: [
-              {
-                id: 'comment-1',
-                authorId: currentUser.id,
-                content: 'Good point! I\'ll look into adding IPv6 support in the next release.',
-                createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
-              }
-            ]
-          }
-        ],
-        pullRequests: [
-          {
-            id: 'pr-1',
-            title: 'Implement web application security testing module',
-            description: 'This PR adds a new module for testing web application security, including SQL injection and XSS detection.',
-            authorId: 'user_sample_2',
-            sourceBranch: 'feature/web-scanner',
-            targetBranch: 'main',
-            status: 'open',
-            reviewers: [currentUser.id, 'user_sample_3'],
-            reviews: [
-              {
-                id: 'review-1',
-                reviewerId: currentUser.id,
-                status: 'approved',
-                comment: 'Looks great! The code is well-structured and the tests are comprehensive.',
-                createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
-              }
-            ],
-            filesChanged: [
-              {
-                path: '/modules/web_scanner.py',
-                type: 'added',
-                additions: 150,
-                deletions: 0
-              }
-            ],
-            commits: ['abc123f'],
-            createdAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
-            updatedAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
-          }
-        ],
+        issues: [],
+        pullRequests: [],
         createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-        updatedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-        cloneUrl: `https://github.com/${currentUser.username}/cybersec-toolkit.git`,
+        updatedAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+        cloneUrl: `https://github.com/cxb3rf1lth/cybersec-hub.git`,
         defaultBranch: 'main'
       }
     ]
