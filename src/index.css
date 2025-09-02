@@ -93,46 +93,37 @@
   background: var(--muted-foreground);
 }
 
-/* Enhanced cyber glow animations - now using CSS variables */
+/* Sleek minimal glow animations */
 @keyframes pulse-primary {
   0%, 100% {
     box-shadow: 
-      0 0 8px color-mix(in oklch, var(--primary), transparent 60%),
-      inset 0 0 8px color-mix(in oklch, var(--primary), transparent 90%);
+      0 0 4px color-mix(in oklch, var(--primary), transparent 70%),
+      inset 0 0 1px color-mix(in oklch, var(--primary), transparent 95%);
   }
   50% {
     box-shadow: 
-      0 0 20px color-mix(in oklch, var(--accent), transparent 40%), 
-      0 0 35px color-mix(in oklch, var(--primary), transparent 70%),
-      0 0 50px color-mix(in oklch, var(--primary), transparent 85%),
-      inset 0 0 12px color-mix(in oklch, var(--accent), transparent 80%);
+      0 0 8px color-mix(in oklch, var(--accent), transparent 60%), 
+      0 0 12px color-mix(in oklch, var(--primary), transparent 80%),
+      inset 0 0 2px color-mix(in oklch, var(--accent), transparent 90%);
   }
 }
 
 @keyframes border-flow {
   0% {
     border-color: var(--border);
-    box-shadow: 0 0 2px color-mix(in oklch, var(--border), transparent 70%);
-  }
-  25% {
-    border-color: color-mix(in oklch, var(--primary), transparent 40%);
-    box-shadow: 0 0 8px color-mix(in oklch, var(--primary), transparent 60%);
+    box-shadow: 0 0 1px color-mix(in oklch, var(--border), transparent 80%);
   }
   50% {
-    border-color: color-mix(in oklch, var(--accent), transparent 20%);
-    box-shadow: 0 0 15px color-mix(in oklch, var(--accent), transparent 40%), 0 0 25px color-mix(in oklch, var(--primary), transparent 70%);
-  }
-  75% {
-    border-color: color-mix(in oklch, var(--primary), transparent 40%);
-    box-shadow: 0 0 8px color-mix(in oklch, var(--primary), transparent 60%);
+    border-color: color-mix(in oklch, var(--accent), transparent 30%);
+    box-shadow: 0 0 4px color-mix(in oklch, var(--accent), transparent 70%);
   }
   100% {
     border-color: var(--border);
-    box-shadow: 0 0 2px color-mix(in oklch, var(--border), transparent 70%);
+    box-shadow: 0 0 1px color-mix(in oklch, var(--border), transparent 80%);
   }
 }
 
-/* Hacker-style terminal cursor */
+/* Minimal hacker-style terminal cursor */
 @keyframes terminal-cursor {
   0%, 50% {
     opacity: 1;
@@ -146,22 +137,22 @@
   content: '▋';
   color: var(--accent);
   animation: terminal-cursor 1.2s infinite;
-  text-shadow: 0 0 8px color-mix(in oklch, var(--accent), transparent 40%);
+  text-shadow: 0 0 2px color-mix(in oklch, var(--accent), transparent 60%);
 }
 
 /* Enhanced interactive states */
 .hover-red-glow:hover {
-  animation: pulse-primary 3s infinite;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateY(-1px);
+  animation: pulse-primary 2s ease-in-out infinite;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(-0.5px);
 }
 
 .hover-border-flow:hover {
-  animation: border-flow 3s infinite;
-  transition: all 0.3s ease;
+  animation: border-flow 2s ease-in-out infinite;
+  transition: all 0.2s ease;
 }
 
-/* Add subtle depth and texture to buttons */
+/* Minimal button depth effects */
 .hover-red-glow {
   position: relative;
   overflow: hidden;
@@ -172,99 +163,84 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, 
-    color-mix(in oklch, var(--accent), transparent 90%) 0%,
+    color-mix(in oklch, var(--accent), transparent 95%) 0%,
     transparent 50%,
-    color-mix(in oklch, var(--primary), transparent 95%) 100%
+    color-mix(in oklch, var(--primary), transparent 98%) 100%
   );
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
 }
 
 .hover-red-glow:hover::before {
   opacity: 1;
 }
 
-/* Matrix-style text selection with enhanced glow */
+/* Refined matrix-style text selection */
 ::selection {
-  background: color-mix(in oklch, var(--accent), transparent 65%);
+  background: color-mix(in oklch, var(--accent), transparent 75%);
   color: var(--foreground);
-  text-shadow: 0 0 4px color-mix(in oklch, var(--accent), transparent 20%);
+  text-shadow: 0 0 2px color-mix(in oklch, var(--accent), transparent 40%);
 }
 
-/* Enhanced network pattern overlay with depth */
+/* Minimal network pattern overlay */
 .network-pattern {
   background-image: 
-    /* Primary grid with glow */
-    radial-gradient(circle at 25% 25%, color-mix(in oklch, var(--accent), transparent 92%) 1px, transparent 1px),
-    radial-gradient(circle at 75% 75%, color-mix(in oklch, var(--primary), transparent 94%) 1px, transparent 1px),
-    /* Secondary micro grid */
-    linear-gradient(color-mix(in oklch, var(--primary), transparent 97%) 0.5px, transparent 0.5px),
-    linear-gradient(90deg, color-mix(in oklch, var(--primary), transparent 97%) 0.5px, transparent 0.5px),
-    /* Tertiary accent lines */
-    linear-gradient(color-mix(in oklch, var(--primary), transparent 98%) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in oklch, var(--primary), transparent 98%) 1px, transparent 1px),
-    /* Noise texture overlay */
-    radial-gradient(circle at 40% 60%, color-mix(in oklch, var(--accent), transparent 96%) 2px, transparent 2px);
+    /* Primary subtle grid */
+    radial-gradient(circle at 25% 25%, color-mix(in oklch, var(--accent), transparent 96%) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 75% 75%, color-mix(in oklch, var(--primary), transparent 97%) 0.5px, transparent 0.5px),
+    /* Micro grid structure */
+    linear-gradient(color-mix(in oklch, var(--primary), transparent 98%) 0.25px, transparent 0.25px),
+    linear-gradient(90deg, color-mix(in oklch, var(--primary), transparent 98%) 0.25px, transparent 0.25px);
   background-size: 
-    60px 60px, 60px 60px,
-    15px 15px, 15px 15px,
-    30px 30px, 30px 30px,
-    80px 80px;
+    80px 80px, 80px 80px,
+    20px 20px, 20px 20px;
   background-position: 
-    0 0, 30px 30px,
-    0 0, 0 0,
-    15px 15px, 15px 15px,
-    20px 40px;
+    0 0, 40px 40px,
+    0 0, 0 0;
 }
 
-/* Enhanced glitch effect with chromatic aberration */
+/* Refined glitch effect with minimal chromatic aberration */
 @keyframes glitch {
   0% {
     transform: translate(0);
     text-shadow: 
-      2px 0 var(--accent),
-      -2px 0 color-mix(in oklch, var(--accent), blue 50%);
-  }
-  15% {
-    transform: translate(-2px, 1px);
-    text-shadow: 
-      3px 0 var(--accent),
-      -3px 0 color-mix(in oklch, var(--accent), blue 50%);
-  }
-  30% {
-    transform: translate(2px, -1px);
-    text-shadow: 
-      -2px 0 var(--accent),
-      2px 0 color-mix(in oklch, var(--accent), blue 50%);
-  }
-  45% {
-    transform: translate(-1px, 2px);
-    text-shadow: 
       1px 0 var(--accent),
-      -1px 0 color-mix(in oklch, var(--accent), blue 50%);
+      -1px 0 color-mix(in oklch, var(--accent), blue 40%);
+  }
+  20% {
+    transform: translate(-1px, 0.5px);
+    text-shadow: 
+      1.5px 0 var(--accent),
+      -1.5px 0 color-mix(in oklch, var(--accent), blue 40%);
+  }
+  40% {
+    transform: translate(1px, -0.5px);
+    text-shadow: 
+      -1px 0 var(--accent),
+      1px 0 color-mix(in oklch, var(--accent), blue 40%);
   }
   60% {
-    transform: translate(1px, -2px);
+    transform: translate(-0.5px, 1px);
     text-shadow: 
-      -3px 0 var(--accent),
-      3px 0 color-mix(in oklch, var(--accent), blue 50%);
+      0.5px 0 var(--accent),
+      -0.5px 0 color-mix(in oklch, var(--accent), blue 40%);
   }
-  75% {
-    transform: translate(-2px, 1px);
+  80% {
+    transform: translate(0.5px, -1px);
     text-shadow: 
-      2px 0 var(--accent),
-      -2px 0 color-mix(in oklch, var(--accent), blue 50%);
+      -1.5px 0 var(--accent),
+      1.5px 0 color-mix(in oklch, var(--accent), blue 40%);
   }
   100% {
     transform: translate(0);
     text-shadow: 
       0 0 var(--accent),
-      0 0 color-mix(in oklch, var(--accent), blue 50%);
+      0 0 color-mix(in oklch, var(--accent), blue 40%);
   }
 }
 
 .glitch-effect:hover {
-  animation: glitch 0.5s ease-in-out;
+  animation: glitch 0.3s ease-in-out;
 }
 
 /* Add line-clamp utility classes */
@@ -321,37 +297,36 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Enhanced matrix dots with depth */
+/* Minimal matrix dots */
 .matrix-pulse {
-  animation: matrix-pulse 1.8s ease-in-out infinite;
+  animation: matrix-pulse 2s ease-in-out infinite;
   box-shadow: 
-    0 0 8px oklch(0.72 0.28 15 / 0.6),
-    inset 0 0 4px oklch(0.58 0.22 15 / 0.3);
-  background: radial-gradient(circle, oklch(0.72 0.28 15 / 0.8), oklch(0.45 0.18 15 / 0.4));
+    0 0 4px oklch(0.72 0.28 15 / 0.4),
+    inset 0 0 2px oklch(0.58 0.22 15 / 0.2);
+  background: radial-gradient(circle, oklch(0.72 0.28 15 / 0.6), oklch(0.45 0.18 15 / 0.3));
 }
 
 @keyframes matrix-pulse {
   0%, 80%, 100% {
-    transform: scale(0.6);
-    opacity: 0.4;
+    transform: scale(0.8);
+    opacity: 0.3;
     box-shadow: 
-      0 0 6px oklch(0.58 0.22 15 / 0.4),
-      inset 0 0 3px oklch(0.45 0.18 15 / 0.2);
-    background: radial-gradient(circle, oklch(0.58 0.22 15 / 0.6), oklch(0.35 0.15 15 / 0.3));
+      0 0 2px oklch(0.58 0.22 15 / 0.3),
+      inset 0 0 1px oklch(0.45 0.18 15 / 0.1);
+    background: radial-gradient(circle, oklch(0.58 0.22 15 / 0.4), oklch(0.35 0.15 15 / 0.2));
   }
   40% {
-    transform: scale(1.4);
-    opacity: 1;
+    transform: scale(1.2);
+    opacity: 0.8;
     box-shadow: 
-      0 0 20px oklch(0.72 0.28 15 / 0.9), 
-      0 0 35px oklch(0.58 0.22 15 / 0.5),
-      0 0 50px oklch(0.45 0.18 15 / 0.3),
-      inset 0 0 8px oklch(0.72 0.28 15 / 0.4);
-    background: radial-gradient(circle, oklch(0.85 0.32 15), oklch(0.72 0.28 15 / 0.7));
+      0 0 8px oklch(0.72 0.28 15 / 0.6), 
+      0 0 12px oklch(0.58 0.22 15 / 0.3),
+      inset 0 0 3px oklch(0.72 0.28 15 / 0.3);
+    background: radial-gradient(circle, oklch(0.85 0.32 15 / 0.8), oklch(0.72 0.28 15 / 0.5));
   }
 }
 
-/* Cyberpunk Progress Bar */
+/* Sleek progress bar */
 .cyber-progress-container {
   position: relative;
   display: flex;
@@ -361,32 +336,31 @@
 
 .cyber-progress-track {
   position: relative;
-  height: 10px;
+  height: 8px;
   background: 
     linear-gradient(180deg, oklch(0.08 0.02 320), oklch(0.05 0.01 320)),
     oklch(0.06 0.02 320);
   border: 1px solid oklch(0.15 0.03 320);
-  border-radius: 3px;
+  border-radius: 2px;
   overflow: hidden;
   flex: 1;
   box-shadow: 
-    inset 0 2px 4px oklch(0 0 0 / 0.3),
-    0 1px 2px oklch(0.72 0.28 15 / 0.1);
+    inset 0 1px 2px oklch(0 0 0 / 0.2),
+    0 0.5px 1px oklch(0.72 0.28 15 / 0.05);
 }
 
 .cyber-progress-fill {
   height: 100%;
   background: linear-gradient(90deg, 
-    oklch(0.35 0.15 15), 
+    oklch(0.45 0.18 15), 
     oklch(0.58 0.22 15), 
     oklch(0.72 0.28 15),
-    oklch(0.58 0.22 15),
-    oklch(0.45 0.18 15)
+    oklch(0.58 0.22 15)
   );
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 
-    0 0 12px oklch(0.72 0.28 15 / 0.6),
-    inset 0 1px 2px oklch(0.85 0.32 15 / 0.4);
+    0 0 4px oklch(0.72 0.28 15 / 0.4),
+    inset 0 0.5px 1px oklch(0.85 0.32 15 / 0.3);
   animation: progress-glow 3s ease-in-out infinite alternate;
   position: relative;
 }
@@ -400,10 +374,10 @@
   bottom: 0;
   background: linear-gradient(90deg,
     transparent,
-    oklch(0.85 0.32 15 / 0.3),
+    oklch(0.85 0.32 15 / 0.2),
     transparent
   );
-  animation: progress-shimmer 2s linear infinite;
+  animation: progress-shimmer 2.5s linear infinite;
 }
 
 @keyframes progress-shimmer {
@@ -448,14 +422,14 @@
 @keyframes progress-glow {
   0% { 
     box-shadow: 
-      0 0 8px oklch(0.58 0.22 15 / 0.4),
-      inset 0 1px 2px oklch(0.72 0.28 15 / 0.3);
+      0 0 2px oklch(0.58 0.22 15 / 0.3),
+      inset 0 0.5px 1px oklch(0.72 0.28 15 / 0.2);
   }
   100% { 
     box-shadow: 
-      0 0 25px oklch(0.72 0.28 15 / 0.8), 
-      0 0 40px oklch(0.58 0.22 15 / 0.4),
-      inset 0 1px 4px oklch(0.85 0.32 15 / 0.5);
+      0 0 6px oklch(0.72 0.28 15 / 0.5), 
+      0 0 10px oklch(0.58 0.22 15 / 0.3),
+      inset 0 0.5px 2px oklch(0.85 0.32 15 / 0.4);
   }
 }
 
@@ -464,7 +438,7 @@
   50% { transform: scale(1.2); }
 }
 
-/* Hexagonal Grid Overlay */
+/* Refined hexagonal grid overlay */
 .hex-grid-overlay {
   position: absolute;
   inset: 0;
@@ -476,29 +450,29 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  gap: 10px;
+  gap: 15px;
   width: 100%;
   height: 100%;
-  padding: 20px;
+  padding: 30px;
 }
 
 .hex-cell {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   background: 
-    radial-gradient(circle at center, color-mix(in oklch, var(--accent), transparent 85%), transparent 70%),
+    radial-gradient(circle at center, color-mix(in oklch, var(--accent), transparent 90%), transparent 70%),
     transparent;
-  border: 1px solid color-mix(in oklch, var(--primary), transparent 60%);
+  border: 1px solid color-mix(in oklch, var(--primary), transparent 70%);
   clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
-  animation: hex-grid-pulse 4s ease-in-out infinite;
+  animation: hex-grid-pulse 6s ease-in-out infinite;
   position: relative;
 }
 
 .hex-cell::before {
   content: '';
   position: absolute;
-  inset: 2px;
-  background: radial-gradient(circle at center, color-mix(in oklch, var(--accent), transparent 90%), transparent);
+  inset: 1px;
+  background: radial-gradient(circle at center, color-mix(in oklch, var(--accent), transparent 95%), transparent);
   clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -506,79 +480,79 @@
 
 @keyframes hex-grid-pulse {
   0%, 100% {
-    border-color: color-mix(in oklch, var(--primary), transparent 70%);
-    background: radial-gradient(circle at center, color-mix(in oklch, var(--primary), transparent 92%), transparent 70%);
-    box-shadow: 0 0 4px color-mix(in oklch, var(--primary), transparent 80%);
+    border-color: color-mix(in oklch, var(--primary), transparent 80%);
+    background: radial-gradient(circle at center, color-mix(in oklch, var(--primary), transparent 95%), transparent 70%);
+    box-shadow: 0 0 2px color-mix(in oklch, var(--primary), transparent 90%);
   }
   50% {
-    border-color: color-mix(in oklch, var(--accent), transparent 10%);
-    background: radial-gradient(circle at center, color-mix(in oklch, var(--accent), transparent 75%), transparent 70%);
+    border-color: color-mix(in oklch, var(--accent), transparent 40%);
+    background: radial-gradient(circle at center, color-mix(in oklch, var(--accent), transparent 85%), transparent 70%);
     box-shadow: 
-      0 0 18px color-mix(in oklch, var(--accent), transparent 40%),
-      0 0 30px color-mix(in oklch, var(--primary), transparent 70%);
+      0 0 6px color-mix(in oklch, var(--accent), transparent 60%),
+      0 0 10px color-mix(in oklch, var(--primary), transparent 80%);
   }
 }
 
-/* Enhanced scanning line with particle trail */
+/* Refined scanning line */
 .scan-line-container {
   position: relative;
   width: 300px;
-  height: 4px;
+  height: 3px;
   background: 
     linear-gradient(180deg, oklch(0.08 0.02 320), oklch(0.05 0.01 320)),
     oklch(0.06 0.02 320);
-  border-radius: 2px;
+  border-radius: 1.5px;
   overflow: hidden;
   border: 1px solid oklch(0.15 0.03 320);
-  box-shadow: inset 0 1px 3px oklch(0 0 0 / 0.3);
+  box-shadow: inset 0 0.5px 1px oklch(0 0 0 / 0.2);
 }
 
 .scan-line {
   position: absolute;
   top: 0;
-  left: -80px;
-  width: 80px;
+  left: -60px;
+  width: 60px;
   height: 100%;
   background: linear-gradient(90deg, 
     transparent,
-    oklch(0.45 0.18 15 / 0.4),
-    oklch(0.72 0.28 15 / 0.9),
-    oklch(0.85 0.32 15),
-    oklch(0.72 0.28 15 / 0.9),
-    oklch(0.45 0.18 15 / 0.4),
+    oklch(0.58 0.22 15 / 0.3),
+    oklch(0.72 0.28 15 / 0.7),
+    oklch(0.85 0.32 15 / 0.9),
+    oklch(0.72 0.28 15 / 0.7),
+    oklch(0.58 0.22 15 / 0.3),
     transparent
   );
-  animation: scan-sweep 2.5s linear infinite;
+  animation: scan-sweep 3s linear infinite;
   box-shadow: 
-    0 0 15px oklch(0.72 0.28 15 / 0.8),
-    0 0 25px oklch(0.58 0.22 15 / 0.4);
+    0 0 6px oklch(0.72 0.28 15 / 0.5),
+    0 0 10px oklch(0.58 0.22 15 / 0.3);
 }
 
 .scan-line::after {
   content: '';
   position: absolute;
-  top: -2px;
-  right: -10px;
-  width: 20px;
-  height: 8px;
-  background: radial-gradient(ellipse, oklch(0.85 0.32 15 / 0.8), transparent);
-  filter: blur(1px);
-  animation: scan-particles 2.5s linear infinite;
+  top: -1px;
+  right: -6px;
+  width: 12px;
+  height: 5px;
+  background: radial-gradient(ellipse, oklch(0.85 0.32 15 / 0.6), transparent);
+  filter: blur(0.5px);
+  animation: scan-particles 3s linear infinite;
 }
 
 @keyframes scan-sweep {
-  0% { left: -80px; opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
+  0% { left: -60px; opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
   100% { left: 100%; opacity: 0; }
 }
 
 @keyframes scan-particles {
-  0%, 100% { transform: scale(0.8); opacity: 0; }
-  50% { transform: scale(1.2); opacity: 1; }
+  0%, 100% { transform: scale(0.9); opacity: 0; }
+  50% { transform: scale(1.1); opacity: 0.8; }
 }
 
-/* Binary Rain Effect */
+/* Refined binary rain effect */
 .binary-rain-container {
   position: relative;
   width: 100%;
@@ -591,17 +565,17 @@
 .binary-column {
   display: flex;
   flex-direction: column;
-  animation: binary-fall 4s linear infinite;
+  animation: binary-fall 5s linear infinite;
 }
 
 .binary-char {
   font-family: 'IBM Plex Mono', 'Fira Code', monospace;
-  font-size: 12px;
-  color: color-mix(in oklch, var(--accent), transparent 15%);
-  line-height: 1.2;
-  animation: binary-fade 1.5s ease-in-out infinite;
-  text-shadow: 0 0 6px color-mix(in oklch, var(--accent), transparent 50%);
-  font-weight: 500;
+  font-size: 10px;
+  color: color-mix(in oklch, var(--accent), transparent 25%);
+  line-height: 1.3;
+  animation: binary-fade 2s ease-in-out infinite;
+  text-shadow: 0 0 3px color-mix(in oklch, var(--accent), transparent 60%);
+  font-weight: 400;
   position: relative;
 }
 
@@ -609,139 +583,136 @@
   content: attr(data-char);
   position: absolute;
   top: 0;
-  left: 1px;
-  color: color-mix(in oklch, var(--accent), blue 50%);
+  left: 0.5px;
+  color: color-mix(in oklch, var(--accent), blue 40%);
   z-index: -1;
-  animation: binary-shadow 1.5s ease-in-out infinite;
+  animation: binary-shadow 2s ease-in-out infinite;
 }
 
-/* Enhanced binary rain with glowing effects */
-.binary-char:nth-child(3n) {
-  color: color-mix(in oklch, var(--accent), transparent 5%);
+/* Minimal binary rain highlights */
+.binary-char:nth-child(4n) {
+  color: color-mix(in oklch, var(--accent), transparent 10%);
   text-shadow: 
-    0 0 10px color-mix(in oklch, var(--accent), transparent 20%), 
-    0 0 15px color-mix(in oklch, var(--primary), transparent 60%);
-  animation: binary-glow-fade 1.8s ease-in-out infinite;
+    0 0 4px color-mix(in oklch, var(--accent), transparent 40%), 
+    0 0 6px color-mix(in oklch, var(--primary), transparent 70%);
+  animation: binary-glow-fade 2.2s ease-in-out infinite;
 }
 
-.binary-char:nth-child(5n) {
+.binary-char:nth-child(7n) {
   color: var(--accent);
   text-shadow: 
-    0 0 12px color-mix(in oklch, var(--accent), transparent 10%), 
-    0 0 20px color-mix(in oklch, var(--accent), transparent 50%),
-    0 0 30px color-mix(in oklch, var(--primary), transparent 70%);
-  animation: binary-intense-glow 1.2s ease-in-out infinite;
+    0 0 5px color-mix(in oklch, var(--accent), transparent 20%), 
+    0 0 8px color-mix(in oklch, var(--accent), transparent 60%);
+  animation: binary-intense-glow 1.8s ease-in-out infinite;
 }
 
 @keyframes binary-fall {
   0% { transform: translateY(-120%); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
   100% { transform: translateY(120%); opacity: 0; }
 }
 
 @keyframes binary-fade {
   0%, 100% { 
-    opacity: 0.4; 
-    color: color-mix(in oklch, var(--primary), transparent 40%);
-    transform: scale(0.95);
+    opacity: 0.3; 
+    color: color-mix(in oklch, var(--primary), transparent 50%);
+    transform: scale(0.98);
   }
   50% { 
-    opacity: 1; 
-    color: color-mix(in oklch, var(--accent), transparent 10%);
+    opacity: 0.8; 
+    color: color-mix(in oklch, var(--accent), transparent 20%);
     transform: scale(1);
   }
 }
 
 @keyframes binary-shadow {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 0.5; }
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.3; }
 }
 
 @keyframes binary-glow-fade {
   0%, 100% { 
-    opacity: 0.6; 
-    text-shadow: 0 0 6px oklch(0.58 0.22 15 / 0.5);
-    transform: scale(0.98);
+    opacity: 0.5; 
+    text-shadow: 0 0 3px oklch(0.58 0.22 15 / 0.4);
+    transform: scale(0.99);
   }
   50% { 
-    opacity: 1; 
+    opacity: 0.9; 
     text-shadow: 
-      0 0 15px oklch(0.85 0.32 15 / 0.9), 
-      0 0 25px oklch(0.72 0.28 15 / 0.5);
-    transform: scale(1.05);
+      0 0 6px oklch(0.85 0.32 15 / 0.7), 
+      0 0 10px oklch(0.72 0.28 15 / 0.4);
+    transform: scale(1.02);
   }
 }
 
 @keyframes binary-intense-glow {
   0%, 100% { 
-    opacity: 0.7; 
-    text-shadow: 0 0 10px oklch(0.72 0.28 15 / 0.7);
-    transform: scale(0.96) rotate(-0.5deg);
+    opacity: 0.6; 
+    text-shadow: 0 0 4px oklch(0.72 0.28 15 / 0.6);
+    transform: scale(0.97) rotate(-0.2deg);
   }
   50% { 
     opacity: 1; 
     text-shadow: 
-      0 0 18px oklch(0.95 0.35 15), 
-      0 0 30px oklch(0.85 0.32 15 / 0.7), 
-      0 0 45px oklch(0.72 0.28 15 / 0.4);
-    transform: scale(1.1) rotate(0.5deg);
+      0 0 8px oklch(0.95 0.35 15 / 0.8), 
+      0 0 12px oklch(0.85 0.32 15 / 0.5); 
+    transform: scale(1.05) rotate(0.2deg);
   }
 }
 
 /* Cascading effect for different speeds */
 .binary-column:nth-child(even) {
-  animation-duration: 4.5s;
-  animation-delay: 0.8s;
+  animation-duration: 5.5s;
+  animation-delay: 1s;
 }
 
 .binary-column:nth-child(3n) {
-  animation-duration: 3.8s;
-  animation-delay: 1.2s;
+  animation-duration: 4.8s;
+  animation-delay: 1.5s;
 }
 
 .binary-column:nth-child(4n) {
-  animation-duration: 5.2s;
-  animation-delay: 0.4s;
+  animation-duration: 6s;
+  animation-delay: 0.5s;
 }
 
-/* Special effects for immersive mode */
+/* Refined immersive mode */
 .binary-rain-container.immersive .binary-char {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 500;
 }
 
-.binary-rain-container.immersive .binary-char:nth-child(7n) {
-  color: oklch(0.98 0.38 15);
+.binary-rain-container.immersive .binary-char:nth-child(9n) {
+  color: oklch(0.90 0.35 15);
   text-shadow: 
-    0 0 8px oklch(0.95 0.35 15),
-    0 0 15px oklch(0.85 0.32 15 / 0.9),
-    0 0 25px oklch(0.72 0.28 15 / 0.6),
-    0 0 40px oklch(0.58 0.22 15 / 0.3);
-  animation: binary-ultra-glow 0.9s ease-in-out infinite;
+    0 0 4px oklch(0.95 0.35 15 / 0.8),
+    0 0 6px oklch(0.85 0.32 15 / 0.6),
+    0 0 10px oklch(0.72 0.28 15 / 0.4);
+  animation: binary-ultra-glow 1.5s ease-in-out infinite;
 }
 
 @keyframes binary-ultra-glow {
   0%, 100% { 
-    opacity: 0.8; 
-    transform: scale(0.95) rotate(-1deg);
+    opacity: 0.7; 
+    transform: scale(0.98) rotate(-0.3deg);
     filter: brightness(1) saturate(1);
   }
   50% { 
     opacity: 1; 
-    transform: scale(1.2) rotate(1deg);
-    filter: brightness(1.3) saturate(1.4);
+    transform: scale(1.08) rotate(0.3deg);
+    filter: brightness(1.2) saturate(1.2);
   }
 }
 
 /* Responsive binary rain */
 @media (max-width: 768px) {
   .binary-char {
-    font-size: 9px;
+    font-size: 8px;
   }
   
   .binary-rain-container.immersive .binary-char {
-    font-size: 10px;
+    font-size: 9px;
   }
 }
 
@@ -798,7 +769,7 @@
   pointer-events: none;
 }
 
-/* Floating Particle System */
+/* Refined floating particle system */
 .floating-particles {
   position: absolute;
   inset: 0;
@@ -810,40 +781,39 @@
 .particle {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in oklch, var(--accent), transparent 40%), color-mix(in oklch, var(--primary), transparent 70%));
+  background: radial-gradient(circle, color-mix(in oklch, var(--accent), transparent 50%), color-mix(in oklch, var(--primary), transparent 80%));
   box-shadow: 
-    0 0 8px color-mix(in oklch, var(--accent), transparent 60%),
-    0 0 15px color-mix(in oklch, var(--primary), transparent 80%);
-  animation: particle-float 15s linear infinite;
+    0 0 4px color-mix(in oklch, var(--accent), transparent 70%),
+    0 0 6px color-mix(in oklch, var(--primary), transparent 85%);
+  animation: particle-float 20s linear infinite;
 }
 
 .particle.small {
-  width: 2px;
-  height: 2px;
-  background: radial-gradient(circle, color-mix(in oklch, var(--accent), transparent 20%), transparent);
-  box-shadow: 0 0 4px color-mix(in oklch, var(--accent), transparent 40%);
-  animation-duration: 12s;
-}
-
-.particle.medium {
-  width: 3px;
-  height: 3px;
-  background: radial-gradient(circle, color-mix(in oklch, var(--accent), transparent 30%), color-mix(in oklch, var(--primary), transparent 60%));
-  box-shadow: 
-    0 0 6px color-mix(in oklch, var(--accent), transparent 50%),
-    0 0 12px color-mix(in oklch, var(--accent), transparent 70%);
+  width: 1.5px;
+  height: 1.5px;
+  background: radial-gradient(circle, color-mix(in oklch, var(--accent), transparent 30%), transparent);
+  box-shadow: 0 0 2px color-mix(in oklch, var(--accent), transparent 50%);
   animation-duration: 18s;
 }
 
-.particle.large {
-  width: 4px;
-  height: 4px;
-  background: radial-gradient(circle, color-mix(in oklch, var(--accent), transparent 20%), color-mix(in oklch, var(--accent), transparent 50%));
+.particle.medium {
+  width: 2.5px;
+  height: 2.5px;
+  background: radial-gradient(circle, color-mix(in oklch, var(--accent), transparent 40%), color-mix(in oklch, var(--primary), transparent 70%));
   box-shadow: 
-    0 0 10px color-mix(in oklch, var(--accent), transparent 40%),
-    0 0 20px color-mix(in oklch, var(--accent), transparent 60%),
-    0 0 30px color-mix(in oklch, var(--accent), transparent 80%);
+    0 0 3px color-mix(in oklch, var(--accent), transparent 60%),
+    0 0 5px color-mix(in oklch, var(--accent), transparent 80%);
   animation-duration: 25s;
+}
+
+.particle.large {
+  width: 3px;
+  height: 3px;
+  background: radial-gradient(circle, color-mix(in oklch, var(--accent), transparent 30%), color-mix(in oklch, var(--accent), transparent 60%));
+  box-shadow: 
+    0 0 4px color-mix(in oklch, var(--accent), transparent 50%),
+    0 0 8px color-mix(in oklch, var(--accent), transparent 70%);
+  animation-duration: 30s;
 }
 
 .particle.accent {
@@ -854,20 +824,20 @@
   animation-duration: 20s;
 }
 
-/* Particle movement patterns */
+/* Refined particle movement patterns */
 @keyframes particle-float {
   0% {
     transform: translateY(100vh) translateX(0) rotate(0deg);
     opacity: 0;
   }
   10% {
-    opacity: 1;
+    opacity: 0.6;
   }
   90% {
-    opacity: 1;
+    opacity: 0.6;
   }
   100% {
-    transform: translateY(-100px) translateX(var(--drift-x, 50px)) rotate(360deg);
+    transform: translateY(-100px) translateX(var(--drift-x, 30px)) rotate(360deg);
     opacity: 0;
   }
 }
@@ -898,9 +868,9 @@
   --drift-x: -45px;
 }
 
-/* Pulsing effect for some particles */
+/* Refined pulse effect for some particles */
 .particle.pulse {
-  animation: particle-float 20s linear infinite, particle-pulse 3s ease-in-out infinite;
+  animation: particle-float 25s linear infinite, particle-pulse 4s ease-in-out infinite;
 }
 
 @keyframes particle-pulse {
@@ -909,39 +879,39 @@
     filter: brightness(1);
   }
   50% {
-    transform: scale(1.4);
-    filter: brightness(1.5);
+    transform: scale(1.2);
+    filter: brightness(1.3);
   }
 }
 
-/* Data stream particles - more structured movement */
+/* Refined data stream particles */
 .data-stream-particle {
   position: absolute;
   width: 1px;
-  height: 8px;
+  height: 6px;
   background: linear-gradient(0deg, 
     transparent,
-    color-mix(in oklch, var(--accent), transparent 20%),
+    color-mix(in oklch, var(--accent), transparent 30%),
     var(--accent),
-    color-mix(in oklch, var(--accent), transparent 20%),
+    color-mix(in oklch, var(--accent), transparent 30%),
     transparent
   );
-  box-shadow: 0 0 6px color-mix(in oklch, var(--accent), transparent 40%);
-  animation: data-stream 8s linear infinite;
+  box-shadow: 0 0 3px color-mix(in oklch, var(--accent), transparent 50%);
+  animation: data-stream 12s linear infinite;
   pointer-events: none;
 }
 
 .data-stream-particle.horizontal {
-  width: 8px;
+  width: 6px;
   height: 1px;
   background: linear-gradient(90deg, 
     transparent,
-    color-mix(in oklch, var(--accent), transparent 20%),
+    color-mix(in oklch, var(--accent), transparent 30%),
     var(--accent),
-    color-mix(in oklch, var(--accent), transparent 20%),
+    color-mix(in oklch, var(--accent), transparent 30%),
     transparent
   );
-  animation: data-stream-horizontal 10s linear infinite;
+  animation: data-stream-horizontal 15s linear infinite;
 }
 
 @keyframes data-stream {
@@ -950,10 +920,10 @@
     opacity: 0;
   }
   5% {
-    opacity: 1;
+    opacity: 0.7;
   }
   95% {
-    opacity: 1;
+    opacity: 0.7;
   }
   100% {
     transform: translateY(-50px);
@@ -967,10 +937,10 @@
     opacity: 0;
   }
   5% {
-    opacity: 1;
+    opacity: 0.7;
   }
   95% {
-    opacity: 1;
+    opacity: 0.7;
   }
   100% {
     transform: translateX(100vw);
@@ -980,23 +950,23 @@
 
 /* Different timing for data streams */
 .data-stream-particle:nth-child(2n) {
-  animation-delay: -3s;
-  animation-duration: 12s;
+  animation-delay: -4s;
+  animation-duration: 16s;
 }
 
 .data-stream-particle:nth-child(3n) {
-  animation-delay: -6s;
-  animation-duration: 15s;
+  animation-delay: -8s;
+  animation-duration: 20s;
 }
 
 .data-stream-particle.horizontal:nth-child(2n) {
-  animation-delay: -4s;
-  animation-duration: 14s;
+  animation-delay: -6s;
+  animation-duration: 18s;
 }
 
 .data-stream-particle.horizontal:nth-child(3n) {
-  animation-delay: -7s;
-  animation-duration: 18s;
+  animation-delay: -10s;
+  animation-duration: 24s;
 }
 
 body {
