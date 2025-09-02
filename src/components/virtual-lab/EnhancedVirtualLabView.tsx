@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, Play, Stop, Trash, Settings, Terminal, Network, Shield, DesktopTower, Code, Database, Eye, Target, Users, Clock, HardDrives, Cpu, Activity } from '@phosphor-icons/react'
+import { Plus, Play, Stop, Trash, Settings, Terminal, Network, Shield, DesktopTower, Code, Database, Eye, Target, Users, Clock, HardDrives, Cpu, Activity, Binoculars } from '@phosphor-icons/react'
 import { useVirtualLab } from '@/hooks/useVirtualLab'
 import { useKV } from '@github/spark/hooks'
 import type { User } from '@/types/user'
@@ -21,7 +21,7 @@ interface VMTemplate {
   name: string
   description: string
   distro: 'kali' | 'arch' | 'ubuntu' | 'centos' | 'windows-10' | 'windows-server'
-  category: 'penetration-testing' | 'malware-analysis' | 'forensics' | 'red-team' | 'blue-team' | 'research'
+  category: 'penetration-testing' | 'malware-analysis' | 'forensics' | 'red-team' | 'blue-team' | 'research' | 'reconnaissance'
   preInstalledTools: string[]
   resources: {
     cpu: number
@@ -71,80 +71,146 @@ export function EnhancedVirtualLabView({ currentUser }: Props) {
       const sampleTemplates: VMTemplate[] = [
         {
           id: 'template-1',
-          name: 'Kali Linux - Red Team Edition',
-          description: 'Pre-configured Kali Linux with advanced red team tools and frameworks',
+          name: 'Kali Linux - Red Team Elite',
+          description: 'Ultimate red team platform with advanced C2 frameworks and custom toolsets',
           distro: 'kali',
           category: 'red-team',
           preInstalledTools: [
-            'Metasploit Framework',
             'Cobalt Strike',
-            'Empire Framework',
-            'BloodHound',
-            'Mimikatz',
-            'PowerShell Empire',
+            'Sliver C2 Framework',
+            'Havoc Framework', 
             'Covenant C2',
-            'Sliver C2',
-            'Havoc Framework',
-            'Nmap Advanced Scripts'
+            'Empire Framework',
+            'BloodHound CE',
+            'Mimikatz',
+            'Rubeus',
+            'SharpHound',
+            'PowerView',
+            'Impacket Suite',
+            'CrackMapExec',
+            'Responder',
+            'Chisel Tunneling',
+            'Ligolo Proxy',
+            'Custom Payload Generators',
+            'OPSEC Tools Suite',
+            'Advanced Persistence Modules'
           ],
-          resources: { cpu: 4, memory: 8192, storage: 80 },
+          resources: { cpu: 6, memory: 16384, storage: 120 },
           networkConfig: 'nat',
           isSecure: true
         },
         {
           id: 'template-2',
-          name: 'Windows 10 - Target System',
-          description: 'Intentionally vulnerable Windows 10 system for testing',
-          distro: 'windows-10',
+          name: 'Windows Domain Controller - Target',
+          description: 'Vulnerable Windows Server 2019 DC with realistic enterprise misconfigurations',
+          distro: 'windows-server',
           category: 'penetration-testing',
           preInstalledTools: [
-            'Vulnerable Software Suite',
-            'Legacy Applications',
-            'Weak Configurations',
-            'Monitoring Tools'
+            'Active Directory Domain Services',
+            'DNS Server',
+            'DHCP Server',
+            'File Share Services',
+            'Intentional Misconfigurations',
+            'Weak GPO Settings',
+            'Legacy Protocols Enabled',
+            'Vulnerable Service Accounts',
+            'Unpatched Components',
+            'Simulation Monitoring Tools'
           ],
-          resources: { cpu: 2, memory: 4096, storage: 60 },
+          resources: { cpu: 4, memory: 8192, storage: 80 },
           networkConfig: 'isolated',
           isSecure: false
         },
         {
           id: 'template-3',
-          name: 'Ubuntu Server - Blue Team SOC',
-          description: 'Ubuntu server configured with SIEM and monitoring tools',
-          distro: 'ubuntu',
-          category: 'blue-team',
+          name: 'Windows 11 - Corporate Workstation',
+          description: 'Enterprise Windows 11 workstation with common business applications',
+          distro: 'windows-10',
+          category: 'penetration-testing',
           preInstalledTools: [
-            'Elastic Stack (ELK)',
-            'Splunk Universal Forwarder',
-            'OSSEC HIDS',
-            'Suricata IDS',
-            'Wazuh',
-            'TheHive',
-            'Cortex',
-            'MISP'
+            'Microsoft Office Suite',
+            'Adobe Creative Suite',
+            'Chrome Browser',
+            'Teams Application',
+            'Outlook Client',
+            'Corporate VPN Client',
+            'Weak Endpoint Protection',
+            'Scheduled Tasks',
+            'Local Admin Accounts',
+            'Cached Credentials'
           ],
-          resources: { cpu: 4, memory: 16384, storage: 120 },
-          networkConfig: 'bridged',
-          isSecure: true
+          resources: { cpu: 4, memory: 8192, storage: 100 },
+          networkConfig: 'nat',
+          isSecure: false
         },
         {
           id: 'template-4',
-          name: 'REMnux - Malware Analysis',
-          description: 'Specialized Linux distribution for reverse-engineering malware',
+          name: 'Ubuntu Server - Web Application Target',
+          description: 'Vulnerable LAMP stack with intentional web application vulnerabilities',
           distro: 'ubuntu',
-          category: 'malware-analysis',
+          category: 'penetration-testing',
           preInstalledTools: [
-            'IDA Pro Demo',
-            'Ghidra',
-            'radare2',
-            'Volatility',
-            'YARA',
-            'Wireshark',
-            'Burp Suite',
-            'Dynamic Analysis Tools'
+            'Apache Web Server',
+            'MySQL Database',
+            'PHP Runtime',
+            'Vulnerable Web Apps (DVWA, WebGoat)',
+            'Weak Database Configurations',
+            'Exposed Admin Panels',
+            'OWASP Top 10 Vulnerabilities',
+            'File Upload Vulnerabilities',
+            'SQL Injection Points',
+            'XSS Vulnerabilities'
           ],
-          resources: { cpu: 2, memory: 8192, storage: 100 },
-          networkConfig: 'isolated',
+          resources: { cpu: 2, memory: 4096, storage: 60 },
+          networkConfig: 'nat',
+          isSecure: false
+        },
+        {
+          id: 'template-5',
+          name: 'Parrot Security - OSINT Specialist',
+          description: 'Specialized distribution for open source intelligence gathering',
+          distro: 'kali',
+          category: 'reconnaissance',
+          preInstalledTools: [
+            'Maltego',
+            'theHarvester',
+            'Recon-ng',
+            'SpiderFoot',
+            'Shodan Tools',
+            'Google Dorking Scripts',
+            'Social Media Intelligence',
+            'DNS Enumeration Tools',
+            'Subdomain Discovery',
+            'Email Harvesting',
+            'Image Metadata Analysis',
+            'Geolocation Tools'
+          ],
+          resources: { cpu: 4, memory: 8192, storage: 100 },
+          networkConfig: 'nat',
+          isSecure: true
+        },
+        {
+          id: 'template-6',
+          name: 'RedTeam Infrastructure - C2 Server',
+          description: 'Dedicated C2 infrastructure server with multiple frameworks',
+          distro: 'ubuntu',
+          category: 'red-team',
+          preInstalledTools: [
+            'Cobalt Strike Team Server',
+            'Metasploit Framework',
+            'Empire C2 Server',
+            'Sliver Server',
+            'Mythic C2 Framework',
+            'Apache Redirectors',
+            'Domain Fronting Setup',
+            'SSL Certificate Management',
+            'Traffic Obfuscation',
+            'Payload Hosting',
+            'Custom Malleable Profiles',
+            'OPSEC Monitoring'
+          ],
+          resources: { cpu: 8, memory: 32768, storage: 200 },
+          networkConfig: 'bridged',
           isSecure: true
         }
       ]
@@ -155,19 +221,59 @@ export function EnhancedVirtualLabView({ currentUser }: Props) {
       const sampleTopologies: NetworkTopology[] = [
         {
           id: 'topology-1',
-          name: 'Red Team vs Blue Team Lab',
-          description: 'Simulated corporate network with attackers and defenders',
+          name: 'Advanced Persistent Threat Simulation',
+          description: 'Complex enterprise network for full-scale APT simulation exercises',
           vms: [],
           subnets: [
-            { name: 'DMZ', cidr: '192.168.1.0/24', purpose: 'Public-facing services' },
-            { name: 'Internal', cidr: '10.0.1.0/24', purpose: 'Corporate workstations' },
-            { name: 'Server', cidr: '10.0.2.0/24', purpose: 'Internal servers and databases' },
-            { name: 'Management', cidr: '10.0.3.0/24', purpose: 'IT management and monitoring' }
+            { name: 'Internet-DMZ', cidr: '203.0.113.0/24', purpose: 'External-facing services and web servers' },
+            { name: 'Corporate-DMZ', cidr: '192.168.100.0/24', purpose: 'Email servers and external access' },
+            { name: 'Workstation-VLAN', cidr: '10.1.0.0/16', purpose: 'Employee workstations and laptops' },
+            { name: 'Server-VLAN', cidr: '10.2.0.0/16', purpose: 'Internal application and database servers' },
+            { name: 'Admin-VLAN', cidr: '10.3.0.0/24', purpose: 'IT administration and domain controllers' },
+            { name: 'C2-Infrastructure', cidr: '172.16.0.0/24', purpose: 'Red team command and control servers' }
           ],
           rules: [
-            { source: 'DMZ', destination: 'Internal', ports: '80,443', protocol: 'TCP', action: 'allow' },
-            { source: 'Internal', destination: 'Server', ports: '1433,3306', protocol: 'TCP', action: 'allow' },
-            { source: 'Management', destination: '*', ports: '*', protocol: '*', action: 'allow' }
+            { source: 'Internet-DMZ', destination: 'Corporate-DMZ', ports: '80,443,25', protocol: 'TCP', action: 'allow' },
+            { source: 'Corporate-DMZ', destination: 'Admin-VLAN', ports: '389,636,88', protocol: 'TCP', action: 'allow' },
+            { source: 'Workstation-VLAN', destination: 'Server-VLAN', ports: '1433,3306,5432', protocol: 'TCP', action: 'allow' },
+            { source: 'Admin-VLAN', destination: '*', ports: '*', protocol: '*', action: 'allow' },
+            { source: 'C2-Infrastructure', destination: 'Workstation-VLAN', ports: '80,443,53', protocol: 'TCP', action: 'allow' }
+          ]
+        },
+        {
+          id: 'topology-2',
+          name: 'Red Team Training Range',
+          description: 'Isolated training environment for red team skill development',
+          vms: [],
+          subnets: [
+            { name: 'Attacker-Network', cidr: '192.168.1.0/24', purpose: 'Red team operator workstations' },
+            { name: 'Target-Network', cidr: '192.168.2.0/24', purpose: 'Vulnerable target systems' },
+            { name: 'C2-Network', cidr: '192.168.3.0/24', purpose: 'Command and control infrastructure' },
+            { name: 'Monitoring-Network', cidr: '192.168.4.0/24', purpose: 'Exercise monitoring and logging' }
+          ],
+          rules: [
+            { source: 'Attacker-Network', destination: 'Target-Network', ports: '*', protocol: '*', action: 'allow' },
+            { source: 'C2-Network', destination: 'Target-Network', ports: '80,443,53,8080', protocol: 'TCP', action: 'allow' },
+            { source: 'Monitoring-Network', destination: '*', ports: '514,161,6514', protocol: 'UDP', action: 'allow' },
+            { source: 'Target-Network', destination: 'Attacker-Network', ports: '*', protocol: '*', action: 'deny' }
+          ]
+        },
+        {
+          id: 'topology-3',
+          name: 'Purple Team Collaborative Lab',
+          description: 'Integrated red and blue team exercise environment',
+          vms: [],
+          subnets: [
+            { name: 'Red-Team-Ops', cidr: '10.100.1.0/24', purpose: 'Red team attack infrastructure' },
+            { name: 'Blue-Team-SOC', cidr: '10.100.2.0/24', purpose: 'Blue team monitoring and analysis' },
+            { name: 'Corporate-Sim', cidr: '10.100.10.0/24', purpose: 'Simulated corporate environment' },
+            { name: 'Shared-Range', cidr: '10.100.99.0/24', purpose: 'Shared exercise coordination' }
+          ],
+          rules: [
+            { source: 'Red-Team-Ops', destination: 'Corporate-Sim', ports: '*', protocol: '*', action: 'allow' },
+            { source: 'Blue-Team-SOC', destination: 'Corporate-Sim', ports: '514,161,162', protocol: 'UDP', action: 'allow' },
+            { source: 'Shared-Range', destination: '*', ports: '22,3389,5985', protocol: 'TCP', action: 'allow' },
+            { source: '*', destination: 'Blue-Team-SOC', ports: '9200,5601', protocol: 'TCP', action: 'allow' }
           ]
         }
       ]
@@ -222,6 +328,7 @@ export function EnhancedVirtualLabView({ currentUser }: Props) {
       case 'malware-analysis': return <Code className="w-5 h-5 text-orange-400" />
       case 'forensics': return <Database className="w-5 h-5 text-green-400" />
       case 'research': return <Activity className="w-5 h-5 text-indigo-400" />
+      case 'reconnaissance': return <Binoculars className="w-5 h-5 text-yellow-400" />
       default: return <DesktopTower className="w-5 h-5 text-gray-400" />
     }
   }
