@@ -23,10 +23,14 @@ import {
   MessageCircle,
   Calendar,
   FileText,
-  UserPlus
+  UserPlus,
+  Gear,
+  Key
 } from '@phosphor-icons/react'
 import { useBugBountyPlatforms } from '@/hooks/useBugBountyPlatforms'
 import { useTeamHunts } from '@/hooks/useTeamHunts'
+import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
+import { APISettings } from '@/components/settings/APISettings'
 import { User } from '@/types/user'
 import { toast } from 'sonner'
 
@@ -38,16 +42,28 @@ interface BugBountyDashboardProps {
 export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashboardProps) {
   const { platforms, programs, liveFeed } = useBugBountyPlatforms()
   const { teamHunts, partnerRequests, joinTeamHunt, createPartnerRequest } = useTeamHunts()
+  const { integrations, programs: realPrograms, threatFeed } = useBugBountyIntegration()
   const [activeTab, setActiveTab] = useState('overview')
   const [showBinaryRain, setShowBinaryRain] = useState(false)
+  const [showAPISettings, setShowAPISettings] = useState(false)
+
+  // Use real data when available, fallback to sample data
+  const allPrograms = realPrograms.length > 0 ? realPrograms : programs
+  const allThreats = threatFeed.length > 0 ? threatFeed : liveFeed
 
   const activePlatforms = platforms.filter(p => p.isActive)
-  const publicPrograms = programs.filter(p => p.type === 'public' && p.status === 'active')
+  const connectedIntegrations = integrations.filter(i => i.connected)
+  const publicPrograms = allPrograms.filter(p => p.status === 'active')
   const activeHunts = teamHunts.filter(h => h.status === 'active')
   const openPartnerRequests = partnerRequests.filter(r => r.status === 'open')
 
-  const totalBountyValue = programs.reduce((total, program) => {
-    return total + (program.rewards.bountyTable[0]?.maxAmount || 0)
+  const totalBountyValue = allPrograms.reduce((total, program) => {
+    const maxReward = Math.max(
+      parseInt(program.rewards.critical.split(' - ')[1]?.replace(/[^0-9]/g, '') || '0'),
+      parseInt(program.rewards.high.split(' - ')[1]?.replace(/[^0-9]/g, '') || '0')
+    )
+    return total + maxReward
+  }, 0)
   }, 0)
 
   const handleJoinHunt = (huntId: string) => {
@@ -104,6 +120,15 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
             <Activity className="h-4 w-4 mr-2" />
             {showBinaryRain ? 'Disable' : 'Enable'} Matrix Mode
           </Button>
+          <Button 
+            onClick={() => setShowAPISettings(true)}
+            variant="outline" 
+            size="sm"
+            className="hover-red-glow"
+          >
+            <Key className="w-4 h-4 mr-2" />
+            API Settings
+          </Button>
           <Button onClick={handleCreatePartnerRequest} className="hover-red-glow">
             <UserPlus className="h-4 w-4 mr-2" />
             Find Partner
@@ -111,26 +136,40 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
         </div>
       </div>
 
+      {showAPISettings && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-6xl max-h-[90vh] overflow-auto bg-background border border-border rounded-lg">
+            <div className="p-6">
+              <APISettings onClose={() => setShowAPISettings(false)} />
+            </div>
+          </div>
+        </div>
+      )}
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="relative z-10">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="platforms">Platforms</TabsTrigger>
           <TabsTrigger value="programs">Programs</TabsTrigger>
           <TabsTrigger value="team-hunts">Team Hunts</TabsTrigger>
           <TabsTrigger value="partners">Partner Requests</TabsTrigger>
           <TabsTrigger value="live-feed">Live Feed</TabsTrigger>
+          <TabsTrigger value="integrations" className="flex items-center gap-1">
+            <Gear className="w-3 h-3" />
+            Integrations
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
           {/* Overview Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <Card className="hover-border-flow">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-2">
                   <Shield className="h-8 w-8 text-primary" />
                   <div>
-                    <p className="text-2xl font-bold">{activePlatforms.length}</p>
-                    <p className="text-xs text-muted-foreground">Active Platforms</p>
+                    <p className="text-2xl font-bold">{connectedIntegrations.length}</p>
+                    <p className="text-xs text-muted-foreground">Connected APIs</p>
                   </div>
                 </div>
               </CardContent>
@@ -167,6 +206,18 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
                   <div>
                     <p className="text-2xl font-bold">${(totalBountyValue / 1000).toFixed(0)}K</p>
                     <p className="text-xs text-muted-foreground">Total Bounty Value</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover-border-flow">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-2">
+                  <Zap className="h-8 w-8 text-primary" />
+                  <div>
+                    <p className="text-2xl font-bold">{allThreats.length}</p>
+                    <p className="text-xs text-muted-foreground">Live Threats</p>
                   </div>
                 </div>
               </CardContent>
@@ -586,6 +637,154 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
               </ScrollArea>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="integrations" className="space-y-6">
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {integrations.map((integration) => {
+                const isConnected = integration.connected
+                const hasErrors = syncErrors[integration.name.toLowerCase().split(' ')[0]]
+                
+                return (
+                  <Card key={integration.id} className="glass-card hover-border-flow">
+                    <CardHeader className="pb-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-3 h-3 rounded-full ${
+                            isConnected 
+                              ? hasErrors 
+                                ? 'bg-yellow-400 animate-pulse' 
+                                : 'bg-green-400'
+                              : 'bg-muted-foreground'
+                          }`} />
+                          <div>
+                            <CardTitle className="text-lg">{integration.name}</CardTitle>
+                            <p className="text-sm text-muted-foreground capitalize">
+                              {integration.type.replace('-', ' ')} platform
+                            </p>
+                          </div>
+                        </div>
+                        <Badge variant={isConnected ? 'default' : 'secondary'}>
+                          {isConnected ? 'Connected' : 'Disconnected'}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent className="space-y-4">
+                      <div className="flex flex-wrap gap-1">
+                        {integration.dataTypes.map((type) => (
+                          <Badge key={type} variant="outline" className="text-xs">
+                            {type}
+                          </Badge>
+                        ))}
+                      </div>
+                      
+                      {isConnected && (
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Last sync:</span>
+                            <span>{integration.lastSync ? new Date(integration.lastSync).toLocaleDateString() : 'Never'}</span>
+                          </div>
+                          
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Rate limit:</span>
+                            <span className="flex items-center gap-1">
+                              <Activity className="w-3 h-3" />
+                              {integration.rateLimits.remaining}/{integration.rateLimits.requests}
+                            </span>
+                          </div>
+                          
+                          <Progress 
+                            value={(integration.rateLimits.remaining / integration.rateLimits.requests) * 100} 
+                            className="h-2"
+                          />
+                        </div>
+                      )}
+                      
+                      {hasErrors && (
+                        <div className="flex items-center gap-2 p-2 bg-yellow-500/10 border border-yellow-500/20 rounded text-sm text-yellow-300">
+                          <Zap className="w-4 h-4" />
+                          <span>Sync issues detected</span>
+                        </div>
+                      )}
+                      
+                      <div className="flex gap-2">
+                        {isConnected ? (
+                          <>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => syncPlatformData(integration.id)}
+                              disabled={isLoading}
+                              className="flex-1"
+                            >
+                              <Activity className="w-3 h-3 mr-1" />
+                              Sync
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => disconnectPlatform(integration.id)}
+                              className="flex-1"
+                            >
+                              Disconnect
+                            </Button>
+                          </>
+                        ) : (
+                          <Button
+                            onClick={() => setShowAPISettings(true)}
+                            className="w-full hover-red-glow"
+                            size="sm"
+                          >
+                            <Key className="w-3 h-3 mr-2" />
+                            Configure
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </div>
+            
+            <Card className="glass-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="w-5 h-5" />
+                  Integration Status Summary
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                  <div>
+                    <div className="text-2xl font-bold text-green-400">
+                      {integrations.filter(i => i.connected).length}
+                    </div>
+                    <div className="text-sm text-muted-foreground">Connected</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-muted-foreground">
+                      {integrations.filter(i => !i.connected).length}
+                    </div>
+                    <div className="text-sm text-muted-foreground">Available</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-foreground">
+                      {realPrograms.length}
+                    </div>
+                    <div className="text-sm text-muted-foreground">Programs</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-foreground">
+                      {threatFeed.length}
+                    </div>
+                    <div className="text-sm text-muted-foreground">Threats</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

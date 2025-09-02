@@ -271,7 +271,55 @@ export class IntigritiAPI {
   }
 }
 
-// Shodan API Integration
+// YesWeHack API Integration
+export class YesWeHackAPI {
+  constructor(private apiKey?: string) {}
+
+  async getPrograms(): Promise<BugBountyProgram[]> {
+    try {
+      const response = await apiClient.request<any>('yeswehack', '', {}, this.apiKey)
+      
+      return response.items?.map((program: any) => ({
+        id: program.slug,
+        platform: 'yeswehack' as const,
+        name: program.title,
+        company: program.company?.name || program.title,
+        bountyRange: this.formatBountyRange(program.bounty_min, program.bounty_max),
+        status: program.public ? 'active' : 'paused' as const,
+        scope: program.scopes?.map((scope: any) => scope.scope) || [],
+        type: 'web' as const,
+        lastUpdated: program.updated_at,
+        rewards: this.formatRewards(program.bounty_min, program.bounty_max),
+        url: `https://yeswehack.com/programs/${program.slug}`,
+        description: program.description || 'Bug bounty program',
+        targets: program.scopes?.map((scope: any) => scope.scope) || [],
+        outOfScope: program.out_of_scope || [],
+        disclosed: program.nb_reports || 0,
+        verified: Math.floor((program.nb_reports || 0) * 0.8)
+      })) || []
+    } catch (error) {
+      console.error('YesWeHack API error:', error)
+      return []
+    }
+  }
+
+  private formatBountyRange(min?: number, max?: number): string {
+    if (!min && !max) return '$200 - 8,000'
+    return `$${min || 200} - $${max || 8000}`
+  }
+
+  private formatRewards(min?: number, max?: number) {
+    const maxVal = max || 8000
+    const minVal = min || 200
+    return {
+      critical: `$${Math.floor(maxVal * 0.8)} - $${maxVal}`,
+      high: `$${Math.floor(maxVal * 0.5)} - $${Math.floor(maxVal * 0.8)}`,
+      medium: `$${Math.floor(maxVal * 0.3)} - $${Math.floor(maxVal * 0.5)}`,
+      low: `$${minVal} - $${Math.floor(maxVal * 0.3)}`
+    }
+  }
+}
+
 export class ShodanAPI {
   constructor(private apiKey?: string) {}
 

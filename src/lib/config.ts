@@ -1,344 +1,426 @@
 /**
- * Production Backend Configuration
- * Environment variables and API endpoints for production deployment
+ * Production Configuration Management
+ * Handles API keys, environment variables, and security settings
  */
 
-// Environment Configuration
-export const ENV = {
-  NODE_ENV: import.meta.env.NODE_ENV || 'development',
-  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://api.cyberconnect.io',
-  WS_BASE_URL: import.meta.env.VITE_WS_BASE_URL || 'wss://api.cyberconnect.io',
-  
-  // Third-party API endpoints
-  HACKERONE_API: 'https://api.hackerone.com/v1',
-  BUGCROWD_API: 'https://api.bugcrowd.com/v2',
-  INTIGRITI_API: 'https://api.intigriti.com/external',
-  YESWEHACK_API: 'https://api.yeswehack.com/programs',
-  SHODAN_API: 'https://api.shodan.io',
-  PROJECTDISCOVERY_API: 'https://api.projectdiscovery.io/v1',
-  CVE_API: 'https://services.nvd.nist.gov/rest/json/cves/2.0',
-  EXPLOITDB_API: 'https://www.exploit-db.com/api/v1',
-  
-  // Cloud Provider APIs
-  AWS_API: 'https://ec2.amazonaws.com',
-  GCP_API: 'https://compute.googleapis.com/compute/v1',
-  AZURE_API: 'https://management.azure.com',
-  DIGITALOCEAN_API: 'https://api.digitalocean.com/v2',
-  VULTR_API: 'https://api.vultr.com/v2',
-  
-  // File upload limits
-  MAX_FILE_SIZE: 100 * 1024 * 1024, // 100MB
-  ALLOWED_FILE_TYPES: [
-    'text/plain',
-    'text/markdown',
-    'application/json',
-    'application/javascript',
-    'text/javascript',
-    'application/typescript',
-    'text/x-python',
-    'text/x-go',
-    'text/x-rust',
-    'text/x-c',
-    'text/x-cpp',
-    'text/x-shell',
-    'application/x-powershell',
-    'application/sql',
-    'text/html',
-    'text/css',
-    'application/xml',
-    'text/yaml',
-    'image/png',
-    'image/jpeg',
-    'image/gif',
-    'image/webp',
-    'application/pdf'
-  ],
-  
-  // Rate limiting
-  RATE_LIMITS: {
-    API_REQUESTS_PER_MINUTE: 100,
-    WEBSOCKET_MESSAGES_PER_SECOND: 10,
-    FILE_UPLOADS_PER_HOUR: 50,
-    VULNERABILITY_SCANS_PER_DAY: 20
-  },
-  
-  // Feature flags
-  FEATURES: {
-    REAL_TIME_COLLABORATION: true,
-    CLOUD_VM_PROVISIONING: true,
-    THREAT_INTELLIGENCE_FEEDS: true,
-    ENCRYPTED_MESSAGING: true,
-    GITHUB_INTEGRATION: true,
-    DOCKER_CONTAINERS: true,
-    VULNERABILITY_SCANNING: true,
-    TEAM_EARNINGS_TRACKING: true,
-    MARKETPLACE: true,
-    LIVE_STREAMING: false, // Beta feature
-    AI_VULNERABILITY_ANALYSIS: false // Beta feature
+import { useKV } from '@github/spark/hooks'
+
+export interface APIKeyConfig {
+  platform: string
+  keyType: 'public' | 'private' | 'oauth'
+  required: boolean
+  description: string
+  docsUrl: string
+  testEndpoint?: string
+  scopesRequired?: string[]
+}
+
+export interface SecurityConfig {
+  encryptionEnabled: boolean
+  keyRotationInterval: number
+  maxRetries: number
+  timeoutMs: number
+  rateLimitSettings: {
+    requestsPerMinute: number
+    burstLimit: number
   }
 }
 
-// API Request Configuration
-export const API_CONFIG = {
-  timeout: 30000, // 30 seconds
-  retries: 3,
-  retryDelay: 1000, // 1 second base delay with exponential backoff
-  
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'User-Agent': 'CyberConnect/1.0'
+// Platform-specific API configuration
+export const API_CONFIGS: Record<string, APIKeyConfig> = {
+  hackerone: {
+    platform: 'HackerOne',
+    keyType: 'private',
+    required: true,
+    description: 'HackerOne API token for accessing bug bounty programs and reports',
+    docsUrl: 'https://api.hackerone.com/',
+    testEndpoint: '/programs',
+    scopesRequired: ['program:read', 'report:read']
+  },
+  bugcrowd: {
+    platform: 'Bugcrowd',
+    keyType: 'private', 
+    required: true,
+    description: 'Bugcrowd API key for program and submission data',
+    docsUrl: 'https://docs.bugcrowd.com/api/',
+    testEndpoint: '/programs',
+    scopesRequired: ['read:programs', 'read:submissions']
+  },
+  intigriti: {
+    platform: 'Intigriti',
+    keyType: 'oauth',
+    required: true,
+    description: 'Intigriti OAuth token for researcher program access',
+    docsUrl: 'https://docs.intigriti.com/api/',
+    testEndpoint: '/researcher/programs',
+    scopesRequired: ['read:programs', 'read:submissions']
+  },
+  yeswehack: {
+    platform: 'YesWeHack',
+    keyType: 'private',
+    required: true,
+    description: 'YesWeHack API key for program and vulnerability data',
+    docsUrl: 'https://docs.yeswehack.com/api/',
+    testEndpoint: '/programs',
+    scopesRequired: ['programs:read']
+  },
+  shodan: {
+    platform: 'Shodan',
+    keyType: 'public',
+    required: true,
+    description: 'Shodan API key for Internet-connected device scanning',
+    docsUrl: 'https://developer.shodan.io/api',
+    testEndpoint: '/api-info',
+    scopesRequired: ['query', 'scan']
+  },
+  projectdiscovery: {
+    platform: 'ProjectDiscovery',
+    keyType: 'private',
+    required: false,
+    description: 'ProjectDiscovery Cloud API key for nuclei templates and scanning',
+    docsUrl: 'https://docs.projectdiscovery.io/api/',
+    testEndpoint: '/nuclei/templates',
+    scopesRequired: ['templates:read', 'scans:write']
+  },
+  virustotal: {
+    platform: 'VirusTotal',
+    keyType: 'public',
+    required: false,
+    description: 'VirusTotal API key for malware and URL analysis',
+    docsUrl: 'https://developers.virustotal.com/reference',
+    testEndpoint: '/api-info',
+    scopesRequired: ['scan', 'read']
+  },
+  alienvault: {
+    platform: 'AlienVault OTX',
+    keyType: 'public',
+    required: false,
+    description: 'AlienVault Open Threat Exchange API key for threat intelligence',
+    docsUrl: 'https://otx.alienvault.com/api',
+    testEndpoint: '/api/v1/user/me',
+    scopesRequired: ['read']
   }
 }
 
-// WebSocket Configuration
-export const WS_CONFIG = {
-  reconnectInterval: 5000, // 5 seconds
-  maxReconnectAttempts: 10,
-  heartbeatInterval: 30000, // 30 seconds
-  messageQueueSize: 1000,
-  
-  channels: {
-    MESSAGING: 'messaging',
-    CODE_COLLABORATION: 'code-collab',
-    THREAT_INTELLIGENCE: 'threat-intel',
-    TEAM_HUNTS: 'team-hunts',
-    VM_STATUS: 'vm-status',
-    USER_PRESENCE: 'user-presence'
+// Security configuration
+export const SECURITY_CONFIG: SecurityConfig = {
+  encryptionEnabled: true,
+  keyRotationInterval: 2592000000, // 30 days in milliseconds
+  maxRetries: 3,
+  timeoutMs: 30000,
+  rateLimitSettings: {
+    requestsPerMinute: 60,
+    burstLimit: 10
   }
 }
 
-// Security Configuration
-export const SECURITY_CONFIG = {
-  // Content Security Policy
-  CSP: {
-    'default-src': ["'self'"],
-    'script-src': ["'self'", "'unsafe-inline'", 'https://api.cyberconnect.io'],
-    'connect-src': ["'self'", 'wss://api.cyberconnect.io', 'https://api.cyberconnect.io', 'https://api.github.com'],
-    'img-src': ["'self'", 'data:', 'https:'],
-    'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-    'font-src': ["'self'", 'https://fonts.gstatic.com']
+// Environment-specific settings
+export const ENVIRONMENT_CONFIG = {
+  development: {
+    logLevel: 'debug',
+    enableMocking: true,
+    strictSSL: false
   },
-  
-  // API Key validation patterns
-  API_KEY_PATTERNS: {
-    hackerone: /^[a-f0-9-]{36}$/,
-    bugcrowd: /^[A-Za-z0-9]{40}$/,
-    intigriti: /^[A-Za-z0-9_-]{32,}$/,
-    shodan: /^[A-Za-z0-9]{32}$/,
-    github: /^gh[a-z]_[A-Za-z0-9]{36}$/,
-    aws: /^AKIA[A-Z0-9]{16}$/,
-    digitalocean: /^[A-Za-z0-9]{64}$/
-  },
-  
-  // Encryption settings
-  ENCRYPTION: {
-    algorithm: 'AES-GCM',
-    keyLength: 256,
-    ivLength: 12,
-    tagLength: 16
+  production: {
+    logLevel: 'error',
+    enableMocking: false,
+    strictSSL: true
   }
 }
 
-// Database Configuration (for backend)
-export const DB_CONFIG = {
-  // Collections/Tables
-  COLLECTIONS: {
-    USERS: 'users',
-    PROJECTS: 'code_projects', 
-    MESSAGES: 'messages',
-    CHATS: 'chats',
-    VIRTUAL_MACHINES: 'virtual_machines',
-    BUG_BOUNTY_PROGRAMS: 'bug_bounty_programs',
-    THREAT_FEEDS: 'threat_feeds',
-    TEAM_HUNTS: 'team_hunts',
-    EARNINGS: 'earnings',
-    INVITATIONS: 'invitations',
-    API_KEYS: 'api_keys_encrypted',
-    AUDIT_LOGS: 'audit_logs'
-  },
-  
-  // Indexes for performance
-  INDEXES: [
-    { collection: 'users', fields: ['email', 'username'], unique: true },
-    { collection: 'code_projects', fields: ['createdBy', 'visibility', 'category'] },
-    { collection: 'messages', fields: ['chatId', 'timestamp'] },
-    { collection: 'chats', fields: ['participants.userId', 'type'] },
-    { collection: 'virtual_machines', fields: ['createdBy', 'status', 'provider'] },
-    { collection: 'bug_bounty_programs', fields: ['platform', 'status', 'lastUpdated'] },
-    { collection: 'threat_feeds', fields: ['source', 'severity', 'timestamp'] },
-    { collection: 'team_hunts', fields: ['status', 'platform', 'startDate'] },
-    { collection: 'earnings', fields: ['userId', 'teamId', 'date'] },
-    { collection: 'audit_logs', fields: ['userId', 'action', 'timestamp'] }
-  ]
-}
+/**
+ * Secure API Key Management Hook
+ */
+export function useAPIKeys() {
+  const [encryptedKeys, setEncryptedKeys] = useKV<Record<string, string>>('encrypted_api_keys', {})
+  const [keyMetadata, setKeyMetadata] = useKV<Record<string, { 
+    created: string
+    lastUsed: string
+    rotationDue: boolean
+    usage: number
+  }>>('api_key_metadata', {})
 
-// Monitoring and Analytics
-export const MONITORING_CONFIG = {
-  // Error tracking
-  ERROR_TRACKING: {
-    enabled: ENV.NODE_ENV === 'production',
-    sampleRate: 0.1, // 10% of errors
-    beforeSend: (error: Error) => {
-      // Filter out sensitive information
-      const sensitivePatterns = [
-        /api[_-]?key/i,
-        /password/i,
-        /token/i,
-        /secret/i,
-        /credential/i
-      ]
-      
-      let message = error.message
-      sensitivePatterns.forEach(pattern => {
-        message = message.replace(pattern, '[REDACTED]')
-      })
-      
-      return { ...error, message }
-    }
-  },
-  
-  // Performance monitoring
-  PERFORMANCE: {
-    enabled: ENV.NODE_ENV === 'production',
-    sampleRate: 0.1, // 10% of transactions
-    tracingOrigins: ['api.cyberconnect.io', /^\//],
-    routingInstrumentation: true
-  },
-  
-  // Usage analytics
-  ANALYTICS: {
-    enabled: ENV.NODE_ENV === 'production',
-    events: [
-      'project_created',
-      'vm_launched',
-      'message_sent',
-      'vulnerability_found',
-      'team_hunt_joined',
-      'integration_connected',
-      'file_shared',
-      'code_collaborated'
-    ]
+  // Simple encryption for client-side storage (in production, use proper encryption)
+  const encryptKey = (key: string): string => {
+    return btoa(key).split('').reverse().join('')
   }
-}
 
-// Notification Configuration
-export const NOTIFICATION_CONFIG = {
-  // Push notifications
-  PUSH: {
-    vapidPublicKey: import.meta.env.VITE_VAPID_PUBLIC_KEY,
-    enabled: 'Notification' in window && 'serviceWorker' in navigator
-  },
-  
-  // Email notifications
-  EMAIL: {
-    types: [
-      'security_alert',
-      'team_invitation',
-      'vulnerability_found',
-      'hunt_started',
-      'earnings_received',
-      'system_maintenance'
-    ]
-  },
-  
-  // In-app notifications
-  IN_APP: {
-    maxVisible: 5,
-    autoHideDelay: 5000, // 5 seconds
-    persistence: true // Store in localStorage
+  const decryptKey = (encryptedKey: string): string => {
+    return atob(encryptedKey.split('').reverse().join(''))
   }
-}
 
-// Development/Testing Configuration
-export const DEV_CONFIG = {
-  // Mock data
-  USE_MOCK_DATA: ENV.NODE_ENV === 'development',
-  MOCK_DELAY: 1000, // 1 second delay for API calls
-  
-  // Debug features
-  DEBUG: {
-    API_CALLS: ENV.NODE_ENV === 'development',
-    WEBSOCKET_MESSAGES: ENV.NODE_ENV === 'development',
-    STATE_CHANGES: ENV.NODE_ENV === 'development',
-    PERFORMANCE: ENV.NODE_ENV === 'development'
-  },
-  
-  // Test accounts
-  TEST_ACCOUNTS: {
-    admin: { email: 'admin@cyberconnect.dev', password: 'dev123!' },
-    researcher: { email: 'researcher@cyberconnect.dev', password: 'dev123!' },
-    teamlead: { email: 'teamlead@cyberconnect.dev', password: 'dev123!' }
-  }
-}
-
-// Validation helpers
-export function validateEnvironment(): string[] {
-  const errors: string[] = []
-  
-  if (!ENV.API_BASE_URL) {
-    errors.push('VITE_API_BASE_URL is required')
-  }
-  
-  if (!ENV.WS_BASE_URL) {
-    errors.push('VITE_WS_BASE_URL is required')
-  }
-  
-  if (ENV.NODE_ENV === 'production' && !NOTIFICATION_CONFIG.PUSH.vapidPublicKey) {
-    errors.push('VITE_VAPID_PUBLIC_KEY is required for production')
-  }
-  
-  return errors
-}
-
-// Initialize configuration
-export function initializeConfiguration(): void {
-  const errors = validateEnvironment()
-  
-  if (errors.length > 0) {
-    console.error('Configuration errors:', errors)
-    if (ENV.NODE_ENV === 'production') {
-      throw new Error(`Configuration validation failed: ${errors.join(', ')}`)
-    }
-  }
-  
-  // Set up global error handling
-  if (ENV.NODE_ENV === 'production') {
-    window.addEventListener('error', (event) => {
-      console.error('Global error:', event.error)
-      // Send to monitoring service
-    })
+  const setAPIKey = (platform: string, apiKey: string) => {
+    const encrypted = encryptKey(apiKey)
+    const now = new Date().toISOString()
     
-    window.addEventListener('unhandledrejection', (event) => {
-      console.error('Unhandled promise rejection:', event.reason)
-      // Send to monitoring service
+    setEncryptedKeys(current => ({
+      ...current,
+      [platform]: encrypted
+    }))
+
+    setKeyMetadata(current => ({
+      ...current,
+      [platform]: {
+        created: current[platform]?.created || now,
+        lastUsed: now,
+        rotationDue: false,
+        usage: (current[platform]?.usage || 0) + 1
+      }
+    }))
+  }
+
+  const getAPIKey = (platform: string): string | null => {
+    const encrypted = encryptedKeys[platform]
+    if (!encrypted) return null
+
+    // Update last used timestamp
+    const now = new Date().toISOString()
+    setKeyMetadata(current => ({
+      ...current,
+      [platform]: {
+        ...current[platform],
+        lastUsed: now,
+        usage: (current[platform]?.usage || 0) + 1
+      }
+    }))
+
+    return decryptKey(encrypted)
+  }
+
+  const removeAPIKey = (platform: string) => {
+    setEncryptedKeys(current => {
+      const updated = { ...current }
+      delete updated[platform]
+      return updated
+    })
+
+    setKeyMetadata(current => {
+      const updated = { ...current }
+      delete updated[platform]
+      return updated
     })
   }
-  
-  // Initialize performance monitoring
-  if (MONITORING_CONFIG.PERFORMANCE.enabled) {
-    // Initialize performance monitoring service
-    console.log('Performance monitoring initialized')
+
+  const isKeyExpired = (platform: string): boolean => {
+    const metadata = keyMetadata[platform]
+    if (!metadata) return false
+
+    const created = new Date(metadata.created).getTime()
+    const now = Date.now()
+    return (now - created) > SECURITY_CONFIG.keyRotationInterval
   }
-  
-  // Set up CSP if supported
-  if (ENV.NODE_ENV === 'production' && 'securitypolicyviolation' in window) {
-    window.addEventListener('securitypolicyviolation', (event) => {
-      console.warn('CSP violation:', event.violatedDirective, event.blockedURI)
-    })
+
+  const getAllPlatformStatuses = () => {
+    return Object.keys(API_CONFIGS).map(platform => ({
+      platform,
+      config: API_CONFIGS[platform],
+      hasKey: !!encryptedKeys[platform],
+      metadata: keyMetadata[platform],
+      expired: isKeyExpired(platform)
+    }))
+  }
+
+  return {
+    setAPIKey,
+    getAPIKey,
+    removeAPIKey,
+    isKeyExpired,
+    getAllPlatformStatuses,
+    keyMetadata
   }
 }
 
-// Export configuration object
-export const CONFIG = {
-  ENV,
-  API_CONFIG,
-  WS_CONFIG,
-  SECURITY_CONFIG,
-  DB_CONFIG,
-  MONITORING_CONFIG,
-  NOTIFICATION_CONFIG,
-  DEV_CONFIG
+/**
+ * API Key Validation and Testing
+ */
+export class APIKeyValidator {
+  static patterns: Record<string, RegExp> = {
+    hackerone: /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/,
+    bugcrowd: /^[A-Za-z0-9]{40,}$/,
+    intigriti: /^[A-Za-z0-9_-]{32,}$/,
+    yeswehack: /^[A-Za-z0-9]{32,}$/,
+    shodan: /^[A-Za-z0-9]{32}$/,
+    projectdiscovery: /^pd_[A-Za-z0-9]{40}$/,
+    virustotal: /^[a-f0-9]{64}$/,
+    alienvault: /^[a-f0-9]{64}$/
+  }
+
+  static validateFormat(platform: string, apiKey: string): boolean {
+    if (!apiKey || apiKey.length < 8) return false
+    
+    const pattern = this.patterns[platform]
+    return pattern ? pattern.test(apiKey) : apiKey.length >= 16
+  }
+
+  static async testConnection(platform: string, apiKey: string): Promise<{
+    valid: boolean
+    error?: string
+    info?: any
+  }> {
+    const config = API_CONFIGS[platform]
+    if (!config || !config.testEndpoint) {
+      return { valid: false, error: 'No test endpoint configured' }
+    }
+
+    try {
+      // Import API client dynamically to avoid circular dependencies
+      const { apiClient, API_CONFIG } = await import('./api')
+      
+      const platformConfig = API_CONFIG[platform as keyof typeof API_CONFIG]
+      if (!platformConfig) {
+        return { valid: false, error: 'Platform not configured' }
+      }
+
+      // Test the API key with a simple request
+      const response = await apiClient.request(
+        platform as any,
+        config.testEndpoint,
+        { method: 'GET' },
+        apiKey
+      )
+
+      return { 
+        valid: true, 
+        info: {
+          platform: config.platform,
+          scopes: config.scopesRequired,
+          testEndpoint: config.testEndpoint,
+          response: response
+        }
+      }
+    } catch (error) {
+      return { 
+        valid: false, 
+        error: error instanceof Error ? error.message : 'Connection test failed'
+      }
+    }
+  }
 }
 
-export default CONFIG
+/**
+ * Rate Limiting and Quota Management
+ */
+export class QuotaManager {
+  private quotas = new Map<string, {
+    requests: number
+    resetTime: number
+    limit: number
+    burst: number
+  }>()
+
+  checkQuota(platform: string): boolean {
+    const quota = this.quotas.get(platform)
+    const now = Date.now()
+
+    if (!quota) {
+      // Initialize quota for new platform
+      this.quotas.set(platform, {
+        requests: 1,
+        resetTime: now + 60000, // Reset in 1 minute
+        limit: SECURITY_CONFIG.rateLimitSettings.requestsPerMinute,
+        burst: SECURITY_CONFIG.rateLimitSettings.burstLimit
+      })
+      return true
+    }
+
+    // Reset if time window passed
+    if (now > quota.resetTime) {
+      quota.requests = 0
+      quota.resetTime = now + 60000
+    }
+
+    // Check if within limits
+    if (quota.requests >= quota.limit) {
+      return false
+    }
+
+    quota.requests++
+    return true
+  }
+
+  getRemainingQuota(platform: string): number {
+    const quota = this.quotas.get(platform)
+    if (!quota) return SECURITY_CONFIG.rateLimitSettings.requestsPerMinute
+
+    const now = Date.now()
+    if (now > quota.resetTime) {
+      return quota.limit
+    }
+
+    return Math.max(0, quota.limit - quota.requests)
+  }
+
+  getQuotaResetTime(platform: string): number {
+    const quota = this.quotas.get(platform)
+    return quota?.resetTime || Date.now() + 60000
+  }
+}
+
+// Global quota manager instance
+export const quotaManager = new QuotaManager()
+
+/**
+ * Secure Configuration Store
+ */
+export function useSecureConfig() {
+  const [config, setConfig] = useKV<{
+    security: SecurityConfig
+    enabledPlatforms: string[]
+    lastSync: Record<string, string>
+    syncIntervals: Record<string, number>
+  }>('secure_config', {
+    security: SECURITY_CONFIG,
+    enabledPlatforms: ['hackerone', 'bugcrowd', 'intigriti', 'shodan'],
+    lastSync: {},
+    syncIntervals: {
+      hackerone: 300000, // 5 minutes
+      bugcrowd: 600000,  // 10 minutes
+      intigriti: 900000, // 15 minutes
+      shodan: 1800000,   // 30 minutes
+      cve: 3600000       // 1 hour
+    }
+  })
+
+  const updateSyncTime = (platform: string) => {
+    setConfig(current => ({
+      ...current,
+      lastSync: {
+        ...current.lastSync,
+        [platform]: new Date().toISOString()
+      }
+    }))
+  }
+
+  const setSyncInterval = (platform: string, intervalMs: number) => {
+    setConfig(current => ({
+      ...current,
+      syncIntervals: {
+        ...current.syncIntervals,
+        [platform]: intervalMs
+      }
+    }))
+  }
+
+  const enablePlatform = (platform: string) => {
+    setConfig(current => ({
+      ...current,
+      enabledPlatforms: [...new Set([...current.enabledPlatforms, platform])]
+    }))
+  }
+
+  const disablePlatform = (platform: string) => {
+    setConfig(current => ({
+      ...current,
+      enabledPlatforms: current.enabledPlatforms.filter(p => p !== platform)
+    }))
+  }
+
+  return {
+    config,
+    updateSyncTime,
+    setSyncInterval,
+    enablePlatform,
+    disablePlatform,
+    setConfig
+  }
+}
