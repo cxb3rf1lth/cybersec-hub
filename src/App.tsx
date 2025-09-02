@@ -15,6 +15,7 @@ import { Sidebar } from '@/components/layout/Sidebar'
 import { MainContent } from '@/components/layout/MainContent'
 import { AuthModal } from '@/components/auth/AuthModal'
 import { NeuralNetwork } from '@/components/ui/NeuralNetwork'
+import { FloatingParticles } from '@/components/ui/FloatingParticles'
 import { Toaster } from '@/components/ui/sonner'
 import { User } from '@/types/user'
 
@@ -57,6 +58,7 @@ function App() {
           </div>
         </div>
         <NeuralNetwork opacity={0.4} nodeCount={80} />
+        <FloatingParticles density="medium" includeDataStreams={true} />
         <div className="text-center space-y-6 max-w-md mx-auto p-6 relative z-10">
           <div className="space-y-2">
             <h1 className="text-4xl font-bold text-foreground terminal-cursor glitch-effect">CyberConnect</h1>
@@ -93,6 +95,7 @@ function App() {
         </div>
       </div>
       <NeuralNetwork opacity={0.2} nodeCount={60} />
+      <FloatingParticles density="low" includeDataStreams={true} />
       <div className="flex relative z-10">
         <Sidebar
           currentUser={currentUser}
