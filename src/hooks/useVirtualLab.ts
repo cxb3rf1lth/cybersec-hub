@@ -31,8 +31,12 @@ export function useVirtualLab(currentUserId: string) {
       updatedAt: now,
       notes: req.notes,
       network: { protocol: 'vnc' },
+      resources: req.resources || { cpu: 2, memory: 4096, storage: 40 },
+      templateId: req.templateId,
+      category: req.templateId ? getTemplateCategory(req.templateId) : 'penetration-testing'
     }
-  setState({ ...state, vms: [vm, ...state.vms], lastSync: now })
+    setState({ ...state, vms: [vm, ...state.vms], lastSync: now })
+    
     // Simulate startup and console URL assignment
     setTimeout(() => {
       setState((prev0 => {
@@ -53,6 +57,15 @@ export function useVirtualLab(currentUserId: string) {
       }) as any)
     }, 1200)
     return vm
+  }
+  
+  function getTemplateCategory(templateId: string): VM['category'] {
+    // Simple mapping - in real app, would fetch from template data
+    if (templateId.includes('red-team')) return 'red-team'
+    if (templateId.includes('blue-team')) return 'blue-team'
+    if (templateId.includes('malware')) return 'malware-analysis'
+    if (templateId.includes('forensics')) return 'forensics'
+    return 'penetration-testing'
   }
 
   function start(id: string) {

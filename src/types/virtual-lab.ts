@@ -1,4 +1,4 @@
-export type Distro = 'kali' | 'arch'
+export type Distro = 'kali' | 'arch' | 'ubuntu' | 'centos' | 'windows-10' | 'windows-server'
 
 export type VMStatus = 'stopped' | 'starting' | 'running' | 'stopping' | 'error'
 
@@ -19,12 +19,25 @@ export interface VM {
   notes?: string
   network?: VMNetwork
   consoleUrl?: string // URL for embedded console (ex: noVNC gateway)
+  resources?: {
+    cpu: number
+    memory: number
+    storage: number
+  }
+  templateId?: string
+  category?: 'penetration-testing' | 'malware-analysis' | 'forensics' | 'red-team' | 'blue-team' | 'research'
 }
 
 export interface VMProvisionRequest {
   name: string
   distro: Distro
   notes?: string
+  templateId?: string
+  resources?: {
+    cpu: number
+    memory: number
+    storage: number
+  }
 }
 
 export interface VirtualLabState {

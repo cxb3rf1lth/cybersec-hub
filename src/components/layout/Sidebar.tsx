@@ -1,4 +1,4 @@
-import { Shield, House, Compass, User, Code, SignOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, Eye, BugBeetle, Handshake, Globe, DesktopTower, CaretRight } from '@phosphor-icons/react'
+import { Shield, House, Compass, User, Code, SignOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, BugBeetle, Handshake, DesktopTower, CaretRight, Target, Terminal } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
@@ -10,8 +10,8 @@ import { TeamInvitation } from '@/types/teams'
 
 interface SidebarProps {
   currentUser: UserType
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab'
-  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab') => void
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team'
+  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team') => void
   onLogout: () => void
 }
 
@@ -19,7 +19,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
   const [conversations] = useKV<Conversation[]>('conversations', [])
   const [teamInvitations] = useKV<TeamInvitation[]>('teamInvitations', [])
   const [expandedSections, setExpandedSections] = useState({
-    security: true,
+    operations: true,
     collaboration: false,
     development: false
   })
@@ -45,9 +45,8 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
       { id: 'explore' as const, label: 'Explore', icon: Compass },
       { id: 'profile' as const, label: 'Profile', icon: User },
     ],
-    security: [
-      { id: 'threats' as const, label: 'Threat Intel', icon: Eye },
-      { id: 'threat-map' as const, label: 'Threat Map', icon: Globe },
+    operations: [
+      { id: 'red-team' as const, label: 'Red Team Ops', icon: Target },
       { id: 'bug-bounty' as const, label: 'Bug Bounty', icon: BugBeetle },
       { id: 'virtual-lab' as const, label: 'Virtual Lab', icon: DesktopTower },
     ],
@@ -126,16 +125,16 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
           })}
         </div>
 
-        {/* Security Operations */}
-        <Collapsible open={expandedSections.security} onOpenChange={() => toggleSection('security')}>
+        {/* Red Team Operations */}
+        <Collapsible open={expandedSections.operations} onOpenChange={() => toggleSection('operations')}>
           <CollapsibleTrigger asChild>
             <Button variant="ghost" size="sm" className="w-full justify-between mb-2 text-muted-foreground hover:text-foreground">
-              <span className="text-xs font-semibold uppercase tracking-wider">Security Ops</span>
-              <CaretRight className={`w-3 h-3 transition-transform ${expandedSections.security ? 'rotate-90' : ''}`} />
+              <span className="text-xs font-semibold uppercase tracking-wider">Operations</span>
+              <CaretRight className={`w-3 h-3 transition-transform ${expandedSections.operations ? 'rotate-90' : ''}`} />
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-1 mb-4">
-            {navigationSections.security.map((item) => {
+            {navigationSections.operations.map((item) => {
               const Icon = item.icon
               return (
                 <Button

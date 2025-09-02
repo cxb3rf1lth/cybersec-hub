@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { Distro, VMProvisionRequest } from '@/types/virtual-lab'
 
 interface Props {
-  onCreate: (req: VMProvisionRequest) => void
+  onCreate: (req: { name: string; distro: Distro; notes?: string }) => void
 }
 
 export function CreateVMForm({ onCreate }: Props) {
@@ -37,6 +37,10 @@ export function CreateVMForm({ onCreate }: Props) {
           >
             <option value="kali">Kali Linux</option>
             <option value="arch">Arch Linux</option>
+            <option value="ubuntu">Ubuntu Server</option>
+            <option value="centos">CentOS</option>
+            <option value="windows-10">Windows 10</option>
+            <option value="windows-server">Windows Server</option>
           </select>
         </div>
       </div>

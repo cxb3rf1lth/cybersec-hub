@@ -9,19 +9,18 @@ import { EarningsView } from '@/components/views/EarningsView'
 import { TeamsView } from '@/components/teams/TeamsView'
 import { TeamInvitationsView } from '@/components/teams/TeamInvitationsView'
 import { MarketplaceView } from '@/components/marketplace/MarketplaceView'
-import { ThreatIntelligenceFeed } from '@/components/feeds/ThreatIntelligenceFeed'
 import { BugBountyDashboard } from '@/components/bug-bounty/BugBountyDashboard'
 import { BugBountyPlatform } from '@/components/features/BugBountyPlatform'
 import { PartnerRequests } from '@/components/partner-requests/PartnerRequests'
-import { LiveThreatMap } from '@/components/threats/LiveThreatMap'
+import { RedTeamDashboard } from '@/components/red-team/RedTeamDashboard'
+import { EnhancedVirtualLabView } from '@/components/virtual-lab/EnhancedVirtualLabView'
 import { User } from '@/types/user'
-import { VirtualLabView } from '@/components/views/VirtualLabView'
 
 interface MainContentProps {
   currentUser: User
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab'
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team'
   onUserUpdate: (user: User) => void
-  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab') => void
+  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team') => void
 }
 
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
@@ -36,14 +35,9 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
       {activeTab === 'feed' && (
         <FeedView currentUser={currentUser} />
       )}
-      {activeTab === 'threats' && (
+      {activeTab === 'red-team' && (
         <div className="p-6">
-          <ThreatIntelligenceFeed />
-        </div>
-      )}
-      {activeTab === 'threat-map' && (
-        <div className="p-6">
-          <LiveThreatMap />
+          <RedTeamDashboard currentUser={currentUser} />
         </div>
       )}
       {(activeTab === 'bug-bounty' || activeTab === 'team-hunts') && (
@@ -79,7 +73,7 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
         />
       )}
       {activeTab === 'virtual-lab' && (
-        <VirtualLabView currentUser={currentUser} />
+        <EnhancedVirtualLabView currentUser={currentUser} />
       )}
       {activeTab === 'explore' && (
         <ExploreView 

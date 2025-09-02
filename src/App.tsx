@@ -6,7 +6,6 @@ import { useSampleTeamData } from '@/hooks/useSampleTeamData'
 import { useSampleEarningsData } from '@/hooks/useSampleEarningsData'
 import { useUserInvitations } from '@/hooks/useUserInvitations'
 import { useSampleMarketplaceData } from '@/hooks/useSampleMarketplaceData'
-import { useSampleThreatSources } from '@/hooks/useSampleThreatSources'
 import { useBugBountyPlatforms } from '@/hooks/useBugBountyPlatforms'
 import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
 import { useTeamHunts } from '@/hooks/useTeamHunts'
@@ -23,7 +22,7 @@ import { User } from '@/types/user'
 
 function App() {
   const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null as User | null)
-  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab'>('feed')
+  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team'>('feed')
   const [showAuthModal, setShowAuthModal] = useState(false)
 
   // Initialize sample data
@@ -32,7 +31,6 @@ function App() {
   useSampleTeamData()
   useSampleEarningsData()
   useSampleMarketplaceData()
-  useSampleThreatSources()
   useBugBountyPlatforms()
   useBugBountyIntegration()
   useTeamHunts()
