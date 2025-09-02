@@ -93,42 +93,42 @@
   background: var(--muted-foreground);
 }
 
-/* Enhanced cyber glow animations */
-@keyframes pulse-red {
+/* Enhanced cyber glow animations - now using CSS variables */
+@keyframes pulse-primary {
   0%, 100% {
     box-shadow: 
-      0 0 8px oklch(0.58 0.22 15 / 0.4),
-      inset 0 0 8px oklch(0.58 0.22 15 / 0.1);
+      0 0 8px color-mix(in oklch, var(--primary), transparent 60%),
+      inset 0 0 8px color-mix(in oklch, var(--primary), transparent 90%);
   }
   50% {
     box-shadow: 
-      0 0 20px oklch(0.72 0.28 15 / 0.6), 
-      0 0 35px oklch(0.58 0.22 15 / 0.3),
-      0 0 50px oklch(0.45 0.18 15 / 0.15),
-      inset 0 0 12px oklch(0.72 0.28 15 / 0.2);
+      0 0 20px color-mix(in oklch, var(--accent), transparent 40%), 
+      0 0 35px color-mix(in oklch, var(--primary), transparent 70%),
+      0 0 50px color-mix(in oklch, var(--primary), transparent 85%),
+      inset 0 0 12px color-mix(in oklch, var(--accent), transparent 80%);
   }
 }
 
 @keyframes border-flow {
   0% {
-    border-color: oklch(0.15 0.03 320);
-    box-shadow: 0 0 2px oklch(0.15 0.03 320 / 0.3);
+    border-color: var(--border);
+    box-shadow: 0 0 2px color-mix(in oklch, var(--border), transparent 70%);
   }
   25% {
-    border-color: oklch(0.45 0.18 15 / 0.6);
-    box-shadow: 0 0 8px oklch(0.45 0.18 15 / 0.4);
+    border-color: color-mix(in oklch, var(--primary), transparent 40%);
+    box-shadow: 0 0 8px color-mix(in oklch, var(--primary), transparent 60%);
   }
   50% {
-    border-color: oklch(0.72 0.28 15 / 0.8);
-    box-shadow: 0 0 15px oklch(0.72 0.28 15 / 0.6), 0 0 25px oklch(0.58 0.22 15 / 0.3);
+    border-color: color-mix(in oklch, var(--accent), transparent 20%);
+    box-shadow: 0 0 15px color-mix(in oklch, var(--accent), transparent 40%), 0 0 25px color-mix(in oklch, var(--primary), transparent 70%);
   }
   75% {
-    border-color: oklch(0.45 0.18 15 / 0.6);
-    box-shadow: 0 0 8px oklch(0.45 0.18 15 / 0.4);
+    border-color: color-mix(in oklch, var(--primary), transparent 40%);
+    box-shadow: 0 0 8px color-mix(in oklch, var(--primary), transparent 60%);
   }
   100% {
-    border-color: oklch(0.15 0.03 320);
-    box-shadow: 0 0 2px oklch(0.15 0.03 320 / 0.3);
+    border-color: var(--border);
+    box-shadow: 0 0 2px color-mix(in oklch, var(--border), transparent 70%);
   }
 }
 
@@ -144,14 +144,14 @@
 
 .terminal-cursor::after {
   content: '▋';
-  color: oklch(0.72 0.28 15);
+  color: var(--accent);
   animation: terminal-cursor 1.2s infinite;
-  text-shadow: 0 0 8px oklch(0.72 0.28 15 / 0.6);
+  text-shadow: 0 0 8px color-mix(in oklch, var(--accent), transparent 40%);
 }
 
 /* Enhanced interactive states */
 .hover-red-glow:hover {
-  animation: pulse-red 3s infinite;
+  animation: pulse-primary 3s infinite;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateY(-1px);
 }
@@ -172,9 +172,9 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, 
-    oklch(0.72 0.28 15 / 0.1) 0%,
+    color-mix(in oklch, var(--accent), transparent 90%) 0%,
     transparent 50%,
-    oklch(0.58 0.22 15 / 0.05) 100%
+    color-mix(in oklch, var(--primary), transparent 95%) 100%
   );
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -186,25 +186,25 @@
 
 /* Matrix-style text selection with enhanced glow */
 ::selection {
-  background: oklch(0.72 0.28 15 / 0.35);
-  color: oklch(0.95 0.03 15);
-  text-shadow: 0 0 4px oklch(0.72 0.28 15 / 0.8);
+  background: color-mix(in oklch, var(--accent), transparent 65%);
+  color: var(--foreground);
+  text-shadow: 0 0 4px color-mix(in oklch, var(--accent), transparent 20%);
 }
 
 /* Enhanced network pattern overlay with depth */
 .network-pattern {
   background-image: 
     /* Primary grid with glow */
-    radial-gradient(circle at 25% 25%, oklch(0.72 0.28 15 / 0.08) 1px, transparent 1px),
-    radial-gradient(circle at 75% 75%, oklch(0.58 0.22 15 / 0.06) 1px, transparent 1px),
+    radial-gradient(circle at 25% 25%, color-mix(in oklch, var(--accent), transparent 92%) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, color-mix(in oklch, var(--primary), transparent 94%) 1px, transparent 1px),
     /* Secondary micro grid */
-    linear-gradient(oklch(0.58 0.22 15 / 0.03) 0.5px, transparent 0.5px),
-    linear-gradient(90deg, oklch(0.58 0.22 15 / 0.03) 0.5px, transparent 0.5px),
+    linear-gradient(color-mix(in oklch, var(--primary), transparent 97%) 0.5px, transparent 0.5px),
+    linear-gradient(90deg, color-mix(in oklch, var(--primary), transparent 97%) 0.5px, transparent 0.5px),
     /* Tertiary accent lines */
-    linear-gradient(oklch(0.45 0.18 15 / 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(0.45 0.18 15 / 0.02) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklch, var(--primary), transparent 98%) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklch, var(--primary), transparent 98%) 1px, transparent 1px),
     /* Noise texture overlay */
-    radial-gradient(circle at 40% 60%, oklch(0.72 0.28 15 / 0.04) 2px, transparent 2px);
+    radial-gradient(circle at 40% 60%, color-mix(in oklch, var(--accent), transparent 96%) 2px, transparent 2px);
   background-size: 
     60px 60px, 60px 60px,
     15px 15px, 15px 15px,
@@ -222,44 +222,44 @@
   0% {
     transform: translate(0);
     text-shadow: 
-      2px 0 oklch(0.72 0.28 15),
-      -2px 0 oklch(0.45 0.3 200);
+      2px 0 var(--accent),
+      -2px 0 color-mix(in oklch, var(--accent), blue 50%);
   }
   15% {
     transform: translate(-2px, 1px);
     text-shadow: 
-      3px 0 oklch(0.72 0.28 15),
-      -3px 0 oklch(0.45 0.3 200);
+      3px 0 var(--accent),
+      -3px 0 color-mix(in oklch, var(--accent), blue 50%);
   }
   30% {
     transform: translate(2px, -1px);
     text-shadow: 
-      -2px 0 oklch(0.72 0.28 15),
-      2px 0 oklch(0.45 0.3 200);
+      -2px 0 var(--accent),
+      2px 0 color-mix(in oklch, var(--accent), blue 50%);
   }
   45% {
     transform: translate(-1px, 2px);
     text-shadow: 
-      1px 0 oklch(0.72 0.28 15),
-      -1px 0 oklch(0.45 0.3 200);
+      1px 0 var(--accent),
+      -1px 0 color-mix(in oklch, var(--accent), blue 50%);
   }
   60% {
     transform: translate(1px, -2px);
     text-shadow: 
-      -3px 0 oklch(0.72 0.28 15),
-      3px 0 oklch(0.45 0.3 200);
+      -3px 0 var(--accent),
+      3px 0 color-mix(in oklch, var(--accent), blue 50%);
   }
   75% {
     transform: translate(-2px, 1px);
     text-shadow: 
-      2px 0 oklch(0.72 0.28 15),
-      -2px 0 oklch(0.45 0.3 200);
+      2px 0 var(--accent),
+      -2px 0 color-mix(in oklch, var(--accent), blue 50%);
   }
   100% {
     transform: translate(0);
     text-shadow: 
-      0 0 oklch(0.72 0.28 15),
-      0 0 oklch(0.45 0.3 200);
+      0 0 var(--accent),
+      0 0 color-mix(in oklch, var(--accent), blue 50%);
   }
 }
 
@@ -297,15 +297,15 @@
   height: 3px;
   background: linear-gradient(90deg, 
     transparent, 
-    oklch(0.45 0.18 15 / 0.4),
-    oklch(0.72 0.28 15),
-    oklch(0.58 0.22 15),
-    oklch(0.45 0.18 15 / 0.4),
+    color-mix(in oklch, var(--primary), transparent 60%),
+    var(--accent),
+    var(--primary),
+    color-mix(in oklch, var(--primary), transparent 60%),
     transparent
   );
   border-radius: 3px;
   transform-origin: center;
-  box-shadow: 0 0 6px oklch(0.72 0.28 15 / 0.4);
+  box-shadow: 0 0 6px color-mix(in oklch, var(--accent), transparent 60%);
 }
 
 .hex-side:nth-child(1) { transform: rotate(0deg) translateY(-50%); }
@@ -485,9 +485,9 @@
   width: 24px;
   height: 24px;
   background: 
-    radial-gradient(circle at center, oklch(0.72 0.28 15 / 0.15), transparent 70%),
+    radial-gradient(circle at center, color-mix(in oklch, var(--accent), transparent 85%), transparent 70%),
     transparent;
-  border: 1px solid oklch(0.58 0.22 15 / 0.4);
+  border: 1px solid color-mix(in oklch, var(--primary), transparent 60%);
   clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
   animation: hex-grid-pulse 4s ease-in-out infinite;
   position: relative;
@@ -497,7 +497,7 @@
   content: '';
   position: absolute;
   inset: 2px;
-  background: radial-gradient(circle at center, oklch(0.72 0.28 15 / 0.1), transparent);
+  background: radial-gradient(circle at center, color-mix(in oklch, var(--accent), transparent 90%), transparent);
   clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -505,16 +505,16 @@
 
 @keyframes hex-grid-pulse {
   0%, 100% {
-    border-color: oklch(0.58 0.22 15 / 0.3);
-    background: radial-gradient(circle at center, oklch(0.58 0.22 15 / 0.08), transparent 70%);
-    box-shadow: 0 0 4px oklch(0.58 0.22 15 / 0.2);
+    border-color: color-mix(in oklch, var(--primary), transparent 70%);
+    background: radial-gradient(circle at center, color-mix(in oklch, var(--primary), transparent 92%), transparent 70%);
+    box-shadow: 0 0 4px color-mix(in oklch, var(--primary), transparent 80%);
   }
   50% {
-    border-color: oklch(0.72 0.28 15 / 0.9);
-    background: radial-gradient(circle at center, oklch(0.72 0.28 15 / 0.25), transparent 70%);
+    border-color: color-mix(in oklch, var(--accent), transparent 10%);
+    background: radial-gradient(circle at center, color-mix(in oklch, var(--accent), transparent 75%), transparent 70%);
     box-shadow: 
-      0 0 18px oklch(0.72 0.28 15 / 0.6),
-      0 0 30px oklch(0.58 0.22 15 / 0.3);
+      0 0 18px color-mix(in oklch, var(--accent), transparent 40%),
+      0 0 30px color-mix(in oklch, var(--primary), transparent 70%);
   }
 }
 
@@ -596,10 +596,10 @@
 .binary-char {
   font-family: 'IBM Plex Mono', 'Fira Code', monospace;
   font-size: 12px;
-  color: oklch(0.72 0.28 15 / 0.85);
+  color: color-mix(in oklch, var(--accent), transparent 15%);
   line-height: 1.2;
   animation: binary-fade 1.5s ease-in-out infinite;
-  text-shadow: 0 0 6px oklch(0.72 0.28 15 / 0.5);
+  text-shadow: 0 0 6px color-mix(in oklch, var(--accent), transparent 50%);
   font-weight: 500;
   position: relative;
 }
@@ -609,26 +609,26 @@
   position: absolute;
   top: 0;
   left: 1px;
-  color: oklch(0.45 0.3 200 / 0.4);
+  color: color-mix(in oklch, var(--accent), blue 50%);
   z-index: -1;
   animation: binary-shadow 1.5s ease-in-out infinite;
 }
 
 /* Enhanced binary rain with glowing effects */
 .binary-char:nth-child(3n) {
-  color: oklch(0.85 0.32 15 / 0.95);
+  color: color-mix(in oklch, var(--accent), transparent 5%);
   text-shadow: 
-    0 0 10px oklch(0.72 0.28 15 / 0.8), 
-    0 0 15px oklch(0.58 0.22 15 / 0.4);
+    0 0 10px color-mix(in oklch, var(--accent), transparent 20%), 
+    0 0 15px color-mix(in oklch, var(--primary), transparent 60%);
   animation: binary-glow-fade 1.8s ease-in-out infinite;
 }
 
 .binary-char:nth-child(5n) {
-  color: oklch(0.95 0.35 15);
+  color: var(--accent);
   text-shadow: 
-    0 0 12px oklch(0.85 0.32 15 / 0.9), 
-    0 0 20px oklch(0.72 0.28 15 / 0.5),
-    0 0 30px oklch(0.58 0.22 15 / 0.3);
+    0 0 12px color-mix(in oklch, var(--accent), transparent 10%), 
+    0 0 20px color-mix(in oklch, var(--accent), transparent 50%),
+    0 0 30px color-mix(in oklch, var(--primary), transparent 70%);
   animation: binary-intense-glow 1.2s ease-in-out infinite;
 }
 
@@ -642,12 +642,12 @@
 @keyframes binary-fade {
   0%, 100% { 
     opacity: 0.4; 
-    color: oklch(0.45 0.18 15 / 0.6);
+    color: color-mix(in oklch, var(--primary), transparent 40%);
     transform: scale(0.95);
   }
   50% { 
     opacity: 1; 
-    color: oklch(0.72 0.28 15 / 0.9);
+    color: color-mix(in oklch, var(--accent), transparent 10%);
     transform: scale(1);
   }
 }
@@ -809,39 +809,39 @@
 .particle {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle, oklch(0.72 0.28 15 / 0.6), oklch(0.58 0.22 15 / 0.3));
+  background: radial-gradient(circle, color-mix(in oklch, var(--accent), transparent 40%), color-mix(in oklch, var(--primary), transparent 70%));
   box-shadow: 
-    0 0 8px oklch(0.72 0.28 15 / 0.4),
-    0 0 15px oklch(0.58 0.22 15 / 0.2);
+    0 0 8px color-mix(in oklch, var(--accent), transparent 60%),
+    0 0 15px color-mix(in oklch, var(--primary), transparent 80%);
   animation: particle-float 15s linear infinite;
 }
 
 .particle.small {
   width: 2px;
   height: 2px;
-  background: radial-gradient(circle, oklch(0.72 0.28 15 / 0.8), transparent);
-  box-shadow: 0 0 4px oklch(0.72 0.28 15 / 0.6);
+  background: radial-gradient(circle, color-mix(in oklch, var(--accent), transparent 20%), transparent);
+  box-shadow: 0 0 4px color-mix(in oklch, var(--accent), transparent 40%);
   animation-duration: 12s;
 }
 
 .particle.medium {
   width: 3px;
   height: 3px;
-  background: radial-gradient(circle, oklch(0.85 0.32 15 / 0.7), oklch(0.58 0.22 15 / 0.4));
+  background: radial-gradient(circle, color-mix(in oklch, var(--accent), transparent 30%), color-mix(in oklch, var(--primary), transparent 60%));
   box-shadow: 
-    0 0 6px oklch(0.85 0.32 15 / 0.5),
-    0 0 12px oklch(0.72 0.28 15 / 0.3);
+    0 0 6px color-mix(in oklch, var(--accent), transparent 50%),
+    0 0 12px color-mix(in oklch, var(--accent), transparent 70%);
   animation-duration: 18s;
 }
 
 .particle.large {
   width: 4px;
   height: 4px;
-  background: radial-gradient(circle, oklch(0.95 0.35 15 / 0.8), oklch(0.72 0.28 15 / 0.5));
+  background: radial-gradient(circle, color-mix(in oklch, var(--accent), transparent 20%), color-mix(in oklch, var(--accent), transparent 50%));
   box-shadow: 
-    0 0 10px oklch(0.95 0.35 15 / 0.6),
-    0 0 20px oklch(0.85 0.32 15 / 0.4),
-    0 0 30px oklch(0.72 0.28 15 / 0.2);
+    0 0 10px color-mix(in oklch, var(--accent), transparent 40%),
+    0 0 20px color-mix(in oklch, var(--accent), transparent 60%),
+    0 0 30px color-mix(in oklch, var(--accent), transparent 80%);
   animation-duration: 25s;
 }
 
@@ -920,12 +920,12 @@
   height: 8px;
   background: linear-gradient(0deg, 
     transparent,
-    oklch(0.72 0.28 15 / 0.8),
-    oklch(0.85 0.32 15),
-    oklch(0.72 0.28 15 / 0.8),
+    color-mix(in oklch, var(--accent), transparent 20%),
+    var(--accent),
+    color-mix(in oklch, var(--accent), transparent 20%),
     transparent
   );
-  box-shadow: 0 0 6px oklch(0.72 0.28 15 / 0.6);
+  box-shadow: 0 0 6px color-mix(in oklch, var(--accent), transparent 40%);
   animation: data-stream 8s linear infinite;
   pointer-events: none;
 }
@@ -935,9 +935,9 @@
   height: 1px;
   background: linear-gradient(90deg, 
     transparent,
-    oklch(0.72 0.28 15 / 0.8),
-    oklch(0.85 0.32 15),
-    oklch(0.72 0.28 15 / 0.8),
+    color-mix(in oklch, var(--accent), transparent 20%),
+    var(--accent),
+    color-mix(in oklch, var(--accent), transparent 20%),
     transparent
   );
   animation: data-stream-horizontal 10s linear infinite;

@@ -5,10 +5,11 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Users, FileText, Code, Calendar, Edit } from '@phosphor-icons/react'
+import { Users, FileText, Code, Calendar, Edit, Gear } from '@phosphor-icons/react'
 import { User, Post } from '@/types/user'
 import { PostCard } from '@/components/posts/PostCard'
 import { EditProfileModal } from '@/components/profile/EditProfileModal'
+import { ThemeSelector } from '@/components/profile/ThemeSelector'
 
 interface ProfileViewProps {
   currentUser: User
@@ -90,7 +91,7 @@ export function ProfileView({ currentUser, onUserUpdate }: ProfileViewProps) {
         </Card>
 
         <Tabs defaultValue="posts" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="posts" className="flex items-center gap-2">
               <FileText className="w-4 h-4" />
               Posts ({userPosts.length})
@@ -102,6 +103,10 @@ export function ProfileView({ currentUser, onUserUpdate }: ProfileViewProps) {
             <TabsTrigger value="following" className="flex items-center gap-2">
               <Users className="w-4 h-4" />
               Following ({following.length})
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="flex items-center gap-2">
+              <Gear className="w-4 h-4" />
+              Settings
             </TabsTrigger>
           </TabsList>
 
@@ -194,6 +199,28 @@ export function ProfileView({ currentUser, onUserUpdate }: ProfileViewProps) {
                 )}
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="settings" className="mt-6">
+            <div className="space-y-6">
+              <ThemeSelector />
+              
+              <Card className="panel-dark">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-foreground">
+                    Interface Settings
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Customize your cyberpunk experience
+                  </p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="text-sm text-muted-foreground">
+                    More interface customization options coming soon...
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
 

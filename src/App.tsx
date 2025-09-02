@@ -11,6 +11,7 @@ import { useBugBountyPlatforms } from '@/hooks/useBugBountyPlatforms'
 import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
 import { useTeamHunts } from '@/hooks/useTeamHunts'
 import { useSamplePartnerRequests } from '@/hooks/useSamplePartnerRequests'
+import { useTheme } from '@/hooks/useTheme'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MainContent } from '@/components/layout/MainContent'
 import { AuthModal } from '@/components/auth/AuthModal'
@@ -36,6 +37,9 @@ function App() {
   useTeamHunts()
   useSamplePartnerRequests()
   useUserInvitations(currentUser ?? null)
+  
+  // Initialize theme system
+  useTheme()
 
   const handleLogin = (user: User) => {
     setCurrentUser(user)
