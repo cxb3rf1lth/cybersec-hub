@@ -58,14 +58,14 @@ export function useVirtualLab(currentUserId: string) {
     }, 1200)
     return vm
   }
-  
-  function getTemplateCategory(templateId: string): VM['category'] {
-    // Simple mapping - in real app, would fetch from template data
-    if (templateId.includes('red-team')) return 'red-team'
     if (templateId.includes('blue-team')) return 'blue-team'
     if (templateId.includes('malware')) return 'malware-analysis'
     if (templateId.includes('forensics')) return 'forensics'
     return 'penetration-testing'
+  }
+
+  function start(id: string) {
+    transition(id, 'starting', 'running')
   }
 
   function start(id: string) {
@@ -81,10 +81,6 @@ export function useVirtualLab(currentUserId: string) {
   setState({ ...state, vms: state.vms.filter(v => v.id !== id), lastSync: now })
   }
 
-  function updateNotes(id: string, notes?: string) {
-    const now = new Date().toISOString()
-    if (!state || !Array.isArray(state.vms)) {
-      setState({ vms: [], lastSync: now })
       return
     }
     setState({
