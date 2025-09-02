@@ -228,10 +228,10 @@ export function ThemeSelector() {
               </p>
               <p className="text-xs text-muted-foreground mt-1">
                 <strong className="text-foreground">Persistent setting:</strong> Your theme preference is automatically saved and will be restored when you return.
+              </p>
             </div>
           </div>
         </div>
-              </p>
             </div>
           </div>
         </div>
