@@ -58,14 +58,12 @@ export function useVirtualLab(currentUserId: string) {
     }, 1200)
     return vm
   }
+
+  function getTemplateCategory(templateId: string): VM['category'] {
     if (templateId.includes('blue-team')) return 'blue-team'
     if (templateId.includes('malware')) return 'malware-analysis'
     if (templateId.includes('forensics')) return 'forensics'
     return 'penetration-testing'
-  }
-
-  function start(id: string) {
-    transition(id, 'starting', 'running')
   }
 
   function start(id: string) {
@@ -109,7 +107,7 @@ export function useVirtualLab(currentUserId: string) {
 
   return {
     vms: myVMs,
-  all: state.vms,
+    all: state.vms,
     provision,
     start,
     stop,
