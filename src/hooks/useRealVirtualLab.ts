@@ -414,7 +414,7 @@ class DigitalOceanProvider {
   }
 }
 
-export function useVirtualLab() {
+export function useRealVirtualLab() {
   const [vms, setVMs] = useKV<VirtualMachine[]>('virtualMachines', [])
   const [providers, setProviders] = useKV<CloudProvider[]>('cloudProviders', [])
   const [templates, setTemplates] = useKV<VMTemplate[]>('vmTemplates', [])
