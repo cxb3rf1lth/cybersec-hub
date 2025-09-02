@@ -14,16 +14,16 @@ import {
   Shield, 
   Target, 
   Users, 
-  TrendingUp, 
+  TrendUp, 
   Globe, 
-  Search, 
+  MagnifyingGlass, 
   UserPlus, 
-  DollarSign,
+  CurrencyDollar,
   Clock,
-  AlertTriangle,
+  Warning,
   CheckCircle,
-  ExternalLink,
-  Zap,
+  ArrowSquareOut,
+  Lightning,
   Database,
   Network,
   Eye
@@ -36,13 +36,13 @@ interface BugBountyPlatformProps {
 
 export function BugBountyPlatform({ currentUserId }: BugBountyPlatformProps) {
   const {
-    programs,
-    threatFeed,
-    teamHunts,
-    partnerRequests,
-    integrations,
-    isLoading,
-    lastUpdate,
+    programs = [],
+    threatFeed = [],
+    teamHunts = [],
+    partnerRequests = [],
+    integrations = [],
+    isLoading = false,
+    lastUpdate = Date.now(),
     joinTeamHunt,
     createPartnerRequest,
     respondToPartnerRequest,
@@ -115,7 +115,9 @@ export function BugBountyPlatform({ currentUserId }: BugBountyPlatformProps) {
 
   return (
     <div className="space-y-6 relative">
-      <BinaryRain opacity={0.1} className="absolute inset-0 pointer-events-none" />
+      <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.1 }}>
+        <BinaryRain className="absolute inset-0" />
+      </div>
       
       {/* Header with Real-time Stats */}
       <div className="glass-panel p-6 relative">
@@ -169,7 +171,7 @@ export function BugBountyPlatform({ currentUserId }: BugBountyPlatformProps) {
             Programs
           </TabsTrigger>
           <TabsTrigger value="threats" className="glass-button">
-            <AlertTriangle className="w-4 h-4 mr-2" />
+            <Warning className="w-4 h-4 mr-2" />
             Threat Intel
           </TabsTrigger>
           <TabsTrigger value="hunts" className="glass-button">
@@ -181,7 +183,7 @@ export function BugBountyPlatform({ currentUserId }: BugBountyPlatformProps) {
             Partners
           </TabsTrigger>
           <TabsTrigger value="integrations" className="glass-button">
-            <Zap className="w-4 h-4 mr-2" />
+            <Lightning className="w-4 h-4 mr-2" />
             Integrations
           </TabsTrigger>
         </TabsList>
@@ -191,7 +193,7 @@ export function BugBountyPlatform({ currentUserId }: BugBountyPlatformProps) {
           <div className="glass-card p-4">
             <div className="flex gap-4 mb-4">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <MagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <Input
                   placeholder="Search programs by name, company, or type..."
                   value={searchQuery}
@@ -261,7 +263,7 @@ export function BugBountyPlatform({ currentUserId }: BugBountyPlatformProps) {
 
                     <div className="flex gap-2 mt-3">
                       <Button size="sm" className="glass-button hover-red-glow flex-1">
-                        <ExternalLink className="w-3 h-3 mr-1" />
+                        <ArrowSquareOut className="w-3 h-3 mr-1" />
                         View Program
                       </Button>
                       <Dialog open={showPartnerRequest} onOpenChange={setShowPartnerRequest}>
@@ -301,7 +303,7 @@ export function BugBountyPlatform({ currentUserId }: BugBountyPlatformProps) {
           <Card className="glass-panel-intense">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-red-400" />
+                <Warning className="w-5 h-5 text-red-400" />
                 Live Threat Intelligence Feed
               </CardTitle>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -312,7 +314,9 @@ export function BugBountyPlatform({ currentUserId }: BugBountyPlatformProps) {
             <CardContent>
               <ScrollArea className="h-96">
                 <div className="space-y-3 relative">
-                  <BinaryRain opacity={0.15} className="absolute inset-0 pointer-events-none" />
+                  <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.15 }}>
+                    <BinaryRain className="absolute inset-0" />
+                  </div>
                   {threatFeed.map(threat => (
                     <div key={threat.id} className="glass-card p-4 electric-border">
                       <div className="flex items-start justify-between mb-2">
@@ -605,7 +609,7 @@ export function BugBountyPlatform({ currentUserId }: BugBountyPlatformProps) {
               
               <div className="flex gap-2">
                 <Button className="glass-button hover-red-glow">
-                  <ExternalLink className="w-4 h-4 mr-2" />
+                  <ArrowSquareOut className="w-4 h-4 mr-2" />
                   View on {selectedProgram.platform}
                 </Button>
                 <Button variant="outline" className="glass-button">
