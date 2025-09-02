@@ -228,9 +228,9 @@ export function ThemeSelector() {
               </p>
               <p className="text-xs text-muted-foreground mt-1">
                 <strong className="text-foreground">Persistent setting:</strong> Your theme preference is automatically saved and will be restored when you return.
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                <strong className="text-foreground">Keyboard shortcuts:</strong> Use Ctrl+Shift+R/P/B/G for Red/Purple/Blue/Green, or Ctrl+Shift+T to cycle through themes.
+            </div>
+          </div>
+        </div>
               </p>
             </div>
           </div>
