@@ -803,3 +803,9 @@ apt-get update && apt-get upgrade -y
     updateVMStatuses
   }
 }
+
+// Default export for compatibility  
+export default useRealVirtualLab
+
+// Named export for explicit usage
+export { useRealVirtualLab as realVirtualLab }
