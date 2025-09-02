@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>noVNC Console</title>
+    <style>
+      html, body { height: 100%; margin: 0; }
+      body { background: #000; color: #eee; }
+      .bar { padding: 6px 10px; background: #111; color: #aaa; font-family: monospace; }
+      iframe { border: 0; width: 100%; height: calc(100% - 32px); background: #000; }
+    </style>
+  </head>
+  <body>
+    <div class="bar">Mock noVNC - In production, point to your real noVNC gateway URL. <span id="vm"></span></div>
+    <iframe srcdoc="<style>body{background:#000;color:#0f0;font-family:monospace;display:grid;place-items:center;height:100%;margin:0}</style><div>Console stream for VM will appear here.</div>"></iframe>
+    <script>
+      const vm = new URLSearchParams(location.search).get('vm');
+      document.getElementById('vm').textContent = vm ? `(vm=${vm})` : '';
+    </script>
+  </body>
+</html>
