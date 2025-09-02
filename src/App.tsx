@@ -22,7 +22,7 @@ import { User } from '@/types/user'
 
 function App() {
   const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null as User | null)
-  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab'>('feed')
+  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab'>('feed')
   const [showAuthModal, setShowAuthModal] = useState(false)
 
   // Initialize sample data
@@ -63,16 +63,19 @@ function App() {
         </div>
         <NeuralNetwork opacity={0.4} nodeCount={80} />
         <FloatingParticles density="medium" includeDataStreams={true} />
-        <div className="text-center space-y-6 max-w-md mx-auto p-6 relative z-10">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-foreground terminal-cursor glitch-effect">CyberConnect</h1>
-            <p className="text-muted-foreground">
+        <div className="text-center space-y-8 max-w-lg mx-auto p-8 relative z-10">
+          <div className="space-y-4">
+            <h1 className="text-5xl font-bold text-foreground tracking-tight">CyberConnect</h1>
+            <p className="text-xl text-muted-foreground font-medium">
               The professional network for cybersecurity experts
+            </p>
+            <p className="text-sm text-muted-foreground/80 max-w-md mx-auto">
+              Connect with security professionals, collaborate on bug bounties, and advance your cybersecurity career.
             </p>
           </div>
           <button
             onClick={() => setShowAuthModal(true)}
-            className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover-red-glow transition-all duration-300 transform hover:scale-105"
+            className="bg-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold hover-red-glow transition-all duration-300 transform hover:scale-105 text-lg"
           >
             Join the Community
           </button>

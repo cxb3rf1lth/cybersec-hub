@@ -8,37 +8,37 @@
 }
 
 :root {
-  --background: oklch(0.03 0.01 320);
-  --foreground: oklch(0.92 0.03 15);
+  --background: oklch(0.02 0.01 240);
+  --foreground: oklch(0.95 0.01 240);
   
-  --card: oklch(0.06 0.02 320);
-  --card-foreground: oklch(0.90 0.03 15);
-  --popover: oklch(0.05 0.02 320);
-  --popover-foreground: oklch(0.92 0.03 15);
+  --card: oklch(0.04 0.01 240);
+  --card-foreground: oklch(0.92 0.01 240);
+  --popover: oklch(0.03 0.01 240);
+  --popover-foreground: oklch(0.95 0.01 240);
   
-  --primary: oklch(0.58 0.22 15);
-  --primary-foreground: oklch(0.02 0 0);
-  --secondary: oklch(0.08 0.02 320);
-  --secondary-foreground: oklch(0.88 0.03 15);
-  --accent: oklch(0.72 0.28 15);
-  --accent-foreground: oklch(0.02 0 0);
+  --primary: oklch(0.15 0.02 240);
+  --primary-foreground: oklch(0.95 0.01 240);
+  --secondary: oklch(0.08 0.01 240);
+  --secondary-foreground: oklch(0.85 0.01 240);
+  --accent: oklch(0.50 0.15 15);
+  --accent-foreground: oklch(0.95 0.01 240);
   
-  --muted: oklch(0.10 0.02 320);
-  --muted-foreground: oklch(0.65 0.05 15);
-  --destructive: oklch(0.58 0.22 15);
-  --destructive-foreground: oklch(0.02 0 0);
+  --muted: oklch(0.06 0.01 240);
+  --muted-foreground: oklch(0.65 0.02 240);
+  --destructive: oklch(0.50 0.15 15);
+  --destructive-foreground: oklch(0.95 0.01 240);
   
-  --border: oklch(0.15 0.03 320);
-  --input: oklch(0.12 0.03 320);
-  --ring: oklch(0.72 0.28 15);
+  --border: oklch(0.12 0.02 240);
+  --input: oklch(0.08 0.02 240);
+  --ring: oklch(0.40 0.08 15);
   
-  --radius: 0.5rem;
+  --radius: 0.75rem;
   
-  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
   
   --font-serif: "IBM Plex Serif", ui-serif, Georgia, serif;
   
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-mono: "IBM Plex Mono", "Fira Code", ui-monospace, monospace;
 }
 
 :root {
@@ -93,90 +93,46 @@
   background: var(--muted-foreground);
 }
 
-/* Ultra-sleek minimal glow animations */
-@keyframes pulse-primary {
-  0%, 100% {
-    box-shadow: 
-      0 0 6px color-mix(in oklch, var(--primary), transparent 75%),
-      0 0 12px color-mix(in oklch, var(--primary), transparent 90%),
-      inset 0 0 1px color-mix(in oklch, var(--primary), transparent 90%);
-  }
-  50% {
-    box-shadow: 
-      0 0 12px color-mix(in oklch, var(--accent), transparent 50%), 
-      0 0 20px color-mix(in oklch, var(--primary), transparent 70%),
-      0 0 28px color-mix(in oklch, var(--accent), transparent 85%),
-      inset 0 0 3px color-mix(in oklch, var(--accent), transparent 80%);
-  }
-}
+/* Ultra-minimal red accent animations */
+@keyframes subtle-pulse {\n  0%, 100% {\n    box-shadow: \n      0 0 2px color-mix(in oklch, var(--accent), transparent 95%),\n      inset 0 0 1px color-mix(in oklch, var(--accent), transparent 98%);\n  }\n  50% {\n    box-shadow: \n      0 0 4px color-mix(in oklch, var(--accent), transparent 90%), \n      0 0 8px color-mix(in oklch, var(--accent), transparent 97%),\n      inset 0 0 2px color-mix(in oklch, var(--accent), transparent 96%);\n  }\n}\n\n@keyframes border-flow {\n  0% {\n    border-color: var(--border);\n    box-shadow: inset 0 0 1px color-mix(in oklch, var(--accent), transparent 98%);\n  }\n  50% {\n    border-color: color-mix(in oklch, var(--accent), transparent 70%);\n    box-shadow: \n      0 0 3px color-mix(in oklch, var(--accent), transparent 90%),\n      inset 0 0 1px color-mix(in oklch, var(--accent), transparent 94%);\n  }\n  100% {\n    border-color: var(--border);\n    box-shadow: inset 0 0 1px color-mix(in oklch, var(--accent), transparent 98%);\n  }\n}
 
-@keyframes border-flow {
-  0% {
-    border-color: var(--border);
-    box-shadow: 
-      0 0 2px color-mix(in oklch, var(--border), transparent 70%),
-      inset 0 0 1px color-mix(in oklch, var(--primary), transparent 95%);
-  }
-  50% {
-    border-color: color-mix(in oklch, var(--accent), transparent 20%);
-    box-shadow: 
-      0 0 8px color-mix(in oklch, var(--accent), transparent 60%),
-      0 0 16px color-mix(in oklch, var(--accent), transparent 80%),
-      inset 0 0 2px color-mix(in oklch, var(--accent), transparent 85%);
-  }
-  100% {
-    border-color: var(--border);
-    box-shadow: 
-      0 0 2px color-mix(in oklch, var(--border), transparent 70%),
-      inset 0 0 1px color-mix(in oklch, var(--primary), transparent 95%);
-  }
-}
-
-/* Ultra-premium hacker-style terminal cursor */
+/* Professional terminal cursor */
 @keyframes terminal-cursor {
   0%, 45% {
     opacity: 1;
-    text-shadow: 
-      0 0 4px color-mix(in oklch, var(--accent), transparent 50%),
-      0 0 8px color-mix(in oklch, var(--accent), transparent 70%);
+    text-shadow: 0 0 2px color-mix(in oklch, var(--accent), transparent 85%);
   }
   50%, 100% {
     opacity: 0;
-    text-shadow: 
-      0 0 2px color-mix(in oklch, var(--accent), transparent 80%),
-      0 0 4px color-mix(in oklch, var(--accent), transparent 90%);
+    text-shadow: 0 0 1px color-mix(in oklch, var(--accent), transparent 95%);
   }
 }
 
 .terminal-cursor::after {
   content: '▋';
-  color: var(--accent);
-  animation: terminal-cursor 1.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-  text-shadow: 
-    0 0 4px color-mix(in oklch, var(--accent), transparent 50%),
-    0 0 8px color-mix(in oklch, var(--accent), transparent 70%);
-  filter: brightness(1.2);
+  color: var(--foreground);
+  animation: terminal-cursor 1.2s ease-in-out infinite;
+  text-shadow: 0 0 1px color-mix(in oklch, var(--accent), transparent 90%);
 }
 
-/* Ultra-sleek interactive states */
+/* Professional interactive states */
 .hover-red-glow:hover {
-  animation: pulse-primary 2.5s ease-in-out infinite;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  transform: translateY(-1px) scale(1.02);
-  backdrop-filter: blur(0.5px);
+  animation: subtle-pulse 3s ease-in-out infinite;
+  transition: all 0.3s ease;
+  transform: translateY(-1px);
+  backdrop-filter: blur(1px);
 }
 
 .hover-border-flow:hover {
-  animation: border-flow 2.5s ease-in-out infinite;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  transform: translateY(-0.5px);
+  animation: border-flow 3s ease-in-out infinite;
+  transition: all 0.3s ease;
 }
 
-/* Ultra-premium button depth effects */
+/* Professional button depth effects */
 .hover-red-glow {
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(0.2px);
+  backdrop-filter: blur(0.5px);
 }
 
 .hover-red-glow::before {
@@ -184,125 +140,71 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, 
-    color-mix(in oklch, var(--accent), transparent 90%) 0%,
-    color-mix(in oklch, var(--accent), transparent 96%) 20%,
-    transparent 45%,
-    transparent 55%,
-    color-mix(in oklch, var(--primary), transparent 96%) 80%,
-    color-mix(in oklch, var(--primary), transparent 92%) 100%
+    color-mix(in oklch, var(--foreground), transparent 98%) 0%,
+    transparent 50%,
+    color-mix(in oklch, var(--accent), transparent 97%) 100%
   );
   opacity: 0;
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.3s ease;
 }
 
 .hover-red-glow:hover::before {
   opacity: 1;
 }
 
-.hover-red-glow::after {
-  content: '';
-  position: absolute;
-  inset: 1px;
-  background: linear-gradient(135deg, 
-    color-mix(in oklch, var(--accent), transparent 98%) 0%,
-    transparent 30%,
-    transparent 70%,
-    color-mix(in oklch, var(--primary), transparent 98%) 100%
-  );
-  border-radius: inherit;
-  opacity: 0;
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.hover-red-glow:hover::after {
-  opacity: 1;
-}
-
-/* Ultra-premium matrix-style text selection */
+/* Professional text selection */
 ::selection {
-  background: color-mix(in oklch, var(--accent), transparent 65%);
-  color: var(--foreground);
-  text-shadow: 
-    0 0 4px color-mix(in oklch, var(--accent), transparent 30%),
-    0 0 8px color-mix(in oklch, var(--accent), transparent 60%);
+  background: color-mix(in oklch, var(--foreground), transparent 85%);
+  color: var(--background);
 }
 
-/* Ultra-sleek network pattern overlay */
+/* Professional network pattern overlay */
 .network-pattern {
   background-image: 
-    /* Primary ultra-subtle grid */
-    radial-gradient(circle at 25% 25%, color-mix(in oklch, var(--accent), transparent 94%) 0.8px, transparent 0.8px),
-    radial-gradient(circle at 75% 75%, color-mix(in oklch, var(--primary), transparent 95%) 0.8px, transparent 0.8px),
-    /* Micro grid structure with depth */
-    linear-gradient(color-mix(in oklch, var(--primary), transparent 96%) 0.5px, transparent 0.5px),
-    linear-gradient(90deg, color-mix(in oklch, var(--primary), transparent 96%) 0.5px, transparent 0.5px),
-    /* Ultra-fine texture */
-    radial-gradient(circle at 50% 50%, color-mix(in oklch, var(--accent), transparent 98%) 0.2px, transparent 0.2px);
+    /* Subtle grid structure */
+    radial-gradient(circle at 25% 25%, color-mix(in oklch, var(--border), transparent 85%) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 75% 75%, color-mix(in oklch, var(--border), transparent 90%) 0.5px, transparent 0.5px),
+    /* Fine line grid */
+    linear-gradient(color-mix(in oklch, var(--border), transparent 92%) 0.3px, transparent 0.3px),
+    linear-gradient(90deg, color-mix(in oklch, var(--border), transparent 92%) 0.3px, transparent 0.3px);
   background-size: 
-    120px 120px, 120px 120px,
-    30px 30px, 30px 30px,
-    15px 15px;
+    80px 80px, 80px 80px,
+    20px 20px, 20px 20px;
   background-position: 
-    0 0, 60px 60px,
-    0 0, 0 0,
-    7.5px 7.5px;
+    0 0, 40px 40px,
+    0 0, 0 0;
 }
 
-/* Ultra-refined glitch effect with premium chromatic aberration */
+/* Subtle glitch effect */
 @keyframes glitch {
   0% {
     transform: translate(0);
-    text-shadow: 
-      2px 0 color-mix(in oklch, var(--accent), transparent 10%),
-      -2px 0 color-mix(in oklch, var(--accent), blue 30%),
-      0 0 6px color-mix(in oklch, var(--accent), transparent 50%);
+    text-shadow: 1px 0 color-mix(in oklch, var(--accent), transparent 80%);
   }
-  15% {
-    transform: translate(-2px, 1px);
-    text-shadow: 
-      3px 0 color-mix(in oklch, var(--accent), transparent 5%),
-      -3px 0 color-mix(in oklch, var(--accent), blue 25%),
-      0 0 8px color-mix(in oklch, var(--accent), transparent 40%);
+  20% {
+    transform: translate(-1px, 0.5px);
+    text-shadow: 2px 0 color-mix(in oklch, var(--accent), transparent 75%);
   }
-  30% {
-    transform: translate(2px, -1px);
-    text-shadow: 
-      -2px 0 color-mix(in oklch, var(--accent), transparent 8%),
-      2px 0 color-mix(in oklch, var(--accent), blue 35%),
-      0 0 10px color-mix(in oklch, var(--accent), transparent 30%);
-  }
-  45% {
-    transform: translate(-1px, 2px);
-    text-shadow: 
-      1px 0 color-mix(in oklch, var(--accent), transparent 12%),
-      -1px 0 color-mix(in oklch, var(--accent), blue 40%),
-      0 0 12px color-mix(in oklch, var(--accent), transparent 25%);
+  40% {
+    transform: translate(1px, -0.5px);
+    text-shadow: -1px 0 color-mix(in oklch, var(--accent), transparent 85%);
   }
   60% {
-    transform: translate(1px, -2px);
-    text-shadow: 
-      -3px 0 color-mix(in oklch, var(--accent), transparent 6%),
-      3px 0 color-mix(in oklch, var(--accent), blue 28%),
-      0 0 14px color-mix(in oklch, var(--accent), transparent 20%);
+    transform: translate(-0.5px, 1px);
+    text-shadow: 1.5px 0 color-mix(in oklch, var(--accent), transparent 80%);
   }
   80% {
-    transform: translate(-0.5px, 0.5px);
-    text-shadow: 
-      1.5px 0 color-mix(in oklch, var(--accent), transparent 15%),
-      -1.5px 0 color-mix(in oklch, var(--accent), blue 45%),
-      0 0 8px color-mix(in oklch, var(--accent), transparent 35%);
+    transform: translate(0.5px, -1px);
+    text-shadow: -0.5px 0 color-mix(in oklch, var(--accent), transparent 90%);
   }
   100% {
     transform: translate(0);
-    text-shadow: 
-      0 0 color-mix(in oklch, var(--accent), transparent 20%),
-      0 0 color-mix(in oklch, var(--accent), blue 50%),
-      0 0 4px color-mix(in oklch, var(--accent), transparent 60%);
+    text-shadow: 0 0 color-mix(in oklch, var(--accent), transparent 95%);
   }
 }
 
 .glitch-effect:hover {
-  animation: glitch 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: glitch 0.3s ease-out;
 }
 
 /* Add line-clamp utility classes */
@@ -673,16 +575,14 @@
 
 .binary-char {
   font-family: 'IBM Plex Mono', 'Fira Code', monospace;
-  font-size: 11px;
-  color: color-mix(in oklch, var(--accent), transparent 20%);
+  font-size: 10px;
+  color: color-mix(in oklch, var(--accent), transparent 70%);
   line-height: 1.4;
-  animation: binary-fade 2.2s ease-in-out infinite;
-  text-shadow: 
-    0 0 4px color-mix(in oklch, var(--accent), transparent 50%),
-    0 0 8px color-mix(in oklch, var(--accent), transparent 75%);
-  font-weight: 500;
+  animation: binary-fade 3s ease-in-out infinite;
+  text-shadow: 0 0 1px color-mix(in oklch, var(--accent), transparent 90%);
+  font-weight: 400;
   position: relative;
-  backdrop-filter: blur(0.1px);
+  backdrop-filter: blur(0.05px);
 }
 
 .binary-char::before {
@@ -695,25 +595,19 @@
   animation: binary-shadow 2s ease-in-out infinite;
 }
 
-/* Ultra-premium binary rain highlights */
+/* Subtle binary rain highlights */
 .binary-char:nth-child(4n) {
-  color: color-mix(in oklch, var(--accent), transparent 5%);
-  text-shadow: 
-    0 0 6px color-mix(in oklch, var(--accent), transparent 30%), 
-    0 0 12px color-mix(in oklch, var(--primary), transparent 60%),
-    0 0 18px color-mix(in oklch, var(--accent), transparent 80%);
-  animation: binary-glow-fade 2.5s ease-in-out infinite;
-  font-weight: 600;
+  color: color-mix(in oklch, var(--accent), transparent 50%);
+  text-shadow: 0 0 2px color-mix(in oklch, var(--accent), transparent 85%);
+  animation: binary-glow-fade 3.5s ease-in-out infinite;
+  font-weight: 500;
 }
 
 .binary-char:nth-child(7n) {
-  color: oklch(0.90 0.35 15);
-  text-shadow: 
-    0 0 8px color-mix(in oklch, var(--accent), transparent 10%), 
-    0 0 16px color-mix(in oklch, var(--accent), transparent 50%),
-    0 0 24px color-mix(in oklch, var(--accent), transparent 70%);
-  animation: binary-intense-glow 2s ease-in-out infinite;
-  font-weight: 700;
+  color: color-mix(in oklch, var(--accent), transparent 30%);
+  text-shadow: 0 0 3px color-mix(in oklch, var(--accent), transparent 75%);
+  animation: binary-intense-glow 3s ease-in-out infinite;
+  font-weight: 600;
 }
 
 @keyframes binary-fall {
@@ -871,35 +765,33 @@
   }
 }
 
-/* Ultra-premium card components with depth */
+/* Professional card components with depth */
 .card-dark {
   background: 
     linear-gradient(145deg, 
-      oklch(0.10 0.02 320), 
-      oklch(0.06 0.01 320), 
-      oklch(0.04 0.01 320)
+      oklch(0.06 0.01 240), 
+      oklch(0.04 0.01 240), 
+      oklch(0.02 0.01 240)
     );
-  border: 2px solid oklch(0.18 0.04 320);
+  border: 1px solid oklch(0.15 0.02 240);
   border-radius: var(--radius-md);
   box-shadow: 
-    0 8px 32px oklch(0 0 0 / 0.7),
-    0 4px 16px oklch(0 0 0 / 0.4),
-    inset 0 2px 4px oklch(0.72 0.28 15 / 0.08),
-    inset 0 0 2px oklch(0.85 0.32 15 / 0.05),
-    0 0 0 1px oklch(0.72 0.28 15 / 0.12);
+    0 4px 16px oklch(0 0 0 / 0.3),
+    0 2px 8px oklch(0 0 0 / 0.2),
+    inset 0 1px 2px oklch(0.95 0.01 240 / 0.04),
+    inset 0 0 1px oklch(0.95 0.01 240 / 0.02);
   position: relative;
   backdrop-filter: blur(1px);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s ease;
 }
 
 .card-dark:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: 
-    0 12px 48px oklch(0 0 0 / 0.8),
-    0 6px 24px oklch(0 0 0 / 0.5),
-    inset 0 2px 6px oklch(0.85 0.32 15 / 0.12),
-    inset 0 0 3px oklch(0.95 0.35 15 / 0.08),
-    0 0 0 1px oklch(0.85 0.32 15 / 0.18);
+    0 6px 24px oklch(0 0 0 / 0.4),
+    0 3px 12px oklch(0 0 0 / 0.3),
+    inset 0 1px 3px oklch(0.95 0.01 240 / 0.06),
+    inset 0 0 2px oklch(0.95 0.01 240 / 0.04);
 }
 
 .card-dark::before {
@@ -908,11 +800,9 @@
   inset: 0;
   border-radius: var(--radius-md);
   background: linear-gradient(145deg, 
-    oklch(0.85 0.32 15 / 0.04) 0%,
-    oklch(0.72 0.28 15 / 0.02) 25%,
+    oklch(0.95 0.01 240 / 0.02) 0%,
     transparent 50%,
-    transparent 75%,
-    oklch(0.58 0.22 15 / 0.03) 100%
+    oklch(0.50 0.15 15 / 0.01) 100%
   );
   pointer-events: none;
 }
@@ -920,31 +810,29 @@
 .panel-dark {
   background: 
     linear-gradient(135deg, 
-      oklch(0.08 0.02 320), 
-      oklch(0.04 0.01 320), 
-      oklch(0.02 0.01 320)
+      oklch(0.05 0.01 240), 
+      oklch(0.03 0.01 240), 
+      oklch(0.01 0.01 240)
     );
-  border: 2px solid oklch(0.20 0.05 320);
+  border: 1px solid oklch(0.18 0.03 240);
   border-radius: var(--radius-lg);
   box-shadow: 
-    0 16px 64px oklch(0 0 0 / 0.8),
-    0 8px 32px oklch(0 0 0 / 0.6),
-    inset 0 2px 6px oklch(0.85 0.32 15 / 0.1),
-    inset 0 0 3px oklch(0.95 0.35 15 / 0.06),
-    0 0 0 1px oklch(0.72 0.28 15 / 0.15);
+    0 8px 32px oklch(0 0 0 / 0.4),
+    0 4px 16px oklch(0 0 0 / 0.3),
+    inset 0 1px 3px oklch(0.95 0.01 240 / 0.05),
+    inset 0 0 2px oklch(0.95 0.01 240 / 0.03);
   position: relative;
   backdrop-filter: blur(2px);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s ease;
 }
 
 .panel-dark:hover {
   transform: translateY(-1px);
   box-shadow: 
-    0 20px 80px oklch(0 0 0 / 0.9),
-    0 10px 40px oklch(0 0 0 / 0.7),
-    inset 0 3px 8px oklch(0.95 0.35 15 / 0.12),
-    inset 0 0 4px oklch(1 0.4 15 / 0.08),
-    0 0 0 1px oklch(0.85 0.32 15 / 0.20);
+    0 12px 48px oklch(0 0 0 / 0.5),
+    0 6px 24px oklch(0 0 0 / 0.4),
+    inset 0 2px 4px oklch(0.95 0.01 240 / 0.07),
+    inset 0 0 3px oklch(0.95 0.01 240 / 0.05);
 }
 
 .panel-dark::before {
@@ -953,13 +841,12 @@
   inset: 0;
   border-radius: var(--radius-lg);
   background: 
-    radial-gradient(circle at 20% 20%, oklch(0.85 0.32 15 / 0.08), transparent 60%),
-    radial-gradient(circle at 80% 80%, oklch(0.72 0.28 15 / 0.06), transparent 60%),
+    radial-gradient(circle at 20% 20%, oklch(0.95 0.01 240 / 0.03), transparent 60%),
+    radial-gradient(circle at 80% 80%, oklch(0.50 0.15 15 / 0.02), transparent 60%),
     linear-gradient(135deg, 
-      oklch(0.95 0.35 15 / 0.03) 0%, 
-      transparent 30%, 
-      transparent 70%, 
-      oklch(0.58 0.22 15 / 0.04) 100%
+      oklch(0.95 0.01 240 / 0.02) 0%, 
+      transparent 50%, 
+      oklch(0.50 0.15 15 / 0.01) 100%
     );
   pointer-events: none;
 }
@@ -977,61 +864,55 @@
   position: absolute;
   border-radius: 50%;
   background: radial-gradient(circle, 
-    color-mix(in oklch, var(--accent), transparent 40%), 
-    color-mix(in oklch, var(--primary), transparent 70%),
+    color-mix(in oklch, var(--accent), transparent 80%), 
+    color-mix(in oklch, var(--border), transparent 60%),
     transparent
   );
   box-shadow: 
-    0 0 8px color-mix(in oklch, var(--accent), transparent 60%),
-    0 0 16px color-mix(in oklch, var(--primary), transparent 80%),
-    inset 0 0 2px color-mix(in oklch, var(--accent), transparent 70%);
-  animation: particle-float 25s linear infinite;
-  backdrop-filter: blur(0.2px);
+    0 0 2px color-mix(in oklch, var(--accent), transparent 90%),
+    inset 0 0 1px color-mix(in oklch, var(--accent), transparent 95%);
+  animation: particle-float 30s linear infinite;
+  backdrop-filter: blur(0.1px);
 }
 
 .particle.small {
-  width: 2px;
-  height: 2px;
+  width: 1.5px;
+  height: 1.5px;
   background: radial-gradient(circle, 
-    color-mix(in oklch, var(--accent), transparent 20%), 
-    color-mix(in oklch, var(--accent), transparent 60%), 
+    color-mix(in oklch, var(--accent), transparent 85%), 
     transparent
   );
-  box-shadow: 
-    0 0 4px color-mix(in oklch, var(--accent), transparent 40%),
-    0 0 8px color-mix(in oklch, var(--accent), transparent 70%);
-  animation-duration: 22s;
+  box-shadow: 0 0 1px color-mix(in oklch, var(--accent), transparent 95%);
+  animation-duration: 25s;
 }
 
 .particle.medium {
-  width: 3px;
-  height: 3px;
+  width: 2px;
+  height: 2px;
   background: radial-gradient(circle, 
-    color-mix(in oklch, var(--accent), transparent 30%), 
-    color-mix(in oklch, var(--primary), transparent 60%),
+    color-mix(in oklch, var(--accent), transparent 80%), 
+    color-mix(in oklch, var(--border), transparent 70%),
     transparent
   );
   box-shadow: 
-    0 0 6px color-mix(in oklch, var(--accent), transparent 50%),
-    0 0 12px color-mix(in oklch, var(--accent), transparent 75%),
-    inset 0 0 1px color-mix(in oklch, var(--accent), transparent 80%);
-  animation-duration: 30s;
+    0 0 2px color-mix(in oklch, var(--accent), transparent 90%),
+    inset 0 0 1px color-mix(in oklch, var(--accent), transparent 95%);
+  animation-duration: 35s;
 }
 
 .particle.large {
-  width: 4px;
-  height: 4px;
+  width: 2.5px;
+  height: 2.5px;
   background: radial-gradient(circle, 
-    color-mix(in oklch, var(--accent), transparent 20%), 
-    color-mix(in oklch, var(--accent), transparent 50%),
+    color-mix(in oklch, var(--accent), transparent 75%), 
+    color-mix(in oklch, var(--accent), transparent 85%),
     transparent
   );
   box-shadow: 
-    0 0 8px color-mix(in oklch, var(--accent), transparent 40%),
-    0 0 16px color-mix(in oklch, var(--accent), transparent 60%),
-    0 0 24px color-mix(in oklch, var(--accent), transparent 80%),
-    inset 0 0 2px color-mix(in oklch, var(--accent), transparent 70%);
-  animation-duration: 35s;
+    0 0 3px color-mix(in oklch, var(--accent), transparent 85%),
+    0 0 6px color-mix(in oklch, var(--accent), transparent 95%),
+    inset 0 0 1px color-mix(in oklch, var(--accent), transparent 90%);
+  animation-duration: 40s;
 }
 
 .particle.accent {
@@ -1217,36 +1098,48 @@
 
 body {
   font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
-/* Ultra-premium glass card styling */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+/* Professional glass card styling */
 .glass-card {
   background: 
     linear-gradient(145deg, 
-      oklch(0.10 0.02 320 / 0.95), 
-      oklch(0.06 0.01 320 / 0.90), 
-      oklch(0.04 0.01 320 / 0.85)
+      oklch(0.06 0.01 240 / 0.85), 
+      oklch(0.04 0.01 240 / 0.80), 
+      oklch(0.02 0.01 240 / 0.75)
     );
-  backdrop-filter: blur(8px) saturate(1.2);
-  border: 2px solid oklch(0.18 0.04 320 / 0.6);
+  backdrop-filter: blur(12px) saturate(1.1);
+  border: 1px solid oklch(0.15 0.02 240 / 0.3);
   box-shadow: 
-    0 8px 32px oklch(0 0 0 / 0.7),
-    0 4px 16px oklch(0 0 0 / 0.4),
-    inset 0 2px 4px oklch(0.72 0.28 15 / 0.08),
-    inset 0 0 2px oklch(0.85 0.32 15 / 0.05);
+    0 8px 32px oklch(0 0 0 / 0.4),
+    0 2px 8px oklch(0 0 0 / 0.2),
+    inset 0 1px 2px oklch(0.95 0.01 240 / 0.05),
+    inset 0 0 1px oklch(0.95 0.01 240 / 0.03);
   position: relative;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s ease;
 }
 
 .glass-card:hover {
-  transform: translateY(-2px);
-  backdrop-filter: blur(12px) saturate(1.3);
-  border-color: oklch(0.25 0.06 320 / 0.8);
+  transform: translateY(-1px);
+  backdrop-filter: blur(16px) saturate(1.2);
+  border-color: oklch(0.20 0.03 240 / 0.4);
   box-shadow: 
-    0 12px 48px oklch(0 0 0 / 0.8),
-    0 6px 24px oklch(0 0 0 / 0.5),
-    inset 0 2px 6px oklch(0.85 0.32 15 / 0.12),
-    inset 0 0 3px oklch(0.95 0.35 15 / 0.08);
+    0 12px 48px oklch(0 0 0 / 0.5),
+    0 4px 16px oklch(0 0 0 / 0.3),
+    inset 0 1px 3px oklch(0.95 0.01 240 / 0.08),
+    inset 0 0 2px oklch(0.95 0.01 240 / 0.05);
 }
 
 .glass-card::before {
@@ -1255,11 +1148,9 @@ body {
   inset: 0;
   border-radius: inherit;
   background: linear-gradient(145deg, 
-    oklch(0.85 0.32 15 / 0.04) 0%,
-    oklch(0.72 0.28 15 / 0.02) 25%,
+    oklch(0.95 0.01 240 / 0.02) 0%,
     transparent 50%,
-    transparent 75%,
-    oklch(0.58 0.22 15 / 0.03) 100%
+    oklch(0.50 0.15 15 / 0.01) 100%
   );
   pointer-events: none;
 }
@@ -1301,11 +1192,12 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-/* Ultra-premium glass button styling */
+/* Professional glass button styling */
 .glass-button {
-  backdrop-filter: blur(4px) saturate(1.1);
+  backdrop-filter: blur(8px) saturate(1.05);
   position: relative;
   overflow: hidden;
+  border: 1px solid oklch(0.12 0.02 240 / 0.2);
 }
 
 .glass-button::before {
@@ -1313,12 +1205,12 @@ body {
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, 
-    color-mix(in oklch, var(--primary), transparent 90%) 0%,
-    color-mix(in oklch, var(--accent), transparent 95%) 50%,
-    color-mix(in oklch, var(--primary), transparent 92%) 100%
+    oklch(0.95 0.01 240 / 0.02) 0%,
+    transparent 50%,
+    oklch(0.50 0.15 15 / 0.01) 100%
   );
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
   border-radius: inherit;
 }
 

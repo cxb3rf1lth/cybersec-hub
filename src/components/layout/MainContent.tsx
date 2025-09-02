@@ -9,7 +9,6 @@ import { EarningsView } from '@/components/views/EarningsView'
 import { TeamsView } from '@/components/teams/TeamsView'
 import { TeamInvitationsView } from '@/components/teams/TeamInvitationsView'
 import { MarketplaceView } from '@/components/marketplace/MarketplaceView'
-import { LoadingAnimationsDemo } from '@/components/views/LoadingAnimationsDemo'
 import { ThreatIntelligenceFeed } from '@/components/feeds/ThreatIntelligenceFeed'
 import { BugBountyDashboard } from '@/components/bug-bounty/BugBountyDashboard'
 import { BugBountyPlatform } from '@/components/features/BugBountyPlatform'
@@ -20,9 +19,9 @@ import { VirtualLabView } from '@/components/views/VirtualLabView'
 
 interface MainContentProps {
   currentUser: User
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab'
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab'
   onUserUpdate: (user: User) => void
-  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab') => void
+  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab') => void
 }
 
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
@@ -81,9 +80,6 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
       )}
       {activeTab === 'virtual-lab' && (
         <VirtualLabView currentUser={currentUser} />
-      )}
-      {activeTab === 'animations' && (
-        <LoadingAnimationsDemo />
       )}
       {activeTab === 'explore' && (
         <ExploreView 

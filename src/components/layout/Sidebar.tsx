@@ -1,21 +1,28 @@
-import { Shield, House, Compass, User, Code, SignOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, CircleNotch, Eye, Target, BugBeetle, Handshake, Globe, DesktopTower } from '@phosphor-icons/react'
+import { Shield, House, Compass, User, Code, SignOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, Eye, BugBeetle, Handshake, Globe, DesktopTower, CaretRight } from '@phosphor-icons/react'
+import { useState } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { User as UserType, Conversation } from '@/types/user'
 import { TeamInvitation } from '@/types/teams'
 
 interface SidebarProps {
   currentUser: UserType
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab'
-  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'animations' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab') => void
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab'
+  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'threats' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'threat-map' | 'virtual-lab') => void
   onLogout: () => void
 }
 
 export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: SidebarProps) {
   const [conversations] = useKV<Conversation[]>('conversations', [])
   const [teamInvitations] = useKV<TeamInvitation[]>('teamInvitations', [])
+  const [expandedSections, setExpandedSections] = useState({
+    security: true,
+    collaboration: false,
+    development: false
+  })
   
   // Calculate total unread messages
   const totalUnread = (conversations ?? []).reduce((total, conv) => {
@@ -32,40 +39,58 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
     new Date(inv.expiresAt) > new Date()
   ).length
 
-  const navigationItems = [
-  { id: 'feed' as const, label: 'Feed', icon: House },
-    { id: 'threats' as const, label: 'Threat Intel', icon: Eye },
-    { id: 'threat-map' as const, label: 'Threat Map', icon: Globe },
-  { id: 'virtual-lab' as const, label: 'Virtual Lab', icon: DesktopTower },
-    { id: 'bug-bounty' as const, label: 'Bug Bounty', icon: BugBeetle },
-    { id: 'partner-requests' as const, label: 'Partners', icon: Handshake },
-    { id: 'messages' as const, label: 'Messages', icon: ChatCircle, badge: totalUnread },
-    { id: 'marketplace' as const, label: 'Marketplace', icon: Storefront },
-    { id: 'invitations' as const, label: 'Invitations', icon: EnvelopeSimple, badge: pendingInvitations },
-    { id: 'projects' as const, label: 'Projects', icon: Kanban },
-    { id: 'teams' as const, label: 'Teams', icon: Users },
-    { id: 'earnings' as const, label: 'Earnings', icon: CurrencyDollar },
-    { id: 'code' as const, label: 'Code', icon: Code },
-    { id: 'templates' as const, label: 'Templates', icon: FolderOpen },
-  { id: 'animations' as const, label: 'Animations', icon: CircleNotch },
-    { id: 'explore' as const, label: 'Explore', icon: Compass },
-    { id: 'profile' as const, label: 'Profile', icon: User },
-  ]
+  const navigationSections = {
+    main: [
+      { id: 'feed' as const, label: 'Feed', icon: House },
+      { id: 'explore' as const, label: 'Explore', icon: Compass },
+      { id: 'profile' as const, label: 'Profile', icon: User },
+    ],
+    security: [
+      { id: 'threats' as const, label: 'Threat Intel', icon: Eye },
+      { id: 'threat-map' as const, label: 'Threat Map', icon: Globe },
+      { id: 'bug-bounty' as const, label: 'Bug Bounty', icon: BugBeetle },
+      { id: 'virtual-lab' as const, label: 'Virtual Lab', icon: DesktopTower },
+    ],
+    collaboration: [
+      { id: 'messages' as const, label: 'Messages', icon: ChatCircle, badge: totalUnread },
+      { id: 'teams' as const, label: 'Teams', icon: Users },
+      { id: 'invitations' as const, label: 'Invitations', icon: EnvelopeSimple, badge: pendingInvitations },
+      { id: 'partner-requests' as const, label: 'Partners', icon: Handshake },
+      { id: 'marketplace' as const, label: 'Marketplace', icon: Storefront },
+    ],
+    development: [
+      { id: 'code' as const, label: 'Code Editor', icon: Code },
+      { id: 'templates' as const, label: 'Templates', icon: FolderOpen },
+      { id: 'projects' as const, label: 'Projects', icon: Kanban },
+      { id: 'earnings' as const, label: 'Earnings', icon: CurrencyDollar },
+    ]
+  }
+
+  const toggleSection = (section: keyof typeof expandedSections) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }))
+  }
 
   return (
-    <div className="w-64 glass-panel h-screen flex flex-col relative overflow-hidden">
-      <div className="p-4 border-b border-border electric-border">
-        <div className="flex items-center gap-2">
-          <Shield className="w-8 h-8 text-accent hover-red-glow glitch-effect" />
-          <h1 className="text-xl font-bold text-foreground terminal-cursor">CyberConnect</h1>
+    <div className="w-64 glass-card h-screen flex flex-col relative overflow-hidden border-r-2 border-border">
+      {/* Header */}
+      <div className="p-6 border-b border-border/50">
+        <div className="flex items-center gap-3">
+          <Shield className="w-7 h-7 text-accent" />
+          <h1 className="text-xl font-bold text-foreground tracking-tight">CyberConnect</h1>
         </div>
       </div>
 
-      <div className="p-4 border-b border-border">
+      {/* User Profile */}
+      <div className="p-4 border-b border-border/50">
         <div className="flex items-center gap-3">
-          <Avatar className="electric-glow">
+          <Avatar className="w-10 h-10 ring-2 ring-border">
             <AvatarImage src={currentUser.avatar} />
-            <AvatarFallback>{currentUser.username[0].toUpperCase()}</AvatarFallback>
+            <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+              {currentUser.username[0].toUpperCase()}
+            </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-foreground truncate">
@@ -78,43 +103,135 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
         </div>
       </div>
 
-      <nav className="flex-1 p-4">
-        <div className="space-y-2">
-          {navigationItems.map((item) => {
+      {/* Navigation */}
+      <nav className="flex-1 p-3 overflow-y-auto">
+        {/* Main Section */}
+        <div className="space-y-1 mb-4">
+          {navigationSections.main.map((item) => {
             const Icon = item.icon
             return (
               <Button
                 key={item.id}
                 variant={activeTab === item.id ? 'secondary' : 'ghost'}
-                className={`w-full justify-start relative glass-button hover-red-glow transition-all duration-300 ${
-                  activeTab === item.id ? 'border-l-2 border-accent bg-accent/10' : ''
+                size="sm"
+                className={`w-full justify-start glass-button hover-border-flow transition-all duration-200 ${
+                  activeTab === item.id ? 'bg-secondary/20 border-l-2 border-accent' : 'hover:bg-secondary/10'
                 }`}
                 onClick={() => onTabChange(item.id)}
               >
-                <Icon className="w-5 h-5 mr-3" />
-                {item.label}
-                {item.badge && item.badge > 0 && (
-                  <Badge 
-                    variant="destructive" 
-                    className="ml-auto text-xs min-w-[20px] h-5 flex items-center justify-center glass-card"
-                  >
-                    {item.badge > 99 ? '99+' : item.badge}
-                  </Badge>
-                )}
+                <Icon className="w-4 h-4 mr-3 shrink-0" />
+                <span className="truncate">{item.label}</span>
               </Button>
             )
           })}
         </div>
+
+        {/* Security Operations */}
+        <Collapsible open={expandedSections.security} onOpenChange={() => toggleSection('security')}>
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" size="sm" className="w-full justify-between mb-2 text-muted-foreground hover:text-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider">Security Ops</span>
+              <CaretRight className={`w-3 h-3 transition-transform ${expandedSections.security ? 'rotate-90' : ''}`} />
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-1 mb-4">
+            {navigationSections.security.map((item) => {
+              const Icon = item.icon
+              return (
+                <Button
+                  key={item.id}
+                  variant={activeTab === item.id ? 'secondary' : 'ghost'}
+                  size="sm"
+                  className={`w-full justify-start glass-button hover-border-flow transition-all duration-200 ${
+                    activeTab === item.id ? 'bg-secondary/20 border-l-2 border-accent' : 'hover:bg-secondary/10'
+                  }`}
+                  onClick={() => onTabChange(item.id)}
+                >
+                  <Icon className="w-4 h-4 mr-3 shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                </Button>
+              )
+            })}
+          </CollapsibleContent>
+        </Collapsible>
+
+        {/* Collaboration */}
+        <Collapsible open={expandedSections.collaboration} onOpenChange={() => toggleSection('collaboration')}>
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" size="sm" className="w-full justify-between mb-2 text-muted-foreground hover:text-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider">Collaboration</span>
+              <CaretRight className={`w-3 h-3 transition-transform ${expandedSections.collaboration ? 'rotate-90' : ''}`} />
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-1 mb-4">
+            {navigationSections.collaboration.map((item) => {
+              const Icon = item.icon
+              return (
+                <Button
+                  key={item.id}
+                  variant={activeTab === item.id ? 'secondary' : 'ghost'}
+                  size="sm"
+                  className={`w-full justify-start glass-button hover-border-flow transition-all duration-200 relative ${
+                    activeTab === item.id ? 'bg-secondary/20 border-l-2 border-accent' : 'hover:bg-secondary/10'
+                  }`}
+                  onClick={() => onTabChange(item.id)}
+                >
+                  <Icon className="w-4 h-4 mr-3 shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                  {item.badge && item.badge > 0 && (
+                    <Badge 
+                      variant="destructive" 
+                      className="ml-auto text-xs min-w-[18px] h-4 text-[10px] bg-accent/80 text-accent-foreground"
+                    >
+                      {item.badge > 99 ? '99+' : item.badge}
+                    </Badge>
+                  )}
+                </Button>
+              )
+            })}
+          </CollapsibleContent>
+        </Collapsible>
+
+        {/* Development */}
+        <Collapsible open={expandedSections.development} onOpenChange={() => toggleSection('development')}>
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" size="sm" className="w-full justify-between mb-2 text-muted-foreground hover:text-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider">Development</span>
+              <CaretRight className={`w-3 h-3 transition-transform ${expandedSections.development ? 'rotate-90' : ''}`} />
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-1">
+            {navigationSections.development.map((item) => {
+              const Icon = item.icon
+              return (
+                <Button
+                  key={item.id}
+                  variant={activeTab === item.id ? 'secondary' : 'ghost'}
+                  size="sm"
+                  className={`w-full justify-start glass-button hover-border-flow transition-all duration-200 ${
+                    activeTab === item.id ? 'bg-secondary/20 border-l-2 border-accent' : 'hover:bg-secondary/10'
+                  }`}
+                  onClick={() => onTabChange(item.id)}
+                >
+                  <Icon className="w-4 h-4 mr-3 shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                </Button>
+              )
+            })}
+          </CollapsibleContent>
+        </Collapsible>
       </nav>
 
-      <div className="p-4 border-t border-border electric-border">
+      {/* Logout */}
+      <div className="p-3 border-t border-border/50">
         <Button
           variant="ghost"
-          className="w-full justify-start text-muted-foreground hover:text-destructive glass-button hover-red-glow transition-all duration-300"
+          size="sm"
+          className="w-full justify-start text-muted-foreground hover:text-destructive glass-button transition-all duration-200"
           onClick={onLogout}
         >
-          <SignOut className="w-5 h-5 mr-3" />
-          Logout
+          <SignOut className="w-4 h-4 mr-3" />
+          <span>Logout</span>
         </Button>
       </div>
     </div>
