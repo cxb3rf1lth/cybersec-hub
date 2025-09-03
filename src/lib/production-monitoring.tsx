@@ -69,7 +69,7 @@ export class ProductionErrorBoundary extends Component<Props, State> {
         userAgent: navigator.userAgent,
         userId: localStorage.getItem('currentUserId'),
         sessionId: sessionStorage.getItem('sessionId'),
-        buildVersion: process.env.REACT_APP_BUILD_VERSION || 'unknown',
+        buildVersion: import.meta.env.VITE_BUILD_VERSION || 'unknown',
         environment: CONFIG.NODE_ENV
       }
 
@@ -116,7 +116,7 @@ ${errorInfo.componentStack}
 - URL: ${window.location.href}
 - User Agent: ${navigator.userAgent}
 - Timestamp: ${new Date().toISOString()}
-- Build Version: ${process.env.REACT_APP_BUILD_VERSION || 'unknown'}
+- Build Version: ${import.meta.env.VITE_BUILD_VERSION || 'unknown'}
       `.trim()
     }
 

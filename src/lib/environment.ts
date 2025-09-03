@@ -4,7 +4,7 @@
  */
 
 // Environment detection
-export const NODE_ENV = process.env.NODE_ENV || 'development'
+export const NODE_ENV = import.meta.env.MODE || 'development'
 export const IS_PRODUCTION = NODE_ENV === 'production'
 export const IS_DEVELOPMENT = NODE_ENV === 'development'
 
@@ -124,12 +124,12 @@ export const SECURITY_CONFIG = {
 // Monitoring and Analytics
 export const MONITORING_CONFIG = {
   // Error tracking
-  SENTRY_DSN: process.env.REACT_APP_SENTRY_DSN,
+  SENTRY_DSN: import.meta.env.VITE_SENTRY_DSN,
   SENTRY_ENVIRONMENT: currentEnv,
   
   // Analytics
-  GOOGLE_ANALYTICS_ID: process.env.REACT_APP_GA_ID,
-  MIXPANEL_TOKEN: process.env.REACT_APP_MIXPANEL_TOKEN,
+  GOOGLE_ANALYTICS_ID: import.meta.env.VITE_GA_ID,
+  MIXPANEL_TOKEN: import.meta.env.VITE_MIXPANEL_TOKEN,
   
   // Performance monitoring
   PERFORMANCE_SAMPLE_RATE: IS_PRODUCTION ? 0.1 : 1.0,
@@ -216,12 +216,12 @@ export const PROD_CONFIG = IS_PRODUCTION ? {
 // Validation function to ensure all required environment variables are set
 export function validateEnvironment(): { valid: boolean; missing: string[] } {
   const required = IS_PRODUCTION ? [
-    'REACT_APP_API_URL',
-    'REACT_APP_WS_URL',
-    'REACT_APP_SENTRY_DSN',
+    'VITE_API_URL',
+    'VITE_WS_URL',
+    'VITE_SENTRY_DSN',
   ] : []
 
-  const missing = required.filter(key => !process.env[key])
+  const missing = required.filter(key => !import.meta.env[key])
   
   return {
     valid: missing.length === 0,
