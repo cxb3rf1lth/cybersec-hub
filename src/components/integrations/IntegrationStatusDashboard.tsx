@@ -22,9 +22,15 @@ import {
   BarChart3,
   Eye,
   Bug,
-  Server
+  Server,
+  Play,
+  Pause,
+  Timer,
+  Settings
 } from '@phosphor-icons/react'
 import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
+import { useAutoSync } from '@/hooks/useAutoSync'
+import { SyncConfiguration } from '@/components/features/SyncConfiguration'
 import { useKV } from '@github/spark/hooks'
 import { toast } from 'sonner'
 
@@ -55,9 +61,26 @@ export function IntegrationStatusDashboard() {
     refreshAllData
   } = useBugBountyIntegration()
 
+  // Auto-sync functionality
+  const {
+    config: syncConfig,
+    metrics: syncMetrics,
+    connectionStatus,
+    isEnabled: syncEnabled,
+    isRunning: syncRunning,
+    enableSync,
+    disableSync,
+    forceSync,
+    nextSyncFormatted,
+    connectedPlatforms,
+    disconnectedPlatforms
+  } = useAutoSync()
+
   const [healthMetrics, setHealthMetrics] = useKV<ConnectionHealth[]>('connection_health', [])
   const [realTimeData, setRealTimeData] = useKV<MetricData[]>('realtime_metrics', [])
   const [monitoringEnabled, setMonitoringEnabled] = useState(true)
+  const [showSyncConfig, setShowSyncConfig] = useState(false)
+  const [isLoadingAction, setIsLoadingAction] = useState(false)
 
   // Initialize health monitoring
   useEffect(() => {
@@ -134,6 +157,40 @@ export function IntegrationStatusDashboard() {
     }
 
     return { status: 'healthy' }
+  }
+
+  // Auto-sync control functions
+  const handleToggleSync = async () => {
+    setIsLoadingAction(true)
+    try {
+      if (syncEnabled) {
+        disableSync()
+        toast.success('Automatic sync disabled')
+      } else {
+        const success = await enableSync()
+        if (success) {
+          toast.success('Automatic sync enabled')
+        } else {
+          toast.error('Failed to enable sync - check platform connections')
+        }
+      }
+    } finally {
+      setIsLoadingAction(false)
+    }
+  }
+
+  const handleForceSync = async () => {
+    setIsLoadingAction(true)
+    try {
+      const success = await forceSync()
+      if (success) {
+        toast.success('Manual sync completed')
+      } else {
+        toast.error('Manual sync failed')
+      }
+    } finally {
+      setIsLoadingAction(false)
+    }
   }
 
   const collectRealTimeMetrics = () => {
@@ -225,6 +282,15 @@ export function IntegrationStatusDashboard() {
           <Button
             variant="outline"
             size="sm"
+            onClick={() => setShowSyncConfig(true)}
+            className="gap-2"
+          >
+            <Settings size={16} />
+            Sync Settings
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => refreshAllData()}
             disabled={isLoading}
           >
@@ -233,6 +299,111 @@ export function IntegrationStatusDashboard() {
           </Button>
         </div>
       </div>
+
+      {/* Auto-Sync Control Panel */}
+      <Card className="glass-card">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Zap className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <CardTitle className="text-lg">Automatic Data Synchronization</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Real-time sync with {connectedPlatforms.length} connected platforms
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Badge variant={syncRunning ? "default" : "secondary"} className="gap-1">
+                {syncRunning ? <Play className="h-3 w-3" /> : <Pause className="h-3 w-3" />}
+                {syncRunning ? 'Active' : 'Inactive'}
+              </Badge>
+              
+              {syncRunning && (
+                <Badge variant="outline" className="gap-1">
+                  <Timer className="h-3 w-3" />
+                  Next: {nextSyncFormatted}
+                </Badge>
+              )}
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-green-500/10">
+                <Database className="h-4 w-4 text-green-500" />
+              </div>
+              <div>
+                <div className="text-lg font-semibold">{syncMetrics.programsCount}</div>
+                <div className="text-xs text-muted-foreground">Programs Synced</div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-blue-500/10">
+                <Shield className="h-4 w-4 text-blue-500" />
+              </div>
+              <div>
+                <div className="text-lg font-semibold">{syncMetrics.reportsCount}</div>
+                <div className="text-xs text-muted-foreground">Reports Synced</div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-purple-500/10">
+                <BarChart3 className="h-4 w-4 text-purple-500" />
+              </div>
+              <div>
+                <div className="text-lg font-semibold">{syncMetrics.successRate.toFixed(1)}%</div>
+                <div className="text-xs text-muted-foreground">Success Rate</div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-muted-foreground">
+              Sync interval: {Math.floor(syncConfig.interval / 60000)} minutes
+            </div>
+            
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleForceSync}
+                disabled={isLoadingAction || !syncEnabled}
+                className="gap-2"
+              >
+                <RefreshCw className={`h-4 w-4 ${isLoadingAction ? 'animate-spin' : ''}`} />
+                Force Sync
+              </Button>
+              
+              <Button
+                variant={syncEnabled ? "destructive" : "default"}
+                size="sm"
+                onClick={handleToggleSync}
+                disabled={isLoadingAction}
+                className="gap-2"
+              >
+                {syncEnabled ? (
+                  <>
+                    <Pause className="h-4 w-4" />
+                    Disable
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-4 w-4" />
+                    Enable
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -597,6 +768,15 @@ export function IntegrationStatusDashboard() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Sync Configuration Modal */}
+      {showSyncConfig && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-card border border-border rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <SyncConfiguration onClose={() => setShowSyncConfig(false)} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

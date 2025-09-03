@@ -15,6 +15,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { useVirtualLab } from '@/hooks/useVirtualLab'
 import { useRealMessaging } from '@/hooks/useRealMessaging'
 import { useRealCodeCollaboration } from '@/hooks/useRealCodeCollaboration'
+import { useAutoSync } from '@/hooks/useAutoSync'
 import { 
   webSocketService
 } from '@/lib/production-services'
@@ -30,7 +31,7 @@ import ProductionErrorBoundary, { performanceMonitor, usePerformanceMonitor } fr
 
 function App() {
   const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null as User | null)
-  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api'>('feed')
+  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status'>('feed')
   const [showAuthModal, setShowAuthModal] = useState(false)
 
   // Performance monitoring for the main App component
@@ -38,6 +39,9 @@ function App() {
 
   // Initialize production services with comprehensive error handling
   const { statuses: serviceStatuses, overallHealth } = useServiceStatus()
+
+  // Initialize automatic synchronization
+  const autoSyncHook = useAutoSync()
 
   // Initialize sample data
   useSampleData()

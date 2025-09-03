@@ -19,13 +19,14 @@ import { RedTeamDashboard } from '@/components/red-team/RedTeamDashboard'
 import { EnhancedVirtualLabView } from '@/components/virtual-lab/EnhancedVirtualLabView'
 import { PlatformConnectionManager } from '@/components/integrations/PlatformConnectionManager'
 import { IntegrationStatusDashboard } from '@/components/integrations/IntegrationStatusDashboard'
+import { LiveSyncStatus } from '@/components/features/LiveSyncStatus'
 import { User } from '@/types/user'
 
 interface MainContentProps {
   currentUser: User
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api'
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status'
   onUserUpdate: (user: User) => void
-  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api') => void
+  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status') => void
 }
 
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
@@ -109,6 +110,11 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
       {activeTab === 'live-feed' && (
         <div className="p-6">
           <LiveVulnerabilityFeed />
+        </div>
+      )}
+      {activeTab === 'sync-status' && (
+        <div className="p-6">
+          <LiveSyncStatus />
         </div>
       )}
       {activeTab === 'profile' && (
