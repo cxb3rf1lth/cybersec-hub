@@ -14,6 +14,7 @@ import {
   messagingService,
   teamService
 } from './production-services'
+import { apiKeyManager } from './api-keys'
 import { toast } from 'sonner'
 import { useState, useEffect } from 'react'
 
@@ -238,6 +239,18 @@ export class ProductionInitializer {
     }
 
     try {
+      console.log('🔑 Initializing API key manager...')
+      
+      // Load API keys from storage
+      await apiKeyManager.loadApiKeys()
+      
+      // Refresh API key validations (but don't block initialization)
+      apiKeyManager.refreshAllKeys().then(result => {
+        console.log(`API key validation completed: ${result.success} valid, ${result.failed} failed`)
+      }).catch(error => {
+        console.warn('API key validation failed:', error)
+      })
+      
       const startTime = Date.now()
       
       // Initialize threat intelligence service
