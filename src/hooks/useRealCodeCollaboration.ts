@@ -460,24 +460,7 @@ export function useRealCodeCollaboration(currentUserId: string) {
     }
   }, [activeProject])
 
-  const shareProject = useCallback(async (projectId: string, method: 'github' | 'gist' | 'link'): Promise<string> => {
-    setIsLoading(true)
-    
-    try {
-      const shareUrl = await codeCollaborationService.shareProject(projectId, method)
-      
-      navigator.clipboard.writeText(shareUrl)
-      toast.success('Project shared! Link copied to clipboard')
-      
-      return shareUrl
-    } catch (error) {
-      console.error('Failed to share project:', error)
-      toast.error(`Failed to share project: ${error instanceof Error ? error.message : 'Unknown error'}`)
-      throw error
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
+
 
   const handleCollaborationMessage = useCallback((data: any) => {
     switch (data.type) {
