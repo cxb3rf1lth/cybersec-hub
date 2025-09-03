@@ -11,6 +11,9 @@ import { TeamInvitationsView } from '@/components/teams/TeamInvitationsView'
 import { MarketplaceView } from '@/components/marketplace/MarketplaceView'
 import { BugBountyDashboard } from '@/components/bug-bounty/BugBountyDashboard'
 import { BugBountyPlatform } from '@/components/features/BugBountyPlatform'
+import { LiveAPIIntegration } from '@/components/bug-bounty/LiveAPIIntegration'
+import { LiveVulnerabilityFeed } from '@/components/bug-bounty/LiveVulnerabilityFeed'
+import { RealTimeBugBountyDashboard } from '@/components/bug-bounty/RealTimeBugBountyDashboard'
 import { PartnerRequests } from '@/components/partner-requests/PartnerRequests'
 import { RedTeamDashboard } from '@/components/red-team/RedTeamDashboard'
 import { EnhancedVirtualLabView } from '@/components/virtual-lab/EnhancedVirtualLabView'
@@ -20,9 +23,9 @@ import { User } from '@/types/user'
 
 interface MainContentProps {
   currentUser: User
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status'
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api'
   onUserUpdate: (user: User) => void
-  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status') => void
+  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api') => void
 }
 
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
@@ -44,7 +47,7 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
       )}
       {(activeTab === 'bug-bounty' || activeTab === 'team-hunts') && (
         <div className="p-6">
-          <BugBountyPlatform currentUserId={currentUser.id} />
+          <RealTimeBugBountyDashboard />
         </div>
       )}
       {activeTab === 'messages' && (
@@ -96,6 +99,16 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
       {activeTab === 'api-status' && (
         <div className="p-6">
           <IntegrationStatusDashboard />
+        </div>
+      )}
+      {activeTab === 'live-api' && (
+        <div className="p-6">
+          <LiveAPIIntegration />
+        </div>
+      )}
+      {activeTab === 'live-feed' && (
+        <div className="p-6">
+          <LiveVulnerabilityFeed />
         </div>
       )}
       {activeTab === 'profile' && (

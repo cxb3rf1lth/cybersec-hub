@@ -10,8 +10,8 @@ import { TeamInvitation } from '@/types/teams'
 
 interface SidebarProps {
   currentUser: UserType
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status'
-  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status') => void
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api'
+  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api') => void
   onLogout: () => void
 }
 
@@ -65,8 +65,10 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
       { id: 'earnings' as const, label: 'Earnings', icon: CurrencyDollar },
     ],
     integrations: [
-      { id: 'integrations' as const, label: 'API Connections', icon: Globe },
-      { id: 'api-status' as const, label: 'Status Monitor', icon: Activity },
+      { id: 'live-api' as const, label: 'Live API Integration', icon: Globe },
+      { id: 'live-feed' as const, label: 'Live Vulnerability Feed', icon: Activity },
+      { id: 'integrations' as const, label: 'Platform Connections', icon: Terminal },
+      { id: 'api-status' as const, label: 'Status Monitor', icon: Shield },
     ]
   }
 
