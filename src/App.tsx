@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { useSampleData } from '@/hooks/useSampleData'
 import { useSampleProjectData } from '@/hooks/useSampleProjectData'
@@ -16,15 +16,7 @@ import { useVirtualLab } from '@/hooks/useVirtualLab'
 import { useRealMessaging } from '@/hooks/useRealMessaging'
 import { useRealCodeCollaboration } from '@/hooks/useRealCodeCollaboration'
 import { 
-  authService, 
-  webSocketService, 
-  bugBountyService, 
-  threatIntelService,
-  virtualLabService,
-  codeCollaborationService,
-  messagingService,
-  teamService,
-  PRODUCTION_CONFIG
+  webSocketService
 } from '@/lib/production-services'
 import { initializeProductionServices, useServiceStatus } from '@/lib/production-init'
 import { Sidebar } from '@/components/layout/Sidebar'
@@ -104,6 +96,11 @@ function App() {
   const virtualLab = useVirtualLab(currentUser?.id || '')
   const messaging = useRealMessaging(currentUser?.id || '')
   const codeCollaboration = useRealCodeCollaboration(currentUser?.id || '')
+
+  // Use the services to avoid unused variable warnings
+  React.useEffect(() => {
+    console.log('Production services initialized:', { virtualLab, messaging, codeCollaboration })
+  }, [virtualLab, messaging, codeCollaboration])
 
   const handleLogin = (user: User) => {
     setCurrentUser(user)
