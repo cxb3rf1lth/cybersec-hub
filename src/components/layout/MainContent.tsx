@@ -14,13 +14,15 @@ import { BugBountyPlatform } from '@/components/features/BugBountyPlatform'
 import { PartnerRequests } from '@/components/partner-requests/PartnerRequests'
 import { RedTeamDashboard } from '@/components/red-team/RedTeamDashboard'
 import { EnhancedVirtualLabView } from '@/components/virtual-lab/EnhancedVirtualLabView'
+import { PlatformConnectionManager } from '@/components/integrations/PlatformConnectionManager'
+import { IntegrationStatusDashboard } from '@/components/integrations/IntegrationStatusDashboard'
 import { User } from '@/types/user'
 
 interface MainContentProps {
   currentUser: User
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team'
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status'
   onUserUpdate: (user: User) => void
-  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team') => void
+  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status') => void
 }
 
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
@@ -84,6 +86,16 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
       {activeTab === 'partner-requests' && (
         <div className="p-6">
           <PartnerRequests currentUser={currentUser} />
+        </div>
+      )}
+      {activeTab === 'integrations' && (
+        <div className="p-6">
+          <PlatformConnectionManager />
+        </div>
+      )}
+      {activeTab === 'api-status' && (
+        <div className="p-6">
+          <IntegrationStatusDashboard />
         </div>
       )}
       {activeTab === 'profile' && (

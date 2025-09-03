@@ -1,4 +1,4 @@
-import { Shield, House, Compass, User, Code, SignOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, BugBeetle, Handshake, DesktopTower, CaretRight, Target, Terminal } from '@phosphor-icons/react'
+import { Shield, House, Compass, User, Code, SignOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, BugBeetle, Handshake, DesktopTower, CaretRight, Target, Terminal, Globe, Activity } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
@@ -10,8 +10,8 @@ import { TeamInvitation } from '@/types/teams'
 
 interface SidebarProps {
   currentUser: UserType
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team'
-  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team') => void
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status'
+  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status') => void
   onLogout: () => void
 }
 
@@ -21,7 +21,8 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
   const [expandedSections, setExpandedSections] = useState({
     operations: true,
     collaboration: false,
-    development: false
+    development: false,
+    integrations: false
   })
   
   // Calculate total unread messages
@@ -62,6 +63,10 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
       { id: 'templates' as const, label: 'Templates', icon: FolderOpen },
       { id: 'projects' as const, label: 'Projects', icon: Kanban },
       { id: 'earnings' as const, label: 'Earnings', icon: CurrencyDollar },
+    ],
+    integrations: [
+      { id: 'integrations' as const, label: 'API Connections', icon: Globe },
+      { id: 'api-status' as const, label: 'Status Monitor', icon: Activity },
     ]
   }
 
@@ -201,6 +206,35 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-1">
             {navigationSections.development.map((item) => {
+              const Icon = item.icon
+              return (
+                <Button
+                  key={item.id}
+                  variant={activeTab === item.id ? 'secondary' : 'ghost'}
+                  size="sm"
+                  className={`w-full justify-start glass-button hover-border-flow transition-all duration-200 ${
+                    activeTab === item.id ? 'bg-secondary/20 border-l-2 border-accent' : 'hover:bg-secondary/10'
+                  }`}
+                  onClick={() => onTabChange(item.id)}
+                >
+                  <Icon className="w-4 h-4 mr-3 shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                </Button>
+              )
+            })}
+          </CollapsibleContent>
+        </Collapsible>
+
+        {/* Integrations */}
+        <Collapsible open={expandedSections.integrations} onOpenChange={() => toggleSection('integrations')}>
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" size="sm" className="w-full justify-between mb-2 text-muted-foreground hover:text-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider">Integrations</span>
+              <CaretRight className={`w-3 h-3 transition-transform ${expandedSections.integrations ? 'rotate-90' : ''}`} />
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-1 mb-4">
+            {navigationSections.integrations.map((item) => {
               const Icon = item.icon
               return (
                 <Button
