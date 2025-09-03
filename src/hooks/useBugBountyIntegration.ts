@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
-import { apis } from '@/lib/api'
+import { bugBountyService, threatIntelService, authService } from '@/lib/production-services'
 import { useAPIKeys, useSecureConfig, APIKeyValidator, quotaManager, API_CONFIGS } from '@/lib/config'
 import { toast } from 'sonner'
 
@@ -180,25 +180,21 @@ export function useBugBountyIntegration() {
   }
 
   const startRealTimeUpdates = () => {
-    // Connect to real-time threat intelligence feeds
-    apis.realtime.connect((data) => {
-      if (data.type === 'threat_update') {
-        handleRealTimeThreatUpdate(data.payload)
-      } else if (data.type === 'program_update') {
-        handleProgramUpdate(data.payload)
-      } else if (data.type === 'team_hunt_update') {
-        handleTeamHuntUpdate(data.payload)
-      }
-    })
+    // Use production WebSocket service for real-time updates
+    const { webSocketService } = require('@/lib/production-services')
+    
+    webSocketService.on('threat_update', handleRealTimeThreatUpdate)
+    webSocketService.on('bounty_update', handleProgramUpdate)
+    webSocketService.on('team_hunt_update', handleTeamHuntUpdate)
 
     // Subscribe to relevant channels
-    apis.realtime.subscribe('threat-intelligence')
-    apis.realtime.subscribe('bug-bounty-programs')
-    apis.realtime.subscribe('team-hunts')
+    webSocketService.subscribe('threat-intelligence')
+    webSocketService.subscribe('bug-bounty-programs')
+    webSocketService.subscribe('team-hunts')
 
-    // Set up periodic data refresh
+    // Set up periodic data refresh with production service
     const interval = setInterval(async () => {
-      await refreshAllData()
+      await refreshAllDataProduction()
     }, 300000) // Refresh every 5 minutes
 
     return () => clearInterval(interval)
@@ -257,20 +253,9 @@ export function useBugBountyIntegration() {
     try {
       setIsLoading(true)
       
-      // Load CVE data
-      const cveData = await apis.threatIntel.getLatestCVEs(50)
+      // Use production threat intelligence service
+      const allThreats = await threatIntelService.getLatestThreats()
       
-      // Load ExploitDB data if available
-      let exploitData: LiveThreatFeed[] = []
-      try {
-        exploitData = await apis.threatIntel.getExploitDBItems()
-      } catch (error) {
-        console.log('ExploitDB data not available:', error)
-      }
-
-      const allThreats = [...cveData, ...exploitData]
-        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-
       setThreatFeed(allThreats)
       setLastUpdate(new Date().toISOString())
     } catch (error) {
@@ -278,6 +263,69 @@ export function useBugBountyIntegration() {
       toast.error('Failed to load threat intelligence data')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const refreshAllDataProduction = async () => {
+    try {
+      const promises = []
+      setSyncErrors({}) // Clear previous errors
+
+      // Refresh connected bug bounty platforms using production service
+      const connectedIntegrations = integrations.filter(int => int.connected)
+      
+      for (const integration of connectedIntegrations) {
+        const platformKey = integration.name.toLowerCase().split(' ')[0]
+        
+        // Check rate limits before making requests
+        if (!quotaManager.checkQuota(platformKey)) {
+          console.warn(`Rate limit exceeded for ${integration.name}`)
+          continue
+        }
+        
+        if (platformKey === 'cve') {
+          promises.push(loadThreatIntelligence())
+        } else {
+          promises.push(loadPlatformDataProduction(platformKey))
+        }
+      }
+
+      const results = await Promise.allSettled(promises)
+      
+      // Handle failed syncs
+      results.forEach((result, index) => {
+        if (result.status === 'rejected') {
+          const integration = connectedIntegrations[index]
+          setSyncErrors(current => ({
+            ...current,
+            [integration.name]: result.reason?.message || 'Sync failed'
+          }))
+        }
+      })
+
+      setLastUpdate(new Date().toISOString())
+      secureConfig.updateSyncTime('all')
+    } catch (error) {
+      console.error('Failed to refresh data:', error)
+    }
+  }
+
+  const loadPlatformDataProduction = async (platformKey: string) => {
+    try {
+      const programs = await bugBountyService.syncPrograms(platformKey)
+      
+      setPrograms(current => {
+        const filtered = current.filter(p => p.platform !== platformKey)
+        return [...filtered, ...programs]
+      })
+
+      secureConfig.updateSyncTime(platformKey)
+      toast.success(`${platformKey} data updated`)
+    } catch (error) {
+      console.error(`${platformKey} sync failed:`, error)
+      setSyncErrors(current => ({ ...current, [platformKey]: error instanceof Error ? error.message : 'Sync failed' }))
+      toast.error(`Failed to sync ${platformKey} data`)
+      throw error
     }
   }
 
@@ -469,28 +517,19 @@ export function useBugBountyIntegration() {
         throw new Error('Invalid API key format. Please check the key and try again.')
       }
 
-      // Test the connection
+      // Test the connection using production auth service
       if (apiKey) {
-        const testResult = await APIKeyValidator.testConnection(platformKey, apiKey)
-        if (!testResult.valid) {
-          throw new Error(testResult.error || 'API key validation failed')
+        const isValid = await authService.validateAPIKey(platformKey, apiKey)
+        if (!isValid) {
+          throw new Error('API key validation failed')
         }
         
-        // Store the validated API key
+        // Store the validated API key using production service
+        await authService.storeAPIKey(platformKey, apiKey)
         apiKeys.setAPIKey(platformKey, apiKey)
         
-        // Load initial data
-        if (platform.name === 'HackerOne') {
-          await loadHackerOneData(apiKey, platformKey)
-        } else if (platform.name === 'Bugcrowd') {
-          await loadBugcrowdData(apiKey, platformKey)
-        } else if (platform.name === 'Intigriti') {
-          await loadIntigritiData(apiKey, platformKey)
-        } else if (platform.name === 'YesWeHack') {
-          await loadYesWeHackData(apiKey, platformKey)
-        } else if (platform.name === 'Shodan') {
-          await loadShodanData(apiKey, platformKey)
-        }
+        // Load initial data using production service
+        await loadPlatformDataProduction(platformKey)
       }
 
       // Update integration status

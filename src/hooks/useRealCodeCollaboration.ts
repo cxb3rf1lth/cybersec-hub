@@ -6,6 +6,7 @@
 import { useKV } from '@github/spark/hooks'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { toast } from 'sonner'
+import { codeCollaborationService, webSocketService } from '@/lib/production-services'
 
 export interface CodeProject {
   id: string
@@ -416,16 +417,67 @@ export function useRealCodeCollaboration(currentUserId: string) {
     }
   }, [activeProject?.id])
 
-  const initializeCollaboration = useCallback((projectId: string) => {
-    setCollaborationStatus('connecting')
-    collaborationSocketRef.current = new CodeCollaborationSocket()
-    collaborationSocketRef.current.connect(
-      projectId,
-      currentUserId,
-      handleCollaborationMessage,
-      setCollaborationStatus
-    )
-  }, [currentUserId])
+  const initializeCollaboration = useCallback(async (projectId: string) => {
+    try {
+      setCollaborationStatus('connecting')
+      
+      // Initialize collaboration using production service
+      await codeCollaborationService.initializeCollaboration(projectId)
+      
+      // Set up real-time event handlers
+      webSocketService.on('code_change', handleRemoteOperation)
+      webSocketService.on('cursor_update', handleCursorUpdate)
+      webSocketService.on('file_change', handleFileChange)
+      webSocketService.on('comment_added', handleCommentAdded)
+      webSocketService.on('user_joined', handleUserJoined)
+      webSocketService.on('user_left', handleUserLeft)
+      
+      // Subscribe to project channel
+      webSocketService.subscribe(`project:${projectId}`)
+      
+      setCollaborationStatus('connected')
+    } catch (error) {
+      console.error('Failed to initialize collaboration:', error)
+      setCollaborationStatus('error')
+    }
+  }, [])
+
+  const saveProject = useCallback(async (project: CodeProject) => {
+    try {
+      await codeCollaborationService.saveProject(project)
+      
+      // Update local state
+      setProjects(current => 
+        current.map(p => p.id === project.id ? project : p)
+      )
+      
+      if (activeProject?.id === project.id) {
+        setActiveProject(project)
+      }
+    } catch (error) {
+      console.error('Failed to save project:', error)
+      toast.error('Failed to save project')
+    }
+  }, [activeProject])
+
+  const shareProject = useCallback(async (projectId: string, method: 'github' | 'gist' | 'link'): Promise<string> => {
+    setIsLoading(true)
+    
+    try {
+      const shareUrl = await codeCollaborationService.shareProject(projectId, method)
+      
+      navigator.clipboard.writeText(shareUrl)
+      toast.success('Project shared! Link copied to clipboard')
+      
+      return shareUrl
+    } catch (error) {
+      console.error('Failed to share project:', error)
+      toast.error(`Failed to share project: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      throw error
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
 
   const handleCollaborationMessage = useCallback((data: any) => {
     switch (data.type) {

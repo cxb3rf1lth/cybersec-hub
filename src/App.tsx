@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { useSampleData } from '@/hooks/useSampleData'
 import { useSampleProjectData } from '@/hooks/useSampleProjectData'
@@ -15,6 +15,18 @@ import { useTheme } from '@/hooks/useTheme'
 import { useVirtualLab } from '@/hooks/useVirtualLab'
 import { useRealMessaging } from '@/hooks/useRealMessaging'
 import { useRealCodeCollaboration } from '@/hooks/useRealCodeCollaboration'
+import { 
+  authService, 
+  webSocketService, 
+  bugBountyService, 
+  threatIntelService,
+  virtualLabService,
+  codeCollaborationService,
+  messagingService,
+  teamService,
+  PRODUCTION_CONFIG
+} from '@/lib/production-services'
+import { initializeProductionServices, useServiceStatus } from '@/lib/production-init'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MainContent } from '@/components/layout/MainContent'
 import { AuthModal } from '@/components/auth/AuthModal'
@@ -22,11 +34,18 @@ import { NeuralNetwork } from '@/components/ui/NeuralNetwork'
 import { FloatingParticles } from '@/components/ui/FloatingParticles'
 import { Toaster } from '@/components/ui/sonner'
 import { User } from '@/types/user'
+import ProductionErrorBoundary, { performanceMonitor, usePerformanceMonitor } from '@/lib/production-monitoring'
 
 function App() {
   const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null as User | null)
   const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team'>('feed')
   const [showAuthModal, setShowAuthModal] = useState(false)
+
+  // Performance monitoring for the main App component
+  usePerformanceMonitor('App')
+
+  // Initialize production services with comprehensive error handling
+  const { statuses: serviceStatuses, overallHealth } = useServiceStatus()
 
   // Initialize sample data
   useSampleData()
@@ -43,6 +62,43 @@ function App() {
   
   // Initialize theme system
   useTheme()
+
+  // Initialize performance monitoring
+  useEffect(() => {
+    performanceMonitor.initialize()
+    
+    return () => {
+      performanceMonitor.cleanup()
+    }
+  }, [])
+
+  // Initialize production services
+  useEffect(() => {
+    setupProductionServices()
+  }, [currentUser])
+
+  const setupProductionServices = async () => {
+    if (!currentUser) return
+
+    try {
+      // Use the production initialization system
+      await initializeProductionServices(currentUser.id)
+      
+      console.log('Production services initialized successfully')
+      console.log('Service statuses:', serviceStatuses)
+      console.log('Overall health:', overallHealth)
+    } catch (error) {
+      console.error('Failed to initialize production services:', error)
+      // Continue with fallback mode - the app should still work with local data
+    }
+  }
+
+  // Cleanup production services on unmount
+  useEffect(() => {
+    return () => {
+      webSocketService.disconnect()
+    }
+  }, [])
 
   // Initialize real production services
   const virtualLab = useVirtualLab(currentUser?.id || '')
@@ -130,4 +186,13 @@ function App() {
   )
 }
 
-export default App
+// Wrap the main App component with production error boundary
+function WrappedApp() {
+  return (
+    <ProductionErrorBoundary>
+      <App />
+    </ProductionErrorBoundary>
+  )
+}
+
+export default WrappedApp

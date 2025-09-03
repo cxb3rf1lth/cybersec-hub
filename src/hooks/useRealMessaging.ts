@@ -6,6 +6,7 @@
 import { useKV } from '@github/spark/hooks'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { toast } from 'sonner'
+import { messagingService, webSocketService } from '@/lib/production-services'
 
 export interface Message {
   id: string
@@ -334,15 +335,27 @@ export function useRealMessaging(currentUserId: string) {
     }
   }, [currentUserId])
 
-  const initializeWebSocket = useCallback(() => {
+  const initializeWebSocket = useCallback(async () => {
     if (!currentUserId) return
 
-    wsRef.current = new MessageWebSocket()
-    wsRef.current.connect(
-      currentUserId,
-      handleWebSocketMessage,
-      setConnectionStatus
-    )
+    try {
+      // Initialize messaging service with production WebSocket
+      await messagingService.initializeMessaging(currentUserId)
+      
+      // Set up event handlers for real-time messaging
+      webSocketService.on('message', handleNewMessage)
+      webSocketService.on('message_update', handleMessageUpdate)
+      webSocketService.on('typing_start', handleTypingStart)
+      webSocketService.on('typing_stop', handleTypingStop)
+      webSocketService.on('user_status', handleUserStatusUpdate)
+      webSocketService.on('chat_update', handleChatUpdate)
+      webSocketService.on('message_reaction', handleMessageReaction)
+      
+      setConnectionStatus('connected')
+    } catch (error) {
+      console.error('Failed to initialize messaging:', error)
+      setConnectionStatus('error')
+    }
   }, [currentUserId])
 
   const handleWebSocketMessage = useCallback((data: any) => {
@@ -481,85 +494,51 @@ export function useRealMessaging(currentUserId: string) {
     replyTo?: Message['replyTo'],
     metadata?: Message['metadata']
   ): Promise<Message> => {
-    const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-    const chat = chats.find(c => c.id === chatId)
-    
-    let processedContent = content
-    let encrypted = false
-
-    // Encrypt message if chat has encryption enabled
-    if (chat?.settings.encryptionEnabled) {
-      try {
-        let encryptionKey = encryptionKeysRef.current[chatId]
-        if (!encryptionKey) {
-          // Generate or retrieve encryption key for this chat
-          encryptionKey = await MessageEncryption.generateKey()
-          encryptionKeysRef.current[chatId] = encryptionKey
-        }
-
-        const { encrypted: encryptedData, iv } = await MessageEncryption.encrypt(content, encryptionKey)
-        processedContent = JSON.stringify({
-          data: Array.from(new Uint8Array(encryptedData)),
-          iv: Array.from(iv)
-        })
-        encrypted = true
-      } catch (error) {
-        console.error('Encryption failed:', error)
-        toast.error('Failed to encrypt message')
-        throw error
-      }
-    }
-
-    const message: Message = {
-      id: messageId,
-      chatId,
-      senderId: currentUserId,
-      senderName: 'You', // This would be resolved from user data
-      content: processedContent,
-      type,
-      timestamp: new Date().toISOString(),
-      replyTo,
-      reactions: [],
-      metadata,
-      status: 'sending',
-      encrypted
-    }
-
-    // Add message locally first (optimistic update)
-    setMessages(current => ({
-      ...current,
-      [chatId]: [...(current[chatId] || []), message]
-    }))
-
-    // Send via WebSocket
-    const sent = wsRef.current?.send({
-      type: 'send_message',
-      payload: message
-    })
-
-    if (!sent) {
-      // Update status to failed if couldn't send
+    try {
+      // Use production messaging service
+      const message = await messagingService.sendMessage(chatId, content, type)
+      
+      // Update local state
       setMessages(current => ({
         ...current,
-        [chatId]: current[chatId]?.map(msg => 
-          msg.id === messageId ? { ...msg, status: 'failed' } : msg
-        ) || []
+        [chatId]: [...(current[chatId] || []), message]
       }))
-      throw new Error('Failed to send message')
-    }
 
-    return message
-  }, [chats, currentUserId])
+      // Update chat's last message
+      setChats(current => 
+        current.map(chat => 
+          chat.id === chatId
+            ? {
+                ...chat,
+                lastMessage: {
+                  content: message.content,
+                  senderId: message.senderId,
+                  timestamp: message.timestamp
+                }
+              }
+            : chat
+        )
+      )
+
+      return message
+    } catch (error) {
+      console.error('Failed to send message:', error)
+      toast.error('Failed to send message')
+      throw error
+    }
+  }, [])
 
   const sendFile = useCallback(async (chatId: string, file: File, onProgress?: (progress: number) => void): Promise<Message> => {
     try {
       setIsLoading(true)
       
-      const { fileId, url } = await FileUploadService.uploadFile(file, chatId, onProgress)
+      // Use production file upload service
+      const result = await messagingService.uploadFile(chatId, file)
       
+      // Create message with file
       const message = await sendMessage(
         chatId,
-        url,
+        result.url,
         file.type.startsWith('image/') ? 'image' : 'file',
         undefined,
         {
