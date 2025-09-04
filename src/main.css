@@ -158,7 +158,7 @@
 
 /* Running code background animation */
 .network-pattern {
-  background: linear-gradient(120deg, #18181b 0%, #23232a 100%), url('/public/code-bg.svg');
+  background: linear-gradient(120deg, #18181b 0%, #23232a 100%), url('/code-bg.svg');
   background-size: cover, 200% 200%;
   animation: codeRunBg 12s linear infinite;
 }
