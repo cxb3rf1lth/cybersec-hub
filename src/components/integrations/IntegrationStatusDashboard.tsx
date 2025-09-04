@@ -27,7 +27,7 @@ import {
   Pause,
   Timer,
   Settings
-} from '@phosphor-icons/react'
+} from '@/lib/phosphor-icons-wrapper'
 import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
 import { useAutoSync } from '@/hooks/useAutoSync'
 import { SyncConfiguration } from '@/components/features/SyncConfiguration'
@@ -52,32 +52,32 @@ interface ConnectionHealth {
 
 export function IntegrationStatusDashboard() {
   const {
-    integrations,
-    programs,
-    threatFeed,
+    integrations = [],
+    programs = [],
+    threatFeed = [],
     isLoading,
     lastUpdate,
-    syncErrors,
+    syncErrors = {},
     refreshAllData
   } = useBugBountyIntegration()
 
   // Auto-sync functionality
   const {
-    config: syncConfig,
-    metrics: syncMetrics,
-    connectionStatus,
+    config: syncConfig = { interval: 300000 },
+    metrics: syncMetrics = { programsCount: 0, reportsCount: 0, earningsCount: 0, lastSyncDuration: 0, successRate: 100, nextSyncIn: 0 },
+    connectionStatus = {},
     isEnabled: syncEnabled,
     isRunning: syncRunning,
     enableSync,
     disableSync,
     forceSync,
     nextSyncFormatted,
-    connectedPlatforms,
-    disconnectedPlatforms
+    connectedPlatforms = [],
+    disconnectedPlatforms = []
   } = useAutoSync()
 
-  const [healthMetrics, setHealthMetrics] = useKV<ConnectionHealth[]>('connection_health', [])
-  const [realTimeData, setRealTimeData] = useKV<MetricData[]>('realtime_metrics', [])
+  const [healthMetrics = [], setHealthMetrics] = useKV<ConnectionHealth[]>('connection_health', [])
+  const [realTimeData = [], setRealTimeData] = useKV<MetricData[]>('realtime_metrics', [])
   const [monitoringEnabled, setMonitoringEnabled] = useState(true)
   const [showSyncConfig, setShowSyncConfig] = useState(false)
   const [isLoadingAction, setIsLoadingAction] = useState(false)
@@ -97,7 +97,7 @@ export function IntegrationStatusDashboard() {
   const updateHealthMetrics = async () => {
     const newHealthMetrics: ConnectionHealth[] = []
 
-    for (const integration of integrations.filter(int => int.connected)) {
+  for (const integration of (integrations ?? []).filter(int => int.connected)) {
       try {
         const startTime = Date.now()
         
@@ -105,7 +105,7 @@ export function IntegrationStatusDashboard() {
         const healthResponse = await simulateHealthCheck(integration.name)
         const responseTime = Date.now() - startTime
 
-        const existingHealth = healthMetrics.find(h => h.platform === integration.name)
+  const existingHealth = (healthMetrics ?? []).find(h => h.platform === integration.name)
         
         newHealthMetrics.push({
           platform: integration.name,
@@ -126,7 +126,7 @@ export function IntegrationStatusDashboard() {
       } catch (error) {
         console.error(`Health check failed for ${integration.name}:`, error)
         
-        const existingHealth = healthMetrics.find(h => h.platform === integration.name)
+  const existingHealth = (healthMetrics ?? []).find(h => h.platform === integration.name)
         newHealthMetrics.push({
           platform: integration.name,
           status: 'down',
@@ -198,12 +198,12 @@ export function IntegrationStatusDashboard() {
     const newMetrics: MetricData[] = []
 
     // Collect program counts
-    const programsByPlatform = programs.reduce((acc, program) => {
+  const programsByPlatform = (programs ?? []).reduce((acc, program) => {
       acc[program.platform] = (acc[program.platform] || 0) + 1
       return acc
     }, {} as Record<string, number>)
 
-    Object.entries(programsByPlatform).forEach(([platform, count]) => {
+  Object.entries(programsByPlatform).forEach(([platform, count]) => {
       newMetrics.push({
         timestamp: now,
         value: count,
@@ -213,12 +213,12 @@ export function IntegrationStatusDashboard() {
     })
 
     // Collect threat counts
-    const threatsBySource = threatFeed.reduce((acc, threat) => {
+  const threatsBySource = (threatFeed ?? []).reduce((acc, threat) => {
       acc[threat.source] = (acc[threat.source] || 0) + 1
       return acc
     }, {} as Record<string, number>)
 
-    Object.entries(threatsBySource).forEach(([source, count]) => {
+  Object.entries(threatsBySource).forEach(([source, count]) => {
       newMetrics.push({
         timestamp: now,
         value: count,
@@ -228,7 +228,7 @@ export function IntegrationStatusDashboard() {
     })
 
     // Add to existing data and keep last 50 points
-    setRealTimeData(current => [...current, ...newMetrics].slice(-50))
+  setRealTimeData(current => [...(current ?? []), ...newMetrics].slice(-50))
   }
 
   const getStatusColor = (status: string) => {
@@ -261,13 +261,12 @@ export function IntegrationStatusDashboard() {
   }
 
   // Calculate summary stats
-  const connectedPlatformsCount = connectedPlatforms.length
-  const totalPrograms = programs.length
-  const totalPrograms = programs.length
-  const totalThreats = threatFeed.length
-  const activeConnections = healthMetrics.filter(h => h.status === 'healthy').length
-  const degradedConnections = healthMetrics.filter(h => h.status === 'degraded').length
-  const downConnections = healthMetrics.filter(h => h.status === 'down').length
+  const connectedPlatformCount = (integrations ?? []).filter(int => int.connected).length
+  const totalPrograms = (programs ?? []).length
+  const totalThreats = (threatFeed ?? []).length
+  const activeConnections = (healthMetrics ?? []).filter(h => h.status === 'healthy').length
+  const degradedConnections = (healthMetrics ?? []).filter(h => h.status === 'degraded').length
+  const downConnections = (healthMetrics ?? []).filter(h => h.status === 'down').length
 
   return (
     <div className="space-y-6">
@@ -312,7 +311,7 @@ export function IntegrationStatusDashboard() {
               <div>
                 <CardTitle className="text-lg">Automatic Data Synchronization</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Real-time sync with {connectedPlatformsCount} connected platforms
+                  Real-time sync with {connectedPlatforms.length} connected platforms
                 </p>
               </div>
             </div>
@@ -367,7 +366,7 @@ export function IntegrationStatusDashboard() {
           
           <div className="flex items-center justify-between">
             <div className="text-sm text-muted-foreground">
-              Sync interval: {Math.floor(syncConfig.interval / 60000)} minutes
+              Sync interval: {Math.floor((syncConfig?.interval ?? 300000) / 60000)} minutes
             </div>
             
             <div className="flex gap-2">
@@ -458,7 +457,7 @@ export function IntegrationStatusDashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">
-                  {((activeConnections / Math.max(connectedPlatformsCount, 1)) * 100).toFixed(0)}%
+                  {((activeConnections / Math.max(connectedPlatformCount, 1)) * 100).toFixed(0)}%
                 </p>
                 <p className="text-xs text-muted-foreground">Uptime Rate</p>
               </div>
@@ -477,7 +476,7 @@ export function IntegrationStatusDashboard() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-            {healthMetrics.map((health) => (
+            {(healthMetrics ?? []).map((health) => (
               <Card key={health.platform} className="border border-border/50">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-3">
@@ -550,8 +549,8 @@ export function IntegrationStatusDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {integrations.filter(int => int.connected).map((integration) => {
-                    const platformPrograms = programs.filter(p => 
+                  {(integrations ?? []).filter(int => int.connected).map((integration) => {
+                    const platformPrograms = (programs ?? []).filter(p => 
                       p.platform.toLowerCase() === integration.name.toLowerCase().split(' ')[0]
                     ).length
                     const percentage = totalPrograms > 0 ? (platformPrograms / totalPrograms) * 100 : 0
@@ -592,7 +591,7 @@ export function IntegrationStatusDashboard() {
                     </div>
                   )}
                   
-                  {Object.entries(syncErrors).map(([platform, error]) => (
+                  {Object.entries(syncErrors ?? {}).map(([platform, error]) => (
                     <div key={platform} className="flex items-start gap-3 p-2 rounded-lg bg-red-500/5 border border-red-500/10">
                       <XCircle size={16} className="text-red-500 mt-0.5" />
                       <div>
@@ -602,7 +601,7 @@ export function IntegrationStatusDashboard() {
                     </div>
                   ))}
 
-                  {healthMetrics.filter(h => h.status === 'degraded').map((health) => (
+                  {(healthMetrics ?? []).filter(h => h.status === 'degraded').map((health) => (
                     <div key={health.platform} className="flex items-start gap-3 p-2 rounded-lg bg-yellow-500/5 border border-yellow-500/10">
                       <AlertTriangle size={16} className="text-yellow-500 mt-0.5" />
                       <div>
@@ -628,16 +627,16 @@ export function IntegrationStatusDashboard() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-foreground">{programs.filter(p => p.status === 'active').length}</p>
+                  <p className="text-2xl font-bold text-foreground">{(programs ?? []).filter(p => p.status === 'active').length}</p>
                   <p className="text-sm text-muted-foreground">Active Programs</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-foreground">{programs.filter(p => p.type === 'web').length}</p>
+                  <p className="text-2xl font-bold text-foreground">{(programs ?? []).filter(p => p.type === 'web').length}</p>
                   <p className="text-sm text-muted-foreground">Web Applications</p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-foreground">
-                    {programs.reduce((sum, p) => sum + (p.disclosed || 0), 0)}
+                    {(programs ?? []).reduce((sum, p) => sum + (p.disclosed || 0), 0)}
                   </p>
                   <p className="text-sm text-muted-foreground">Total Disclosed</p>
                 </div>
@@ -645,7 +644,7 @@ export function IntegrationStatusDashboard() {
 
               <div className="space-y-4">
                 {Object.entries(
-                  programs.reduce((acc, program) => {
+                  (programs ?? []).reduce((acc, program) => {
                     acc[program.platform] = (acc[program.platform] || 0) + 1
                     return acc
                   }, {} as Record<string, number>)
@@ -674,7 +673,7 @@ export function IntegrationStatusDashboard() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 {['critical', 'high', 'medium', 'low'].map((severity) => {
-                  const count = threatFeed.filter(t => t.severity === severity).length
+                  const count = (threatFeed ?? []).filter(t => t.severity === severity).length
                   return (
                     <div key={severity} className="text-center">
                       <p className="text-2xl font-bold text-foreground">{count}</p>
@@ -685,7 +684,7 @@ export function IntegrationStatusDashboard() {
               </div>
 
               <div className="space-y-3">
-                {threatFeed.slice(0, 5).map((threat) => (
+                {(threatFeed ?? []).slice(0, 5).map((threat) => (
                   <div key={threat.id} className="flex items-center justify-between p-3 rounded-lg border border-border/50">
                     <div className="flex items-center gap-3">
                       <Badge 
@@ -721,7 +720,7 @@ export function IntegrationStatusDashboard() {
                 <div>
                   <h4 className="font-medium text-foreground mb-3">Average Response Times</h4>
                   <div className="space-y-3">
-                    {healthMetrics.map((health) => (
+                    {(healthMetrics ?? []).map((health) => (
                       <div key={health.platform} className="space-y-2">
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-foreground">{health.platform}</span>
