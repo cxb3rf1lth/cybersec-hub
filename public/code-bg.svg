@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" fill="none">
+  <rect width="1200" height="800" fill="#0f0f12"/>
+  <g opacity="0.35">
+    <text x="40" y="80" fill="#ff003c" font-family="monospace" font-size="14">$ sudo nmap -sC -sV target</text>
+    <text x="40" y="110" fill="#95a5a6" font-family="monospace" font-size="12">Starting Nmap 7.93 ( https://nmap.org ) at 00:00 UTC</text>
+    <text x="40" y="140" fill="#e74c3c" font-family="monospace" font-size="12">PORT     STATE SERVICE VERSION</text>
+    <text x="40" y="170" fill="#bdc3c7" font-family="monospace" font-size="12">22/tcp   open  ssh     OpenSSH 8.9p1</text>
+    <text x="40" y="200" fill="#bdc3c7" font-family="monospace" font-size="12">80/tcp   open  http    nginx 1.20.2</text>
+    <text x="40" y="230" fill="#bdc3c7" font-family="monospace" font-size="12">443/tcp  open  https   nginx 1.20.2</text>
+  </g>
+  <g opacity="0.15">
+    <text x="800" y="360" fill="#ecf0f1" font-family="monospace" font-size="12">while(true){</text>
+    <text x="800" y="380" fill="#ecf0f1" font-family="monospace" font-size="12">  console.log("trace")</text>
+    <text x="800" y="400" fill="#ecf0f1" font-family="monospace" font-size="12">}</text>
+  </g>
+</svg>
