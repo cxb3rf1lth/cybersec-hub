@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { useSampleData } from '@/hooks/useSampleData'
 import { useSampleProjectData } from '@/hooks/useSampleProjectData'
@@ -20,9 +20,11 @@ import {
   webSocketService
 } from '@/lib/production-services'
 import { initializeProductionServices, useServiceStatus } from '@/lib/production-init'
+import { stabilityChecker, useStabilityMonitor } from '@/lib/stability-checker.tsx'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MainContent } from '@/components/layout/MainContent'
 import { AuthModal } from '@/components/auth/AuthModal'
+import { ApiKeyManager } from '@/components/ui/ApiKeyManager'
 import { NeuralNetwork } from '@/components/ui/NeuralNetwork'
 import { FloatingParticles } from '@/components/ui/FloatingParticles'
 import { Toaster } from '@/components/ui/sonner'
@@ -30,9 +32,15 @@ import { User } from '@/types/user'
 import ProductionErrorBoundary, { performanceMonitor, usePerformanceMonitor } from '@/lib/production-monitoring'
 
 function App() {
+  // Enable stability monitoring for the main App component
+  useStabilityMonitor('App')
+  
   const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null as User | null)
   const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status'>('feed')
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const [showApiKeyManager, setShowApiKeyManager] = useState(false)
+  const [apiKey, setApiKey] = useState<string | null>(null)
+  const [servicesInitialized, setServicesInitialized] = useState(false)
 
   // Performance monitoring for the main App component
   usePerformanceMonitor('App')
@@ -43,42 +51,51 @@ function App() {
   // Initialize automatic synchronization
   const autoSyncHook = useAutoSync()
 
-  // Initialize sample data
-  useSampleData()
-  useSampleProjectData()
-  useSampleTeamData()
-  useSampleEarningsData()
-  useSampleMarketplaceData()
-  useBugBountyPlatforms()
-  useBugBountyIntegration()
-  useTeamHunts()
-  useSamplePartnerRequests()
-  useSampleStatusData()
-  useUserInvitations(currentUser ?? null)
+  // Memoize sample data initialization to prevent unnecessary re-runs
+  const sampleDataInitialized = useMemo(() => {
+    useSampleData()
+    useSampleProjectData()
+    useSampleTeamData()
+    useSampleEarningsData()
+    useSampleMarketplaceData()
+    useBugBountyPlatforms()
+    useBugBountyIntegration()
+    useTeamHunts()
+    useSamplePartnerRequests()
+    useSampleStatusData()
+    return true
+  }, [])
+
+  // Initialize user-dependent hooks with proper dependency management
+  const userInvitations = useUserInvitations(currentUser ?? null)
   
   // Initialize theme system
   useTheme()
 
-  // Initialize performance monitoring
-  useEffect(() => {
+  // Initialize performance monitoring - wrapped in useCallback to prevent recreation
+  const initializeMonitoring = useCallback(() => {
     performanceMonitor.initialize()
+    stabilityChecker.startMonitoring()
     
     return () => {
       performanceMonitor.cleanup()
+      stabilityChecker.stopMonitoring()
     }
   }, [])
 
-  // Initialize production services
   useEffect(() => {
-    setupProductionServices()
-  }, [currentUser])
+    const cleanup = initializeMonitoring()
+    return cleanup
+  }, [initializeMonitoring])
 
-  const setupProductionServices = async () => {
-    if (!currentUser) return
+  // Initialize production services with proper cleanup
+  const setupProductionServices = useCallback(async () => {
+    if (!currentUser || servicesInitialized) return
 
     try {
       // Use the production initialization system
       await initializeProductionServices(currentUser.id)
+      setServicesInitialized(true)
       
       console.log('Production services initialized successfully')
       console.log('Service statuses:', serviceStatuses)
@@ -87,34 +104,70 @@ function App() {
       console.error('Failed to initialize production services:', error)
       // Continue with fallback mode - the app should still work with local data
     }
-  }
+  }, [currentUser, servicesInitialized, serviceStatuses, overallHealth])
+
+  useEffect(() => {
+    setupProductionServices()
+  }, [setupProductionServices])
 
   // Cleanup production services on unmount
   useEffect(() => {
     return () => {
       webSocketService.disconnect()
+      setServicesInitialized(false)
     }
   }, [])
 
-  // Initialize real production services
+  // Initialize real production services with proper dependency management
   const virtualLab = useVirtualLab(currentUser?.id || '')
   const messaging = useRealMessaging(currentUser?.id || '')
   const codeCollaboration = useRealCodeCollaboration(currentUser?.id || '')
 
-  // Use the services to avoid unused variable warnings
-  React.useEffect(() => {
+  // Use the services to avoid unused variable warnings - wrapped in useCallback
+  const logServicesStatus = useCallback(() => {
     console.log('Production services initialized:', { virtualLab, messaging, codeCollaboration })
   }, [virtualLab, messaging, codeCollaboration])
 
-  const handleLogin = (user: User) => {
+  useEffect(() => {
+    logServicesStatus()
+  }, [logServicesStatus])
+
+  // Stable callback functions to prevent unnecessary re-renders
+  const handleLogin = useCallback((user: User) => {
     setCurrentUser(user)
     setShowAuthModal(false)
-  }
+  }, [setCurrentUser])
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     setCurrentUser(null)
     setActiveTab('feed')
-  }
+    setServicesInitialized(false)
+  }, [setCurrentUser])
+
+  const handleTabChange = useCallback((tab: typeof activeTab) => {
+    setActiveTab(tab)
+  }, [])
+
+  const handleShowAuthModal = useCallback(() => {
+    setShowAuthModal(true)
+  }, [])
+
+  const handleCloseAuthModal = useCallback(() => {
+    setShowAuthModal(false)
+  }, [])
+
+  const handleShowApiKeyManager = useCallback(() => {
+    setShowApiKeyManager(true)
+  }, [])
+
+  const handleCloseApiKeyManager = useCallback(() => {
+    setShowApiKeyManager(false)
+  }, [])
+
+  const handleApplyApiKey = useCallback((key: string) => {
+    setApiKey(key)
+    // TODO: propagate API key to relevant services/hooks
+  }, [])
 
   if (!currentUser) {
     return (
@@ -138,18 +191,32 @@ function App() {
               Connect with security professionals, collaborate on bug bounties, and advance your cybersecurity career.
             </p>
           </div>
-          <button
-            onClick={() => setShowAuthModal(true)}
-            className="bg-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold hover-red-glow transition-all duration-300 transform hover:scale-105 text-lg"
-          >
-            Join the Community
-          </button>
+          <div className="flex gap-4 justify-center">
+            <button
+              onClick={handleShowAuthModal}
+              className="bg-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold hover-red-glow transition-all duration-300 transform hover:scale-105 text-lg"
+            >
+              Join the Community
+            </button>
+            <button
+              onClick={handleShowApiKeyManager}
+              className="bg-black bg-opacity-70 text-red-500 px-6 py-4 rounded-lg font-semibold border border-red-500 shadow-lg glitch-effect hover:scale-105 transition-all duration-300"
+            >
+              Enter API Key
+            </button>
+          </div>
         </div>
-        
         {showAuthModal && (
           <AuthModal
-            onClose={() => setShowAuthModal(false)}
+            onClose={handleCloseAuthModal}
             onLogin={handleLogin}
+          />
+        )}
+        {showApiKeyManager && (
+          <ApiKeyManager
+            visible={showApiKeyManager}
+            onClose={handleCloseApiKeyManager}
+            onApply={handleApplyApiKey}
           />
         )}
         <Toaster />
@@ -172,16 +239,29 @@ function App() {
         <Sidebar
           currentUser={currentUser}
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={handleTabChange}
           onLogout={handleLogout}
         />
         <MainContent
           currentUser={currentUser}
           activeTab={activeTab}
           onUserUpdate={setCurrentUser}
-          onTabChange={setActiveTab}
+          onTabChange={handleTabChange}
         />
       </div>
+      <button
+        onClick={handleShowApiKeyManager}
+        className="fixed bottom-8 right-8 bg-black bg-opacity-70 text-red-500 px-6 py-4 rounded-lg font-semibold border border-red-500 shadow-lg glitch-effect hover:scale-105 transition-all duration-300 z-50"
+      >
+        Enter API Key
+      </button>
+      {showApiKeyManager && (
+        <ApiKeyManager
+          visible={showApiKeyManager}
+          onClose={handleCloseApiKeyManager}
+          onApply={handleApplyApiKey}
+        />
+      )}
       <Toaster />
     </div>
   )

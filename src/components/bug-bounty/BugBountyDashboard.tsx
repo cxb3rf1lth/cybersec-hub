@@ -64,7 +64,6 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
     )
     return total + maxReward
   }, 0)
-  }, 0)
 
   const handleJoinHunt = (huntId: string) => {
     joinTeamHunt(huntId, currentUser)
