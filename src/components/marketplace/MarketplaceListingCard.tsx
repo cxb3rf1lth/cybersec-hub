@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { MarketplaceListing } from '@/types/marketplace'
-import { Team } from '@/types/teams'
+import type { Team } from '@/types/teams'
 import { CreateProposalModal } from './CreateProposalModal'
 import { User } from '@/types/user'
 import { useKV } from '@github/spark/hooks'
@@ -17,7 +17,7 @@ interface MarketplaceListingCardProps {
 }
 
 export function MarketplaceListingCard({ listing, team, featured = false }: MarketplaceListingCardProps) {
-  const [currentUser] = useKV<User>('currentUser', null)
+  const [currentUser] = useKV<User>('currentUser', undefined)
   const [showProposalModal, setShowProposalModal] = useState(false)
   const getCategoryColor = (category: string) => {
     const colors = {
@@ -92,7 +92,7 @@ export function MarketplaceListingCard({ listing, team, featured = false }: Mark
         {team && (
           <div className="flex items-center gap-3">
             <Avatar className="w-8 h-8">
-              <AvatarImage src={team.avatar} />
+              <AvatarImage src={team?.members?.[0]?.avatar ?? ''} />
               <AvatarFallback>{team.name[0]}</AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">

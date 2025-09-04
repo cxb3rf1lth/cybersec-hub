@@ -11,7 +11,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { CreateProjectModal } from '@/components/projects/CreateProjectModal'
 import { ProjectDetailsModal } from '@/components/projects/ProjectDetailsModal'
 import { ProjectKanban } from '@/components/projects/ProjectKanban'
-import { Project, Team, User } from '@/types'
+import { Team } from '@/types'
+import type { Project } from '@/types/projects'
+import type { User } from '@/types/user'
 
 interface ProjectsViewProps {
   currentUser: User
@@ -28,12 +30,12 @@ export function ProjectsView({ currentUser }: ProjectsViewProps) {
   const [typeFilter, setTypeFilter] = useState<string>('all')
 
   // Get user's teams for project access
-  const userTeams = teams.filter(team => 
+  const userTeams = (teams ?? []).filter(team =>
     team.members.some(member => member.userId === currentUser.id)
   )
 
   // Filter projects user has access to
-  const accessibleProjects = projects.filter(project => {
+  const accessibleProjects = (projects ?? []).filter(project => {
     const isOwner = project.ownerId === currentUser.id
     const isTeamMember = userTeams.some(team => team.id === project.teamId)
     const isPublic = project.visibility === 'public'
@@ -56,7 +58,7 @@ export function ProjectsView({ currentUser }: ProjectsViewProps) {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
-    setProjects(current => [...current, newProject])
+  setProjects((current = []) => [...current, newProject])
     setShowCreateModal(false)
   }
 
@@ -112,7 +114,7 @@ export function ProjectsView({ currentUser }: ProjectsViewProps) {
           currentUser={currentUser}
           onUpdateProject={(updatedProject) => {
             setProjects(current => 
-              current.map(p => p.id === updatedProject.id ? updatedProject : p)
+              (current ?? []).map(p => p.id === updatedProject.id ? updatedProject : p)
             )
             setSelectedProject(updatedProject)
           }}
@@ -206,7 +208,7 @@ export function ProjectsView({ currentUser }: ProjectsViewProps) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProjects.map((project) => {
-              const team = teams.find(t => t.id === project.teamId)
+              const team = (teams ?? []).find(t => t.id === project.teamId)
               const progress = calculateProgress(project)
               const overdueTasks = project.tasks.filter(task => 
                 task.dueDate && new Date(task.dueDate) < new Date() && task.status !== 'completed'
@@ -321,7 +323,7 @@ export function ProjectsView({ currentUser }: ProjectsViewProps) {
           onClose={() => setSelectedProject(null)}
           onUpdateProject={(updatedProject) => {
             setProjects(current => 
-              current.map(p => p.id === updatedProject.id ? updatedProject : p)
+              (current ?? []).map(p => p.id === updatedProject.id ? updatedProject : p)
             )
             setSelectedProject(updatedProject)
           }}

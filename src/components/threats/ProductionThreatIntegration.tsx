@@ -134,7 +134,7 @@ export function ProductionThreatIntegration() {
   useEffect(() => {
     const interval = setInterval(() => {
       // Generate new threat feed entry
-      const activeSources = sources.filter(s => s.status === 'active')
+  const activeSources = (sources ?? []).filter(s => s.status === 'active')
       if (activeSources.length === 0) return
 
       const randomSource = activeSources[Math.floor(Math.random() * activeSources.length)]
@@ -170,7 +170,7 @@ export function ProductionThreatIntegration() {
         description: `Detected by ${randomSource.name} - ${randomSource.type} activity`
       }
 
-      setFeeds(current => [newFeed, ...current.slice(0, 199)]) // Keep last 200 feeds
+  setFeeds((current = []) => [newFeed, ...current.slice(0, 199)]) // Keep last 200 feeds
     }, 5000) // New feed every 5 seconds
 
     return () => clearInterval(interval)
@@ -197,9 +197,9 @@ export function ProductionThreatIntegration() {
     }
   }
 
-  const totalFeeds = feeds.length
-  const activeSources = sources.filter(s => s.status === 'active').length
-  const avgReliability = sources.reduce((sum, s) => sum + s.reliability, 0) / sources.length
+  const totalFeeds = (feeds ?? []).length
+  const activeSources = (sources ?? []).filter(s => s.status === 'active').length
+  const avgReliability = (sources ?? []).reduce((sum, s) => sum + s.reliability, 0) / ((sources ?? []).length || 1)
 
   return (
     <div className="space-y-6">
@@ -275,7 +275,7 @@ export function ProductionThreatIntegration() {
       <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as any)}>
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="sources">Sources ({sources.length})</TabsTrigger>
+          <TabsTrigger value="sources">Sources ({(sources ?? []).length})</TabsTrigger>
           <TabsTrigger value="feeds">Live Feeds ({totalFeeds})</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
@@ -288,7 +288,7 @@ export function ProductionThreatIntegration() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {sources.slice(0, 6).map((source) => (
+                  {(sources ?? []).slice(0, 6).map((source) => (
                     <div key={source.id} className="flex items-center gap-3 p-3 rounded-lg border">
                       <div className="text-2xl">{getTypeIcon(source.type)}</div>
                       <div className="flex-1">
@@ -318,7 +318,7 @@ export function ProductionThreatIntegration() {
                     <Activity className="w-12 h-12 text-primary mx-auto mb-2 animate-pulse" />
                     <p className="text-lg font-semibold">Processing Data</p>
                     <p className="text-sm text-muted-foreground">
-                      {feeds.length} threats processed
+                      {(feeds ?? []).length} threats processed
                     </p>
                   </div>
                 </div>
@@ -329,7 +329,7 @@ export function ProductionThreatIntegration() {
 
         <TabsContent value="sources" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {sources.map((source) => (
+            {(sources ?? []).map((source) => (
               <Card 
                 key={source.id} 
                 className="hover-border-flow cursor-pointer"
@@ -389,8 +389,8 @@ export function ProductionThreatIntegration() {
             </CardHeader>
             <CardContent>
               <div className="space-y-2 max-h-[600px] overflow-y-auto">
-                {feeds.slice(0, 50).map((feed) => {
-                  const source = sources.find(s => s.sourceId === feed.sourceId)
+                {(feeds ?? []).slice(0, 50).map((feed) => {
+                  const source = (sources ?? []).find(s => s.id === feed.sourceId)
                   return (
                     <div key={feed.id} className="flex items-center gap-3 p-3 rounded border text-sm">
                       <Badge variant="outline" className="text-xs">
@@ -425,7 +425,7 @@ export function ProductionThreatIntegration() {
               <CardContent>
                 <div className="space-y-3">
                   {['ip', 'domain', 'hash', 'url'].map((type) => {
-                    const count = feeds.filter(f => f.type === type).length
+                    const count = (feeds ?? []).filter(f => f.type === type).length
                     const percentage = totalFeeds > 0 ? Math.round((count / totalFeeds) * 100) : 0
                     return (
                       <div key={type} className="space-y-1">
@@ -447,7 +447,7 @@ export function ProductionThreatIntegration() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {sources.slice(0, 5).map((source) => (
+                  {(sources ?? []).slice(0, 5).map((source) => (
                     <div key={source.id} className="flex items-center justify-between p-2 rounded">
                       <div className="flex items-center gap-2">
                         <span className="text-lg">{getTypeIcon(source.type)}</span>

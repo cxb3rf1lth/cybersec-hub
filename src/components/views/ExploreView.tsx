@@ -32,7 +32,7 @@ export function ExploreView({ currentUser, onNavigateToMessages }: ExploreViewPr
     'Ethical Hacking', 'Malware Analysis', 'Security Research'
   ]
 
-  const filteredUsers = users.filter(user => {
+  const filteredUsers = (users ?? []).filter(user => {
     if (user.id === currentUser.id) return false
     
     const matchesSearch = user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -44,23 +44,23 @@ export function ExploreView({ currentUser, onNavigateToMessages }: ExploreViewPr
     return matchesSearch && matchesCategory
   })
 
-  const trendingPosts = posts
+  const trendingPosts = (posts ?? [])
     .filter(post => post.likes.length > 0)
     .sort((a, b) => b.likes.length - a.likes.length)
     .slice(0, 5)
 
   const handleFollow = (userId: string) => {
-    const isFollowing = following.includes(userId)
+  const isFollowing = (following ?? []).includes(userId)
     const newFollowing = isFollowing 
-      ? following.filter(id => id !== userId)
-      : [...following, userId]
+  ? (following ?? []).filter(id => id !== userId)
+  : [...(following ?? []), userId]
     
     setFollowing(newFollowing)
   }
 
   const handleStartMessage = (userId: string) => {
     // Check if conversation already exists
-    const existingConversation = conversations.find(conv => 
+  const existingConversation = (conversations ?? []).find(conv =>
       conv.participants.includes(currentUser.id) && 
       conv.participants.includes(userId) &&
       !conv.isGroup
@@ -76,7 +76,7 @@ export function ExploreView({ currentUser, onNavigateToMessages }: ExploreViewPr
         unreadCount: 0
       }
 
-      setConversations((prevConversations) => [...prevConversations, newConversation])
+  setConversations((prevConversations = []) => [...prevConversations, newConversation])
     }
 
     // Navigate to messages with this user
@@ -151,11 +151,11 @@ export function ExploreView({ currentUser, onNavigateToMessages }: ExploreViewPr
                           </Button>
                           <Button
                             size="sm"
-                            variant={following.includes(user.id) ? 'secondary' : 'default'}
+                            variant={(following ?? []).includes(user.id) ? 'secondary' : 'default'}
                             onClick={() => handleFollow(user.id)}
                             className="hover-red-glow"
                           >
-                            {following.includes(user.id) ? 'Following' : 'Follow'}
+                            {(following ?? []).includes(user.id) ? 'Following' : 'Follow'}
                           </Button>
                         </div>
                       </div>

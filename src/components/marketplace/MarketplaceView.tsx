@@ -28,7 +28,7 @@ export function MarketplaceView({ currentUser, onTabChange }: MarketplaceViewPro
   const [showFilters, setShowFilters] = useState(false)
 
   // Filter and sort listings
-  const filteredListings = listings
+  const filteredListings = (listings ?? [])
     .filter(listing => {
       // Search filter
       if (searchQuery) {
@@ -90,7 +90,7 @@ export function MarketplaceView({ currentUser, onTabChange }: MarketplaceViewPro
       }
     })
 
-  const featuredListings = listings.filter(listing => listing.featured && listing.status === 'active')
+  const featuredListings = (listings ?? []).filter(listing => listing.featured && listing.status === 'active')
 
   const categories = [
     { value: 'penetration-testing', label: 'Penetration Testing' },
@@ -170,7 +170,7 @@ export function MarketplaceView({ currentUser, onTabChange }: MarketplaceViewPro
           <h2 className="text-xl font-semibold text-foreground">Featured Teams</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {featuredListings.slice(0, 4).map(listing => {
-              const team = teams.find(t => t.id === listing.teamId)
+              const team = (teams ?? []).find(t => t.id === listing.teamId)
               return (
                 <MarketplaceListingCard
                   key={listing.id}
@@ -206,7 +206,7 @@ export function MarketplaceView({ currentUser, onTabChange }: MarketplaceViewPro
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {filteredListings.map(listing => {
-              const team = teams.find(t => t.id === listing.teamId)
+              const team = (teams ?? []).find(t => t.id === listing.teamId)
               return (
                 <MarketplaceListingCard
                   key={listing.id}

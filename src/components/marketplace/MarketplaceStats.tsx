@@ -8,7 +8,7 @@ export function MarketplaceStats() {
   const [listings] = useKV<MarketplaceListing[]>('marketplaceListings', [])
   const [teams] = useKV<Team[]>('teams', [])
 
-  const activeListings = listings.filter(listing => listing.status === 'active')
+  const activeListings = (listings ?? []).filter(listing => listing.status === 'active')
   const totalProjects = activeListings.reduce((sum, listing) => sum + listing.completedProjects, 0)
   const averageRating = activeListings.length > 0 
     ? activeListings.reduce((sum, listing) => sum + listing.rating, 0) / activeListings.length 

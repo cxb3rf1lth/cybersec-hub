@@ -37,7 +37,7 @@ export function TemplatesView({ currentUser }: TemplatesViewProps) {
   })
 
   // Filter and search templates
-  const filteredTemplates = templates
+  const filteredTemplates = (templates ?? [])
     .filter(template => {
       if (!template.isPublic && template.author.id !== currentUser.id) return false
       
@@ -74,7 +74,7 @@ export function TemplatesView({ currentUser }: TemplatesViewProps) {
     })
 
   // Filter and search repositories
-  const filteredRepositories = repositories
+  const filteredRepositories = (repositories ?? [])
     .filter(repo => {
       if (!repo.isPublic && repo.author.id !== currentUser.id) return false
       

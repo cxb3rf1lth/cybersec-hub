@@ -30,17 +30,17 @@ import {
 import { useBugBountyPlatforms } from '@/hooks/useBugBountyPlatforms'
 import { useTeamHunts } from '@/hooks/useTeamHunts'
 import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
-import { APISettings } from '@/components/settings/APISettings'
-import { User } from '@/types/user'
-import { toast } from 'sonner'
-
-interface BugBountyDashboardProps {
-  currentUser: User
-  onTabChange: (tab: string) => void
-}
-
-export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashboardProps) {
-  const { platforms, programs, liveFeed } = useBugBountyPlatforms()
+  import {
+    DollarSign,
+    TrendingUp,
+    ExternalLink,
+    Zap,
+    Award,
+    Search,
+    Filter,
+    MessageCircle,
+    // ...existing code...
+  } from '@/lib/phosphor-icons-wrapper'
   const { teamHunts, partnerRequests, joinTeamHunt, createPartnerRequest } = useTeamHunts()
   const { integrations, programs: realPrograms, threatFeed } = useBugBountyIntegration()
   const [activeTab, setActiveTab] = useState('overview')
@@ -48,19 +48,19 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
   const [showAPISettings, setShowAPISettings] = useState(false)
 
   // Use real data when available, fallback to sample data
-  const allPrograms = realPrograms.length > 0 ? realPrograms : programs
-  const allThreats = threatFeed.length > 0 ? threatFeed : liveFeed
+  const allPrograms = (realPrograms ?? []).length > 0 ? (realPrograms ?? []) : (programs ?? [])
+  const allThreats = (threatFeed ?? []).length > 0 ? (threatFeed ?? []) : (liveFeed ?? [])
 
-  const activePlatforms = platforms.filter(p => p.isActive)
-  const connectedIntegrations = integrations.filter(i => i.connected)
-  const publicPrograms = allPrograms.filter(p => p.status === 'active')
-  const activeHunts = teamHunts.filter(h => h.status === 'active')
-  const openPartnerRequests = partnerRequests.filter(r => r.status === 'open')
+  const activePlatforms = (platforms ?? []).filter(p => p.isActive)
+  const connectedIntegrations = (integrations ?? []).filter(i => i.connected)
+  const publicPrograms = (allPrograms ?? []).filter(p => p.status === 'active')
+  const activeHunts = (teamHunts ?? []).filter(h => h.status === 'active')
+  const openPartnerRequests = (partnerRequests ?? []).filter(r => r.status === 'open')
 
-  const totalBountyValue = allPrograms.reduce((total, program) => {
+  const totalBountyValue = (allPrograms ?? []).reduce((total, program) => {
     const maxReward = Math.max(
-      parseInt(program.rewards.critical.split(' - ')[1]?.replace(/[^0-9]/g, '') || '0'),
-      parseInt(program.rewards.high.split(' - ')[1]?.replace(/[^0-9]/g, '') || '0')
+  parseInt((program.rewards as any)?.critical?.split(' - ')[1]?.replace(/[^0-9]/g, '') || '0'),
+  parseInt((program.rewards as any)?.high?.split(' - ')[1]?.replace(/[^0-9]/g, '') || '0')
     )
     return total + maxReward
   }, 0)
@@ -215,7 +215,7 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
                 <div className="flex items-center space-x-2">
                   <Zap className="h-8 w-8 text-primary" />
                   <div>
-                    <p className="text-2xl font-bold">{allThreats.length}</p>
+                    <p className="text-2xl font-bold">{(allThreats ?? []).length}</p>
                     <p className="text-xs text-muted-foreground">Live Threats</p>
                   </div>
                 </div>
@@ -235,7 +235,7 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
               <CardContent>
                 <ScrollArea className="h-64">
                   <div className="space-y-3">
-                    {liveFeed.slice(0, 5).map((item) => (
+                    {(liveFeed ?? []).slice(0, 5).map((item) => (
                       <div key={item.id} className="flex items-start space-x-3 p-2 rounded-lg hover:bg-muted/50">
                         <div className="flex-shrink-0 w-2 h-2 rounded-full bg-primary mt-2"></div>
                         <div className="flex-1 min-w-0">
@@ -294,7 +294,7 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {platforms.map((platform) => (
+            {(platforms ?? []).map((platform) => (
               <Card key={platform.id} className="hover-border-flow">
                 <CardHeader>
                   <div className="flex items-center justify-between">
@@ -354,7 +354,7 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {programs.map((program) => (
+            {(programs ?? []).map((program) => (
               <Card key={program.id} className="hover-border-flow">
                 <CardHeader>
                   <div className="flex items-center justify-between">
@@ -430,7 +430,7 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {teamHunts.map((hunt) => (
+            {(teamHunts ?? []).map((hunt) => (
               <Card key={hunt.id} className="hover-border-flow">
                 <CardHeader>
                   <div className="flex items-center justify-between">
@@ -513,7 +513,7 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {partnerRequests.map((request) => (
+            {(partnerRequests ?? []).map((request) => (
               <Card key={request.id} className="hover-border-flow">
                 <CardHeader>
                   <div className="flex items-center justify-between">
@@ -601,7 +601,7 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
             <CardContent className="p-0">
               <ScrollArea className="h-96">
                 <div className="p-6 space-y-4">
-                  {liveFeed.map((item) => (
+                  {(liveFeed ?? []).map((item) => (
                     <div key={item.id} className="flex items-start space-x-4 p-4 rounded-lg hover:bg-muted/50 hover-border-flow">
                       <div className={`flex-shrink-0 w-3 h-3 rounded-full mt-2 ${
                         item.priority === 'high' ? 'bg-destructive' :
@@ -641,9 +641,9 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
         <TabsContent value="integrations" className="space-y-6">
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {integrations.map((integration) => {
+              {(integrations ?? []).map((integration) => {
                 const isConnected = integration.connected
-                const hasErrors = syncErrors[integration.name.toLowerCase().split(' ')[0]]
+                const hasErrors = (syncErrors ?? {})[integration.name.toLowerCase().split(' ')[0]]
                 
                 return (
                   <Card key={integration.id} className="glass-card hover-border-flow">
@@ -714,8 +714,8 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => syncPlatformData(integration.id)}
-                              disabled={isLoading}
+                              onClick={() => (syncPlatformData ? syncPlatformData(integration.id) : undefined)}
+                              disabled={isLoading ?? false}
                               className="flex-1"
                             >
                               <Activity className="w-3 h-3 mr-1" />
@@ -724,7 +724,7 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
                             <Button
                               variant="destructive"
                               size="sm"
-                              onClick={() => disconnectPlatform(integration.id)}
+                              onClick={() => (disconnectPlatform ? disconnectPlatform(integration.id) : undefined)}
                               className="flex-1"
                             >
                               Disconnect
@@ -758,25 +758,25 @@ export function BugBountyDashboard({ currentUser, onTabChange }: BugBountyDashbo
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                   <div>
                     <div className="text-2xl font-bold text-green-400">
-                      {integrations.filter(i => i.connected).length}
+                      {(integrations ?? []).filter(i => i.connected).length}
                     </div>
                     <div className="text-sm text-muted-foreground">Connected</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-muted-foreground">
-                      {integrations.filter(i => !i.connected).length}
+                      {(integrations ?? []).filter(i => !i.connected).length}
                     </div>
                     <div className="text-sm text-muted-foreground">Available</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-foreground">
-                      {realPrograms.length}
+                      {(realPrograms ?? []).length}
                     </div>
                     <div className="text-sm text-muted-foreground">Programs</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-foreground">
-                      {threatFeed.length}
+                      {(threatFeed ?? []).length}
                     </div>
                     <div className="text-sm text-muted-foreground">Threats</div>
                   </div>
