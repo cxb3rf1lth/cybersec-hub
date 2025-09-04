@@ -261,7 +261,6 @@ export function IntegrationStatusDashboard() {
   }
 
   // Calculate summary stats
-  const connectedPlatforms = integrations.filter(int => int.connected).length
   const totalPrograms = programs.length
   const totalThreats = threatFeed.length
   const activeConnections = healthMetrics.filter(h => h.status === 'healthy').length
@@ -457,7 +456,7 @@ export function IntegrationStatusDashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">
-                  {((activeConnections / Math.max(connectedPlatforms, 1)) * 100).toFixed(0)}%
+                  {((activeConnections / Math.max(connectedPlatforms.length, 1)) * 100).toFixed(0)}%
                 </p>
                 <p className="text-xs text-muted-foreground">Uptime Rate</p>
               </div>
