@@ -261,6 +261,8 @@ export function IntegrationStatusDashboard() {
   }
 
   // Calculate summary stats
+  const connectedPlatformsCount = connectedPlatforms.length
+  const totalPrograms = programs.length
   const totalThreats = threatFeed.length
   const activeConnections = healthMetrics.filter(h => h.status === 'healthy').length
   const degradedConnections = healthMetrics.filter(h => h.status === 'degraded').length
@@ -309,7 +311,7 @@ export function IntegrationStatusDashboard() {
               <div>
                 <CardTitle className="text-lg">Automatic Data Synchronization</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Real-time sync with {connectedPlatforms.length} connected platforms
+                  Real-time sync with {connectedPlatformsCount} connected platforms
                 </p>
               </div>
             </div>
@@ -455,7 +457,7 @@ export function IntegrationStatusDashboard() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">
-                  {((activeConnections / Math.max(connectedPlatforms, 1)) * 100).toFixed(0)}%
+                  {((activeConnections / Math.max(connectedPlatformsCount, 1)) * 100).toFixed(0)}%
                 </p>
                 <p className="text-xs text-muted-foreground">Uptime Rate</p>
               </div>
