@@ -1,5 +1,5 @@
 import { useKV } from '@github/spark/hooks'
-import { TrendingUp, Users, Star, CheckCircle } from '@phosphor-icons/react'
+import { TrendingUp, Users, Star, CheckCircle } from '@/lib/phosphor-icons-wrapper'
 import { Card, CardContent } from '@/components/ui/card'
 import { MarketplaceListing } from '@/types/marketplace'
 import { Team } from '@/types/teams'

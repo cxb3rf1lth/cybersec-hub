@@ -263,6 +263,7 @@ export function IntegrationStatusDashboard() {
   // Calculate summary stats
   const connectedPlatformsCount = connectedPlatforms.length
   const totalPrograms = programs.length
+  const totalPrograms = programs.length
   const totalThreats = threatFeed.length
   const activeConnections = healthMetrics.filter(h => h.status === 'healthy').length
   const degradedConnections = healthMetrics.filter(h => h.status === 'degraded').length

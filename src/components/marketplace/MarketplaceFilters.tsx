@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { X } from '@phosphor-icons/react'
+import { X } from '@/lib/phosphor-icons-wrapper'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'

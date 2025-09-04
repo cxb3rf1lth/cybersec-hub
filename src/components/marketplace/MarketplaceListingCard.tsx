@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Star, Clock, DollarSign, Users, Award, CheckCircle } from '@phosphor-icons/react'
+import { Star, Clock, DollarSign, Users, Award, CheckCircle } from '@/lib/phosphor-icons-wrapper'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'

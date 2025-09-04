@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useKV } from '@github/spark/hooks'
-import { Plus, Calendar, Users, Target, Filter, Search, MoreHorizontal } from '@phosphor-icons/react'
+import { Plus, Calendar, Users, Target, Filter, Search, MoreHorizontal } from '@/lib/phosphor-icons-wrapper'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

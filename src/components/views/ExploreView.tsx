@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { UserCard } from '@/components/ui/UserCard'
-import { Search, Users, Code, TrendingUp, ChatCircle } from '@phosphor-icons/react'
+import { Search, Users, Code, TrendingUp, ChatCircle } from '@/lib/phosphor-icons-wrapper'
 import { User, Post, Specialization, Conversation } from '@/types/user'
 
 interface ExploreViewProps {

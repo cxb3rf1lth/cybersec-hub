@@ -1,1 +1,2 @@
-// This file is deprecated - use stability-checker.tsx instead
+export * from './stability-checker.tsx';
+export { default } from './stability-checker.tsx';

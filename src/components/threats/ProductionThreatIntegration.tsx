@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
 import { BinaryRain } from '@/components/ui/BinaryRain'
-import { Eye, Globe, Shield, Activity, Target, AlertTriangle, Code, Database, Search, TrendingUp, Clock, Users } from '@phosphor-icons/react'
+import { Eye, Globe, Shield, Activity, Target, AlertTriangle, Code, Database, Search, TrendingUp, Clock, Users } from '@/lib/phosphor-icons-wrapper'
 
 interface ThreatSource {
   id: string
