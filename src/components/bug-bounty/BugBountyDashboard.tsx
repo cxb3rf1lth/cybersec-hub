@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Progress } from '@/components/ui/progress'
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Progress } from '@/components/ui/progress';
 import { 
   Shield, 
   Target, 
@@ -26,10 +26,10 @@ import {
   UserPlus,
   Gear,
   Key
-} from '@phosphor-icons/react'
-import { useBugBountyPlatforms } from '@/hooks/useBugBountyPlatforms'
-import { useTeamHunts } from '@/hooks/useTeamHunts'
-import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
+} from '@phosphor-icons/react';
+import { useBugBountyPlatforms } from '@/hooks/useBugBountyPlatforms';
+import { useTeamHunts } from '@/hooks/useTeamHunts';
+import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration';
   import {
     DollarSign,
     TrendingUp,
@@ -40,45 +40,45 @@ import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
     Filter,
     MessageCircle,
     // ...existing code...
-  } from '@/lib/phosphor-icons-wrapper'
+  } from '@/lib/phosphor-icons-wrapper';
 
 export function BugBountyDashboard() {
-  const { teamHunts, partnerRequests, joinTeamHunt, createPartnerRequest } = useTeamHunts()
-  const { integrations, programs: realPrograms, threatFeed } = useBugBountyIntegration()
-  const [activeTab, setActiveTab] = useState('overview')
-  const [showBinaryRain, setShowBinaryRain] = useState(false)
-  const [showAPISettings, setShowAPISettings] = useState(false)
+  const { teamHunts, partnerRequests, joinTeamHunt, createPartnerRequest } = useTeamHunts();
+  const { integrations, programs: realPrograms, threatFeed } = useBugBountyIntegration();
+  const [activeTab, setActiveTab] = useState('overview');
+  const [showBinaryRain, setShowBinaryRain] = useState(false);
+  const [showAPISettings, setShowAPISettings] = useState(false);
 
   // Use real data when available, fallback to sample data
-  const allPrograms = (realPrograms ?? []).length > 0 ? (realPrograms ?? []) : (programs ?? [])
-  const allThreats = (threatFeed ?? []).length > 0 ? (threatFeed ?? []) : (liveFeed ?? [])
+  const allPrograms = (realPrograms ?? []).length > 0 ? (realPrograms ?? []) : (programs ?? []);
+  const allThreats = (threatFeed ?? []).length > 0 ? (threatFeed ?? []) : (liveFeed ?? []);
 
-  const activePlatforms = (platforms ?? []).filter(p => p.isActive)
-  const connectedIntegrations = (integrations ?? []).filter(i => i.connected)
-  const publicPrograms = (allPrograms ?? []).filter(p => p.status === 'active')
-  const activeHunts = (teamHunts ?? []).filter(h => h.status === 'active')
-  const openPartnerRequests = (partnerRequests ?? []).filter(r => r.status === 'open')
+  const activePlatforms = (platforms ?? []).filter(p => p.isActive);
+  const connectedIntegrations = (integrations ?? []).filter(i => i.connected);
+  const publicPrograms = (allPrograms ?? []).filter(p => p.status === 'active');
+  const activeHunts = (teamHunts ?? []).filter(h => h.status === 'active');
+  const openPartnerRequests = (partnerRequests ?? []).filter(r => r.status === 'open');
 
   const totalBountyValue = (allPrograms ?? []).reduce((total, program) => {
     const maxReward = Math.max(
   parseInt((program.rewards as any)?.critical?.split(' - ')[1]?.replace(/[^0-9]/g, '') || '0'),
   parseInt((program.rewards as any)?.high?.split(' - ')[1]?.replace(/[^0-9]/g, '') || '0')
-    )
-    return total + maxReward
-  }, 0)
+    );
+    return total + maxReward;
+  }, 0);
 
   const handleJoinHunt = (huntId: string) => {
-    joinTeamHunt(huntId, currentUser)
-    toast.success('Successfully joined team hunt!')
-  }
+    joinTeamHunt(huntId, currentUser);
+    toast.success('Successfully joined team hunt!');
+  };
 
   const handleCreatePartnerRequest = () => {
     // This would open a modal/form in a real implementation
-    toast.success('Partner request created!')
-  }
+    toast.success('Partner request created!');
+  };
 
   const renderBinaryRain = () => {
-    if (!showBinaryRain) return null
+    if (!showBinaryRain) {return null;}
     
     return (
       <div className="fixed inset-0 pointer-events-none z-0 opacity-20">
@@ -97,8 +97,8 @@ export function BugBountyDashboard() {
           ))}
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="space-y-6 relative">
@@ -644,8 +644,8 @@ export function BugBountyDashboard() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {(integrations ?? []).map((integration) => {
-                const isConnected = integration.connected
-                const hasErrors = (syncErrors ?? {})[integration.name.toLowerCase().split(' ')[0]]
+                const isConnected = integration.connected;
+                const hasErrors = (syncErrors ?? {})[integration.name.toLowerCase().split(' ')[0]];
                 
                 return (
                   <Card key={integration.id} className="glass-card hover-border-flow">
@@ -745,7 +745,7 @@ export function BugBountyDashboard() {
                       </div>
                     </CardContent>
                   </Card>
-                )
+                );
               })}
             </div>
             
@@ -789,5 +789,5 @@ export function BugBountyDashboard() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

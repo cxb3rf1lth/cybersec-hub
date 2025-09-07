@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { UserCard } from '@/components/ui/UserCard'
-import { Search, Users, Code, TrendingUp, ChatCircle } from '@/lib/phosphor-icons-wrapper'
-import { User, Post, Specialization, Conversation } from '@/types/user'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { UserCard } from '@/components/ui/UserCard';
+import { Search, Users, Code, TrendingUp, ChatCircle } from '@/lib/phosphor-icons-wrapper';
+import { User, Post, Specialization, Conversation } from '@/types/user';
 
 interface ExploreViewProps {
   currentUser: User
@@ -17,46 +17,46 @@ interface ExploreViewProps {
 const TRENDING_TOPICS = [
   'Zero-Day Exploits', 'API Security', 'Cloud Security', 'SIEM Implementation',
   'Threat Hunting', 'Incident Response', 'Social Engineering', 'Network Forensics'
-]
+];
 
 export function ExploreView({ currentUser, onNavigateToMessages }: ExploreViewProps) {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<Specialization | 'All'>('All')
-  const [users] = useKVWithFallback<User[]>('allUsers', [])
-  const [posts] = useKVWithFallback<Post[]>('posts', [])
-  const [following, setFollowing] = useKVWithFallback<string[]>(`following-${currentUser.id}`, currentUser.following)
-  const [conversations, setConversations] = useKVWithFallback<Conversation[]>('conversations', [])
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<Specialization | 'All'>('All');
+  const [users] = useKVWithFallback<User[]>('allUsers', []);
+  const [posts] = useKVWithFallback<Post[]>('posts', []);
+  const [following, setFollowing] = useKVWithFallback<string[]>(`following-${currentUser.id}`, currentUser.following);
+  const [conversations, setConversations] = useKVWithFallback<Conversation[]>('conversations', []);
 
   const categories: (Specialization | 'All')[] = [
     'All', 'Red Team', 'Blue Team', 'Bug Bounty', 'Penetration Testing',
     'Ethical Hacking', 'Malware Analysis', 'Security Research'
-  ]
+  ];
 
   const filteredUsers = (users ?? []).filter(user => {
-    if (user.id === currentUser.id) return false
+    if (user.id === currentUser.id) {return false;}
     
     const matchesSearch = user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         user.bio?.toLowerCase().includes(searchQuery.toLowerCase())
+                         user.bio?.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesCategory = selectedCategory === 'All' || 
-                           user.specializations.includes(selectedCategory as Specialization)
+                           user.specializations.includes(selectedCategory as Specialization);
     
-    return matchesSearch && matchesCategory
-  })
+    return matchesSearch && matchesCategory;
+  });
 
   const trendingPosts = (posts ?? [])
     .filter(post => post.likes.length > 0)
     .sort((a, b) => b.likes.length - a.likes.length)
-    .slice(0, 5)
+    .slice(0, 5);
 
   const handleFollow = (userId: string) => {
-  const isFollowing = (following ?? []).includes(userId)
+  const isFollowing = (following ?? []).includes(userId);
     const newFollowing = isFollowing 
   ? (following ?? []).filter(id => id !== userId)
-  : [...(following ?? []), userId]
+  : [...(following ?? []), userId];
     
-    setFollowing(newFollowing)
-  }
+    setFollowing(newFollowing);
+  };
 
   const handleStartMessage = (userId: string) => {
     // Check if conversation already exists
@@ -64,7 +64,7 @@ export function ExploreView({ currentUser, onNavigateToMessages }: ExploreViewPr
       conv.participants.includes(currentUser.id) && 
       conv.participants.includes(userId) &&
       !conv.isGroup
-    )
+    );
 
     if (!existingConversation) {
       // Create new conversation
@@ -74,16 +74,16 @@ export function ExploreView({ currentUser, onNavigateToMessages }: ExploreViewPr
         lastMessageAt: new Date().toISOString(),
         isGroup: false,
         unreadCount: 0
-      }
+      };
 
-  setConversations((prevConversations = []) => [...prevConversations, newConversation])
+  setConversations((prevConversations = []) => [...prevConversations, newConversation]);
     }
 
     // Navigate to messages with this user
     if (onNavigateToMessages) {
-      onNavigateToMessages(userId)
+      onNavigateToMessages(userId);
     }
-  }
+  };
 
   return (
     <div className="h-screen overflow-y-auto">
@@ -220,5 +220,5 @@ export function ExploreView({ currentUser, onNavigateToMessages }: ExploreViewPr
         </div>
       </div>
     </div>
-  )
+  );
 }

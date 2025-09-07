@@ -1,6 +1,6 @@
-import { X } from '@phosphor-icons/react'
-import { Button } from '@/components/ui/button'
-import { Project, User } from '@/types'
+import { X } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
+import { Project, User } from '@/types';
 
 interface ProjectDetailsModalProps {
   project: Project
@@ -28,5 +28,5 @@ export function ProjectDetailsModal({ project, currentUser, onClose, onUpdatePro
         </div>
       </div>
     </div>
-  )
+  );
 }

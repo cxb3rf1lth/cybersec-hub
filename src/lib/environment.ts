@@ -4,9 +4,9 @@
  */
 
 // Environment detection
-export const NODE_ENV = import.meta.env.MODE || 'development'
-export const IS_PRODUCTION = NODE_ENV === 'production'
-export const IS_DEVELOPMENT = NODE_ENV === 'development'
+export const NODE_ENV = import.meta.env.MODE || 'development';
+export const IS_PRODUCTION = NODE_ENV === 'production';
+export const IS_DEVELOPMENT = NODE_ENV === 'development';
 
 // API Configuration
 export const API_ENDPOINTS = {
@@ -28,11 +28,11 @@ export const API_ENDPOINTS = {
     CDN_BASE_URL: 'http://localhost:3003',
     AUTH_URL: 'http://localhost:3004'
   }
-}
+};
 
 // Current environment endpoints
-const currentEnv = IS_PRODUCTION ? 'production' : IS_DEVELOPMENT ? 'development' : 'staging'
-export const ENDPOINTS = API_ENDPOINTS[currentEnv]
+const currentEnv = IS_PRODUCTION ? 'production' : IS_DEVELOPMENT ? 'development' : 'staging';
+export const ENDPOINTS = API_ENDPOINTS[currentEnv];
 
 // Feature Flags
 export const FEATURE_FLAGS = {
@@ -63,7 +63,7 @@ export const FEATURE_FLAGS = {
   TELEMETRY: IS_PRODUCTION,
   ERROR_TRACKING: true,
   PERFORMANCE_MONITORING: IS_PRODUCTION,
-}
+};
 
 // Resource Limits
 export const LIMITS = {
@@ -86,7 +86,7 @@ export const LIMITS = {
   VM_MAX_MEMORY: 32, // GB
   VM_MAX_STORAGE: 500, // GB
   VM_MAX_RUNTIME: 24 * 60, // 24 hours in minutes
-}
+};
 
 // Timeouts
 export const TIMEOUTS = {
@@ -95,7 +95,7 @@ export const TIMEOUTS = {
   FILE_UPLOAD: 300000, // 5 minutes
   WEBSOCKET_RECONNECT: 30000, // 30 seconds
   SESSION_TIMEOUT: 8 * 60 * 60 * 1000, // 8 hours
-}
+};
 
 // Security Configuration
 export const SECURITY_CONFIG = {
@@ -119,7 +119,7 @@ export const SECURITY_CONFIG = {
   
   // Content Security Policy
   CSP_ENABLED: IS_PRODUCTION,
-}
+};
 
 // Monitoring and Analytics
 export const MONITORING_CONFIG = {
@@ -134,7 +134,7 @@ export const MONITORING_CONFIG = {
   // Performance monitoring
   PERFORMANCE_SAMPLE_RATE: IS_PRODUCTION ? 0.1 : 1.0,
   ERROR_SAMPLE_RATE: IS_PRODUCTION ? 0.25 : 1.0,
-}
+};
 
 // External Service Configuration
 export const EXTERNAL_SERVICES = {
@@ -158,7 +158,7 @@ export const EXTERNAL_SERVICES = {
   AWS_REGIONS: ['us-east-1', 'eu-west-1', 'ap-southeast-1'],
   GCP_ZONES: ['us-central1-a', 'europe-west1-b', 'asia-east1-a'],
   AZURE_REGIONS: ['eastus', 'westeurope', 'southeastasia'],
-}
+};
 
 // VM Templates and Images
 export const VM_TEMPLATES = {
@@ -194,7 +194,7 @@ export const VM_TEMPLATES = {
     category: 'windows-security',
     tools: ['powershell', 'sysinternals', 'wireshark', 'procmon']
   }
-}
+};
 
 // Development-specific configuration
 export const DEV_CONFIG = IS_DEVELOPMENT ? {
@@ -203,7 +203,7 @@ export const DEV_CONFIG = IS_DEVELOPMENT ? {
   VERBOSE_LOGGING: true,
   ENABLE_REACT_DEVTOOLS: true,
   HOT_RELOAD: true,
-} : {}
+} : {};
 
 // Production-specific configuration
 export const PROD_CONFIG = IS_PRODUCTION ? {
@@ -211,7 +211,7 @@ export const PROD_CONFIG = IS_PRODUCTION ? {
   ENABLE_SERVICE_WORKER: true,
   PRELOAD_CRITICAL_RESOURCES: true,
   LAZY_LOAD_COMPONENTS: true,
-} : {}
+} : {};
 
 // Validation function to ensure all required environment variables are set
 export function validateEnvironment(): { valid: boolean; missing: string[] } {
@@ -219,22 +219,22 @@ export function validateEnvironment(): { valid: boolean; missing: string[] } {
     'VITE_API_URL',
     'VITE_WS_URL',
     'VITE_SENTRY_DSN',
-  ] : []
+  ] : [];
 
-  const missing = required.filter(key => !import.meta.env[key])
+  const missing = required.filter(key => !import.meta.env[key]);
   
   return {
     valid: missing.length === 0,
     missing
-  }
+  };
 }
 
 // Initialize environment validation
-const envValidation = validateEnvironment()
+const envValidation = validateEnvironment();
 if (!envValidation.valid) {
-  console.warn('Missing required environment variables:', envValidation.missing)
+  console.warn('Missing required environment variables:', envValidation.missing);
   if (IS_PRODUCTION) {
-    throw new Error(`Missing required environment variables: ${envValidation.missing.join(', ')}`)
+    throw new Error(`Missing required environment variables: ${envValidation.missing.join(', ')}`);
   }
 }
 
@@ -253,6 +253,6 @@ export const CONFIG = {
   VM_TEMPLATES,
   ...(IS_DEVELOPMENT ? DEV_CONFIG : {}),
   ...(IS_PRODUCTION ? PROD_CONFIG : {}),
-}
+};
 
-export default CONFIG
+export default CONFIG;

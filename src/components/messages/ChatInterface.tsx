@@ -1,13 +1,13 @@
-import { useState, useRef, useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Card } from '@/components/ui/card'
-import { PaperPlaneTilt, Code, User as UserIcon, Check, Checks } from '@phosphor-icons/react'
-import { Conversation, Message, User } from '@/types/user'
-import { formatDistanceToNow } from 'date-fns'
+import { useState, useRef, useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card } from '@/components/ui/card';
+import { PaperPlaneTilt, Code, User as UserIcon, Check, Checks } from '@phosphor-icons/react';
+import { Conversation, Message, User } from '@/types/user';
+import { formatDistanceToNow } from 'date-fns';
 
 interface ChatInterfaceProps {
   conversation: Conversation
@@ -17,42 +17,42 @@ interface ChatInterfaceProps {
 }
 
 export function ChatInterface({ conversation, messages, currentUser, onSendMessage }: ChatInterfaceProps) {
-  const [users] = useKVWithFallback<User[]>('allUsers', [])
-  const [messageContent, setMessageContent] = useState('')
-  const [messageType, setMessageType] = useState<'text' | 'code'>('text')
-  const [codeLanguage, setCodeLanguage] = useState('javascript')
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const [users] = useKVWithFallback<User[]>('allUsers', []);
+  const [messageContent, setMessageContent] = useState('');
+  const [messageType, setMessageType] = useState<'text' | 'code'>('text');
+  const [codeLanguage, setCodeLanguage] = useState('javascript');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const otherParticipant = users.find(user => 
     conversation.participants.includes(user.id) && user.id !== currentUser.id
-  )
+  );
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const handleSendMessage = () => {
-    if (!messageContent.trim()) return
+    if (!messageContent.trim()) {return;}
 
     onSendMessage(
       messageContent.trim(), 
       messageType, 
       messageType === 'code' ? codeLanguage : undefined
-    )
-    setMessageContent('')
-  }
+    );
+    setMessageContent('');
+  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSendMessage()
+      e.preventDefault();
+      handleSendMessage();
     }
-  }
+  };
 
   const codeLanguages = [
     'javascript', 'python', 'bash', 'powershell', 'c', 'cpp', 'java', 
     'go', 'rust', 'sql', 'yaml', 'json', 'xml', 'html', 'css'
-  ]
+  ];
 
   return (
     <div className="flex flex-col h-full">
@@ -79,8 +79,8 @@ export function ChatInterface({ conversation, messages, currentUser, onSendMessa
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message) => {
-          const isCurrentUser = message.senderId === currentUser.id
-          const sender = users.find(user => user.id === message.senderId)
+          const isCurrentUser = message.senderId === currentUser.id;
+          const sender = users.find(user => user.id === message.senderId);
 
           return (
             <div
@@ -142,7 +142,7 @@ export function ChatInterface({ conversation, messages, currentUser, onSendMessa
                 </Avatar>
               )}
             </div>
-          )
+          );
         })}
         <div ref={messagesEndRef} />
       </div>
@@ -197,5 +197,5 @@ export function ChatInterface({ conversation, messages, currentUser, onSendMessa
         </div>
       </div>
     </div>
-  )
+  );
 }

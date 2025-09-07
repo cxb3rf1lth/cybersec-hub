@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Switch } from '@/components/ui/switch'
-import { Progress } from '@/components/ui/progress'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
+import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   WifiOff, 
   Wifi, 
@@ -26,10 +26,10 @@ import {
   AlertTriangle,
   Database,
   Code
-} from '@phosphor-icons/react'
-import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
-import { API_CONFIGS, useAPIKeys, APIKeyValidator } from '@/lib/config'
-import { toast } from 'sonner'
+} from '@phosphor-icons/react';
+import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration';
+import { API_CONFIGS, useAPIKeys, APIKeyValidator } from '@/lib/config';
+import { toast } from 'sonner';
 
 export function PlatformConnectionManager() {
   const {
@@ -42,129 +42,129 @@ export function PlatformConnectionManager() {
     syncErrors,
     getAPIKeyStatus,
     getRateLimitStatus
-  } = useBugBountyIntegration()
+  } = useBugBountyIntegration();
 
-  const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null)
-  const [apiKey, setApiKey] = useState('')
-  const [showAPIKeyDialog, setShowAPIKeyDialog] = useState(false)
-  const [validatingKey, setValidatingKey] = useState(false)
-  const [connectionStatus, setConnectionStatus] = useState<Record<string, 'testing' | 'connected' | 'failed' | 'idle'>>({})
+  const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
+  const [apiKey, setApiKey] = useState('');
+  const [showAPIKeyDialog, setShowAPIKeyDialog] = useState(false);
+  const [validatingKey, setValidatingKey] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<Record<string, 'testing' | 'connected' | 'failed' | 'idle'>>({});
 
   // Live connection testing
   const testConnection = async (platformId: string, testKey?: string) => {
-    setConnectionStatus(prev => ({ ...prev, [platformId]: 'testing' }))
-    setValidatingKey(true)
+    setConnectionStatus(prev => ({ ...prev, [platformId]: 'testing' }));
+    setValidatingKey(true);
 
     try {
-      const platform = integrations.find(int => int.id === platformId)
-      const platformKey = platform?.name.toLowerCase().split(' ')[0]
+      const platform = integrations.find(int => int.id === platformId);
+      const platformKey = platform?.name.toLowerCase().split(' ')[0];
       
       if (!platformKey) {
-        throw new Error('Platform not found')
+        throw new Error('Platform not found');
       }
 
-      const keyToTest = testKey || apiKey
+      const keyToTest = testKey || apiKey;
       if (!keyToTest) {
-        throw new Error('API key required')
+        throw new Error('API key required');
       }
 
       // Validate key format first
       if (!APIKeyValidator.validateFormat(platformKey, keyToTest)) {
-        throw new Error('Invalid API key format')
+        throw new Error('Invalid API key format');
       }
 
       // Test the actual connection
-      const result = await APIKeyValidator.testConnection(platformKey, keyToTest)
+      const result = await APIKeyValidator.testConnection(platformKey, keyToTest);
       
       if (result.valid) {
-        setConnectionStatus(prev => ({ ...prev, [platformId]: 'connected' }))
-        toast.success(`✅ Successfully connected to ${platform?.name}`)
+        setConnectionStatus(prev => ({ ...prev, [platformId]: 'connected' }));
+        toast.success(`✅ Successfully connected to ${platform?.name}`);
         
         if (testKey) {
           // If this is during the connection process, proceed to connect
-          await connectPlatform(platformId, testKey)
-          setShowAPIKeyDialog(false)
-          setApiKey('')
+          await connectPlatform(platformId, testKey);
+          setShowAPIKeyDialog(false);
+          setApiKey('');
         }
       } else {
-        setConnectionStatus(prev => ({ ...prev, [platformId]: 'failed' }))
-        toast.error(`❌ Connection failed: ${result.error}`)
+        setConnectionStatus(prev => ({ ...prev, [platformId]: 'failed' }));
+        toast.error(`❌ Connection failed: ${result.error}`);
       }
     } catch (error) {
-      setConnectionStatus(prev => ({ ...prev, [platformId]: 'failed' }))
-      toast.error(`❌ Connection test failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      setConnectionStatus(prev => ({ ...prev, [platformId]: 'failed' }));
+      toast.error(`❌ Connection test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
-      setValidatingKey(false)
+      setValidatingKey(false);
     }
-  }
+  };
 
   const handleConnect = async () => {
-    if (!selectedPlatform || !apiKey) return
-    await testConnection(selectedPlatform, apiKey)
-  }
+    if (!selectedPlatform || !apiKey) {return;}
+    await testConnection(selectedPlatform, apiKey);
+  };
 
   const handleDisconnect = async (platformId: string) => {
     try {
-      await disconnectPlatform(platformId)
-      setConnectionStatus(prev => ({ ...prev, [platformId]: 'idle' }))
-      toast.success('Platform disconnected')
+      await disconnectPlatform(platformId);
+      setConnectionStatus(prev => ({ ...prev, [platformId]: 'idle' }));
+      toast.success('Platform disconnected');
     } catch (error) {
-      toast.error('Failed to disconnect platform')
+      toast.error('Failed to disconnect platform');
     }
-  }
+  };
 
   const getStatusColor = (integration: any) => {
     if (integration.connected) {
-      const status = connectionStatus[integration.id]
+      const status = connectionStatus[integration.id];
       switch (status) {
-        case 'testing': return 'bg-yellow-500'
-        case 'connected': return 'bg-green-500'
-        case 'failed': return 'bg-red-500'
-        default: return 'bg-green-500'
+        case 'testing': return 'bg-yellow-500';
+        case 'connected': return 'bg-green-500';
+        case 'failed': return 'bg-red-500';
+        default: return 'bg-green-500';
       }
     }
-    return 'bg-gray-500'
-  }
+    return 'bg-gray-500';
+  };
 
   const getConnectionStatusText = (integration: any) => {
-    if (!integration.connected) return 'Disconnected'
+    if (!integration.connected) {return 'Disconnected';}
     
-    const status = connectionStatus[integration.id]
+    const status = connectionStatus[integration.id];
     switch (status) {
-      case 'testing': return 'Testing...'
-      case 'connected': return 'Connected'
-      case 'failed': return 'Connection Failed'
-      default: return 'Connected'
+      case 'testing': return 'Testing...';
+      case 'connected': return 'Connected';
+      case 'failed': return 'Connection Failed';
+      default: return 'Connected';
     }
-  }
+  };
 
   const formatLastSync = (lastSync: string) => {
-    if (!lastSync) return 'Never'
-    const date = new Date(lastSync)
-    const now = new Date()
-    const diffMs = now.getTime() - date.getTime()
-    const diffMins = Math.floor(diffMs / 60000)
+    if (!lastSync) {return 'Never';}
+    const date = new Date(lastSync);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
     
-    if (diffMins < 1) return 'Just now'
-    if (diffMins < 60) return `${diffMins}m ago`
-    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`
-    return `${Math.floor(diffMins / 1440)}d ago`
-  }
+    if (diffMins < 1) {return 'Just now';}
+    if (diffMins < 60) {return `${diffMins}m ago`;}
+    if (diffMins < 1440) {return `${Math.floor(diffMins / 60)}h ago`;}
+    return `${Math.floor(diffMins / 1440)}d ago`;
+  };
 
   // Auto-refresh connection status every 30 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       integrations.filter(int => int.connected).forEach(integration => {
-        const lastTest = connectionStatus[integration.id]
+        const lastTest = connectionStatus[integration.id];
         if (lastTest !== 'testing') {
           // Silently test connections without showing success messages
-          testConnection(integration.id).catch(() => {}) 
+          testConnection(integration.id).catch(() => {}); 
         }
-      })
-    }, 30000)
+      });
+    }, 30000);
 
-    return () => clearInterval(interval)
-  }, [integrations, connectionStatus])
+    return () => clearInterval(interval);
+  }, [integrations, connectionStatus]);
 
   return (
     <div className="space-y-6">
@@ -260,12 +260,12 @@ export function PlatformConnectionManager() {
       {/* Platform Integration Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {integrations.map((integration) => {
-          const keyStatus = getAPIKeyStatus(integration.id)
-          const rateLimitStatus = getRateLimitStatus(integration.id)
+          const keyStatus = getAPIKeyStatus(integration.id);
+          const rateLimitStatus = getRateLimitStatus(integration.id);
           const platformConfig = Object.values(API_CONFIGS).find(
             config => config.platform.toLowerCase() === integration.name.toLowerCase().split(' ')[0]
-          )
-          const syncError = syncErrors[integration.name.toLowerCase().split(' ')[0]]
+          );
+          const syncError = syncErrors[integration.name.toLowerCase().split(' ')[0]];
 
           return (
             <Card key={integration.id} className="glass-card">
@@ -363,10 +363,10 @@ export function PlatformConnectionManager() {
                     <Dialog 
                       open={showAPIKeyDialog && selectedPlatform === integration.id} 
                       onOpenChange={(open) => {
-                        setShowAPIKeyDialog(open)
+                        setShowAPIKeyDialog(open);
                         if (!open) {
-                          setSelectedPlatform(null)
-                          setApiKey('')
+                          setSelectedPlatform(null);
+                          setApiKey('');
                         }
                       }}
                     >
@@ -375,8 +375,8 @@ export function PlatformConnectionManager() {
                           size="sm" 
                           className="flex-1"
                           onClick={() => {
-                            setSelectedPlatform(integration.id)
-                            setShowAPIKeyDialog(true)
+                            setSelectedPlatform(integration.id);
+                            setShowAPIKeyDialog(true);
                           }}
                         >
                           <Key size={16} className="mr-2" />
@@ -437,9 +437,9 @@ export function PlatformConnectionManager() {
                             <Button
                               variant="outline"
                               onClick={() => {
-                                setShowAPIKeyDialog(false)
-                                setApiKey('')
-                                setSelectedPlatform(null)
+                                setShowAPIKeyDialog(false);
+                                setApiKey('');
+                                setSelectedPlatform(null);
                               }}
                               disabled={validatingKey}
                             >
@@ -482,7 +482,7 @@ export function PlatformConnectionManager() {
                 </div>
               </CardContent>
             </Card>
-          )
+          );
         })}
       </div>
 
@@ -566,5 +566,5 @@ export function PlatformConnectionManager() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

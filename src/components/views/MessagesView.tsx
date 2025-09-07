@@ -1,27 +1,27 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { ConversationList } from '@/components/messages/ConversationList'
-import { ChatInterface } from '@/components/messages/ChatInterface'
-import { NewMessageModal } from '@/components/messages/NewMessageModal'
-import { Button } from '@/components/ui/button'
-import { PencilSimple } from '@phosphor-icons/react'
-import { toast } from 'sonner'
-import { User, Conversation, Message } from '@/types/user'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { ConversationList } from '@/components/messages/ConversationList';
+import { ChatInterface } from '@/components/messages/ChatInterface';
+import { NewMessageModal } from '@/components/messages/NewMessageModal';
+import { Button } from '@/components/ui/button';
+import { PencilSimple } from '@phosphor-icons/react';
+import { toast } from 'sonner';
+import { User, Conversation, Message } from '@/types/user';
 
 interface MessagesViewProps {
   currentUser: User
 }
 
 export function MessagesView({ currentUser }: MessagesViewProps) {
-  const [conversations, setConversations] = useKVWithFallback<Conversation[]>('conversations', [])
-  const [messages, setMessages] = useKVWithFallback<Message[]>('messages', [])
-  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null)
-  const [showNewMessage, setShowNewMessage] = useState(false)
+  const [conversations, setConversations] = useKVWithFallback<Conversation[]>('conversations', []);
+  const [messages, setMessages] = useKVWithFallback<Message[]>('messages', []);
+  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
+  const [showNewMessage, setShowNewMessage] = useState(false);
 
-  const selectedConversation = conversations.find(c => c.id === selectedConversationId)
+  const selectedConversation = conversations.find(c => c.id === selectedConversationId);
 
   const handleSendMessage = async (content: string, type: 'text' | 'code' = 'text', codeLanguage?: string) => {
-    if (!selectedConversation) return
+    if (!selectedConversation) {return;}
 
     const newMessage: Message = {
       id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -33,10 +33,10 @@ export function MessagesView({ currentUser }: MessagesViewProps) {
       isRead: false,
       createdAt: new Date().toISOString(),
       status: 'sent'
-    }
+    };
 
     // Add message to messages array
-    setMessages((prevMessages) => [...prevMessages, newMessage])
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
 
     // Update conversation with last message
     setConversations((prevConversations) => 
@@ -49,15 +49,15 @@ export function MessagesView({ currentUser }: MessagesViewProps) {
             }
           : conv
       )
-    )
+    );
 
     // Show success toast
     if (type === 'code') {
-      toast.success(`Code snippet sent (${codeLanguage})`)
+      toast.success(`Code snippet sent (${codeLanguage})`);
     } else {
-      toast.success('Message sent')
+      toast.success('Message sent');
     }
-  }
+  };
 
   const handleStartConversation = (participantId: string) => {
     // Check if conversation already exists
@@ -65,12 +65,12 @@ export function MessagesView({ currentUser }: MessagesViewProps) {
       conv.participants.includes(currentUser.id) && 
       conv.participants.includes(participantId) &&
       !conv.isGroup
-    )
+    );
 
     if (existingConversation) {
-      setSelectedConversationId(existingConversation.id)
-      setShowNewMessage(false)
-      return
+      setSelectedConversationId(existingConversation.id);
+      setShowNewMessage(false);
+      return;
     }
 
     // Create new conversation
@@ -80,22 +80,22 @@ export function MessagesView({ currentUser }: MessagesViewProps) {
       lastMessageAt: new Date().toISOString(),
       isGroup: false,
       unreadCount: 0
-    }
+    };
 
-    setConversations((prevConversations) => [...prevConversations, newConversation])
-    setSelectedConversationId(newConversation.id)
-    setShowNewMessage(false)
-  }
+    setConversations((prevConversations) => [...prevConversations, newConversation]);
+    setSelectedConversationId(newConversation.id);
+    setShowNewMessage(false);
+  };
 
   const getConversationMessages = (conversationId: string) => {
     return messages.filter(msg => {
-      const conversation = conversations.find(c => c.id === conversationId)
-      if (!conversation) return false
+      const conversation = conversations.find(c => c.id === conversationId);
+      if (!conversation) {return false;}
       
       return conversation.participants.includes(msg.senderId) && 
-             conversation.participants.includes(msg.receiverId)
-    }).sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-  }
+             conversation.participants.includes(msg.receiverId);
+    }).sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  };
 
   return (
     <div className="h-screen flex">
@@ -150,5 +150,5 @@ export function MessagesView({ currentUser }: MessagesViewProps) {
         />
       )}
     </div>
-  )
+  );
 }

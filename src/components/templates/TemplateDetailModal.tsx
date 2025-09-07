@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Star, Download, Copy, Code, FileText, List, CalendarBlank, Users, GitBranch, Edit3 } from '@phosphor-icons/react'
-import { Template } from '@/types/templates'
-import { User } from '@/types/user'
-import { CodeBlock } from '@/components/code/CodeBlock'
-import { CollaborativeEditor } from './CollaborativeEditor'
+import { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Star, Download, Copy, Code, FileText, List, CalendarBlank, Users, GitBranch, Edit3 } from '@phosphor-icons/react';
+import { Template } from '@/types/templates';
+import { User } from '@/types/user';
+import { CodeBlock } from '@/components/code/CodeBlock';
+import { CollaborativeEditor } from './CollaborativeEditor';
 
 interface TemplateDetailModalProps {
   template: Template
@@ -20,31 +20,31 @@ interface TemplateDetailModalProps {
 }
 
 export function TemplateDetailModal({ template, currentUser, onClose, onUse }: TemplateDetailModalProps) {
-  const [activeFileIndex, setActiveFileIndex] = useState(0)
-  const [showCollaborativeEditor, setShowCollaborativeEditor] = useState(false)
+  const [activeFileIndex, setActiveFileIndex] = useState(0);
+  const [showCollaborativeEditor, setShowCollaborativeEditor] = useState(false);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'beginner': return 'bg-green-500/20 text-green-400 border-green-500/30'
-      case 'intermediate': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'advanced': return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
-      case 'expert': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      default: return 'bg-muted'
+      case 'beginner': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'intermediate': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'advanced': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+      case 'expert': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      default: return 'bg-muted';
     }
-  }
+  };
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'web-app': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-      case 'cli-tool': return 'bg-purple-500/20 text-purple-400 border-purple-500/30'
-      case 'exploitation': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      case 'analysis': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'networking': return 'bg-green-500/20 text-green-400 border-green-500/30'
-      case 'forensics': return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'
-      case 'automation': return 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30'
-      default: return 'bg-muted'
+      case 'web-app': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'cli-tool': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+      case 'exploitation': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      case 'analysis': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'networking': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'forensics': return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30';
+      case 'automation': return 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30';
+      default: return 'bg-muted';
     }
-  }
+  };
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -283,10 +283,10 @@ export function TemplateDetailModal({ template, currentUser, onClose, onUse }: T
           onClose={() => setShowCollaborativeEditor(false)}
           onTemplateUpdated={(updatedTemplate) => {
             // Handle template updates
-            setShowCollaborativeEditor(false)
+            setShowCollaborativeEditor(false);
           }}
         />
       )}
     </Dialog>
-  )
+  );
 }

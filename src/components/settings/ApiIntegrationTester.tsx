@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { useApiKeys, API_SERVICES, type ApiServiceKey } from '@/lib/api-keys'
-import { authenticatedApiService } from '@/lib/api-keys'
-import { bugBountyService, threatIntelService } from '@/lib/production-services'
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useApiKeys, API_SERVICES, type ApiServiceKey } from '@/lib/api-keys';
+import { authenticatedApiService } from '@/lib/api-keys';
+import { bugBountyService, threatIntelService } from '@/lib/production-services';
 import { 
   CheckCircle, 
   XCircle, 
@@ -16,7 +16,7 @@ import {
   Shield,
   Bug,
   Database
-} from '@phosphor-icons/react'
+} from '@phosphor-icons/react';
 
 interface TestResult {
   service: ApiServiceKey
@@ -27,74 +27,74 @@ interface TestResult {
 }
 
 export function ApiIntegrationTester() {
-  const { getAllApiKeys, isServiceEnabled } = useApiKeys()
-  const [testing, setTesting] = useState(false)
-  const [results, setResults] = useState<TestResult[]>([])
-  const [progress, setProgress] = useState(0)
+  const { getAllApiKeys, isServiceEnabled } = useApiKeys();
+  const [testing, setTesting] = useState(false);
+  const [results, setResults] = useState<TestResult[]>([]);
+  const [progress, setProgress] = useState(0);
 
   const runAllTests = async () => {
-    setTesting(true)
-    setResults([])
-    setProgress(0)
+    setTesting(true);
+    setResults([]);
+    setProgress(0);
 
     const enabledServices = Array.from(getAllApiKeys().entries())
       .filter(([_, config]) => config.enabled)
-      .map(([service]) => service)
+      .map(([service]) => service);
 
     if (enabledServices.length === 0) {
-      setTesting(false)
-      return
+      setTesting(false);
+      return;
     }
 
-    const testResults: TestResult[] = []
+    const testResults: TestResult[] = [];
     
     for (let i = 0; i < enabledServices.length; i++) {
-      const service = enabledServices[i]
-      const result = await testService(service)
-      testResults.push(result)
-      setResults([...testResults])
-      setProgress(((i + 1) / enabledServices.length) * 100)
+      const service = enabledServices[i];
+      const result = await testService(service);
+      testResults.push(result);
+      setResults([...testResults]);
+      setProgress(((i + 1) / enabledServices.length) * 100);
     }
 
-    setTesting(false)
-  }
+    setTesting(false);
+  };
 
   const testService = async (service: ApiServiceKey): Promise<TestResult> => {
-    const startTime = Date.now()
+    const startTime = Date.now();
     
     try {
-      let testData: any
+      let testData: any;
       
       switch (service) {
         case 'HACKERONE':
-          testData = await authenticatedApiService.get('HACKERONE', '/me')
-          break
+          testData = await authenticatedApiService.get('HACKERONE', '/me');
+          break;
         case 'BUGCROWD':
-          testData = await authenticatedApiService.get('BUGCROWD', '/user')
-          break
+          testData = await authenticatedApiService.get('BUGCROWD', '/user');
+          break;
         case 'INTIGRITI':
-          testData = await authenticatedApiService.get('INTIGRITI', '/researcher/me')
-          break
+          testData = await authenticatedApiService.get('INTIGRITI', '/researcher/me');
+          break;
         case 'YESWEHACK':
-          testData = await authenticatedApiService.get('YESWEHACK', '/user')
-          break
+          testData = await authenticatedApiService.get('YESWEHACK', '/user');
+          break;
         case 'SHODAN':
-          testData = await authenticatedApiService.get('SHODAN', '/api-info')
-          break
+          testData = await authenticatedApiService.get('SHODAN', '/api-info');
+          break;
         case 'VIRUSTOTAL':
-          testData = await authenticatedApiService.get('VIRUSTOTAL', '/file/report?apikey=test&resource=test')
-          break
+          testData = await authenticatedApiService.get('VIRUSTOTAL', '/file/report?apikey=test&resource=test');
+          break;
         case 'CVE_CIRCL':
-          testData = await authenticatedApiService.get('CVE_CIRCL', '/last/1')
-          break
+          testData = await authenticatedApiService.get('CVE_CIRCL', '/last/1');
+          break;
         case 'NVD':
-          testData = await authenticatedApiService.get('NVD', '/cves/2.0?resultsPerPage=1')
-          break
+          testData = await authenticatedApiService.get('NVD', '/cves/2.0?resultsPerPage=1');
+          break;
         case 'SECURITY_ADVISORIES':
-          testData = await authenticatedApiService.get('SECURITY_ADVISORIES', '?per_page=1')
-          break
+          testData = await authenticatedApiService.get('SECURITY_ADVISORIES', '?per_page=1');
+          break;
         default:
-          throw new Error('Test not implemented for this service')
+          throw new Error('Test not implemented for this service');
       }
 
       return {
@@ -102,62 +102,62 @@ export function ApiIntegrationTester() {
         success: true,
         duration: Date.now() - startTime,
         data: testData
-      }
+      };
     } catch (error) {
       return {
         service,
         success: false,
         duration: Date.now() - startTime,
         error: error instanceof Error ? error.message : 'Unknown error'
-      }
+      };
     }
-  }
+  };
 
   const testBugBountyIntegration = async () => {
     try {
-      setTesting(true)
-      const platforms: ApiServiceKey[] = ['HACKERONE', 'BUGCROWD', 'INTIGRITI', 'YESWEHACK']
-      const enabledPlatforms = platforms.filter(p => isServiceEnabled(p))
+      setTesting(true);
+      const platforms: ApiServiceKey[] = ['HACKERONE', 'BUGCROWD', 'INTIGRITI', 'YESWEHACK'];
+      const enabledPlatforms = platforms.filter(p => isServiceEnabled(p));
       
       if (enabledPlatforms.length === 0) {
-        throw new Error('No bug bounty platforms configured')
+        throw new Error('No bug bounty platforms configured');
       }
 
       const results = await Promise.allSettled(
         enabledPlatforms.map(platform => bugBountyService.syncPrograms(platform))
-      )
+      );
 
-      const successCount = results.filter(r => r.status === 'fulfilled').length
-      console.log(`Bug bounty sync completed: ${successCount}/${enabledPlatforms.length} platforms successful`)
+      const successCount = results.filter(r => r.status === 'fulfilled').length;
+      console.log(`Bug bounty sync completed: ${successCount}/${enabledPlatforms.length} platforms successful`);
       
     } catch (error) {
-      console.error('Bug bounty integration test failed:', error)
+      console.error('Bug bounty integration test failed:', error);
     } finally {
-      setTesting(false)
+      setTesting(false);
     }
-  }
+  };
 
   const testThreatIntelligence = async () => {
     try {
-      setTesting(true)
-      const threats = await threatIntelService.getLatestThreats()
-      console.log(`Threat intelligence test completed: ${threats.length} threats retrieved`)
+      setTesting(true);
+      const threats = await threatIntelService.getLatestThreats();
+      console.log(`Threat intelligence test completed: ${threats.length} threats retrieved`);
     } catch (error) {
-      console.error('Threat intelligence test failed:', error)
+      console.error('Threat intelligence test failed:', error);
     } finally {
-      setTesting(false)
+      setTesting(false);
     }
-  }
+  };
 
   const getServiceIcon = (service: ApiServiceKey) => {
     if (['HACKERONE', 'BUGCROWD', 'INTIGRITI', 'YESWEHACK'].includes(service)) {
-      return <Bug size={16} className="text-blue-400" />
+      return <Bug size={16} className="text-blue-400" />;
     }
     if (['SHODAN', 'VIRUSTOTAL', 'CVE_CIRCL', 'NVD', 'SECURITY_ADVISORIES'].includes(service)) {
-      return <Shield size={16} className="text-red-400" />
+      return <Shield size={16} className="text-red-400" />;
     }
-    return <Database size={16} className="text-green-400" />
-  }
+    return <Database size={16} className="text-green-400" />;
+  };
 
   const getResultBadge = (result: TestResult) => {
     if (result.success) {
@@ -166,18 +166,18 @@ export function ApiIntegrationTester() {
           <CheckCircle size={12} className="mr-1" />
           Success
         </Badge>
-      )
+      );
     }
     return (
       <Badge variant="destructive">
         <XCircle size={12} className="mr-1" />
         Failed
       </Badge>
-    )
-  }
+    );
+  };
 
   const enabledServices = Array.from(getAllApiKeys().entries())
-    .filter(([_, config]) => config.enabled)
+    .filter(([_, config]) => config.enabled);
 
   return (
     <div className="space-y-6">
@@ -311,5 +311,5 @@ export function ApiIntegrationTester() {
         </Card>
       )}
     </div>
-  )
+  );
 }

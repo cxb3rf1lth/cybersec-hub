@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { X, DollarSign, Calendar, FileText, Upload } from '@phosphor-icons/react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { toast } from 'sonner'
-import { MarketplaceListing, MarketplaceProposal } from '@/types/marketplace'
-import { Team } from '@/types/teams'
-import { User } from '@/types/user'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { X, DollarSign, Calendar, FileText, Upload } from '@phosphor-icons/react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
+import { MarketplaceListing, MarketplaceProposal } from '@/types/marketplace';
+import { Team } from '@/types/teams';
+import { User } from '@/types/user';
 
 interface CreateProposalModalProps {
   listing: MarketplaceListing
@@ -22,42 +22,42 @@ interface CreateProposalModalProps {
 }
 
 export function CreateProposalModal({ listing, team, currentUser, isOpen, onClose }: CreateProposalModalProps) {
-  const [proposals, setProposals] = useKVWithFallback<MarketplaceProposal[]>('marketplaceProposals', [])
-  const [projectTitle, setProjectTitle] = useState('')
-  const [projectDescription, setProjectDescription] = useState('')
-  const [budget, setBudget] = useState('')
-  const [currency, setCurrency] = useState<'USD' | 'EUR' | 'GBP'>('USD')
-  const [timeline, setTimeline] = useState('')
-  const [requirements, setRequirements] = useState<string[]>([''])
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [proposals, setProposals] = useKVWithFallback<MarketplaceProposal[]>('marketplaceProposals', []);
+  const [projectTitle, setProjectTitle] = useState('');
+  const [projectDescription, setProjectDescription] = useState('');
+  const [budget, setBudget] = useState('');
+  const [currency, setCurrency] = useState<'USD' | 'EUR' | 'GBP'>('USD');
+  const [timeline, setTimeline] = useState('');
+  const [requirements, setRequirements] = useState<string[]>(['']);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleAddRequirement = () => {
-    setRequirements([...requirements, ''])
-  }
+    setRequirements([...requirements, '']);
+  };
 
   const handleRemoveRequirement = (index: number) => {
-    setRequirements(requirements.filter((_, i) => i !== index))
-  }
+    setRequirements(requirements.filter((_, i) => i !== index));
+  };
 
   const handleRequirementChange = (index: number, value: string) => {
-    const updated = [...requirements]
-    updated[index] = value
-    setRequirements(updated)
-  }
+    const updated = [...requirements];
+    updated[index] = value;
+    setRequirements(updated);
+  };
 
   const handleSubmit = async () => {
     if (!projectTitle.trim() || !projectDescription.trim() || !budget || !timeline.trim()) {
-      toast.error('Please fill in all required fields')
-      return
+      toast.error('Please fill in all required fields');
+      return;
     }
 
-    const budgetNum = parseFloat(budget)
+    const budgetNum = parseFloat(budget);
     if (isNaN(budgetNum) || budgetNum <= 0) {
-      toast.error('Please enter a valid budget amount')
-      return
+      toast.error('Please enter a valid budget amount');
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
       const newProposal: MarketplaceProposal = {
@@ -77,26 +77,26 @@ export function CreateProposalModal({ listing, team, currentUser, isOpen, onClos
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days from now
-      }
+      };
 
-      setProposals(current => [...current, newProposal])
+      setProposals(current => [...current, newProposal]);
       
-      toast.success('Proposal submitted successfully!')
-      onClose()
+      toast.success('Proposal submitted successfully!');
+      onClose();
       
       // Reset form
-      setProjectTitle('')
-      setProjectDescription('')
-      setBudget('')
-      setCurrency('USD')
-      setTimeline('')
-      setRequirements([''])
+      setProjectTitle('');
+      setProjectDescription('');
+      setBudget('');
+      setCurrency('USD');
+      setTimeline('');
+      setRequirements(['']);
     } catch (error) {
-      toast.error('Failed to submit proposal')
+      toast.error('Failed to submit proposal');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -247,5 +247,5 @@ export function CreateProposalModal({ listing, team, currentUser, isOpen, onClos
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

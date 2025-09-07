@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { X, Calendar, Users, Target } from '@phosphor-icons/react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
-import { Badge } from '@/components/ui/badge'
-import { Project, Team, User } from '@/types'
+import { useState } from 'react';
+import { X, Calendar, Users, Target } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
+import { Project, Team, User } from '@/types';
 
 interface CreateProjectModalProps {
   currentUser: User
@@ -27,9 +27,9 @@ export function CreateProjectModal({ currentUser, teams, onClose, onCreateProjec
     budget: '',
     visibility: 'team' as Project['visibility'],
     tags: [] as string[]
-  })
-  const [tagInput, setTagInput] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  });
+  const [tagInput, setTagInput] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const projectTypes = [
     { value: 'general', label: 'General Security Project' },
@@ -38,13 +38,13 @@ export function CreateProjectModal({ currentUser, teams, onClose, onCreateProjec
     { value: 'development', label: 'Tool Development' },
     { value: 'red-team', label: 'Red Team Exercise' },
     { value: 'blue-team', label: 'Blue Team Defense' }
-  ]
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!formData.name.trim()) return
+    e.preventDefault();
+    if (!formData.name.trim()) {return;}
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     
     const projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'> = {
       name: formData.name.trim(),
@@ -60,35 +60,35 @@ export function CreateProjectModal({ currentUser, teams, onClose, onCreateProjec
       budget: formData.budget ? parseFloat(formData.budget) : undefined,
       tags: formData.tags,
       visibility: formData.visibility
-    }
+    };
 
-    onCreateProject(projectData)
-    setIsSubmitting(false)
-  }
+    onCreateProject(projectData);
+    setIsSubmitting(false);
+  };
 
   const addTag = () => {
     if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
       setFormData(prev => ({
         ...prev,
         tags: [...prev.tags, tagInput.trim()]
-      }))
-      setTagInput('')
+      }));
+      setTagInput('');
     }
-  }
+  };
 
   const removeTag = (tagToRemove: string) => {
     setFormData(prev => ({
       ...prev,
       tags: prev.tags.filter(tag => tag !== tagToRemove)
-    }))
-  }
+    }));
+  };
 
   const handleTagInputKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      e.preventDefault()
-      addTag()
+      e.preventDefault();
+      addTag();
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -256,5 +256,5 @@ export function CreateProjectModal({ currentUser, teams, onClose, onCreateProjec
         </form>
       </div>
     </div>
-  )
+  );
 }

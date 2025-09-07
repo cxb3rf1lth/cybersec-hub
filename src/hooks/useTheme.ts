@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
+import { useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
 
 export type ThemeColor = 'red' | 'purple' | 'blue' | 'green'
 
@@ -70,29 +70,29 @@ export const THEME_CONFIGS: Record<ThemeColor, ThemeConfig> = {
       ring: 'oklch(0.75 0.26 145)'
     }
   }
-}
+};
 
 export function useTheme() {
-  const [currentTheme, setCurrentTheme] = useKVWithFallback<ThemeColor>('theme-color', 'red')
+  const [currentTheme, setCurrentTheme] = useKVWithFallback<ThemeColor>('theme-color', 'red');
 
   useEffect(() => {
-    const theme = THEME_CONFIGS[currentTheme]
-    const root = document.documentElement
+    const theme = THEME_CONFIGS[currentTheme];
+    const root = document.documentElement;
 
     // Apply theme colors to CSS variables
     Object.entries(theme.colors).forEach(([key, value]) => {
-      const cssVar = key.replace(/([A-Z])/g, '-$1').toLowerCase()
-      root.style.setProperty(`--${cssVar}`, value)
-    })
-  }, [currentTheme])
+      const cssVar = key.replace(/([A-Z])/g, '-$1').toLowerCase();
+      root.style.setProperty(`--${cssVar}`, value);
+    });
+  }, [currentTheme]);
 
   const changeTheme = (theme: ThemeColor) => {
-    setCurrentTheme(theme)
-  }
+    setCurrentTheme(theme);
+  };
 
   return {
     currentTheme,
     changeTheme,
     availableThemes: Object.values(THEME_CONFIGS)
-  }
+  };
 }

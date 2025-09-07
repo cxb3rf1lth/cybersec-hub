@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
-import { Plus, Search, Star, GitFork, Eye, Lock, Globe } from '@phosphor-icons/react'
-import { User, Repository } from '@/types/user'
-import { toast } from 'sonner'
+import { useState, useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Plus, Search, Star, GitFork, Eye, Lock, Globe } from '@phosphor-icons/react';
+import { User, Repository } from '@/types/user';
+import { toast } from 'sonner';
 
 interface RepositoryListProps {
   currentUser: User
@@ -19,10 +19,10 @@ interface RepositoryListProps {
 }
 
 export function RepositoryList({ currentUser, onRepositorySelect }: RepositoryListProps) {
-  const [repositories, setRepositories] = useKVWithFallback<Repository[]>('repositories', [])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [showCreateDialog, setShowCreateDialog] = useState(false)
-  const [filterType, setFilterType] = useState<'all' | 'owned' | 'starred' | 'forked'>('all')
+  const [repositories, setRepositories] = useKVWithFallback<Repository[]>('repositories', []);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [filterType, setFilterType] = useState<'all' | 'owned' | 'starred' | 'forked'>('all');
 
   // Form state for creating new repository
   const [newRepo, setNewRepo] = useState({
@@ -31,14 +31,14 @@ export function RepositoryList({ currentUser, onRepositorySelect }: RepositoryLi
     language: 'JavaScript',
     isPrivate: false,
     tags: ''
-  })
+  });
 
   useEffect(() => {
     // Initialize with sample repositories if none exist
     if (repositories.length === 0) {
-      initializeSampleRepositories()
+      initializeSampleRepositories();
     }
-  }, [])
+  }, []);
 
   const initializeSampleRepositories = () => {
     const sampleRepos: Repository[] = [
@@ -231,30 +231,30 @@ export function RepositoryList({ currentUser, onRepositorySelect }: RepositoryLi
         cloneUrl: `https://github.com/${currentUser.username}/cybersec-toolkit.git`,
         defaultBranch: 'main'
       }
-    ]
-    setRepositories(sampleRepos)
-  }
+    ];
+    setRepositories(sampleRepos);
+  };
 
   const filteredRepositories = repositories.filter(repo => {
     const matchesSearch = repo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         repo.description.toLowerCase().includes(searchQuery.toLowerCase())
+                         repo.description.toLowerCase().includes(searchQuery.toLowerCase());
     
     switch (filterType) {
       case 'owned':
-        return matchesSearch && repo.ownerId === currentUser.id
+        return matchesSearch && repo.ownerId === currentUser.id;
       case 'starred':
-        return matchesSearch && repo.stars.includes(currentUser.id)
+        return matchesSearch && repo.stars.includes(currentUser.id);
       case 'forked':
-        return matchesSearch && repo.forks.includes(currentUser.id)
+        return matchesSearch && repo.forks.includes(currentUser.id);
       default:
-        return matchesSearch
+        return matchesSearch;
     }
-  })
+  });
 
   const handleCreateRepository = () => {
     if (!newRepo.name.trim()) {
-      toast.error('Repository name is required')
-      return
+      toast.error('Repository name is required');
+      return;
     }
 
     const repository: Repository = {
@@ -290,13 +290,13 @@ export function RepositoryList({ currentUser, onRepositorySelect }: RepositoryLi
       updatedAt: new Date().toISOString(),
       cloneUrl: `https://github.com/${currentUser.username}/${newRepo.name}.git`,
       defaultBranch: 'main'
-    }
+    };
 
-    setRepositories(prev => [repository, ...prev])
-    setShowCreateDialog(false)
-    setNewRepo({ name: '', description: '', language: 'JavaScript', isPrivate: false, tags: '' })
-    toast.success('Repository created successfully')
-  }
+    setRepositories(prev => [repository, ...prev]);
+    setShowCreateDialog(false);
+    setNewRepo({ name: '', description: '', language: 'JavaScript', isPrivate: false, tags: '' });
+    toast.success('Repository created successfully');
+  };
 
   return (
     <div className="h-full flex flex-col">
@@ -467,5 +467,5 @@ export function RepositoryList({ currentUser, onRepositorySelect }: RepositoryLi
         </div>
       </div>
     </div>
-  )
+  );
 }

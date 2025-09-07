@@ -1,16 +1,16 @@
-import { useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { TeamInvitation } from '@/types/teams'
-import { User } from '@/types/user'
+import { useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { TeamInvitation } from '@/types/teams';
+import { User } from '@/types/user';
 
 export function useUserInvitations(currentUser: User | null) {
-  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
+  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', []);
 
   useEffect(() => {
-    if (!currentUser) return
+    if (!currentUser) {return;}
 
     // Check if this user already has invitations
-    const userInvitations = invitations.filter(inv => inv.targetUserId === currentUser.id)
+    const userInvitations = invitations.filter(inv => inv.targetUserId === currentUser.id);
     
     // If no invitations exist for this user, create some sample ones
     if (userInvitations.length === 0) {
@@ -43,7 +43,7 @@ export function useUserInvitations(currentUser: User | null) {
           sentAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
           expiresAt: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toISOString() // 6 days from now
         }
-      ]
+      ];
 
       // Only add invitations if the user has appropriate specializations
       const filteredInvitations = sampleInvitations.filter(invitation => {
@@ -51,24 +51,24 @@ export function useUserInvitations(currentUser: User | null) {
         if (invitation.teamId === 'cyber-hawks') {
           return currentUser.specializations.some(spec => 
             ['Penetration Testing', 'Red Team', 'Ethical Hacking', 'Bug Bounty'].includes(spec)
-          )
+          );
         }
         
         // Add blue team invitation if user has relevant specializations
         if (invitation.teamId === 'defense-matrix') {
           return currentUser.specializations.some(spec => 
             ['Blue Team', 'Incident Response', 'Threat Hunting', 'Security Research'].includes(spec)
-          )
+          );
         }
         
-        return false
-      })
+        return false;
+      });
 
       if (filteredInvitations.length > 0) {
-        setInvitations(current => [...current, ...filteredInvitations])
+        setInvitations(current => [...current, ...filteredInvitations]);
       }
     }
-  }, [currentUser, invitations, setInvitations])
+  }, [currentUser, invitations, setInvitations]);
 
-  return { invitations }
+  return { invitations };
 }

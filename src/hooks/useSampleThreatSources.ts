@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { ThreatSource, SourceStats } from '@/types/threat-sources'
+import { useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { ThreatSource, SourceStats } from '@/types/threat-sources';
 
 // Initialize with sample threat intelligence sources for demonstration
 const SAMPLE_SOURCES: ThreatSource[] = [
@@ -149,7 +149,7 @@ const SAMPLE_SOURCES: ThreatSource[] = [
       excludeKeywords: ['closed', 'private']
     }
   }
-]
+];
 
 const SAMPLE_STATS: SourceStats[] = [
   {
@@ -208,25 +208,25 @@ const SAMPLE_STATS: SourceStats[] = [
     itemsThisWeek: 89,
     itemsThisMonth: 567
   }
-]
+];
 
 export function useSampleThreatSources() {
-  const [sources, setSources] = useKVWithFallback<ThreatSource[]>('threat-sources', [])
-  const [sourceStats, setSourceStats] = useKVWithFallback<SourceStats[]>('source-stats', [])
+  const [sources, setSources] = useKVWithFallback<ThreatSource[]>('threat-sources', []);
+  const [sourceStats, setSourceStats] = useKVWithFallback<SourceStats[]>('source-stats', []);
 
   useEffect(() => {
     // Initialize with sample sources if none exist
     if (sources.length === 0) {
-      setSources(SAMPLE_SOURCES)
+      setSources(SAMPLE_SOURCES);
     }
-  }, [sources.length, setSources])
+  }, [sources.length, setSources]);
 
   useEffect(() => {
     // Initialize with sample stats if none exist
     if (sourceStats.length === 0) {
-      setSourceStats(SAMPLE_STATS)
+      setSourceStats(SAMPLE_STATS);
     }
-  }, [sourceStats.length, setSourceStats])
+  }, [sourceStats.length, setSourceStats]);
 
-  return { initialized: sources.length > 0 && sourceStats.length > 0 }
+  return { initialized: sources.length > 0 && sourceStats.length > 0 };
 }

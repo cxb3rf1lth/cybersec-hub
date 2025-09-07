@@ -1,23 +1,23 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
 import { 
   Dialog, 
   DialogContent, 
   DialogHeader, 
   DialogTitle 
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
-import { Badge } from '@/components/ui/badge'
-import { Slider } from '@/components/ui/slider'
-import { Team, User, TeamType, TeamMember } from '@/types'
-import { useSampleTeamData } from '@/hooks/useSampleTeamData'
-import { X } from '@phosphor-icons/react'
-import { toast } from 'sonner'
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
+import { Slider } from '@/components/ui/slider';
+import { Team, User, TeamType, TeamMember } from '@/types';
+import { useSampleTeamData } from '@/hooks/useSampleTeamData';
+import { X } from '@phosphor-icons/react';
+import { toast } from 'sonner';
 
 interface CreateTeamModalProps {
   currentUser: User
@@ -36,13 +36,13 @@ export function CreateTeamModal({ currentUser, onClose }: CreateTeamModalProps) 
     minExperience: 1,
     requiredCertifications: [] as string[],
     location: ''
-  })
-  const [specializationInput, setSpecializationInput] = useState('')
-  const [certificationInput, setCertificationInput] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  });
+  const [specializationInput, setSpecializationInput] = useState('');
+  const [certificationInput, setCertificationInput] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { teamRoles } = useSampleTeamData()
-  const [teams, setTeams] = useKVWithFallback<Team[]>('teams', [])
+  const { teamRoles } = useSampleTeamData();
+  const [teams, setTeams] = useKVWithFallback<Team[]>('teams', []);
 
   const teamTypes: { value: TeamType; label: string; description: string }[] = [
     { value: 'red-team', label: 'Red Team', description: 'Offensive security and penetration testing' },
@@ -54,32 +54,32 @@ export function CreateTeamModal({ currentUser, onClose }: CreateTeamModalProps) 
     { value: 'forensics', label: 'Digital Forensics', description: 'Investigation and evidence analysis' },
     { value: 'compliance', label: 'Compliance Team', description: 'Security compliance and auditing' },
     { value: 'education', label: 'Education Team', description: 'Training and knowledge sharing' }
-  ]
+  ];
 
   const commonSpecializations = [
     'penetration-testing', 'vulnerability-assessment', 'network-security', 'web-application-security',
     'mobile-security', 'cloud-security', 'incident-response', 'digital-forensics', 'malware-analysis',
     'reverse-engineering', 'social-engineering', 'cryptography', 'osint', 'threat-hunting',
     'security-monitoring', 'compliance-auditing', 'risk-assessment', 'security-training'
-  ]
+  ];
 
   const commonCertifications = [
     'CISSP', 'CISM', 'CISA', 'CEH', 'OSCP', 'GSEC', 'GCIH', 'GIAC', 'Security+', 'CySA+',
     'SANS', 'OWASP', 'PMP', 'ITIL', 'ISO 27001'
-  ]
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!formData.name.trim()) return
+    e.preventDefault();
+    if (!formData.name.trim()) {return;}
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     
     try {
-      const leaderRole = teamRoles.find(role => role.id === 'team-leader')
+      const leaderRole = teamRoles.find(role => role.id === 'team-leader');
       
       if (!leaderRole) {
-        toast.error('Team leader role not found. Please try again.')
-        return
+        toast.error('Team leader role not found. Please try again.');
+        return;
       }
       
       const currentUserMember: TeamMember = {
@@ -94,7 +94,7 @@ export function CreateTeamModal({ currentUser, onClose }: CreateTeamModalProps) 
         status: 'active',
         specializations: formData.specialization,
         contribution: 100
-      }
+      };
 
       const newTeam: Team = {
         id: `team-${Date.now()}`,
@@ -121,54 +121,54 @@ export function CreateTeamModal({ currentUser, onClose }: CreateTeamModalProps) 
         minExperience: formData.minExperience,
         requiredCertifications: formData.requiredCertifications,
         applicationRequired: formData.applicationRequired
-      }
+      };
 
-      setTeams(prev => [...prev, newTeam])
+      setTeams(prev => [...prev, newTeam]);
       
-      toast.success(`Team "${formData.name}" created successfully!`)
-      onClose()
+      toast.success(`Team "${formData.name}" created successfully!`);
+      onClose();
     } catch (error) {
-      toast.error('Failed to create team')
+      toast.error('Failed to create team');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const addSpecialization = (spec: string) => {
     if (spec.trim() && !formData.specialization.includes(spec.trim())) {
       setFormData(prev => ({
         ...prev,
         specialization: [...prev.specialization, spec.trim()]
-      }))
-      setSpecializationInput('')
+      }));
+      setSpecializationInput('');
     }
-  }
+  };
 
   const removeSpecialization = (specToRemove: string) => {
     setFormData(prev => ({
       ...prev,
       specialization: prev.specialization.filter(spec => spec !== specToRemove)
-    }))
-  }
+    }));
+  };
 
   const addCertification = (cert: string) => {
     if (cert.trim() && !formData.requiredCertifications.includes(cert.trim())) {
       setFormData(prev => ({
         ...prev,
         requiredCertifications: [...prev.requiredCertifications, cert.trim()]
-      }))
-      setCertificationInput('')
+      }));
+      setCertificationInput('');
     }
-  }
+  };
 
   const removeCertification = (certToRemove: string) => {
     setFormData(prev => ({
       ...prev,
       requiredCertifications: prev.requiredCertifications.filter(cert => cert !== certToRemove)
-    }))
-  }
+    }));
+  };
 
-  const selectedTeamType = teamTypes.find(type => type.value === formData.type)
+  const selectedTeamType = teamTypes.find(type => type.value === formData.type);
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -407,5 +407,5 @@ export function CreateTeamModal({ currentUser, onClose }: CreateTeamModalProps) 
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

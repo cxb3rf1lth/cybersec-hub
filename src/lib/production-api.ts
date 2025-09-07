@@ -3,7 +3,7 @@
  * Provides secure, validated connections to bug bounty platforms
  */
 
-import { toast } from 'sonner'
+import { toast } from 'sonner';
 
 export interface APIConnection {
   platform: string
@@ -102,23 +102,23 @@ export const PLATFORM_CONFIGS: Record<string, PlatformConfig> = {
     documentation: 'https://developers.virustotal.com/reference',
     rateLimit: { requests: 4, period: 'minute' }
   }
-}
+};
 
 class ProductionAPIManager {
-  private connections: Map<string, APIConnection> = new Map()
-  private rateLimiters: Map<string, { count: number; resetTime: number }> = new Map()
+  private connections: Map<string, APIConnection> = new Map();
+  private rateLimiters: Map<string, { count: number; resetTime: number }> = new Map();
 
   /**
    * Validate API key format for a platform
    */
   validateKeyFormat(platform: string, apiKey: string): boolean {
-    const config = PLATFORM_CONFIGS[platform]
+    const config = PLATFORM_CONFIGS[platform];
     if (!config) {
-      console.warn(`Unknown platform: ${platform}`)
-      return false
+      console.warn(`Unknown platform: ${platform}`);
+      return false;
     }
 
-    return config.keyFormat.test(apiKey)
+    return config.keyFormat.test(apiKey);
   }
 
   /**
@@ -130,44 +130,44 @@ class ProductionAPIManager {
     capabilities?: string[]
     userInfo?: any
   }> {
-    const config = PLATFORM_CONFIGS[platform]
+    const config = PLATFORM_CONFIGS[platform];
     if (!config) {
-      return { success: false, error: 'Platform not supported' }
+      return { success: false, error: 'Platform not supported' };
     }
 
     // Validate key format first
     if (!this.validateKeyFormat(platform, apiKey)) {
-      return { success: false, error: 'Invalid API key format' }
+      return { success: false, error: 'Invalid API key format' };
     }
 
     try {
-      const response = await this.makeAuthenticatedRequest(platform, apiKey, config.testEndpoint)
+      const response = await this.makeAuthenticatedRequest(platform, apiKey, config.testEndpoint);
       
       if (!response.ok) {
-        const errorText = await response.text()
+        const errorText = await response.text();
         return { 
           success: false, 
           error: `HTTP ${response.status}: ${response.statusText} - ${errorText.substring(0, 100)}` 
-        }
+        };
       }
 
-      const data = await response.json()
+      const data = await response.json();
       
       // Extract capabilities and user info based on platform
-      const capabilities = this.extractCapabilities(platform, data)
-      const userInfo = this.extractUserInfo(platform, data)
+      const capabilities = this.extractCapabilities(platform, data);
+      const userInfo = this.extractUserInfo(platform, data);
 
       return {
         success: true,
         capabilities,
         userInfo
-      }
+      };
     } catch (error) {
-      console.error(`API test failed for ${platform}:`, error)
+      console.error(`API test failed for ${platform}:`, error);
       return { 
         success: false, 
         error: error instanceof Error ? error.message : 'Connection failed' 
-      }
+      };
     }
   }
 
@@ -180,86 +180,86 @@ class ProductionAPIManager {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<Response> {
-    const config = PLATFORM_CONFIGS[platform]
-    const url = `${config.baseUrl}${endpoint}`
+    const config = PLATFORM_CONFIGS[platform];
+    const url = `${config.baseUrl}${endpoint}`;
 
     // Check rate limits
     if (!this.checkRateLimit(platform)) {
-      throw new Error('Rate limit exceeded')
+      throw new Error('Rate limit exceeded');
     }
 
     const headers: Record<string, string> = {
       'User-Agent': 'CyberConnect/1.0',
       'Accept': 'application/json',
       ...options.headers as Record<string, string>
-    }
+    };
 
     // Add authentication based on platform requirements
     switch (config.authType) {
       case 'api_key':
         if (platform === 'shodan') {
-          headers['X-API-Key'] = apiKey
+          headers['X-API-Key'] = apiKey;
         } else if (platform === 'virustotal') {
-          headers['apikey'] = apiKey
+          headers['apikey'] = apiKey;
         } else {
-          headers['Authorization'] = `Bearer ${apiKey}`
+          headers['Authorization'] = `Bearer ${apiKey}`;
         }
-        break
+        break;
       case 'oauth':
-        headers['Authorization'] = `Bearer ${apiKey}`
-        break
+        headers['Authorization'] = `Bearer ${apiKey}`;
+        break;
       case 'basic':
-        headers['Authorization'] = `Basic ${btoa(apiKey)}`
-        break
+        headers['Authorization'] = `Basic ${btoa(apiKey)}`;
+        break;
     }
 
     const response = await fetch(url, {
       ...options,
       headers,
       signal: AbortSignal.timeout(30000) // 30 second timeout
-    })
+    });
 
     // Update rate limit tracking
-    this.updateRateLimit(platform, response)
+    this.updateRateLimit(platform, response);
 
-    return response
+    return response;
   }
 
   /**
    * Extract platform capabilities from API response
    */
   private extractCapabilities(platform: string, data: any): string[] {
-    const capabilities: string[] = []
+    const capabilities: string[] = [];
 
     switch (platform) {
       case 'hackerone':
-        if (data.data) capabilities.push('programs')
-        capabilities.push('reports', 'bounties')
-        break
+        if (data.data) {capabilities.push('programs');}
+        capabilities.push('reports', 'bounties');
+        break;
       case 'bugcrowd':
-        if (data.programs) capabilities.push('programs')
-        capabilities.push('submissions', 'earnings')
-        break
+        if (data.programs) {capabilities.push('programs');}
+        capabilities.push('submissions', 'earnings');
+        break;
       case 'intigriti':
-        if (Array.isArray(data)) capabilities.push('programs')
-        capabilities.push('submissions')
-        break
+        if (Array.isArray(data)) {capabilities.push('programs');}
+        capabilities.push('submissions');
+        break;
       case 'yeswehack':
-        if (data.results) capabilities.push('programs')
-        capabilities.push('submissions')
-        break
+        if (data.results) {capabilities.push('programs');}
+        capabilities.push('submissions');
+        break;
       case 'shodan':
-        capabilities.push('search', 'host-info', 'exploits')
-        break
+        capabilities.push('search', 'host-info', 'exploits');
+        break;
       case 'projectdiscovery':
-        capabilities.push('nuclei-templates', 'scans')
-        break
+        capabilities.push('nuclei-templates', 'scans');
+        break;
       case 'virustotal':
-        capabilities.push('file-analysis', 'url-scan')
-        break
+        capabilities.push('file-analysis', 'url-scan');
+        break;
     }
 
-    return capabilities
+    return capabilities;
   }
 
   /**
@@ -271,20 +271,20 @@ class ProductionAPIManager {
         return {
           reputation: data.data?.[0]?.attributes?.reputation,
           signal: data.data?.[0]?.attributes?.signal
-        }
+        };
       case 'bugcrowd':
         return {
           researcher_id: data.researcher_id,
           stats: data.stats
-        }
+        };
       case 'shodan':
         return {
           plan: data.plan,
           https: data.https,
           unlocked: data.unlocked
-        }
+        };
       default:
-        return data
+        return data;
     }
   }
 
@@ -292,46 +292,46 @@ class ProductionAPIManager {
    * Check if rate limit allows another request
    */
   private checkRateLimit(platform: string): boolean {
-    const config = PLATFORM_CONFIGS[platform]
-    if (!config) return false
+    const config = PLATFORM_CONFIGS[platform];
+    if (!config) {return false;}
 
-    const limiter = this.rateLimiters.get(platform)
-    const now = Date.now()
+    const limiter = this.rateLimiters.get(platform);
+    const now = Date.now();
 
     if (!limiter) {
       // Initialize rate limiter
-      this.rateLimiters.set(platform, { count: 1, resetTime: now + this.getPeriodMs(config.rateLimit.period) })
-      return true
+      this.rateLimiters.set(platform, { count: 1, resetTime: now + this.getPeriodMs(config.rateLimit.period) });
+      return true;
     }
 
     // Reset if period has passed
     if (now > limiter.resetTime) {
-      limiter.count = 1
-      limiter.resetTime = now + this.getPeriodMs(config.rateLimit.period)
-      return true
+      limiter.count = 1;
+      limiter.resetTime = now + this.getPeriodMs(config.rateLimit.period);
+      return true;
     }
 
     // Check if under limit
     if (limiter.count < config.rateLimit.requests) {
-      limiter.count++
-      return true
+      limiter.count++;
+      return true;
     }
 
-    return false
+    return false;
   }
 
   /**
    * Update rate limit info from response headers
    */
   private updateRateLimit(platform: string, response: Response) {
-    const remaining = response.headers.get('x-ratelimit-remaining')
-    const reset = response.headers.get('x-ratelimit-reset')
+    const remaining = response.headers.get('x-ratelimit-remaining');
+    const reset = response.headers.get('x-ratelimit-reset');
 
     if (remaining && reset) {
-      const limiter = this.rateLimiters.get(platform)
+      const limiter = this.rateLimiters.get(platform);
       if (limiter) {
-        limiter.count = parseInt(remaining)
-        limiter.resetTime = parseInt(reset) * 1000
+        limiter.count = parseInt(remaining);
+        limiter.resetTime = parseInt(reset) * 1000;
       }
     }
   }
@@ -341,9 +341,9 @@ class ProductionAPIManager {
    */
   private getPeriodMs(period: 'minute' | 'hour' | 'day'): number {
     switch (period) {
-      case 'minute': return 60 * 1000
-      case 'hour': return 60 * 60 * 1000
-      case 'day': return 24 * 60 * 60 * 1000
+      case 'minute': return 60 * 1000;
+      case 'hour': return 60 * 60 * 1000;
+      case 'day': return 24 * 60 * 60 * 1000;
     }
   }
 
@@ -351,10 +351,10 @@ class ProductionAPIManager {
    * Connect to a platform with validated API key
    */
   async connectPlatform(platform: string, apiKey: string): Promise<APIConnection> {
-    const testResult = await this.testConnection(platform, apiKey)
+    const testResult = await this.testConnection(platform, apiKey);
     
     if (!testResult.success) {
-      throw new Error(testResult.error || 'Connection failed')
+      throw new Error(testResult.error || 'Connection failed');
     }
 
     const connection: APIConnection = {
@@ -368,81 +368,81 @@ class ProductionAPIManager {
         reset: Date.now() + this.getPeriodMs(PLATFORM_CONFIGS[platform]?.rateLimit.period || 'hour'),
         limit: PLATFORM_CONFIGS[platform]?.rateLimit.requests || 100
       }
-    }
+    };
 
-    this.connections.set(platform, connection)
+    this.connections.set(platform, connection);
     
     // Store in KV for persistence
-    await spark.kv.set(`api_connection_${platform}`, connection)
+    await spark.kv.set(`api_connection_${platform}`, connection);
     
-    toast.success(`Successfully connected to ${PLATFORM_CONFIGS[platform]?.name || platform}`)
-    return connection
+    toast.success(`Successfully connected to ${PLATFORM_CONFIGS[platform]?.name || platform}`);
+    return connection;
   }
 
   /**
    * Disconnect from a platform
    */
   async disconnectPlatform(platform: string): Promise<void> {
-    this.connections.delete(platform)
-    await spark.kv.delete(`api_connection_${platform}`)
-    toast.success(`Disconnected from ${PLATFORM_CONFIGS[platform]?.name || platform}`)
+    this.connections.delete(platform);
+    await spark.kv.delete(`api_connection_${platform}`);
+    toast.success(`Disconnected from ${PLATFORM_CONFIGS[platform]?.name || platform}`);
   }
 
   /**
    * Get connection status for a platform
    */
   getConnection(platform: string): APIConnection | null {
-    return this.connections.get(platform) || null
+    return this.connections.get(platform) || null;
   }
 
   /**
    * Get all active connections
    */
   getAllConnections(): APIConnection[] {
-    return Array.from(this.connections.values())
+    return Array.from(this.connections.values());
   }
 
   /**
    * Make API request using stored connection
    */
   async makeRequest(platform: string, endpoint: string, options: RequestInit = {}): Promise<any> {
-    const connection = this.connections.get(platform)
+    const connection = this.connections.get(platform);
     if (!connection || connection.status !== 'connected') {
-      throw new Error(`Not connected to ${platform}`)
+      throw new Error(`Not connected to ${platform}`);
     }
 
-    const decryptedKey = this.decryptKey(connection.apiKey)
-    const response = await this.makeAuthenticatedRequest(platform, decryptedKey, endpoint, options)
+    const decryptedKey = this.decryptKey(connection.apiKey);
+    const response = await this.makeAuthenticatedRequest(platform, decryptedKey, endpoint, options);
     
     if (!response.ok) {
-      throw new Error(`API request failed: ${response.status} ${response.statusText}`)
+      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
     }
 
-    return await response.json()
+    return await response.json();
   }
 
   /**
    * Fetch bug bounty programs from connected platforms
    */
   async fetchPrograms(): Promise<any[]> {
-    const programs: any[] = []
+    const programs: any[] = [];
     
     for (const [platform, connection] of this.connections) {
-      if (connection.status !== 'connected') continue
+      if (connection.status !== 'connected') {continue;}
 
       try {
-        const data = await this.makeRequest(platform, PLATFORM_CONFIGS[platform].testEndpoint)
-        const platformPrograms = this.normalizePrograms(platform, data)
-        programs.push(...platformPrograms)
+        const data = await this.makeRequest(platform, PLATFORM_CONFIGS[platform].testEndpoint);
+        const platformPrograms = this.normalizePrograms(platform, data);
+        programs.push(...platformPrograms);
       } catch (error) {
-        console.error(`Failed to fetch programs from ${platform}:`, error)
+        console.error(`Failed to fetch programs from ${platform}:`, error);
         // Update connection status
-        connection.status = 'error'
-        await spark.kv.set(`api_connection_${platform}`, connection)
+        connection.status = 'error';
+        await spark.kv.set(`api_connection_${platform}`, connection);
       }
     }
 
-    return programs
+    return programs;
   }
 
   /**
@@ -459,7 +459,7 @@ class ProductionAPIManager {
           url: `https://hackerone.com/${program.attributes.handle}`,
           bounty: program.attributes.offers_bounties,
           status: program.attributes.state
-        })) || []
+        })) || [];
 
       case 'bugcrowd':
         return data.programs?.map((program: any) => ({
@@ -470,7 +470,7 @@ class ProductionAPIManager {
           url: `https://bugcrowd.com/${program.code}`,
           bounty: !!program.max_payout,
           status: program.state
-        })) || []
+        })) || [];
 
       case 'intigriti':
         return data.map((program: any) => ({
@@ -481,7 +481,7 @@ class ProductionAPIManager {
           url: `https://app.intigriti.com/programs/${program.companyHandle}/${program.handle}`,
           bounty: !!program.maxBounty,
           status: program.status
-        }))
+        }));
 
       case 'yeswehack':
         return data.results?.map((program: any) => ({
@@ -492,10 +492,10 @@ class ProductionAPIManager {
           url: `https://yeswehack.com/programs/${program.slug}`,
           bounty: program.bounty,
           status: program.public ? 'public' : 'private'
-        })) || []
+        })) || [];
 
       default:
-        return []
+        return [];
     }
   }
 
@@ -505,12 +505,12 @@ class ProductionAPIManager {
   async initialize(): Promise<void> {
     for (const platform of Object.keys(PLATFORM_CONFIGS)) {
       try {
-        const stored = await spark.kv.get<APIConnection>(`api_connection_${platform}`)
+        const stored = await spark.kv.get<APIConnection>(`api_connection_${platform}`);
         if (stored) {
-          this.connections.set(platform, stored)
+          this.connections.set(platform, stored);
         }
       } catch (error) {
-        console.error(`Failed to load connection for ${platform}:`, error)
+        console.error(`Failed to load connection for ${platform}:`, error);
       }
     }
   }
@@ -519,39 +519,39 @@ class ProductionAPIManager {
    * Simple encryption for API keys (in production, use proper encryption)
    */
   private encryptKey(key: string): string {
-    return btoa(key).split('').reverse().join('')
+    return btoa(key).split('').reverse().join('');
   }
 
   /**
    * Simple decryption for API keys
    */
   private decryptKey(encryptedKey: string): string {
-    return atob(encryptedKey.split('').reverse().join(''))
+    return atob(encryptedKey.split('').reverse().join(''));
   }
 
   /**
    * Get remaining rate limit for platform
    */
   getRateLimit(platform: string): { remaining: number; reset: number } | null {
-    const limiter = this.rateLimiters.get(platform)
-    const config = PLATFORM_CONFIGS[platform]
+    const limiter = this.rateLimiters.get(platform);
+    const config = PLATFORM_CONFIGS[platform];
     
-    if (!limiter || !config) return null
+    if (!limiter || !config) {return null;}
 
-    const now = Date.now()
+    const now = Date.now();
     if (now > limiter.resetTime) {
-      return { remaining: config.rateLimit.requests, reset: limiter.resetTime }
+      return { remaining: config.rateLimit.requests, reset: limiter.resetTime };
     }
 
-    return { remaining: Math.max(0, config.rateLimit.requests - limiter.count), reset: limiter.resetTime }
+    return { remaining: Math.max(0, config.rateLimit.requests - limiter.count), reset: limiter.resetTime };
   }
 }
 
 // Export singleton instance
-export const apiManager = new ProductionAPIManager()
+export const apiManager = new ProductionAPIManager();
 
 // Initialize on module load
-apiManager.initialize().catch(console.error)
+apiManager.initialize().catch(console.error);
 
 // Export for use in React components
 export function useProductionAPI() {
@@ -565,5 +565,5 @@ export function useProductionAPI() {
     fetchPrograms: apiManager.fetchPrograms.bind(apiManager),
     getRateLimit: apiManager.getRateLimit.bind(apiManager),
     validateKeyFormat: apiManager.validateKeyFormat.bind(apiManager)
-  }
+  };
 }

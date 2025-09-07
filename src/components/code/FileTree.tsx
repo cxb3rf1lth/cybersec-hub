@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { File, Folder, FolderOpen, GitBranch, Calendar, User as UserIcon } from '@phosphor-icons/react'
-import { Repository, User, RepositoryFile } from '@/types/user'
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { File, Folder, FolderOpen, GitBranch, Calendar, User as UserIcon } from '@phosphor-icons/react';
+import { Repository, User, RepositoryFile } from '@/types/user';
 
 interface FileTreeProps {
   repository: Repository
@@ -14,29 +14,29 @@ interface FileTreeProps {
 }
 
 export function FileTree({ repository, currentUser, onFileSelect, selectedBranch, onBranchChange }: FileTreeProps) {
-  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(['/']))
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(['/']));
 
   const toggleFolder = (path: string) => {
     setExpandedFolders(prev => {
-      const newSet = new Set(prev)
+      const newSet = new Set(prev);
       if (newSet.has(path)) {
-        newSet.delete(path)
+        newSet.delete(path);
       } else {
-        newSet.add(path)
+        newSet.add(path);
       }
-      return newSet
-    })
-  }
+      return newSet;
+    });
+  };
 
   const getFileIcon = (file: RepositoryFile) => {
     if (file.isDirectory) {
-      return expandedFolders.has(file.path) ? FolderOpen : Folder
+      return expandedFolders.has(file.path) ? FolderOpen : Folder;
     }
-    return File
-  }
+    return File;
+  };
 
   const getLanguageFromFileName = (fileName: string) => {
-    const ext = fileName.split('.').pop()?.toLowerCase()
+    const ext = fileName.split('.').pop()?.toLowerCase();
     const langMap: { [key: string]: string } = {
       'js': 'JavaScript',
       'ts': 'TypeScript',
@@ -51,33 +51,33 @@ export function FileTree({ repository, currentUser, onFileSelect, selectedBranch
       'json': 'JSON',
       'yaml': 'YAML',
       'yml': 'YAML'
-    }
-    return langMap[ext || ''] || 'Text'
-  }
+    };
+    return langMap[ext || ''] || 'Text';
+  };
 
   const formatFileSize = (bytes: number) => {
-    const sizes = ['B', 'KB', 'MB', 'GB']
-    if (bytes === 0) return '0 B'
-    const i = Math.floor(Math.log(bytes) / Math.log(1024))
-    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i]
-  }
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    if (bytes === 0) {return '0 B';}
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+  };
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffTime = Math.abs(now.getTime() - date.getTime())
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    if (diffDays === 1) return 'yesterday'
-    if (diffDays < 7) return `${diffDays} days ago`
-    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`
-    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`
-    return `${Math.floor(diffDays / 365)} years ago`
-  }
+    if (diffDays === 1) {return 'yesterday';}
+    if (diffDays < 7) {return `${diffDays} days ago`;}
+    if (diffDays < 30) {return `${Math.floor(diffDays / 7)} weeks ago`;}
+    if (diffDays < 365) {return `${Math.floor(diffDays / 30)} months ago`;}
+    return `${Math.floor(diffDays / 365)} years ago`;
+  };
 
   const renderFileTreeItem = (file: RepositoryFile, depth: number = 0) => {
-    const Icon = getFileIcon(file)
-    const isExpanded = expandedFolders.has(file.path)
+    const Icon = getFileIcon(file);
+    const isExpanded = expandedFolders.has(file.path);
 
     return (
       <div key={file.id}>
@@ -88,9 +88,9 @@ export function FileTree({ repository, currentUser, onFileSelect, selectedBranch
           style={{ paddingLeft: `${depth * 20 + 8}px` }}
           onClick={() => {
             if (file.isDirectory) {
-              toggleFolder(file.path)
+              toggleFolder(file.path);
             } else {
-              onFileSelect(file.path)
+              onFileSelect(file.path);
             }
           }}
         >
@@ -115,31 +115,31 @@ export function FileTree({ repository, currentUser, onFileSelect, selectedBranch
           </div>
         )}
       </div>
-    )
-  }
+    );
+  };
 
   // Build file tree structure for display
   const buildFileTree = (): RepositoryFile[] => {
-    const tree: RepositoryFile[] = []
-    const folders: { [key: string]: RepositoryFile } = {}
+    const tree: RepositoryFile[] = [];
+    const folders: { [key: string]: RepositoryFile } = {};
 
     // First, create all directory entries
     repository.files.forEach(file => {
-      const pathParts = file.path.split('/').filter(Boolean)
-      let currentPath = ''
+      const pathParts = file.path.split('/').filter(Boolean);
+      let currentPath = '';
       
       pathParts.forEach((part, index) => {
-        const parentPath = currentPath
-        currentPath = currentPath ? `${currentPath}/${part}` : `/${part}`
+        const parentPath = currentPath;
+        currentPath = currentPath ? `${currentPath}/${part}` : `/${part}`;
         
         if (index === pathParts.length - 1 && !file.isDirectory) {
           // This is a file
-          const parentFolder = parentPath ? folders[parentPath] : null
+          const parentFolder = parentPath ? folders[parentPath] : null;
           if (parentFolder) {
-            if (!parentFolder.children) parentFolder.children = []
-            parentFolder.children.push(file)
+            if (!parentFolder.children) {parentFolder.children = [];}
+            parentFolder.children.push(file);
           } else {
-            tree.push(file)
+            tree.push(file);
           }
         } else if (!folders[currentPath]) {
           // This is a directory
@@ -154,41 +154,41 @@ export function FileTree({ repository, currentUser, onFileSelect, selectedBranch
             lastCommit: '',
             isDirectory: true,
             children: []
-          }
+          };
           
-          folders[currentPath] = dirFile
+          folders[currentPath] = dirFile;
           
-          const parentFolder = parentPath ? folders[parentPath] : null
+          const parentFolder = parentPath ? folders[parentPath] : null;
           if (parentFolder) {
-            if (!parentFolder.children) parentFolder.children = []
-            parentFolder.children.push(dirFile)
+            if (!parentFolder.children) {parentFolder.children = [];}
+            parentFolder.children.push(dirFile);
           } else {
-            tree.push(dirFile)
+            tree.push(dirFile);
           }
         }
-      })
-    })
+      });
+    });
 
     // Sort directories first, then files
     const sortItems = (items: RepositoryFile[]) => {
       return items.sort((a, b) => {
-        if (a.isDirectory && !b.isDirectory) return -1
-        if (!a.isDirectory && b.isDirectory) return 1
-        return a.name.localeCompare(b.name)
-      })
-    }
+        if (a.isDirectory && !b.isDirectory) {return -1;}
+        if (!a.isDirectory && b.isDirectory) {return 1;}
+        return a.name.localeCompare(b.name);
+      });
+    };
 
     const sortTree = (items: RepositoryFile[]): RepositoryFile[] => {
       return sortItems(items).map(item => ({
         ...item,
         children: item.children ? sortTree(item.children) : undefined
-      }))
-    }
+      }));
+    };
 
-    return sortTree(tree)
-  }
+    return sortTree(tree);
+  };
 
-  const fileTree = buildFileTree()
+  const fileTree = buildFileTree();
 
   return (
     <div className="p-6 h-full flex flex-col">
@@ -266,5 +266,5 @@ export function FileTree({ repository, currentUser, onFileSelect, selectedBranch
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

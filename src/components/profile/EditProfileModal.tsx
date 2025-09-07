@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ApiKeySettings } from '@/components/settings/ApiKeySettings'
-import { ApiIntegrationTester } from '@/components/settings/ApiIntegrationTester'
-import { ThemeSelector } from '@/components/profile/ThemeSelector'
-import { User, Specialization } from '@/types/user'
-import { Key, User as UserIcon, Palette } from '@phosphor-icons/react'
+import { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ApiKeySettings } from '@/components/settings/ApiKeySettings';
+import { ApiIntegrationTester } from '@/components/settings/ApiIntegrationTester';
+import { ThemeSelector } from '@/components/profile/ThemeSelector';
+import { User, Specialization } from '@/types/user';
+import { Key, User as UserIcon, Palette } from '@phosphor-icons/react';
 
 interface EditProfileModalProps {
   user: User
@@ -22,7 +22,7 @@ const SPECIALIZATIONS: Specialization[] = [
   'Red Team', 'Blue Team', 'Bug Bounty', 'Penetration Testing',
   'Ethical Hacking', 'Malware Analysis', 'Incident Response',
   'Security Research', 'OSINT', 'Reverse Engineering'
-]
+];
 
 export function EditProfileModal({ user, onClose, onSave }: EditProfileModalProps) {
   const [formData, setFormData] = useState({
@@ -30,8 +30,8 @@ export function EditProfileModal({ user, onClose, onSave }: EditProfileModalProp
     email: user.email,
     bio: user.bio || '',
     specializations: [...user.specializations]
-  })
-  const [showApiKeySettings, setShowApiKeySettings] = useState(false)
+  });
+  const [showApiKeySettings, setShowApiKeySettings] = useState(false);
 
   const handleSpecializationToggle = (spec: Specialization) => {
     setFormData(prev => ({
@@ -39,11 +39,11 @@ export function EditProfileModal({ user, onClose, onSave }: EditProfileModalProp
       specializations: prev.specializations.includes(spec)
         ? prev.specializations.filter(s => s !== spec)
         : [...prev.specializations, spec]
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     
     const updatedUser: User = {
       ...user,
@@ -51,10 +51,10 @@ export function EditProfileModal({ user, onClose, onSave }: EditProfileModalProp
       email: formData.email,
       bio: formData.bio,
       specializations: formData.specializations
-    }
+    };
 
-    onSave(updatedUser)
-  }
+    onSave(updatedUser);
+  };
 
   return (
     <>
@@ -183,5 +183,5 @@ export function EditProfileModal({ user, onClose, onSave }: EditProfileModalProp
         onOpenChange={setShowApiKeySettings} 
       />
     </>
-  )
+  );
 }

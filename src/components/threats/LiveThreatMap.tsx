@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Globe, Activity, Shield, Target, Filter, AlertTriangle, TrendingUp, MapPin } from '@phosphor-icons/react'
+import { useState, useEffect, useMemo } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Globe, Activity, Shield, Target, Filter, AlertTriangle, TrendingUp, MapPin } from '@phosphor-icons/react';
 
 interface ThreatAlert {
   id: string
@@ -34,17 +34,17 @@ interface CountryStats {
 }
 
 export function LiveThreatMap() {
-  const [threats, setThreats] = useKVWithFallback<ThreatAlert[]>('live-threats', [])
-  const [selectedThreat, setSelectedThreat] = useState<ThreatAlert | null>(null)
-  const [filterType, setFilterType] = useState<string>('all')
-  const [filterSeverity, setFilterSeverity] = useState<string>('all')
-  const [autoUpdate, setAutoUpdate] = useState(true)
+  const [threats, setThreats] = useKVWithFallback<ThreatAlert[]>('live-threats', []);
+  const [selectedThreat, setSelectedThreat] = useState<ThreatAlert | null>(null);
+  const [filterType, setFilterType] = useState<string>('all');
+  const [filterSeverity, setFilterSeverity] = useState<string>('all');
+  const [autoUpdate, setAutoUpdate] = useState(true);
 
   // Generate realistic threat data
   useEffect(() => {
     const generateThreat = (): ThreatAlert => {
-      const types: ThreatAlert['type'][] = ['malware', 'phishing', 'ddos', 'apt', 'vulnerability', 'breach']
-      const severities: ThreatAlert['severity'][] = ['low', 'medium', 'high', 'critical']
+      const types: ThreatAlert['type'][] = ['malware', 'phishing', 'ddos', 'apt', 'vulnerability', 'breach'];
+      const severities: ThreatAlert['severity'][] = ['low', 'medium', 'high', 'critical'];
       const countries = [
         { name: 'United States', lat: 39.8283, lng: -98.5795 },
         { name: 'China', lat: 35.8617, lng: 104.1954 },
@@ -56,11 +56,11 @@ export function LiveThreatMap() {
         { name: 'India', lat: 20.5937, lng: 78.9629 },
         { name: 'Brazil', lat: -14.2350, lng: -51.9253 },
         { name: 'Australia', lat: -25.2744, lng: 133.7751 }
-      ]
+      ];
       
-      const type = types[Math.floor(Math.random() * types.length)]
-      const severity = severities[Math.floor(Math.random() * severities.length)]
-      const location = countries[Math.floor(Math.random() * countries.length)]
+      const type = types[Math.floor(Math.random() * types.length)];
+      const severity = severities[Math.floor(Math.random() * severities.length)];
+      const location = countries[Math.floor(Math.random() * countries.length)];
       
       const threatTemplates = {
         malware: [
@@ -99,9 +99,9 @@ export function LiveThreatMap() {
           'Financial Records Exposed',
           'Healthcare System Breached'
         ]
-      }
+      };
 
-      const title = threatTemplates[type][Math.floor(Math.random() * threatTemplates[type].length)]
+      const title = threatTemplates[type][Math.floor(Math.random() * threatTemplates[type].length)];
       
       return {
         id: `threat-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -126,43 +126,43 @@ export function LiveThreatMap() {
               type === 'malware' ? ['malware', 'trojan', 'banking'] :
               type === 'phishing' ? ['phishing', 'social-engineering', 'credentials'] :
               [type, 'active', 'monitoring']
-      }
-    }
+      };
+    };
 
     // Initialize with some threats
     if (threats.length === 0) {
-      const initialThreats = Array.from({ length: 15 }, () => generateThreat())
-      setThreats(initialThreats)
+      const initialThreats = Array.from({ length: 15 }, () => generateThreat());
+      setThreats(initialThreats);
     }
 
     // Auto-generate new threats
     if (autoUpdate) {
       const interval = setInterval(() => {
         setThreats(current => {
-          const newThreat = generateThreat()
+          const newThreat = generateThreat();
           // Keep only last 50 threats
-          const updated = [newThreat, ...current].slice(0, 50)
-          return updated
-        })
-      }, 8000) // New threat every 8 seconds
+          const updated = [newThreat, ...current].slice(0, 50);
+          return updated;
+        });
+      }, 8000); // New threat every 8 seconds
 
-      return () => clearInterval(interval)
+      return () => clearInterval(interval);
     }
-  }, [threats.length, autoUpdate, setThreats])
+  }, [threats.length, autoUpdate, setThreats]);
 
   const filteredThreats = useMemo(() => {
     return threats.filter(threat => {
-      if (filterType !== 'all' && threat.type !== filterType) return false
-      if (filterSeverity !== 'all' && threat.severity !== filterSeverity) return false
-      return true
-    })
-  }, [threats, filterType, filterSeverity])
+      if (filterType !== 'all' && threat.type !== filterType) {return false;}
+      if (filterSeverity !== 'all' && threat.severity !== filterSeverity) {return false;}
+      return true;
+    });
+  }, [threats, filterType, filterSeverity]);
 
   const countryStats = useMemo(() => {
-    const stats = new Map<string, CountryStats>()
+    const stats = new Map<string, CountryStats>();
     
     filteredThreats.forEach(threat => {
-      const country = threat.location.country
+      const country = threat.location.country;
       if (!stats.has(country)) {
         stats.set(country, {
           country,
@@ -171,43 +171,43 @@ export function LiveThreatMap() {
           severity: 'low',
           lat: threat.location.lat,
           lng: threat.location.lng
-        })
+        });
       }
       
-      const stat = stats.get(country)!
-      stat.threats++
+      const stat = stats.get(country)!;
+      stat.threats++;
       
       // Update severity to highest found
-      const severityOrder = { low: 0, medium: 1, high: 2, critical: 3 }
+      const severityOrder = { low: 0, medium: 1, high: 2, critical: 3 };
       if (severityOrder[threat.severity] > severityOrder[stat.severity]) {
-        stat.severity = threat.severity
+        stat.severity = threat.severity;
       }
-    })
+    });
     
-    return Array.from(stats.values()).sort((a, b) => b.threats - a.threats)
-  }, [filteredThreats])
+    return Array.from(stats.values()).sort((a, b) => b.threats - a.threats);
+  }, [filteredThreats]);
 
   const getSeverityColor = (severity: ThreatAlert['severity']) => {
     switch (severity) {
-      case 'critical': return 'bg-red-600 text-white'
-      case 'high': return 'bg-red-500 text-white'
-      case 'medium': return 'bg-yellow-500 text-black'
-      case 'low': return 'bg-green-500 text-white'
-      default: return 'bg-gray-500 text-white'
+      case 'critical': return 'bg-red-600 text-white';
+      case 'high': return 'bg-red-500 text-white';
+      case 'medium': return 'bg-yellow-500 text-black';
+      case 'low': return 'bg-green-500 text-white';
+      default: return 'bg-gray-500 text-white';
     }
-  }
+  };
 
   const getTypeIcon = (type: ThreatAlert['type']) => {
     switch (type) {
-      case 'malware': return '🦠'
-      case 'phishing': return '🎣'
-      case 'ddos': return '💥'
-      case 'apt': return '🎯'
-      case 'vulnerability': return '🔓'
-      case 'breach': return '🚨'
-      default: return '⚠️'
+      case 'malware': return '🦠';
+      case 'phishing': return '🎣';
+      case 'ddos': return '💥';
+      case 'apt': return '🎯';
+      case 'vulnerability': return '🔓';
+      case 'breach': return '🚨';
+      default: return '⚠️';
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -474,5 +474,5 @@ export function LiveThreatMap() {
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -1,21 +1,21 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
-import { Separator } from '@/components/ui/separator'
-import { Plus, X, FileText, Settings, Code } from '@phosphor-icons/react'
-import { Template, TemplateFile } from '@/types/templates'
-import { User } from '@/types/user'
-import { CodeBlock } from '@/components/code/CodeBlock'
-import { toast } from 'sonner'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
+import { Plus, X, FileText, Settings, Code } from '@phosphor-icons/react';
+import { Template, TemplateFile } from '@/types/templates';
+import { User } from '@/types/user';
+import { CodeBlock } from '@/components/code/CodeBlock';
+import { toast } from 'sonner';
 
 interface CreateTemplateModalProps {
   currentUser: User
@@ -23,29 +23,29 @@ interface CreateTemplateModalProps {
 }
 
 export function CreateTemplateModal({ currentUser, onClose }: CreateTemplateModalProps) {
-  const [templates, setTemplates] = useKVWithFallback<Template[]>('templates', [])
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [category, setCategory] = useState<string>('')
-  const [difficulty, setDifficulty] = useState<string>('')
-  const [framework, setFramework] = useState<string>('')
-  const [license, setLicense] = useState('MIT')
-  const [isPublic, setIsPublic] = useState(true)
-  const [tags, setTags] = useState<string[]>([])
-  const [newTag, setNewTag] = useState('')
-  const [dependencies, setDependencies] = useState<string[]>([])
-  const [newDependency, setNewDependency] = useState('')
-  const [setupInstructions, setSetupInstructions] = useState('')
-  const [usageExample, setUsageExample] = useState('')
-  const [files, setFiles] = useState<TemplateFile[]>([])
+  const [templates, setTemplates] = useKVWithFallback<Template[]>('templates', []);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState<string>('');
+  const [difficulty, setDifficulty] = useState<string>('');
+  const [framework, setFramework] = useState<string>('');
+  const [license, setLicense] = useState('MIT');
+  const [isPublic, setIsPublic] = useState(true);
+  const [tags, setTags] = useState<string[]>([]);
+  const [newTag, setNewTag] = useState('');
+  const [dependencies, setDependencies] = useState<string[]>([]);
+  const [newDependency, setNewDependency] = useState('');
+  const [setupInstructions, setSetupInstructions] = useState('');
+  const [usageExample, setUsageExample] = useState('');
+  const [files, setFiles] = useState<TemplateFile[]>([]);
   const [newFile, setNewFile] = useState({
     name: '',
     path: '',
     content: '',
     language: 'text',
     isEntryPoint: false
-  })
-  const [activeTab, setActiveTab] = useState('basic')
+  });
+  const [activeTab, setActiveTab] = useState('basic');
 
   const templateCategories = [
     { value: 'web-app', label: 'Web Applications' },
@@ -55,14 +55,14 @@ export function CreateTemplateModal({ currentUser, onClose }: CreateTemplateModa
     { value: 'networking', label: 'Networking' },
     { value: 'forensics', label: 'Forensics' },
     { value: 'automation', label: 'Automation' }
-  ]
+  ];
 
   const difficultyLevels = [
     { value: 'beginner', label: 'Beginner' },
     { value: 'intermediate', label: 'Intermediate' },
     { value: 'advanced', label: 'Advanced' },
     { value: 'expert', label: 'Expert' }
-  ]
+  ];
 
   const frameworks = [
     { value: 'python', label: 'Python' },
@@ -73,34 +73,34 @@ export function CreateTemplateModal({ currentUser, onClose }: CreateTemplateModa
     { value: 'rust', label: 'Rust' },
     { value: 'c', label: 'C' },
     { value: 'cpp', label: 'C++' }
-  ]
+  ];
 
   const programmingLanguages = [
     'text', 'python', 'javascript', 'typescript', 'bash', 'powershell', 
     'go', 'rust', 'c', 'cpp', 'java', 'php', 'ruby', 'sql', 'yaml', 'json'
-  ]
+  ];
 
   const addTag = () => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
-      setTags([...tags, newTag.trim()])
-      setNewTag('')
+      setTags([...tags, newTag.trim()]);
+      setNewTag('');
     }
-  }
+  };
 
   const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter(tag => tag !== tagToRemove))
-  }
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
 
   const addDependency = () => {
     if (newDependency.trim() && !dependencies.includes(newDependency.trim())) {
-      setDependencies([...dependencies, newDependency.trim()])
-      setNewDependency('')
+      setDependencies([...dependencies, newDependency.trim()]);
+      setNewDependency('');
     }
-  }
+  };
 
   const removeDependency = (depToRemove: string) => {
-    setDependencies(dependencies.filter(dep => dep !== depToRemove))
-  }
+    setDependencies(dependencies.filter(dep => dep !== depToRemove));
+  };
 
   const addFile = () => {
     if (newFile.name.trim() && newFile.content.trim()) {
@@ -111,31 +111,31 @@ export function CreateTemplateModal({ currentUser, onClose }: CreateTemplateModa
         content: newFile.content.trim(),
         language: newFile.language,
         isEntryPoint: newFile.isEntryPoint
-      }
-      setFiles([...files, file])
+      };
+      setFiles([...files, file]);
       setNewFile({
         name: '',
         path: '',
         content: '',
         language: 'text',
         isEntryPoint: false
-      })
+      });
     }
-  }
+  };
 
   const removeFile = (fileId: string) => {
-    setFiles(files.filter(file => file.id !== fileId))
-  }
+    setFiles(files.filter(file => file.id !== fileId));
+  };
 
   const handleSubmit = async () => {
     if (!name.trim() || !description.trim() || !category || !difficulty) {
-      toast.error('Please fill in all required fields')
-      return
+      toast.error('Please fill in all required fields');
+      return;
     }
 
     if (files.length === 0) {
-      toast.error('Please add at least one file')
-      return
+      toast.error('Please add at least one file');
+      return;
     }
 
     try {
@@ -162,16 +162,16 @@ export function CreateTemplateModal({ currentUser, onClose }: CreateTemplateModa
         isPublic,
         license,
         framework: framework || undefined
-      }
+      };
 
-      setTemplates(prev => [template, ...prev])
-      toast.success('Template created successfully!')
-      onClose()
+      setTemplates(prev => [template, ...prev]);
+      toast.success('Template created successfully!');
+      onClose();
     } catch (error) {
-      console.error('Error creating template:', error)
-      toast.error('Failed to create template')
+      console.error('Error creating template:', error);
+      toast.error('Failed to create template');
     }
-  }
+  };
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -495,5 +495,5 @@ export function CreateTemplateModal({ currentUser, onClose }: CreateTemplateModa
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

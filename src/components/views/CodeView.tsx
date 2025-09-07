@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { RepositoryList } from '@/components/code/RepositoryList'
-import { RepositoryView } from '@/components/code/RepositoryView'
-import { CodeEditor } from '@/components/code/CodeEditor'
-import { User, Repository } from '@/types/user'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { RepositoryList } from '@/components/code/RepositoryList';
+import { RepositoryView } from '@/components/code/RepositoryView';
+import { CodeEditor } from '@/components/code/CodeEditor';
+import { User, Repository } from '@/types/user';
 
 interface CodeViewProps {
   currentUser: User
@@ -12,30 +12,30 @@ interface CodeViewProps {
 type ViewMode = 'repositories' | 'repository' | 'editor'
 
 export function CodeView({ currentUser }: CodeViewProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>('repositories')
-  const [selectedRepository, setSelectedRepository] = useState<Repository | null>(null)
-  const [selectedFilePath, setSelectedFilePath] = useState<string | null>(null)
+  const [viewMode, setViewMode] = useState<ViewMode>('repositories');
+  const [selectedRepository, setSelectedRepository] = useState<Repository | null>(null);
+  const [selectedFilePath, setSelectedFilePath] = useState<string | null>(null);
 
   const handleRepositorySelect = (repository: Repository) => {
-    setSelectedRepository(repository)
-    setViewMode('repository')
-  }
+    setSelectedRepository(repository);
+    setViewMode('repository');
+  };
 
   const handleFileSelect = (filePath: string) => {
-    setSelectedFilePath(filePath)
-    setViewMode('editor')
-  }
+    setSelectedFilePath(filePath);
+    setViewMode('editor');
+  };
 
   const handleBackToRepositories = () => {
-    setSelectedRepository(null)
-    setSelectedFilePath(null)
-    setViewMode('repositories')
-  }
+    setSelectedRepository(null);
+    setSelectedFilePath(null);
+    setViewMode('repositories');
+  };
 
   const handleBackToRepository = () => {
-    setSelectedFilePath(null)
-    setViewMode('repository')
-  }
+    setSelectedFilePath(null);
+    setViewMode('repository');
+  };
 
   return (
     <div className="h-full flex flex-col">
@@ -64,5 +64,5 @@ export function CodeView({ currentUser }: CodeViewProps) {
         />
       )}
     </div>
-  )
+  );
 }

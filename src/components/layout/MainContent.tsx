@@ -1,26 +1,26 @@
-import { FeedView } from '@/components/views/FeedView'
-import { ExploreView } from '@/components/views/ExploreView'
-import { ProfileView } from '@/components/views/ProfileView'
-import { MessagesView } from '@/components/views/MessagesView'
-import { CodeView } from '@/components/views/CodeView'
-import { TemplatesView } from '@/components/views/TemplatesView'
-import { ProjectsView } from '@/components/views/ProjectsView'
-import { EarningsView } from '@/components/views/EarningsView'
-import { TeamsView } from '@/components/teams/TeamsView'
-import { TeamInvitationsView } from '@/components/teams/TeamInvitationsView'
-import { MarketplaceView } from '@/components/marketplace/MarketplaceView'
-import { BugBountyDashboard } from '@/components/bug-bounty/BugBountyDashboard'
-import { BugBountyPlatform } from '@/components/features/BugBountyPlatform'
-import { LiveAPIIntegration } from '@/components/bug-bounty/LiveAPIIntegration'
-import { LiveVulnerabilityFeed } from '@/components/bug-bounty/LiveVulnerabilityFeed'
-import { RealTimeBugBountyDashboard } from '@/components/bug-bounty/RealTimeBugBountyDashboard'
-import { PartnerRequests } from '@/components/partner-requests/PartnerRequests'
-import { RedTeamDashboard } from '@/components/red-team/RedTeamDashboard'
-import { EnhancedVirtualLabView } from '@/components/virtual-lab/EnhancedVirtualLabView'
-import { PlatformConnectionManager } from '@/components/integrations/PlatformConnectionManager'
-import { IntegrationStatusDashboard } from '@/components/integrations/IntegrationStatusDashboard'
-import { LiveSyncStatus } from '@/components/features/LiveSyncStatus'
-import { User } from '@/types/user'
+import { FeedView } from '@/components/views/FeedView';
+import { ExploreView } from '@/components/views/ExploreView';
+import { ProfileView } from '@/components/views/ProfileView';
+import { MessagesView } from '@/components/views/MessagesView';
+import { CodeView } from '@/components/views/CodeView';
+import { TemplatesView } from '@/components/views/TemplatesView';
+import { ProjectsView } from '@/components/views/ProjectsView';
+import { EarningsView } from '@/components/views/EarningsView';
+import { TeamsView } from '@/components/teams/TeamsView';
+import { TeamInvitationsView } from '@/components/teams/TeamInvitationsView';
+import { MarketplaceView } from '@/components/marketplace/MarketplaceView';
+import { BugBountyDashboard } from '@/components/bug-bounty/BugBountyDashboard';
+import { BugBountyPlatform } from '@/components/features/BugBountyPlatform';
+import { LiveAPIIntegration } from '@/components/bug-bounty/LiveAPIIntegration';
+import { LiveVulnerabilityFeed } from '@/components/bug-bounty/LiveVulnerabilityFeed';
+import { RealTimeBugBountyDashboard } from '@/components/bug-bounty/RealTimeBugBountyDashboard';
+import { PartnerRequests } from '@/components/partner-requests/PartnerRequests';
+import { RedTeamDashboard } from '@/components/red-team/RedTeamDashboard';
+import { EnhancedVirtualLabView } from '@/components/virtual-lab/EnhancedVirtualLabView';
+import { PlatformConnectionManager } from '@/components/integrations/PlatformConnectionManager';
+import { IntegrationStatusDashboard } from '@/components/integrations/IntegrationStatusDashboard';
+import { LiveSyncStatus } from '@/components/features/LiveSyncStatus';
+import { User } from '@/types/user';
 
 interface MainContentProps {
   currentUser: User
@@ -32,9 +32,9 @@ interface MainContentProps {
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
   const handleNavigateToMessages = (userId: string) => {
     if (onTabChange) {
-      onTabChange('messages')
+      onTabChange('messages');
     }
-  }
+  };
 
   return (
     <div className="flex-1 overflow-hidden">
@@ -121,5 +121,5 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
         <ProfileView currentUser={currentUser} onUserUpdate={onUserUpdate} />
       )}
     </div>
-  )
+  );
 }

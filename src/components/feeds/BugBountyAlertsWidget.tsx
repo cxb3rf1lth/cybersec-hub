@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { 
   Shield, 
   Bug, 
@@ -12,9 +12,9 @@ import {
   Search,
   Clock,
   ExternalLink
-} from '@phosphor-icons/react'
-import { useState } from 'react'
-import { formatDistanceToNow } from 'date-fns'
+} from '@phosphor-icons/react';
+import { useState } from 'react';
+import { formatDistanceToNow } from 'date-fns';
 
 interface BugBountyAlert {
   id: string
@@ -30,7 +30,7 @@ interface BugBountyAlert {
 }
 
 export function BugBountyAlertsWidget() {
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Mock real-time bug bounty alerts
   const mockAlerts: BugBountyAlert[] = [
@@ -82,33 +82,33 @@ export function BugBountyAlertsWidget() {
       newProgram: true,
       updatedAt: new Date(Date.now() - 1200000).toISOString()
     }
-  ]
+  ];
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'expert': return 'bg-purple-500 text-white'
-      case 'advanced': return 'bg-red-500 text-white'
-      case 'intermediate': return 'bg-orange-500 text-white'
-      case 'beginner': return 'bg-green-500 text-white'
-      default: return 'bg-muted text-muted-foreground'
+      case 'expert': return 'bg-purple-500 text-white';
+      case 'advanced': return 'bg-red-500 text-white';
+      case 'intermediate': return 'bg-orange-500 text-white';
+      case 'beginner': return 'bg-green-500 text-white';
+      default: return 'bg-muted text-muted-foreground';
     }
-  }
+  };
 
   const getPlatformColor = (platform: string) => {
     switch (platform.toLowerCase()) {
-      case 'hackerone': return 'bg-blue-500 text-white'
-      case 'bugcrowd': return 'bg-orange-500 text-white'
-      case 'yeswehack': return 'bg-purple-500 text-white'
-      case 'intigriti': return 'bg-green-500 text-white'
-      default: return 'bg-muted text-muted-foreground'
+      case 'hackerone': return 'bg-blue-500 text-white';
+      case 'bugcrowd': return 'bg-orange-500 text-white';
+      case 'yeswehack': return 'bg-purple-500 text-white';
+      case 'intigriti': return 'bg-green-500 text-white';
+      default: return 'bg-muted text-muted-foreground';
     }
-  }
+  };
 
   const filteredAlerts = mockAlerts.filter(alert =>
     alert.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
     alert.program.toLowerCase().includes(searchQuery.toLowerCase()) ||
     alert.platform.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  );
 
   return (
     <Card className="border-primary/20">
@@ -209,5 +209,5 @@ export function BugBountyAlertsWidget() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

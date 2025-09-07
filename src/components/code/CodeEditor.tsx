@@ -1,17 +1,17 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { BinaryRain, ImmersiveBinaryRain } from '@/components/ui/loading-animations'
-import { ArrowLeft, Play, Save, Share, Users, GitBranch, Clock, Download, Copy, Bug, GitCommit, History, Eye, EyeClosed } from '@phosphor-icons/react'
-import { toast } from 'sonner'
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { BinaryRain, ImmersiveBinaryRain } from '@/components/ui/loading-animations';
+import { ArrowLeft, Play, Save, Share, Users, GitBranch, Clock, Download, Copy, Bug, GitCommit, History, Eye, EyeClosed } from '@phosphor-icons/react';
+import { toast } from 'sonner';
 
 interface CodeEditorProps {
   repository: Repository
@@ -21,55 +21,55 @@ interface CodeEditorProps {
 }
 
 export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEditorProps) {
-  const [repositories, setRepositories] = useKVWithFallback<Repository[]>('repositories', [])
-  const [editorState, setEditorState] = useKVWithFallback<CodeEditorType[]>('editorSessions', [])
-  const [allUsers] = useKVWithFallback<User[]>('allUsers', [])
-  const [showShareDialog, setShowShareDialog] = useState(false)
-  const [showCommitDialog, setShowCommitDialog] = useState(false)
-  const [showVersionHistory, setShowVersionHistory] = useState(false)
-  const [shareEmail, setShareEmail] = useState('')
-  const [sharePermission, setSharePermission] = useState<'read' | 'write'>('read')
-  const [commitMessage, setCommitMessage] = useState('')
-  const [activeCollaborators, setActiveCollaborators] = useState<EditorCollaborator[]>([])
-  const [showCollaboratorCursors, setShowCollaboratorCursors] = useState(true)
+  const [repositories, setRepositories] = useKVWithFallback<Repository[]>('repositories', []);
+  const [editorState, setEditorState] = useKVWithFallback<CodeEditorType[]>('editorSessions', []);
+  const [allUsers] = useKVWithFallback<User[]>('allUsers', []);
+  const [showShareDialog, setShowShareDialog] = useState(false);
+  const [showCommitDialog, setShowCommitDialog] = useState(false);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [shareEmail, setShareEmail] = useState('');
+  const [sharePermission, setSharePermission] = useState<'read' | 'write'>('read');
+  const [commitMessage, setCommitMessage] = useState('');
+  const [activeCollaborators, setActiveCollaborators] = useState<EditorCollaborator[]>([]);
+  const [showCollaboratorCursors, setShowCollaboratorCursors] = useState(true);
   
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const [content, setContent] = useState('')
-  const [isDirty, setIsDirty] = useState(false)
-  const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 })
-  const [selectedText, setSelectedText] = useState('')
-  const [currentTheme, setCurrentTheme] = useState<'dark' | 'light'>('dark')
-  const [isAutoSaving, setIsAutoSaving] = useState(false)
-  const [lastAutoSave, setLastAutoSave] = useState<Date | null>(null)
-  const [isRunningCode, setIsRunningCode] = useState(false)
-  const [codeOutput, setCodeOutput] = useState<string>('')
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [content, setContent] = useState('');
+  const [isDirty, setIsDirty] = useState(false);
+  const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 });
+  const [selectedText, setSelectedText] = useState('');
+  const [currentTheme, setCurrentTheme] = useState<'dark' | 'light'>('dark');
+  const [isAutoSaving, setIsAutoSaving] = useState(false);
+  const [lastAutoSave, setLastAutoSave] = useState<Date | null>(null);
+  const [isRunningCode, setIsRunningCode] = useState(false);
+  const [codeOutput, setCodeOutput] = useState<string>('');
 
   // Find the current file
-  const currentFile = repository.files.find(file => file.path === filePath)
+  const currentFile = repository.files.find(file => file.path === filePath);
   
   useEffect(() => {
     if (currentFile) {
-      setContent(currentFile.content)
-      setIsDirty(false)
+      setContent(currentFile.content);
+      setIsDirty(false);
     }
-  }, [currentFile])
+  }, [currentFile]);
   
   // Auto-save functionality
   useEffect(() => {
     const autoSaveInterval = setInterval(() => {
       if (isDirty && content.trim()) {
-        setIsAutoSaving(true)
-        handleAutoSave()
+        setIsAutoSaving(true);
+        handleAutoSave();
       }
-    }, 10000) // Auto-save every 10 seconds
+    }, 10000); // Auto-save every 10 seconds
 
-    return () => clearInterval(autoSaveInterval)
-  }, [isDirty, content])
+    return () => clearInterval(autoSaveInterval);
+  }, [isDirty, content]);
 
   // Real-time collaboration simulation
   useEffect(() => {
-    const sessionId = `${repository.id}-${filePath}`
-    const currentSession = editorState.find(session => session.id === sessionId)
+    const sessionId = `${repository.id}-${filePath}`;
+    const currentSession = editorState.find(session => session.id === sessionId);
     
     if (!currentSession) {
       // Create new editor session with mock collaborators
@@ -82,7 +82,7 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
           isActive: true,
           lastSeen: new Date().toISOString()
         }
-      ]
+      ];
 
       // Add mock collaborators if they are repository collaborators
       if (repository.collaborators.includes('user_sample_2')) {
@@ -93,7 +93,7 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
           color: '#10b981',
           isActive: Math.random() > 0.3, // 70% chance active
           lastSeen: new Date(Date.now() - Math.random() * 5 * 60 * 1000).toISOString() // Random within 5 minutes
-        })
+        });
       }
 
       if (repository.collaborators.includes('user_sample_3')) {
@@ -104,7 +104,7 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
           color: '#f59e0b',
           isActive: Math.random() > 0.5, // 50% chance active
           lastSeen: new Date(Date.now() - Math.random() * 10 * 60 * 1000).toISOString() // Random within 10 minutes
-        })
+        });
       }
 
       const newSession: CodeEditorType = {
@@ -120,12 +120,12 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
         isReadOnly: false,
         isDirty,
         lastSaved: new Date().toISOString()
-      }
+      };
       
-      setEditorState(prev => [...prev.filter(s => s.id !== sessionId), newSession])
+      setEditorState(prev => [...prev.filter(s => s.id !== sessionId), newSession]);
     } else {
       // Update collaborators list
-      setActiveCollaborators(currentSession.collaborators.filter(c => c.userId !== currentUser.id && c.isActive))
+      setActiveCollaborators(currentSession.collaborators.filter(c => c.userId !== currentUser.id && c.isActive));
     }
 
     // Simulate real-time cursor movements and activity
@@ -139,72 +139,72 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
                 cursorPosition,
                 isActive: true,
                 lastSeen: new Date().toISOString()
-              }
+              };
             } else if (collaborator.isActive && Math.random() > 0.7) {
               // Simulate occasional cursor movement for other collaborators
-              const contentLines = content.split('\n')
-              const randomLine = Math.min(Math.floor(Math.random() * contentLines.length) + 1, contentLines.length)
-              const randomColumn = Math.min(Math.floor(Math.random() * 50) + 1, contentLines[randomLine - 1]?.length || 1)
+              const contentLines = content.split('\n');
+              const randomLine = Math.min(Math.floor(Math.random() * contentLines.length) + 1, contentLines.length);
+              const randomColumn = Math.min(Math.floor(Math.random() * 50) + 1, contentLines[randomLine - 1]?.length || 1);
               
               return {
                 ...collaborator,
                 cursorPosition: { line: randomLine, column: randomColumn },
                 lastSeen: new Date().toISOString()
-              }
+              };
             }
-            return collaborator
-          })
+            return collaborator;
+          });
 
           return {
             ...session,
             collaborators: updatedCollaborators
-          }
+          };
         }
-        return session
-      }))
-    }, 2000) // Update every 2 seconds
+        return session;
+      }));
+    }, 2000); // Update every 2 seconds
 
-    return () => clearInterval(collaborationInterval)
-  }, [cursorPosition, repository.id, filePath, currentUser.id, content])
+    return () => clearInterval(collaborationInterval);
+  }, [cursorPosition, repository.id, filePath, currentUser.id, content]);
 
   // Simulate receiving real-time updates from other collaborators
   useEffect(() => {
-    const sessionId = `${repository.id}-${filePath}`
-    const currentSession = editorState.find(session => session.id === sessionId)
+    const sessionId = `${repository.id}-${filePath}`;
+    const currentSession = editorState.find(session => session.id === sessionId);
     
     if (currentSession) {
-      const otherCollaborators = currentSession.collaborators.filter(c => c.userId !== currentUser.id && c.isActive)
-      setActiveCollaborators(otherCollaborators)
+      const otherCollaborators = currentSession.collaborators.filter(c => c.userId !== currentUser.id && c.isActive);
+      setActiveCollaborators(otherCollaborators);
     }
-  }, [editorState, repository.id, filePath, currentUser.id])
+  }, [editorState, repository.id, filePath, currentUser.id]);
 
   useEffect(() => {
     // Update cursor position when text changes
     if (textareaRef.current) {
-      const textarea = textareaRef.current
+      const textarea = textareaRef.current;
       const updateCursorPosition = () => {
-        const start = textarea.selectionStart
-        const textBeforeCursor = content.substring(0, start)
-        const lines = textBeforeCursor.split('\n')
-        const line = lines.length
-        const column = lines[lines.length - 1].length + 1
-        setCursorPosition({ line, column })
-      }
+        const start = textarea.selectionStart;
+        const textBeforeCursor = content.substring(0, start);
+        const lines = textBeforeCursor.split('\n');
+        const line = lines.length;
+        const column = lines[lines.length - 1].length + 1;
+        setCursorPosition({ line, column });
+      };
 
-      textarea.addEventListener('selectionchange', updateCursorPosition)
-      textarea.addEventListener('click', updateCursorPosition)
-      textarea.addEventListener('keyup', updateCursorPosition)
+      textarea.addEventListener('selectionchange', updateCursorPosition);
+      textarea.addEventListener('click', updateCursorPosition);
+      textarea.addEventListener('keyup', updateCursorPosition);
 
       return () => {
-        textarea.removeEventListener('selectionchange', updateCursorPosition)
-        textarea.removeEventListener('click', updateCursorPosition)
-        textarea.removeEventListener('keyup', updateCursorPosition)
-      }
+        textarea.removeEventListener('selectionchange', updateCursorPosition);
+        textarea.removeEventListener('click', updateCursorPosition);
+        textarea.removeEventListener('keyup', updateCursorPosition);
+      };
     }
-  }, [content])
+  }, [content]);
 
   const getLanguageFromFilePath = (path: string) => {
-    const ext = path.split('.').pop()?.toLowerCase()
+    const ext = path.split('.').pop()?.toLowerCase();
     const langMap: { [key: string]: string } = {
       'js': 'javascript',
       'ts': 'typescript',
@@ -223,30 +223,30 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
       'php': 'php',
       'rb': 'ruby',
       'java': 'java'
-    }
-    return langMap[ext || ''] || 'text'
-  }
+    };
+    return langMap[ext || ''] || 'text';
+  };
 
   const handleContentChange = (newContent: string) => {
-    setContent(newContent)
-    setIsDirty(true)
+    setContent(newContent);
+    setIsDirty(true);
     
     // Broadcast changes to other collaborators
-    const sessionId = `${repository.id}-${filePath}`
+    const sessionId = `${repository.id}-${filePath}`;
     setEditorState(prev => prev.map(session => {
       if (session.id === sessionId) {
         return {
           ...session,
           content: newContent,
           isDirty: true
-        }
+        };
       }
-      return session
-    }))
-  }
+      return session;
+    }));
+  };
 
   const handleAutoSave = useCallback(() => {
-    if (!currentFile || !isDirty) return
+    if (!currentFile || !isDirty) {return;}
 
     setRepositories(prev => prev.map(repo => {
       if (repo.id === repository.id) {
@@ -258,18 +258,18 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
               : file
           ),
           updatedAt: new Date().toISOString()
-        }
+        };
       }
-      return repo
-    }))
+      return repo;
+    }));
 
-    setIsAutoSaving(false)
-    setLastAutoSave(new Date())
-    toast.success('Auto-saved', { duration: 2000 })
-  }, [currentFile, isDirty, content, filePath, repository.id, setRepositories])
+    setIsAutoSaving(false);
+    setLastAutoSave(new Date());
+    toast.success('Auto-saved', { duration: 2000 });
+  }, [currentFile, isDirty, content, filePath, repository.id, setRepositories]);
 
   const handleSave = () => {
-    if (!currentFile) return
+    if (!currentFile) {return;}
 
     setRepositories(prev => prev.map(repo => {
       if (repo.id === repository.id) {
@@ -281,19 +281,19 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
               : file
           ),
           updatedAt: new Date().toISOString()
-        }
+        };
       }
-      return repo
-    }))
+      return repo;
+    }));
     
-    setIsDirty(false)
-    toast.success('File saved successfully')
-  }
+    setIsDirty(false);
+    toast.success('File saved successfully');
+  };
 
   const handleCommit = () => {
     if (!commitMessage.trim()) {
-      toast.error('Please enter a commit message')
-      return
+      toast.error('Please enter a commit message');
+      return;
     }
 
     const newCommit: Commit = {
@@ -313,7 +313,7 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
       additions: content.split('\n').length,
       deletions: 0,
       createdAt: new Date().toISOString()
-    }
+    };
 
     setRepositories(prev => prev.map(repo => {
       if (repo.id === repository.id) {
@@ -326,82 +326,82 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
           ),
           commits: [newCommit, ...repo.commits],
           updatedAt: new Date().toISOString()
-        }
+        };
       }
-      return repo
-    }))
+      return repo;
+    }));
 
-    setIsDirty(false)
-    setShowCommitDialog(false)
-    setCommitMessage('')
-    toast.success('Changes committed successfully')
-  }
+    setIsDirty(false);
+    setShowCommitDialog(false);
+    setCommitMessage('');
+    toast.success('Changes committed successfully');
+  };
 
   const handleRunCode = () => {
-    const language = getLanguageFromFilePath(filePath)
-    setIsRunningCode(true)
-    setCodeOutput('')
+    const language = getLanguageFromFilePath(filePath);
+    setIsRunningCode(true);
+    setCodeOutput('');
     
     // Simulate code execution with binary rain effect
     setTimeout(() => {
       if (language === 'python') {
-        setCodeOutput('Code executed successfully!\n\nOutput:\nHello, CyberConnect!\nProcess completed with exit code 0')
-        toast.success('Python code executed successfully')
+        setCodeOutput('Code executed successfully!\n\nOutput:\nHello, CyberConnect!\nProcess completed with exit code 0');
+        toast.success('Python code executed successfully');
       } else if (language === 'javascript') {
-        setCodeOutput('Code executed successfully!\n\nOutput:\nconsole.log("Secure connection established")\nProcess completed with exit code 0')
-        toast.success('JavaScript code executed successfully')
+        setCodeOutput('Code executed successfully!\n\nOutput:\nconsole.log("Secure connection established")\nProcess completed with exit code 0');
+        toast.success('JavaScript code executed successfully');
       } else if (language === 'bash' || language === 'sh') {
-        setCodeOutput('Script executed successfully!\n\nOutput:\nInitializing security scan...\nScan complete. No vulnerabilities found.\nProcess completed with exit code 0')
-        toast.success('Bash script executed successfully')
+        setCodeOutput('Script executed successfully!\n\nOutput:\nInitializing security scan...\nScan complete. No vulnerabilities found.\nProcess completed with exit code 0');
+        toast.success('Bash script executed successfully');
       } else {
-        setCodeOutput(`Compilation successful!\n\nOutput:\nCode analysis complete for ${language}\nNo syntax errors detected.\nProcess completed with exit code 0`)
-        toast.info(`Code execution completed for ${language}`)
+        setCodeOutput(`Compilation successful!\n\nOutput:\nCode analysis complete for ${language}\nNo syntax errors detected.\nProcess completed with exit code 0`);
+        toast.info(`Code execution completed for ${language}`);
       }
-      setIsRunningCode(false)
-    }, 2000 + Math.random() * 1000) // Random execution time between 2-3 seconds
-  }
+      setIsRunningCode(false);
+    }, 2000 + Math.random() * 1000); // Random execution time between 2-3 seconds
+  };
 
   const handleShare = () => {
     if (!shareEmail.trim()) {
-      toast.error('Please enter an email address')
-      return
+      toast.error('Please enter an email address');
+      return;
     }
 
     // Simulate sharing
-    toast.success(`File shared with ${shareEmail} (${sharePermission} access)`)
-    setShowShareDialog(false)
-    setShareEmail('')
-    setSharePermission('read')
-  }
+    toast.success(`File shared with ${shareEmail} (${sharePermission} access)`);
+    setShowShareDialog(false);
+    setShareEmail('');
+    setSharePermission('read');
+  };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(content)
-    toast.success('Code copied to clipboard')
-  }
+    navigator.clipboard.writeText(content);
+    toast.success('Code copied to clipboard');
+  };
 
   const downloadFile = () => {
-    const blob = new Blob([content], { type: 'text/plain' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = currentFile?.name || 'file.txt'
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-    toast.success('File downloaded')
-  }
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = currentFile?.name || 'file.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success('File downloaded');
+  };
 
   const renderCollaboratorCursors = () => {
-    if (!showCollaboratorCursors || !textareaRef.current) return null
+    if (!showCollaboratorCursors || !textareaRef.current) {return null;}
 
     return activeCollaborators.map(collaborator => {
-      const user = allUsers.find(u => u.id === collaborator.userId)
-      if (!user) return null
+      const user = allUsers.find(u => u.id === collaborator.userId);
+      if (!user) {return null;}
 
-      const { line, column } = collaborator.cursorPosition
-      const lineHeight = 24 // Match the leading-6 class
-      const charWidth = 8.4 // Approximate character width in monospace font
+      const { line, column } = collaborator.cursorPosition;
+      const lineHeight = 24; // Match the leading-6 class
+      const charWidth = 8.4; // Approximate character width in monospace font
       
       return (
         <div
@@ -424,14 +424,14 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
             {user.username}
           </div>
         </div>
-      )
-    })
-  }
+      );
+    });
+  };
 
   const renderVersionHistory = () => {
     const recentCommits = repository.commits
       .filter(commit => commit.filesChanged.some(file => file.path === filePath))
-      .slice(0, 10)
+      .slice(0, 10);
 
     return (
       <div className="space-y-4">
@@ -450,7 +450,7 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
         ) : (
           <div className="space-y-3 max-h-96 overflow-y-auto">
             {recentCommits.map(commit => {
-              const author = allUsers.find(u => u.id === commit.authorId)
+              const author = allUsers.find(u => u.id === commit.authorId);
               return (
                 <Card key={commit.id} className="p-4">
                   <div className="flex items-start justify-between">
@@ -478,18 +478,18 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
                     </Button>
                   </div>
                 </Card>
-              )
+              );
             })}
           </div>
         )}
       </div>
-    )
-  }
+    );
+  };
 
   const getLineNumbers = () => {
-    const lines = content.split('\n')
-    return lines.map((_, index) => index + 1)
-  }
+    const lines = content.split('\n');
+    return lines.map((_, index) => index + 1);
+  };
 
   const syntaxHighlight = (code: string, language: string) => {
     // Basic syntax highlighting
@@ -498,26 +498,26 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
       javascript: ['function', 'const', 'let', 'var', 'if', 'else', 'for', 'while', 'return', 'class', 'import', 'export', 'async', 'await'],
       go: ['func', 'var', 'const', 'if', 'else', 'for', 'range', 'return', 'package', 'import', 'type', 'struct'],
       rust: ['fn', 'let', 'mut', 'const', 'if', 'else', 'for', 'while', 'loop', 'match', 'return', 'struct', 'enum', 'impl']
-    }
+    };
 
-    let highlighted = code
-    const languageKeywords = keywords[language] || []
+    let highlighted = code;
+    const languageKeywords = keywords[language] || [];
     
     languageKeywords.forEach(keyword => {
-      const regex = new RegExp(`\\b${keyword}\\b`, 'g')
-      highlighted = highlighted.replace(regex, `<span class="text-blue-400 font-semibold">${keyword}</span>`)
-    })
+      const regex = new RegExp(`\\b${keyword}\\b`, 'g');
+      highlighted = highlighted.replace(regex, `<span class="text-blue-400 font-semibold">${keyword}</span>`);
+    });
 
     // Highlight strings
-    highlighted = highlighted.replace(/"([^"]*)"/g, '<span class="text-green-400">"$1"</span>')
-    highlighted = highlighted.replace(/'([^']*)'/g, '<span class="text-green-400">\'$1\'</span>')
+    highlighted = highlighted.replace(/"([^"]*)"/g, '<span class="text-green-400">"$1"</span>');
+    highlighted = highlighted.replace(/'([^']*)'/g, '<span class="text-green-400">\'$1\'</span>');
     
     // Highlight comments
-    highlighted = highlighted.replace(/#(.*)$/gm, '<span class="text-gray-500">#$1</span>')
-    highlighted = highlighted.replace(/\/\/(.*)$/gm, '<span class="text-gray-500">//$1</span>')
+    highlighted = highlighted.replace(/#(.*)$/gm, '<span class="text-gray-500">#$1</span>');
+    highlighted = highlighted.replace(/\/\/(.*)$/gm, '<span class="text-gray-500">//$1</span>');
 
-    return highlighted
-  }
+    return highlighted;
+  };
 
   if (!currentFile) {
     return (
@@ -535,11 +535,11 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  const language = getLanguageFromFilePath(filePath)
-  const lineNumbers = getLineNumbers()
+  const language = getLanguageFromFilePath(filePath);
+  const lineNumbers = getLineNumbers();
 
   return (
     <div className="h-full flex flex-col relative">
@@ -744,7 +744,7 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
                 <span>{activeCollaborators.length} collaborators</span>
                 <div className="flex -space-x-1">
                   {activeCollaborators.slice(0, 3).map(collaborator => {
-                    const user = allUsers.find(u => u.id === collaborator.userId)
+                    const user = allUsers.find(u => u.id === collaborator.userId);
                     return (
                       <div
                         key={collaborator.userId}
@@ -754,7 +754,7 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
                       >
                         {user?.username?.charAt(0)?.toUpperCase() || '?'}
                       </div>
-                    )
+                    );
                   })}
                   {activeCollaborators.length > 3 && (
                     <div className="w-6 h-6 rounded-full border-2 border-background bg-muted flex items-center justify-center text-xs">
@@ -841,7 +841,7 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
               <span className="text-sm text-muted-foreground">Active collaborators:</span>
               <div className="flex items-center gap-2">
                 {activeCollaborators.map(collaborator => {
-                  const user = allUsers.find(u => u.id === collaborator.userId)
+                  const user = allUsers.find(u => u.id === collaborator.userId);
                   return (
                     <div key={collaborator.userId} className="flex items-center gap-2">
                       <div
@@ -852,7 +852,7 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
                         {user?.username || 'Unknown'}
                       </Badge>
                     </div>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -902,5 +902,5 @@ export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEd
       )}
       </div>
     </div>
-  )
+  );
 }

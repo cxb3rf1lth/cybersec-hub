@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { TeamInvitation, User, Team, TeamRole } from '@/types'
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { TeamInvitation, User, Team, TeamRole } from '@/types';
 import { 
   Check, 
   X, 
@@ -21,8 +21,8 @@ import {
   Calendar,
   AlertCircle,
   CheckCircle
-} from '@phosphor-icons/react'
-import { toast } from 'sonner'
+} from '@phosphor-icons/react';
+import { toast } from 'sonner';
 
 interface InvitationManagerModalProps {
   team: Team
@@ -31,36 +31,36 @@ interface InvitationManagerModalProps {
 }
 
 export function InvitationManagerModal({ team, currentUser, onClose }: InvitationManagerModalProps) {
-  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
-  const [teamRoles] = useKVWithFallback<TeamRole[]>('teamRoles', [])
-  const [users] = useKVWithFallback<User[]>('users', [])
-  const [activeTab, setActiveTab] = useState('pending')
+  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', []);
+  const [teamRoles] = useKVWithFallback<TeamRole[]>('teamRoles', []);
+  const [users] = useKVWithFallback<User[]>('users', []);
+  const [activeTab, setActiveTab] = useState('pending');
 
   // Filter invitations for this team
-  const teamInvitations = invitations.filter(inv => inv.teamId === team.id)
+  const teamInvitations = invitations.filter(inv => inv.teamId === team.id);
   
   const pendingInvitations = teamInvitations.filter(inv => 
     inv.status === 'pending' && new Date(inv.expiresAt) > new Date()
-  )
+  );
   
   const expiredInvitations = teamInvitations.filter(inv => 
     inv.status === 'pending' && new Date(inv.expiresAt) <= new Date()
-  )
+  );
   
   const completedInvitations = teamInvitations.filter(inv => 
     inv.status === 'accepted' || inv.status === 'declined'
-  )
+  );
 
   const handleCancelInvitation = async (invitationId: string) => {
     try {
       await setInvitations(current => 
         current.filter(inv => inv.id !== invitationId)
-      )
-      toast.success('Invitation cancelled')
+      );
+      toast.success('Invitation cancelled');
     } catch (error) {
-      toast.error('Failed to cancel invitation')
+      toast.error('Failed to cancel invitation');
     }
-  }
+  };
 
   const handleResendInvitation = async (invitation: TeamInvitation) => {
     try {
@@ -70,45 +70,45 @@ export function InvitationManagerModal({ team, currentUser, onClose }: Invitatio
         sentAt: new Date().toISOString(),
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
         status: 'pending'
-      }
+      };
 
       await setInvitations(current => [
         ...current.filter(inv => inv.id !== invitation.id),
         newInvitation
-      ])
+      ]);
       
-      toast.success('Invitation resent')
+      toast.success('Invitation resent');
     } catch (error) {
-      toast.error('Failed to resend invitation')
+      toast.error('Failed to resend invitation');
     }
-  }
+  };
 
   const getRoleInfo = (roleId: string) => {
-    return teamRoles.find(role => role.id === roleId)
-  }
+    return teamRoles.find(role => role.id === roleId);
+  };
 
   const getUserInfo = (userId: string) => {
-    return users.find(user => user.id === userId)
-  }
+    return users.find(user => user.id === userId);
+  };
 
   const formatTimeRemaining = (expiresAt: string) => {
-    const now = new Date()
-    const expires = new Date(expiresAt)
-    const diff = expires.getTime() - now.getTime()
+    const now = new Date();
+    const expires = new Date(expiresAt);
+    const diff = expires.getTime() - now.getTime();
     
-    if (diff <= 0) return 'Expired'
+    if (diff <= 0) {return 'Expired';}
     
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     
-    if (days > 0) return `${days}d ${hours}h remaining`
-    return `${hours}h remaining`
-  }
+    if (days > 0) {return `${days}d ${hours}h remaining`;}
+    return `${hours}h remaining`;
+  };
 
   const InvitationCard = ({ invitation, showActions = true }: { invitation: TeamInvitation, showActions?: boolean }) => {
-    const role = getRoleInfo(invitation.role)
-    const targetUser = getUserInfo(invitation.targetUserId)
-    const isExpired = new Date(invitation.expiresAt) <= new Date()
+    const role = getRoleInfo(invitation.role);
+    const targetUser = getUserInfo(invitation.targetUserId);
+    const isExpired = new Date(invitation.expiresAt) <= new Date();
 
     return (
       <Card>
@@ -193,8 +193,8 @@ export function InvitationManagerModal({ team, currentUser, onClose }: Invitatio
           )}
         </CardContent>
       </Card>
-    )
-  }
+    );
+  };
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -357,9 +357,9 @@ export function InvitationManagerModal({ team, currentUser, onClose }: Invitatio
                             completedInvitations
                               .filter(i => i.respondedAt)
                               .reduce((acc, inv) => {
-                                const sent = new Date(inv.sentAt).getTime()
-                                const responded = new Date(inv.respondedAt!).getTime()
-                                return acc + (responded - sent)
+                                const sent = new Date(inv.sentAt).getTime();
+                                const responded = new Date(inv.respondedAt!).getTime();
+                                return acc + (responded - sent);
                               }, 0) / (completedInvitations.filter(i => i.respondedAt).length * 24 * 60 * 60 * 1000)
                           )} days
                         </p>
@@ -369,12 +369,12 @@ export function InvitationManagerModal({ team, currentUser, onClose }: Invitatio
                         <p className="font-medium">
                           {(() => {
                             const roleCounts = teamInvitations.reduce((acc, inv) => {
-                              acc[inv.role] = (acc[inv.role] || 0) + 1
-                              return acc
-                            }, {} as Record<string, number>)
-                            const mostRequested = Object.entries(roleCounts).reduce((a, b) => a[1] > b[1] ? a : b, ['', 0])
-                            const role = getRoleInfo(mostRequested[0])
-                            return role?.name || 'N/A'
+                              acc[inv.role] = (acc[inv.role] || 0) + 1;
+                              return acc;
+                            }, {} as Record<string, number>);
+                            const mostRequested = Object.entries(roleCounts).reduce((a, b) => a[1] > b[1] ? a : b, ['', 0]);
+                            const role = getRoleInfo(mostRequested[0]);
+                            return role?.name || 'N/A';
                           })()}
                         </p>
                       </div>
@@ -391,5 +391,5 @@ export function InvitationManagerModal({ team, currentUser, onClose }: Invitatio
         </Tabs>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

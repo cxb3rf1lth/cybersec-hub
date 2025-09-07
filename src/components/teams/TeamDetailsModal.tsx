@@ -1,18 +1,18 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
 import { 
   Dialog, 
   DialogContent, 
   DialogHeader, 
   DialogTitle 
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Progress } from '@/components/ui/progress'
-import { Team, User, TeamApplication, TeamInvitation } from '@/types'
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
+import { Team, User, TeamApplication, TeamInvitation } from '@/types';
 import { 
   Users, 
   TrendingUp, 
@@ -26,10 +26,10 @@ import {
   Trophy,
   Clock,
   Mail
-} from '@phosphor-icons/react'
-import { toast } from 'sonner'
-import { InviteMemberModal } from './InviteMemberModal'
-import { InvitationManagerModal } from './InvitationManagerModal'
+} from '@phosphor-icons/react';
+import { toast } from 'sonner';
+import { InviteMemberModal } from './InviteMemberModal';
+import { InvitationManagerModal } from './InvitationManagerModal';
 
 interface TeamDetailsModalProps {
   team: Team
@@ -38,39 +38,39 @@ interface TeamDetailsModalProps {
 }
 
 export function TeamDetailsModal({ team, currentUser, onClose }: TeamDetailsModalProps) {
-  const [activeTab, setActiveTab] = useState('overview')
-  const [applications] = useKVWithFallback<TeamApplication[]>('teamApplications', [])
-  const [invitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
-  const [showInviteModal, setShowInviteModal] = useState(false)
-  const [showInvitationManager, setShowInvitationManager] = useState(false)
+  const [activeTab, setActiveTab] = useState('overview');
+  const [applications] = useKVWithFallback<TeamApplication[]>('teamApplications', []);
+  const [invitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', []);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showInvitationManager, setShowInvitationManager] = useState(false);
   
-  const isMember = team.members.some(member => member.userId === currentUser.id)
-  const isLeader = team.leaderId === currentUser.id
-  const currentMember = team.members.find(member => member.userId === currentUser.id)
+  const isMember = team.members.some(member => member.userId === currentUser.id);
+  const isLeader = team.leaderId === currentUser.id;
+  const currentMember = team.members.find(member => member.userId === currentUser.id);
   
   const teamApplications = applications.filter(app => 
     app.teamId === team.id && app.status === 'pending'
-  )
+  );
 
   const canManageTeam = isLeader || (currentMember && 
-    currentMember.permissions.some(p => p === 'team-settings'))
+    currentMember.permissions.some(p => p === 'team-settings'));
 
   const canInviteMembers = isLeader || (currentMember && 
-    currentMember.permissions.some(p => p === 'invite-members'))
+    currentMember.permissions.some(p => p === 'invite-members'));
 
   const handleJoinTeam = () => {
     if (team.applicationRequired) {
       // Open application modal
-      toast.info('Application required - redirecting to application form')
+      toast.info('Application required - redirecting to application form');
     } else {
       // Direct join
-      toast.success('Joined team successfully!')
+      toast.success('Joined team successfully!');
     }
-  }
+  };
 
   const handleLeaveTeam = () => {
-    toast.success('Left team successfully')
-  }
+    toast.success('Left team successfully');
+  };
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -434,5 +434,5 @@ export function TeamDetailsModal({ team, currentUser, onClose }: TeamDetailsModa
         )}
       </DialogContent>
     </Dialog>
-  )
+  );
 }

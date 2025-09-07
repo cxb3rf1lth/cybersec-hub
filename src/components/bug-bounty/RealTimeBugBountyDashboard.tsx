@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { useProductionAPI } from '@/lib/production-api'
-import { bugBountySyncService, SyncedBugBountyData, BugBountyProgram, BugBountyReport } from '@/lib/real-time-sync'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Progress } from '@/components/ui/progress'
+import React, { useState, useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { useProductionAPI } from '@/lib/production-api';
+import { bugBountySyncService, SyncedBugBountyData, BugBountyProgram, BugBountyReport } from '@/lib/real-time-sync';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
 import { 
   Activity, 
   DollarSign, 
@@ -21,113 +21,113 @@ import {
   Play,
   Pause,
   Settings
-} from '@phosphor-icons/react'
-import { BinaryRain } from '@/components/ui/BinaryRain'
+} from '@phosphor-icons/react';
+import { BinaryRain } from '@/components/ui/BinaryRain';
 
 export function RealTimeBugBountyDashboard() {
-  const [syncData, setSyncData] = useKVWithFallback<SyncedBugBountyData | null>('synced_bug_bounty_data', null)
-  const [isAutoSyncEnabled, setIsAutoSyncEnabled] = useKV('auto_sync_enabled', false)
-  const [syncInterval, setSyncInterval] = useKV('sync_interval_minutes', 5)
-  const [isLoading, setIsLoading] = useState(false)
-  const [selectedTimeRange, setSelectedTimeRange] = useState<'1h' | '6h' | '24h' | '7d'>('24h')
+  const [syncData, setSyncData] = useKVWithFallback<SyncedBugBountyData | null>('synced_bug_bounty_data', null);
+  const [isAutoSyncEnabled, setIsAutoSyncEnabled] = useKV('auto_sync_enabled', false);
+  const [syncInterval, setSyncInterval] = useKV('sync_interval_minutes', 5);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedTimeRange, setSelectedTimeRange] = useState<'1h' | '6h' | '24h' | '7d'>('24h');
   
-  const api = useProductionAPI()
+  const api = useProductionAPI();
 
   // Initialize sync service
   useEffect(() => {
     const loadData = async () => {
-      const cachedData = await bugBountySyncService.getCachedData()
+      const cachedData = await bugBountySyncService.getCachedData();
       if (cachedData) {
-        setSyncData(cachedData)
+        setSyncData(cachedData);
       }
-    }
+    };
 
-    loadData()
+    loadData();
 
     // Add sync listener
     const syncListener = (data: SyncedBugBountyData) => {
-      setSyncData(data)
-    }
+      setSyncData(data);
+    };
 
-    bugBountySyncService.addSyncListener(syncListener)
+    bugBountySyncService.addSyncListener(syncListener);
 
     return () => {
-      bugBountySyncService.removeSyncListener(syncListener)
-    }
-  }, [])
+      bugBountySyncService.removeSyncListener(syncListener);
+    };
+  }, []);
 
   // Auto-sync control
   useEffect(() => {
     if (isAutoSyncEnabled) {
-      bugBountySyncService.setSyncInterval(syncInterval * 60000) // Convert to ms
-      bugBountySyncService.startSync()
+      bugBountySyncService.setSyncInterval(syncInterval * 60000); // Convert to ms
+      bugBountySyncService.startSync();
     } else {
-      bugBountySyncService.stopSync()
+      bugBountySyncService.stopSync();
     }
-  }, [isAutoSyncEnabled, syncInterval])
+  }, [isAutoSyncEnabled, syncInterval]);
 
   const handleManualSync = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      await bugBountySyncService.forcSync()
+      await bugBountySyncService.forcSync();
     } catch (error) {
-      console.error('Manual sync failed:', error)
+      console.error('Manual sync failed:', error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const toggleAutoSync = () => {
-    setIsAutoSyncEnabled(!isAutoSyncEnabled)
-  }
+    setIsAutoSyncEnabled(!isAutoSyncEnabled);
+  };
 
   const formatTimeAgo = (timestamp: string) => {
-    const now = new Date()
-    const past = new Date(timestamp)
-    const diffMs = now.getTime() - past.getTime()
-    const diffMins = Math.floor(diffMs / 60000)
+    const now = new Date();
+    const past = new Date(timestamp);
+    const diffMs = now.getTime() - past.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
     
-    if (diffMins < 1) return 'Just now'
-    if (diffMins < 60) return `${diffMins}m ago`
-    const diffHours = Math.floor(diffMins / 60)
-    if (diffHours < 24) return `${diffHours}h ago`
-    const diffDays = Math.floor(diffHours / 24)
-    return `${diffDays}d ago`
-  }
+    if (diffMins < 1) {return 'Just now';}
+    if (diffMins < 60) {return `${diffMins}m ago`;}
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) {return `${diffHours}h ago`;}
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays}d ago`;
+  };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'Critical': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      case 'High': return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
-      case 'Medium': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'Low': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+      case 'Critical': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      case 'High': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+      case 'Medium': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'Low': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
     }
-  }
+  };
 
   const getRecentPrograms = () => {
-    if (!syncData) return []
+    if (!syncData) {return [];}
     return syncData.programs
       .sort((a, b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime())
-      .slice(0, 10)
-  }
+      .slice(0, 10);
+  };
 
   const getRecentReports = () => {
-    if (!syncData) return []
+    if (!syncData) {return [];}
     return syncData.reports
       .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
-      .slice(0, 10)
-  }
+      .slice(0, 10);
+  };
 
   const getTopEarningPrograms = () => {
-    if (!syncData) return []
+    if (!syncData) {return [];}
     return syncData.programs
       .sort((a, b) => b.rewards.maximum - a.rewards.maximum)
-      .slice(0, 5)
-  }
+      .slice(0, 5);
+  };
 
-  const connections = api.getAllConnections()
-  const connectedPlatforms = connections.filter(c => c.status === 'connected')
+  const connections = api.getAllConnections();
+  const connectedPlatforms = connections.filter(c => c.status === 'connected');
 
   return (
     <div className="space-y-6 relative">
@@ -485,5 +485,5 @@ export function RealTimeBugBountyDashboard() {
         </Tabs>
       </div>
     </div>
-  )
+  );
 }

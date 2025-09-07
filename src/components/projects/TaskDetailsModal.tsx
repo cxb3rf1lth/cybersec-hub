@@ -1,6 +1,6 @@
-import { X } from '@phosphor-icons/react'
-import { Button } from '@/components/ui/button'
-import { Task, Project, User } from '@/types'
+import { X } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
+import { Task, Project, User } from '@/types';
 
 interface TaskDetailsModalProps {
   task: Task
@@ -29,5 +29,5 @@ export function TaskDetailsModal({ task, project, currentUser, onClose, onUpdate
         </div>
       </div>
     </div>
-  )
+  );
 }

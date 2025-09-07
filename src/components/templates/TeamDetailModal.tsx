@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar } from '@/components/ui/avatar'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   X, 
   Users, 
@@ -25,11 +25,11 @@ import {
   Calendar,
   Mail,
   Target
-} from '@phosphor-icons/react'
-import { toast } from 'sonner'
-import { TeamInfo, TeamMember, User, TeamProject, Template } from '@/types'
-import { ProjectManagement } from './ProjectManagement'
-import { format } from 'date-fns'
+} from '@phosphor-icons/react';
+import { toast } from 'sonner';
+import { TeamInfo, TeamMember, User, TeamProject, Template } from '@/types';
+import { ProjectManagement } from './ProjectManagement';
+import { format } from 'date-fns';
 
 interface TeamDetailModalProps {
   team: TeamInfo
@@ -39,60 +39,60 @@ interface TeamDetailModalProps {
 }
 
 export function TeamDetailModal({ team, currentUser, onClose, onTeamUpdated }: TeamDetailModalProps) {
-  const [teams, setTeams] = useKVWithFallback<TeamInfo[]>('teams', [])
-  const [templates] = useKVWithFallback<Template[]>('templates', [])
-  const [teamProjects] = useKVWithFallback<TeamProject[]>('teamProjects', [])
-  const [inviteEmail, setInviteEmail] = useState('')
-  const [selectedRole, setSelectedRole] = useState<TeamMember['role']>('developer')
-  const [activeTab, setActiveTab] = useState('overview')
-  const [showProjectManagement, setShowProjectManagement] = useState(false)
+  const [teams, setTeams] = useKVWithFallback<TeamInfo[]>('teams', []);
+  const [templates] = useKVWithFallback<Template[]>('templates', []);
+  const [teamProjects] = useKVWithFallback<TeamProject[]>('teamProjects', []);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [selectedRole, setSelectedRole] = useState<TeamMember['role']>('developer');
+  const [activeTab, setActiveTab] = useState('overview');
+  const [showProjectManagement, setShowProjectManagement] = useState(false);
 
-  const userMembership = team.members.find(member => member.id === currentUser.id)
-  const canManage = userMembership?.permissions.canManagePermissions
-  const canInvite = userMembership?.permissions.canInvite
+  const userMembership = team.members.find(member => member.id === currentUser.id);
+  const canManage = userMembership?.permissions.canManagePermissions;
+  const canInvite = userMembership?.permissions.canInvite;
 
   const getRoleIcon = (role: TeamMember['role']) => {
     switch (role) {
       case 'owner':
-        return <Crown className="w-4 h-4 text-yellow-500" />
+        return <Crown className="w-4 h-4 text-yellow-500" />;
       case 'admin':
-        return <Shield className="w-4 h-4 text-blue-500" />
+        return <Shield className="w-4 h-4 text-blue-500" />;
       case 'maintainer':
-        return <Wrench className="w-4 h-4 text-green-500" />
+        return <Wrench className="w-4 h-4 text-green-500" />;
       case 'developer':
-        return <Code className="w-4 h-4 text-purple-500" />
+        return <Code className="w-4 h-4 text-purple-500" />;
       default:
-        return <Eye className="w-4 h-4 text-gray-500" />
+        return <Eye className="w-4 h-4 text-gray-500" />;
     }
-  }
+  };
 
   const handleInviteMember = async () => {
     if (!inviteEmail.trim()) {
-      toast.error('Email is required')
-      return
+      toast.error('Email is required');
+      return;
     }
 
     // In a real app, this would send an invitation
-    toast.success(`Invitation sent to ${inviteEmail}`)
-    setInviteEmail('')
-  }
+    toast.success(`Invitation sent to ${inviteEmail}`);
+    setInviteEmail('');
+  };
 
   const handleRemoveMember = async (memberId: string) => {
     if (memberId === team.members.find(m => m.role === 'owner')?.id) {
-      toast.error('Cannot remove team owner')
-      return
+      toast.error('Cannot remove team owner');
+      return;
     }
 
     const updatedTeam = {
       ...team,
       members: team.members.filter(member => member.id !== memberId)
-    }
+    };
 
-    const updatedTeams = teams.map(t => t.id === team.id ? updatedTeam : t)
-    await setTeams(updatedTeams)
-    onTeamUpdated(updatedTeam)
-    toast.success('Member removed from team')
-  }
+    const updatedTeams = teams.map(t => t.id === team.id ? updatedTeam : t);
+    await setTeams(updatedTeams);
+    onTeamUpdated(updatedTeam);
+    toast.success('Member removed from team');
+  };
 
   const handleRoleChange = async (memberId: string, newRole: TeamMember['role']) => {
     const permissions = {
@@ -141,7 +141,7 @@ export function TeamDetailModal({ team, currentUser, onClose, onTeamUpdated }: T
         canMergeBranches: false,
         canPublish: false
       }
-    }
+    };
 
     const updatedTeam = {
       ...team,
@@ -150,13 +150,13 @@ export function TeamDetailModal({ team, currentUser, onClose, onTeamUpdated }: T
           ? { ...member, role: newRole, permissions: permissions[newRole] }
           : member
       )
-    }
+    };
 
-    const updatedTeams = teams.map(t => t.id === team.id ? updatedTeam : t)
-    await setTeams(updatedTeams)
-    onTeamUpdated(updatedTeam)
-    toast.success('Member role updated')
-  }
+    const updatedTeams = teams.map(t => t.id === team.id ? updatedTeam : t);
+    await setTeams(updatedTeams);
+    onTeamUpdated(updatedTeam);
+    toast.success('Member role updated');
+  };
 
   const getTeamTemplates = () => {
     return templates.filter(template => 
@@ -164,12 +164,12 @@ export function TeamDetailModal({ team, currentUser, onClose, onTeamUpdated }: T
       template.collaboration?.allowedUsers.some(userId => 
         team.members.some(member => member.id === userId)
       )
-    )
-  }
+    );
+  };
 
   const getTeamProjects = () => {
-    return teamProjects.filter(project => project.team.id === team.id)
-  }
+    return teamProjects.filter(project => project.team.id === team.id);
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -245,7 +245,7 @@ export function TeamDetailModal({ team, currentUser, onClose, onTeamUpdated }: T
                     <span className="text-muted-foreground">Owner</span>
                     <div className="flex items-center gap-2">
                       {(() => {
-                        const owner = team.members.find(m => m.role === 'owner')
+                        const owner = team.members.find(m => m.role === 'owner');
                         return owner ? (
                           <>
                             <Avatar className="w-4 h-4">
@@ -253,7 +253,7 @@ export function TeamDetailModal({ team, currentUser, onClose, onTeamUpdated }: T
                             </Avatar>
                             <span>{owner.username}</span>
                           </>
-                        ) : null
+                        ) : null;
                       })()}
                     </div>
                   </div>
@@ -503,5 +503,5 @@ export function TeamDetailModal({ team, currentUser, onClose, onTeamUpdated }: T
         />
       )}
     </div>
-  )
+  );
 }

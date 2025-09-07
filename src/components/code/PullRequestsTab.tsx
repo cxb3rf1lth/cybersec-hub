@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Plus, GitPullRequest, Clock, CheckCircle, X, User, Calendar, GitBranch, GitMerge } from '@phosphor-icons/react'
-import { Repository, User as UserType, PullRequest } from '@/types/user'
-import { toast } from 'sonner'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Plus, GitPullRequest, Clock, CheckCircle, X, User, Calendar, GitBranch, GitMerge } from '@phosphor-icons/react';
+import { Repository, User as UserType, PullRequest } from '@/types/user';
+import { toast } from 'sonner';
 
 interface PullRequestsTabProps {
   repository: Repository
@@ -19,33 +19,33 @@ interface PullRequestsTabProps {
 }
 
 export function PullRequestsTab({ repository, currentUser, isOwner }: PullRequestsTabProps) {
-  const [repositories, setRepositories] = useKVWithFallback<Repository[]>('repositories', [])
-  const [showCreateDialog, setShowCreateDialog] = useState(false)
-  const [filterStatus, setFilterStatus] = useState<'all' | 'open' | 'closed' | 'merged'>('all')
+  const [repositories, setRepositories] = useKVWithFallback<Repository[]>('repositories', []);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [filterStatus, setFilterStatus] = useState<'all' | 'open' | 'closed' | 'merged'>('all');
   
   const [newPR, setNewPR] = useState({
     title: '',
     description: '',
     sourceBranch: 'main',
     targetBranch: 'main'
-  })
+  });
 
-  const pullRequests = repository.pullRequests || []
+  const pullRequests = repository.pullRequests || [];
   
   const filteredPRs = pullRequests.filter(pr => {
-    if (filterStatus === 'all') return true
-    return pr.status === filterStatus
-  })
+    if (filterStatus === 'all') {return true;}
+    return pr.status === filterStatus;
+  });
 
   const handleCreatePR = () => {
     if (!newPR.title.trim()) {
-      toast.error('Pull request title is required')
-      return
+      toast.error('Pull request title is required');
+      return;
     }
 
     if (newPR.sourceBranch === newPR.targetBranch) {
-      toast.error('Source and target branches cannot be the same')
-      return
+      toast.error('Source and target branches cannot be the same');
+      return;
     }
 
     const pr: PullRequest = {
@@ -62,18 +62,18 @@ export function PullRequestsTab({ repository, currentUser, isOwner }: PullReques
       commits: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
-    }
+    };
 
     setRepositories(prev => prev.map(repo => 
       repo.id === repository.id 
         ? { ...repo, pullRequests: [pr, ...repo.pullRequests] }
         : repo
-    ))
+    ));
 
-    setShowCreateDialog(false)
-    setNewPR({ title: '', description: '', sourceBranch: 'main', targetBranch: 'main' })
-    toast.success('Pull request created successfully')
-  }
+    setShowCreateDialog(false);
+    setNewPR({ title: '', description: '', sourceBranch: 'main', targetBranch: 'main' });
+    toast.success('Pull request created successfully');
+  };
 
   const handleStatusChange = (prId: string, newStatus: 'open' | 'closed' | 'merged') => {
     setRepositories(prev => prev.map(repo => 
@@ -92,34 +92,34 @@ export function PullRequestsTab({ repository, currentUser, isOwner }: PullReques
             )
           }
         : repo
-    ))
+    ));
 
-    toast.success(`Pull request ${newStatus}`)
-  }
+    toast.success(`Pull request ${newStatus}`);
+  };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString()
-  }
+    return new Date(dateString).toLocaleDateString();
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'open': return <GitPullRequest className="w-4 h-4 text-green-500" />
-      case 'closed': return <X className="w-4 h-4 text-red-500" />
-      case 'merged': return <GitMerge className="w-4 h-4 text-purple-500" />
-      case 'draft': return <Clock className="w-4 h-4 text-yellow-500" />
-      default: return <GitPullRequest className="w-4 h-4" />
+      case 'open': return <GitPullRequest className="w-4 h-4 text-green-500" />;
+      case 'closed': return <X className="w-4 h-4 text-red-500" />;
+      case 'merged': return <GitMerge className="w-4 h-4 text-purple-500" />;
+      case 'draft': return <Clock className="w-4 h-4 text-yellow-500" />;
+      default: return <GitPullRequest className="w-4 h-4" />;
     }
-  }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'open': return 'bg-green-500'
-      case 'closed': return 'bg-red-500'
-      case 'merged': return 'bg-purple-500'
-      case 'draft': return 'bg-yellow-500'
-      default: return 'bg-gray-500'
+      case 'open': return 'bg-green-500';
+      case 'closed': return 'bg-red-500';
+      case 'merged': return 'bg-purple-500';
+      case 'draft': return 'bg-yellow-500';
+      default: return 'bg-gray-500';
     }
-  }
+  };
 
   return (
     <div className="p-6 h-full flex flex-col">
@@ -315,5 +315,5 @@ export function PullRequestsTab({ repository, currentUser, isOwner }: PullReques
         )}
       </div>
     </div>
-  )
+  );
 }

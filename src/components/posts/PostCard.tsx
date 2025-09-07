@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Heart, MessageCircle, Copy, Clock } from '@phosphor-icons/react'
-import { Post, User } from '@/types/user'
-import { toast } from 'sonner'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Heart, MessageCircle, Copy, Clock } from '@phosphor-icons/react';
+import { Post, User } from '@/types/user';
+import { toast } from 'sonner';
 
 interface PostCardProps {
   post: Post
@@ -15,19 +15,19 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, currentUser, onLike }: PostCardProps) {
-  const [allUsers] = useKVWithFallback<User[]>('allUsers', [])
-  const [showComments, setShowComments] = useState(false)
+  const [allUsers] = useKVWithFallback<User[]>('allUsers', []);
+  const [showComments, setShowComments] = useState(false);
   
-  const author = allUsers.find(user => user.id === post.authorId) || currentUser
-  const isLiked = post.likes.includes(currentUser.id)
-  const timeAgo = getTimeAgo(post.createdAt)
+  const author = allUsers.find(user => user.id === post.authorId) || currentUser;
+  const isLiked = post.likes.includes(currentUser.id);
+  const timeAgo = getTimeAgo(post.createdAt);
 
   const handleCopyCode = async () => {
     if (post.type === 'code') {
-      await navigator.clipboard.writeText(post.content)
-      toast.success('Code copied to clipboard!')
+      await navigator.clipboard.writeText(post.content);
+      toast.success('Code copied to clipboard!');
     }
-  }
+  };
 
   const formatCode = (code: string, language?: string) => {
     return (
@@ -49,8 +49,8 @@ export function PostCard({ post, currentUser, onLike }: PostCardProps) {
           <code className="text-sm font-mono">{code}</code>
         </pre>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <Card className="hover:shadow-md transition-shadow">
@@ -125,18 +125,18 @@ export function PostCard({ post, currentUser, onLike }: PostCardProps) {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function getTimeAgo(dateString: string): string {
-  const now = new Date()
-  const date = new Date(dateString)
-  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+  const now = new Date();
+  const date = new Date(dateString);
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-  if (diffInSeconds < 60) return 'just now'
-  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`
-  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`
-  if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`
+  if (diffInSeconds < 60) {return 'just now';}
+  if (diffInSeconds < 3600) {return `${Math.floor(diffInSeconds / 60)}m ago`;}
+  if (diffInSeconds < 86400) {return `${Math.floor(diffInSeconds / 3600)}h ago`;}
+  if (diffInSeconds < 604800) {return `${Math.floor(diffInSeconds / 86400)}d ago`;}
   
-  return date.toLocaleDateString()
+  return date.toLocaleDateString();
 }

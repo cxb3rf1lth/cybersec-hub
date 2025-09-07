@@ -1,14 +1,14 @@
-import React from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { ExternalLink, Key, Shield, CheckCircle, AlertTriangle, Info } from '@phosphor-icons/react'
-import { API_CONFIGS } from '@/lib/config'
+import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ExternalLink, Key, Shield, CheckCircle, AlertTriangle, Info } from '@phosphor-icons/react';
+import { API_CONFIGS } from '@/lib/config';
 
 export function APIConfigurationGuide() {
   const handleOpenDocs = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer')
-  }
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   const getSetupComplexity = (platform: string): 'easy' | 'medium' | 'hard' => {
     const complexityMap: Record<string, 'easy' | 'medium' | 'hard'> = {
@@ -20,17 +20,17 @@ export function APIConfigurationGuide() {
       projectdiscovery: 'easy',
       virustotal: 'easy',
       alienvault: 'easy'
-    }
-    return complexityMap[platform] || 'medium'
-  }
+    };
+    return complexityMap[platform] || 'medium';
+  };
 
   const getComplexityColor = (complexity: 'easy' | 'medium' | 'hard') => {
     switch (complexity) {
-      case 'easy': return 'text-green-400 bg-green-400/10 border-green-400/20'
-      case 'medium': return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20'
-      case 'hard': return 'text-red-400 bg-red-400/10 border-red-400/20'
+      case 'easy': return 'text-green-400 bg-green-400/10 border-green-400/20';
+      case 'medium': return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20';
+      case 'hard': return 'text-red-400 bg-red-400/10 border-red-400/20';
     }
-  }
+  };
 
   const getSetupSteps = (platform: string): string[] => {
     const steps: Record<string, string[]> = {
@@ -86,9 +86,9 @@ export function APIConfigurationGuide() {
         'Generate API key',
         'Copy the 64-character key'
       ]
-    }
-    return steps[platform] || ['Visit platform documentation', 'Follow setup instructions', 'Generate API key']
-  }
+    };
+    return steps[platform] || ['Visit platform documentation', 'Follow setup instructions', 'Generate API key'];
+  };
 
   return (
     <div className="space-y-6">
@@ -101,8 +101,8 @@ export function APIConfigurationGuide() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {Object.entries(API_CONFIGS).map(([key, config]) => {
-          const complexity = getSetupComplexity(key)
-          const steps = getSetupSteps(key)
+          const complexity = getSetupComplexity(key);
+          const steps = getSetupSteps(key);
           
           return (
             <Card key={key} className="glass-card hover-border-flow">
@@ -225,7 +225,7 @@ export function APIConfigurationGuide() {
                 </div>
               </CardContent>
             </Card>
-          )
+          );
         })}
       </div>
 
@@ -262,5 +262,5 @@ export function APIConfigurationGuide() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

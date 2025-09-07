@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   BarChart, 
   PieChart, 
@@ -15,110 +15,110 @@ import {
   Target,
   ArrowUpRight,
   ArrowDownRight
-} from '@phosphor-icons/react'
-import { User } from '@/types/user'
-import { Earning, EarningType, EarningSource } from '@/types/earnings'
+} from '@phosphor-icons/react';
+import { User } from '@/types/user';
+import { Earning, EarningType, EarningSource } from '@/types/earnings';
 
 interface AnalyticsViewProps {
   currentUser: User
 }
 
 export function AnalyticsView({ currentUser }: AnalyticsViewProps) {
-  const [earnings] = useKVWithFallback<Earning[]>(`earnings-${currentUser.id}`, [])
-  const [timeRange, setTimeRange] = useState<'30d' | '90d' | '1y' | 'all'>('90d')
+  const [earnings] = useKVWithFallback<Earning[]>(`earnings-${currentUser.id}`, []);
+  const [timeRange, setTimeRange] = useState<'30d' | '90d' | '1y' | 'all'>('90d');
 
   // Filter earnings based on time range
   const getFilteredEarnings = () => {
-    if (timeRange === 'all') return earnings
+    if (timeRange === 'all') {return earnings;}
 
-    const now = new Date()
-    const cutoffDate = new Date()
+    const now = new Date();
+    const cutoffDate = new Date();
     
     switch (timeRange) {
       case '30d':
-        cutoffDate.setDate(now.getDate() - 30)
-        break
+        cutoffDate.setDate(now.getDate() - 30);
+        break;
       case '90d':
-        cutoffDate.setDate(now.getDate() - 90)
-        break
+        cutoffDate.setDate(now.getDate() - 90);
+        break;
       case '1y':
-        cutoffDate.setFullYear(now.getFullYear() - 1)
-        break
+        cutoffDate.setFullYear(now.getFullYear() - 1);
+        break;
     }
 
-    return earnings.filter(earning => new Date(earning.earnedAt) >= cutoffDate)
-  }
+    return earnings.filter(earning => new Date(earning.earnedAt) >= cutoffDate);
+  };
 
-  const filteredEarnings = getFilteredEarnings()
+  const filteredEarnings = getFilteredEarnings();
 
   // Calculate analytics data
-  const totalEarnings = filteredEarnings.reduce((sum, earning) => sum + earning.amount, 0)
-  const averagePerProject = filteredEarnings.length > 0 ? totalEarnings / filteredEarnings.length : 0
-  const projectCount = filteredEarnings.length
+  const totalEarnings = filteredEarnings.reduce((sum, earning) => sum + earning.amount, 0);
+  const averagePerProject = filteredEarnings.length > 0 ? totalEarnings / filteredEarnings.length : 0;
+  const projectCount = filteredEarnings.length;
 
   // Earnings by type
   const earningsByType = filteredEarnings.reduce((acc, earning) => {
-    acc[earning.type] = (acc[earning.type] || 0) + earning.amount
-    return acc
-  }, {} as Record<EarningType, number>)
+    acc[earning.type] = (acc[earning.type] || 0) + earning.amount;
+    return acc;
+  }, {} as Record<EarningType, number>);
 
   const topEarningTypes = Object.entries(earningsByType)
     .sort(([,a], [,b]) => b - a)
-    .slice(0, 5)
+    .slice(0, 5);
 
   // Earnings by source
   const earningsBySource = filteredEarnings.reduce((acc, earning) => {
-    acc[earning.source] = (acc[earning.source] || 0) + earning.amount
-    return acc
-  }, {} as Record<EarningSource, number>)
+    acc[earning.source] = (acc[earning.source] || 0) + earning.amount;
+    return acc;
+  }, {} as Record<EarningSource, number>);
 
   // Monthly trends (last 12 months)
-  const monthlyTrends = []
+  const monthlyTrends = [];
   for (let i = 11; i >= 0; i--) {
-    const date = new Date()
-    date.setMonth(date.getMonth() - i)
-    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+    const date = new Date();
+    date.setMonth(date.getMonth() - i);
+    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
     
     const monthEarnings = earnings.filter(earning => {
-      const earningDate = new Date(earning.earnedAt)
+      const earningDate = new Date(earning.earnedAt);
       return earningDate.getFullYear() === date.getFullYear() && 
-             earningDate.getMonth() === date.getMonth()
-    })
+             earningDate.getMonth() === date.getMonth();
+    });
 
     monthlyTrends.push({
       month: date.toLocaleString('default', { month: 'short', year: '2-digit' }),
       earnings: monthEarnings.reduce((sum, e) => sum + e.amount, 0),
       projects: monthEarnings.length
-    })
+    });
   }
 
   // Growth calculations
-  const currentMonth = monthlyTrends[monthlyTrends.length - 1]
-  const previousMonth = monthlyTrends[monthlyTrends.length - 2]
+  const currentMonth = monthlyTrends[monthlyTrends.length - 1];
+  const previousMonth = monthlyTrends[monthlyTrends.length - 2];
   const monthlyGrowth = previousMonth?.earnings > 0 
     ? ((currentMonth?.earnings - previousMonth?.earnings) / previousMonth?.earnings) * 100 
-    : 0
+    : 0;
 
   // Team vs individual earnings
-  const teamEarnings = filteredEarnings.filter(e => e.teamId).reduce((sum, e) => sum + e.amount, 0)
-  const individualEarnings = filteredEarnings.filter(e => !e.teamId).reduce((sum, e) => sum + e.amount, 0)
+  const teamEarnings = filteredEarnings.filter(e => e.teamId).reduce((sum, e) => sum + e.amount, 0);
+  const individualEarnings = filteredEarnings.filter(e => !e.teamId).reduce((sum, e) => sum + e.amount, 0);
 
   const formatEarningType = (type: string) => {
     return type.split('-').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ')
-  }
+    ).join(' ');
+  };
 
   const formatEarningSource = (source: string) => {
     return source.split('-').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ')
-  }
+    ).join(' ');
+  };
 
   const getTypeColor = (index: number) => {
-    const colors = ['bg-primary', 'bg-accent', 'bg-secondary', 'bg-muted', 'bg-destructive']
-    return colors[index % colors.length]
-  }
+    const colors = ['bg-primary', 'bg-accent', 'bg-secondary', 'bg-muted', 'bg-destructive'];
+    return colors[index % colors.length];
+  };
 
   return (
     <div className="space-y-6">
@@ -215,7 +215,7 @@ export function AnalyticsView({ currentUser }: AnalyticsViewProps) {
             {topEarningTypes.length > 0 ? (
               <div className="space-y-4">
                 {topEarningTypes.map(([type, amount], index) => {
-                  const percentage = totalEarnings > 0 ? (amount / totalEarnings) * 100 : 0
+                  const percentage = totalEarnings > 0 ? (amount / totalEarnings) * 100 : 0;
                   return (
                     <div key={type} className="space-y-2">
                       <div className="flex justify-between items-center">
@@ -234,7 +234,7 @@ export function AnalyticsView({ currentUser }: AnalyticsViewProps) {
                         />
                       </div>
                     </div>
-                  )
+                  );
                 })}
               </div>
             ) : (
@@ -260,7 +260,7 @@ export function AnalyticsView({ currentUser }: AnalyticsViewProps) {
                 {Object.entries(earningsBySource)
                   .sort(([,a], [,b]) => b - a)
                   .map(([source, amount], index) => {
-                    const percentage = totalEarnings > 0 ? (amount / totalEarnings) * 100 : 0
+                    const percentage = totalEarnings > 0 ? (amount / totalEarnings) * 100 : 0;
                     return (
                       <div key={source} className="space-y-2">
                         <div className="flex justify-between items-center">
@@ -279,7 +279,7 @@ export function AnalyticsView({ currentUser }: AnalyticsViewProps) {
                           />
                         </div>
                       </div>
-                    )
+                    );
                   })}
               </div>
             ) : (
@@ -305,8 +305,8 @@ export function AnalyticsView({ currentUser }: AnalyticsViewProps) {
             <div className="space-y-4">
               <div className="grid grid-cols-12 gap-2">
                 {monthlyTrends.map((trend, index) => {
-                  const maxEarnings = Math.max(...monthlyTrends.map(t => t.earnings))
-                  const height = maxEarnings > 0 ? (trend.earnings / maxEarnings) * 100 : 0
+                  const maxEarnings = Math.max(...monthlyTrends.map(t => t.earnings));
+                  const height = maxEarnings > 0 ? (trend.earnings / maxEarnings) * 100 : 0;
                   
                   return (
                     <div key={index} className="flex flex-col items-center gap-2">
@@ -324,7 +324,7 @@ export function AnalyticsView({ currentUser }: AnalyticsViewProps) {
                         {trend.month}
                       </span>
                     </div>
-                  )
+                  );
                 })}
               </div>
               
@@ -423,5 +423,5 @@ export function AnalyticsView({ currentUser }: AnalyticsViewProps) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

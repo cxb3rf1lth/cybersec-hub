@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   AlertTriangle, 
   Shield, 
@@ -12,8 +12,8 @@ import {
   TrendingUp,
   DollarSign,
   Zap
-} from '@phosphor-icons/react'
-import { formatDistanceToNow } from 'date-fns'
+} from '@phosphor-icons/react';
+import { formatDistanceToNow } from 'date-fns';
 
 interface ThreatFeedItem {
   id: string
@@ -87,30 +87,30 @@ export function LiveThreatFeedWidget({ maxItems = 5, showHeader = true, classNam
       timestamp: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
       reward: 15000
     }
-  ]
+  ];
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'bg-destructive text-destructive-foreground'
-      case 'high': return 'bg-orange-500 text-white'
-      case 'medium': return 'bg-yellow-500 text-black'
-      case 'low': return 'bg-blue-500 text-white'
-      default: return 'bg-muted text-muted-foreground'
+      case 'critical': return 'bg-destructive text-destructive-foreground';
+      case 'high': return 'bg-orange-500 text-white';
+      case 'medium': return 'bg-yellow-500 text-black';
+      case 'low': return 'bg-blue-500 text-white';
+      default: return 'bg-muted text-muted-foreground';
     }
-  }
+  };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'vulnerability': return <AlertTriangle className="w-4 h-4" />
-      case 'exploit': return <Shield className="w-4 h-4" />
-      case 'bounty': return <Bug className="w-4 h-4" />
-      case 'incident': return <Eye className="w-4 h-4" />
-      case 'malware': return <Shield className="w-4 h-4" />
-      default: return <TrendingUp className="w-4 h-4" />
+      case 'vulnerability': return <AlertTriangle className="w-4 h-4" />;
+      case 'exploit': return <Shield className="w-4 h-4" />;
+      case 'bounty': return <Bug className="w-4 h-4" />;
+      case 'incident': return <Eye className="w-4 h-4" />;
+      case 'malware': return <Shield className="w-4 h-4" />;
+      default: return <TrendingUp className="w-4 h-4" />;
     }
-  }
+  };
 
-  const displayFeeds = mockLiveFeeds.slice(0, maxItems)
+  const displayFeeds = mockLiveFeeds.slice(0, maxItems);
 
   return (
     <Card className={`border-primary/20 ${className}`}>
@@ -131,7 +131,7 @@ export function LiveThreatFeedWidget({ maxItems = 5, showHeader = true, classNam
         <ScrollArea className="h-80">
           <div className="space-y-3">
             {displayFeeds.map((feed) => {
-              const timeAgo = formatDistanceToNow(new Date(feed.timestamp), { addSuffix: true })
+              const timeAgo = formatDistanceToNow(new Date(feed.timestamp), { addSuffix: true });
               
               return (
                 <div 
@@ -178,7 +178,7 @@ export function LiveThreatFeedWidget({ maxItems = 5, showHeader = true, classNam
                     )}
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         </ScrollArea>
@@ -190,5 +190,5 @@ export function LiveThreatFeedWidget({ maxItems = 5, showHeader = true, classNam
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

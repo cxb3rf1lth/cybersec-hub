@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar } from '@/components/ui/avatar'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useState, useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   GitBranch, 
   Plus, 
@@ -24,8 +24,8 @@ import {
   X,
   Check,
   Clock
-} from '@phosphor-icons/react'
-import { toast } from 'sonner'
+} from '@phosphor-icons/react';
+import { toast } from 'sonner';
 import { 
   Template, 
   TemplateFile, 
@@ -35,8 +35,8 @@ import {
   User, 
   TeamInfo,
   FileChange 
-} from '@/types'
-import { format } from 'date-fns'
+} from '@/types';
+import { format } from 'date-fns';
 
 interface CollaborativeEditorProps {
   template: Template
@@ -46,47 +46,47 @@ interface CollaborativeEditorProps {
 }
 
 export function CollaborativeEditor({ template, currentUser, onClose, onTemplateUpdated }: CollaborativeEditorProps) {
-  const [templates, setTemplates] = useKVWithFallback<Template[]>('templates', [])
-  const [pullRequests, setPullRequests] = useKVWithFallback<PullRequest[]>('pullRequests', [])
-  const [activeTab, setActiveTab] = useState('editor')
-  const [selectedBranch, setSelectedBranch] = useState(template.branches?.[0]?.name || 'main')
-  const [selectedFile, setSelectedFile] = useState<TemplateFile | null>(template.files[0] || null)
-  const [fileContent, setFileContent] = useState(selectedFile?.content || '')
-  const [commitMessage, setCommitMessage] = useState('')
-  const [showCreateBranch, setShowCreateBranch] = useState(false)
-  const [newBranchName, setNewBranchName] = useState('')
-  const [showCreatePR, setShowCreatePR] = useState(false)
-  const [prTitle, setPrTitle] = useState('')
-  const [prDescription, setPrDescription] = useState('')
-  const [targetBranch, setTargetBranch] = useState('main')
+  const [templates, setTemplates] = useKVWithFallback<Template[]>('templates', []);
+  const [pullRequests, setPullRequests] = useKVWithFallback<PullRequest[]>('pullRequests', []);
+  const [activeTab, setActiveTab] = useState('editor');
+  const [selectedBranch, setSelectedBranch] = useState(template.branches?.[0]?.name || 'main');
+  const [selectedFile, setSelectedFile] = useState<TemplateFile | null>(template.files[0] || null);
+  const [fileContent, setFileContent] = useState(selectedFile?.content || '');
+  const [commitMessage, setCommitMessage] = useState('');
+  const [showCreateBranch, setShowCreateBranch] = useState(false);
+  const [newBranchName, setNewBranchName] = useState('');
+  const [showCreatePR, setShowCreatePR] = useState(false);
+  const [prTitle, setPrTitle] = useState('');
+  const [prDescription, setPrDescription] = useState('');
+  const [targetBranch, setTargetBranch] = useState('main');
   
   // Simulated real-time collaborators
   const [activeCollaborators] = useState([
     { id: '2', username: 'alex_sec', avatar: '/api/placeholder/32/32', lastSeen: new Date() },
     { id: '3', username: 'sarah_cyber', avatar: '/api/placeholder/32/32', lastSeen: new Date() }
-  ])
+  ]);
 
-  const currentBranch = template.branches?.find(b => b.name === selectedBranch)
-  const canEdit = template.collaboration?.permissions[currentUser.id] !== 'read'
+  const currentBranch = template.branches?.find(b => b.name === selectedBranch);
+  const canEdit = template.collaboration?.permissions[currentUser.id] !== 'read';
   const canCreateBranches = template.collaboration?.permissions[currentUser.id] === 'admin' || 
-                           template.collaboration?.permissions[currentUser.id] === 'write'
+                           template.collaboration?.permissions[currentUser.id] === 'write';
 
   useEffect(() => {
     if (selectedFile) {
-      setFileContent(selectedFile.content)
+      setFileContent(selectedFile.content);
     }
-  }, [selectedFile])
+  }, [selectedFile]);
 
   const handleFileSelect = (file: TemplateFile) => {
     if (selectedFile && fileContent !== selectedFile.content) {
       // Auto-save current changes
-      saveFileChanges()
+      saveFileChanges();
     }
-    setSelectedFile(file)
-  }
+    setSelectedFile(file);
+  };
 
   const saveFileChanges = () => {
-    if (!selectedFile || !canEdit) return
+    if (!selectedFile || !canEdit) {return;}
 
     const updatedFiles = template.files.map(file => 
       file.id === selectedFile.id 
@@ -101,22 +101,22 @@ export function CollaborativeEditor({ template, currentUser, onClose, onTemplate
             lastModified: new Date()
           }
         : file
-    )
+    );
 
-    const updatedTemplate = { ...template, files: updatedFiles }
-    onTemplateUpdated(updatedTemplate)
-    toast.success('File saved')
-  }
+    const updatedTemplate = { ...template, files: updatedFiles };
+    onTemplateUpdated(updatedTemplate);
+    toast.success('File saved');
+  };
 
   const handleCommit = async () => {
     if (!commitMessage.trim()) {
-      toast.error('Commit message is required')
-      return
+      toast.error('Commit message is required');
+      return;
     }
 
     const changes: FileChange[] = template.files.map(file => {
       const currentFile = selectedFile?.id === file.id ? 
-        { ...file, content: fileContent } : file
+        { ...file, content: fileContent } : file;
       
       return {
         type: 'modified' as const,
@@ -125,8 +125,8 @@ export function CollaborativeEditor({ template, currentUser, onClose, onTemplate
         oldContent: file.content,
         linesAdded: Math.floor(Math.random() * 10),
         linesRemoved: Math.floor(Math.random() * 5)
-      }
-    }).filter(change => change.content !== change.oldContent)
+      };
+    }).filter(change => change.content !== change.oldContent);
 
     const newCommit: TemplateCommit = {
       id: Date.now().toString(),
@@ -139,31 +139,31 @@ export function CollaborativeEditor({ template, currentUser, onClose, onTemplate
       timestamp: new Date(),
       changes,
       parentCommit: currentBranch?.commits[0]?.id
-    }
+    };
 
     const updatedBranches = template.branches?.map(branch => 
       branch.name === selectedBranch
         ? { ...branch, commits: [newCommit, ...branch.commits], lastModified: new Date() }
         : branch
-    ) || []
+    ) || [];
 
     const updatedTemplate = { 
       ...template, 
       branches: updatedBranches,
       updatedAt: new Date()
-    }
+    };
 
-    const updatedTemplates = templates.map(t => t.id === template.id ? updatedTemplate : t)
-    await setTemplates(updatedTemplates)
-    onTemplateUpdated(updatedTemplate)
-    setCommitMessage('')
-    toast.success('Changes committed successfully')
-  }
+    const updatedTemplates = templates.map(t => t.id === template.id ? updatedTemplate : t);
+    await setTemplates(updatedTemplates);
+    onTemplateUpdated(updatedTemplate);
+    setCommitMessage('');
+    toast.success('Changes committed successfully');
+  };
 
   const handleCreateBranch = async () => {
     if (!newBranchName.trim()) {
-      toast.error('Branch name is required')
-      return
+      toast.error('Branch name is required');
+      return;
     }
 
     const newBranch: TemplateBranch = {
@@ -180,24 +180,24 @@ export function CollaborativeEditor({ template, currentUser, onClose, onTemplate
       isMain: false,
       commits: currentBranch?.commits || [],
       status: 'active'
-    }
+    };
 
-    const updatedBranches = [...(template.branches || []), newBranch]
-    const updatedTemplate = { ...template, branches: updatedBranches }
+    const updatedBranches = [...(template.branches || []), newBranch];
+    const updatedTemplate = { ...template, branches: updatedBranches };
 
-    const updatedTemplates = templates.map(t => t.id === template.id ? updatedTemplate : t)
-    await setTemplates(updatedTemplates)
-    onTemplateUpdated(updatedTemplate)
-    setNewBranchName('')
-    setShowCreateBranch(false)
-    setSelectedBranch(newBranch.name)
-    toast.success('Branch created successfully')
-  }
+    const updatedTemplates = templates.map(t => t.id === template.id ? updatedTemplate : t);
+    await setTemplates(updatedTemplates);
+    onTemplateUpdated(updatedTemplate);
+    setNewBranchName('');
+    setShowCreateBranch(false);
+    setSelectedBranch(newBranch.name);
+    toast.success('Branch created successfully');
+  };
 
   const handleCreatePullRequest = async () => {
     if (!prTitle.trim()) {
-      toast.error('Pull request title is required')
-      return
+      toast.error('Pull request title is required');
+      return;
     }
 
     const newPR: PullRequest = {
@@ -217,22 +217,22 @@ export function CollaborativeEditor({ template, currentUser, onClose, onTemplate
       reviewers: [],
       comments: [],
       changes: currentBranch?.commits[0]?.changes || []
-    }
+    };
 
-    await setPullRequests(prev => [...prev, newPR])
-    setPrTitle('')
-    setPrDescription('')
-    setShowCreatePR(false)
-    toast.success('Pull request created successfully')
-  }
+    await setPullRequests(prev => [...prev, newPR]);
+    setPrTitle('');
+    setPrDescription('');
+    setShowCreatePR(false);
+    toast.success('Pull request created successfully');
+  };
 
   const getTemplatePullRequests = () => {
     return pullRequests.filter(pr => 
       template.branches?.some(branch => 
         branch.name === pr.sourceBranch || branch.name === pr.targetBranch
       )
-    )
-  }
+    );
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -524,5 +524,5 @@ export function CollaborativeEditor({ template, currentUser, onClose, onTemplate
         )}
       </Card>
     </div>
-  )
+  );
 }

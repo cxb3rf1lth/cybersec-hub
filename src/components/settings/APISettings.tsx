@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Switch } from '@/components/ui/switch'
-import { Progress } from '@/components/ui/progress'
-import { AlertCircle, CheckCircle, ExternalLink, Shield, Clock, Zap, Key, RefreshCw, BookOpen } from '@phosphor-icons/react'
-import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
-import { API_CONFIGS, APIKeyValidator } from '@/lib/config'
-import { APIConfigurationGuide } from './APIConfigurationGuide'
-import { toast } from 'sonner'
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
+import { Progress } from '@/components/ui/progress';
+import { AlertCircle, CheckCircle, ExternalLink, Shield, Clock, Zap, Key, RefreshCw, BookOpen } from '@phosphor-icons/react';
+import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration';
+import { API_CONFIGS, APIKeyValidator } from '@/lib/config';
+import { APIConfigurationGuide } from './APIConfigurationGuide';
+import { toast } from 'sonner';
 
 interface APISettingsProps {
   onClose?: () => void
@@ -29,85 +29,85 @@ export function APISettings({ onClose }: APISettingsProps) {
     syncErrors,
     apiKeys,
     secureConfig
-  } = useBugBountyIntegration()
+  } = useBugBountyIntegration();
 
-  const [apiKeyInputs, setApiKeyInputs] = useState<Record<string, string>>({})
-  const [testingKeys, setTestingKeys] = useState<Record<string, boolean>>({})
-  const [showKeys, setShowKeys] = useState<Record<string, boolean>>({})
+  const [apiKeyInputs, setApiKeyInputs] = useState<Record<string, string>>({});
+  const [testingKeys, setTestingKeys] = useState<Record<string, boolean>>({});
+  const [showKeys, setShowKeys] = useState<Record<string, boolean>>({});
 
   const handleAPIKeyChange = (platform: string, value: string) => {
-    setApiKeyInputs(prev => ({ ...prev, [platform]: value }))
-  }
+    setApiKeyInputs(prev => ({ ...prev, [platform]: value }));
+  };
 
   const handleConnect = async (platformId: string) => {
-    const platform = integrations.find(int => int.id === platformId)
-    const platformKey = platform?.name.toLowerCase().split(' ')[0]
-    const apiKey = apiKeyInputs[platformKey || '']
+    const platform = integrations.find(int => int.id === platformId);
+    const platformKey = platform?.name.toLowerCase().split(' ')[0];
+    const apiKey = apiKeyInputs[platformKey || ''];
 
     if (!apiKey && platform?.name !== 'CVE Database') {
-      toast.error('Please enter an API key')
-      return
+      toast.error('Please enter an API key');
+      return;
     }
 
-    setTestingKeys(prev => ({ ...prev, [platformKey || '']: true }))
+    setTestingKeys(prev => ({ ...prev, [platformKey || '']: true }));
 
     try {
-      await connectPlatform(platformId, apiKey)
-      setApiKeyInputs(prev => ({ ...prev, [platformKey || '']: '' }))
+      await connectPlatform(platformId, apiKey);
+      setApiKeyInputs(prev => ({ ...prev, [platformKey || '']: '' }));
     } finally {
-      setTestingKeys(prev => ({ ...prev, [platformKey || '']: false }))
+      setTestingKeys(prev => ({ ...prev, [platformKey || '']: false }));
     }
-  }
+  };
 
   const handleDisconnect = (platformId: string) => {
-    disconnectPlatform(platformId)
-  }
+    disconnectPlatform(platformId);
+  };
 
   const handleTestKey = async (platform: string, apiKey: string) => {
     if (!apiKey) {
-      toast.error('Please enter an API key')
-      return
+      toast.error('Please enter an API key');
+      return;
     }
 
-    setTestingKeys(prev => ({ ...prev, [platform]: true }))
+    setTestingKeys(prev => ({ ...prev, [platform]: true }));
 
     try {
-      const result = await APIKeyValidator.testConnection(platform, apiKey)
+      const result = await APIKeyValidator.testConnection(platform, apiKey);
       
       if (result.valid) {
-        toast.success(`API key is valid for ${API_CONFIGS[platform]?.platform}`)
+        toast.success(`API key is valid for ${API_CONFIGS[platform]?.platform}`);
       } else {
-        toast.error(`Invalid API key: ${result.error}`)
+        toast.error(`Invalid API key: ${result.error}`);
       }
     } catch (error) {
-      toast.error('Failed to test API key')
+      toast.error('Failed to test API key');
     } finally {
-      setTestingKeys(prev => ({ ...prev, [platform]: false }))
+      setTestingKeys(prev => ({ ...prev, [platform]: false }));
     }
-  }
+  };
 
   const formatLastSync = (lastSync: string) => {
-    if (!lastSync) return 'Never'
-    const date = new Date(lastSync)
-    const now = new Date()
-    const diffMs = now.getTime() - date.getTime()
-    const diffMins = Math.floor(diffMs / 60000)
+    if (!lastSync) {return 'Never';}
+    const date = new Date(lastSync);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
     
-    if (diffMins < 1) return 'Just now'
-    if (diffMins < 60) return `${diffMins}m ago`
-    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`
-    return `${Math.floor(diffMins / 1440)}d ago`
-  }
+    if (diffMins < 1) {return 'Just now';}
+    if (diffMins < 60) {return `${diffMins}m ago`;}
+    if (diffMins < 1440) {return `${Math.floor(diffMins / 60)}h ago`;}
+    return `${Math.floor(diffMins / 1440)}d ago`;
+  };
 
   const getSeverityColor = (severity: 'critical' | 'high' | 'medium' | 'low') => {
     switch (severity) {
-      case 'critical': return 'text-red-400'
-      case 'high': return 'text-orange-400'
-      case 'medium': return 'text-yellow-400'
-      case 'low': return 'text-blue-400'
-      default: return 'text-muted-foreground'
+      case 'critical': return 'text-red-400';
+      case 'high': return 'text-orange-400';
+      case 'medium': return 'text-yellow-400';
+      case 'low': return 'text-blue-400';
+      default: return 'text-muted-foreground';
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -147,11 +147,11 @@ export function APISettings({ onClose }: APISettingsProps) {
         <TabsContent value="platforms" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {integrations.map((integration) => {
-              const platformKey = integration.name.toLowerCase().split(' ')[0]
-              const config = API_CONFIGS[platformKey]
-              const keyStatus = getAPIKeyStatus(integration.id)
-              const rateLimit = getRateLimitStatus(integration.id)
-              const hasError = syncErrors[platformKey] || syncErrors[integration.name]
+              const platformKey = integration.name.toLowerCase().split(' ')[0];
+              const config = API_CONFIGS[platformKey];
+              const keyStatus = getAPIKeyStatus(integration.id);
+              const rateLimit = getRateLimitStatus(integration.id);
+              const hasError = syncErrors[platformKey] || syncErrors[integration.name];
 
               return (
                 <Card key={integration.id} className="glass-card hover-border-flow">
@@ -325,7 +325,7 @@ export function APISettings({ onClose }: APISettingsProps) {
                     )}
                   </CardContent>
                 </Card>
-              )
+              );
             })}
           </div>
         </TabsContent>
@@ -386,7 +386,7 @@ export function APISettings({ onClose }: APISettingsProps) {
         <TabsContent value="usage" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {Object.entries(API_CONFIGS).map(([key, config]) => {
-              const keyStatus = apiKeys.getAllPlatformStatuses().find(ks => ks.platform === key)
+              const keyStatus = apiKeys.getAllPlatformStatuses().find(ks => ks.platform === key);
               
               return (
                 <Card key={key} className="glass-card">
@@ -431,11 +431,11 @@ export function APISettings({ onClose }: APISettingsProps) {
                     )}
                   </CardContent>
                 </Card>
-              )
+              );
             })}
           </div>
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

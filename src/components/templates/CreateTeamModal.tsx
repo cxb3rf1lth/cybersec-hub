@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Card } from '@/components/ui/card'
-import { Switch } from '@/components/ui/switch'
-import { X, Users, Shield, Eye } from '@phosphor-icons/react'
-import { toast } from 'sonner'
-import { TeamInfo, User } from '@/types'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { X, Users, Shield, Eye } from '@phosphor-icons/react';
+import { toast } from 'sonner';
+import { TeamInfo, User } from '@/types';
 
 interface CreateTeamModalProps {
   currentUser: User
@@ -17,19 +17,19 @@ interface CreateTeamModalProps {
 }
 
 export function CreateTeamModal({ currentUser, onClose, onTeamCreated }: CreateTeamModalProps) {
-  const [teams] = useKVWithFallback<TeamInfo[]>('teams', [])
+  const [teams] = useKVWithFallback<TeamInfo[]>('teams', []);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     isPublic: true
-  })
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     
     if (!formData.name.trim()) {
-      toast.error('Team name is required')
-      return
+      toast.error('Team name is required');
+      return;
     }
 
     const newTeam: TeamInfo = {
@@ -55,17 +55,17 @@ export function CreateTeamModal({ currentUser, onClose, onTeamCreated }: CreateT
       }],
       createdAt: new Date(),
       isPublic: formData.isPublic
-    }
+    };
 
     try {
-      await spark.kv.set('teams', [...teams, newTeam])
-      toast.success('Team created successfully!')
-      onTeamCreated(newTeam)
-      onClose()
+      await spark.kv.set('teams', [...teams, newTeam]);
+      toast.success('Team created successfully!');
+      onTeamCreated(newTeam);
+      onClose();
     } catch (error) {
-      toast.error('Failed to create team')
+      toast.error('Failed to create team');
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -144,5 +144,5 @@ export function CreateTeamModal({ currentUser, onClose, onTeamCreated }: CreateT
         </form>
       </Card>
     </div>
-  )
+  );
 }

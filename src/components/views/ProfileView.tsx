@@ -1,18 +1,18 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { StatusIndicator } from '@/components/ui/StatusIndicator'
-import { BadgeGrid } from '@/components/ui/SecurityBadge'
-import { CertificationList } from '@/components/ui/CertificationBadge'
-import { Users, FileText, Code, Calendar, Edit, Gear, Trophy, Certificate, Shield } from '@phosphor-icons/react'
-import { User, Post } from '@/types/user'
-import { PostCard } from '@/components/posts/PostCard'
-import { EditProfileModal } from '@/components/profile/EditProfileModal'
-import { ThemeSelector } from '@/components/profile/ThemeSelector'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { StatusIndicator } from '@/components/ui/StatusIndicator';
+import { BadgeGrid } from '@/components/ui/SecurityBadge';
+import { CertificationList } from '@/components/ui/CertificationBadge';
+import { Users, FileText, Code, Calendar, Edit, Gear, Trophy, Certificate, Shield } from '@phosphor-icons/react';
+import { User, Post } from '@/types/user';
+import { PostCard } from '@/components/posts/PostCard';
+import { EditProfileModal } from '@/components/profile/EditProfileModal';
+import { ThemeSelector } from '@/components/profile/ThemeSelector';
 
 interface ProfileViewProps {
   currentUser: User
@@ -20,23 +20,23 @@ interface ProfileViewProps {
 }
 
 export function ProfileView({ currentUser, onUserUpdate }: ProfileViewProps) {
-  const [showEditModal, setShowEditModal] = useState(false)
-  const [posts] = useKVWithFallback<Post[]>('posts', [])
-  const [allUsers] = useKVWithFallback<User[]>('allUsers', [])
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [posts] = useKVWithFallback<Post[]>('posts', []);
+  const [allUsers] = useKVWithFallback<User[]>('allUsers', []);
 
-  const userPosts = posts.filter(post => post.authorId === currentUser.id)
-  const followers = allUsers.filter(user => user.following.includes(currentUser.id))
-  const following = allUsers.filter(user => currentUser.following.includes(user.id))
+  const userPosts = posts.filter(post => post.authorId === currentUser.id);
+  const followers = allUsers.filter(user => user.following.includes(currentUser.id));
+  const following = allUsers.filter(user => currentUser.following.includes(user.id));
 
   const handleLikePost = (postId: string) => {
     // This would typically update the posts in the parent component
     // For now, it's a placeholder
-  }
+  };
 
   const handleUpdateProfile = (updatedUser: User) => {
-    onUserUpdate(updatedUser)
-    setShowEditModal(false)
-  }
+    onUserUpdate(updatedUser);
+    setShowEditModal(false);
+  };
 
   return (
     <div className="h-screen overflow-y-auto">
@@ -338,5 +338,5 @@ export function ProfileView({ currentUser, onUserUpdate }: ProfileViewProps) {
         )}
       </div>
     </div>
-  )
+  );
 }

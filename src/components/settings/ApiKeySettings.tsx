@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react'
-import { useApiKeys, API_SERVICES, type ApiServiceKey } from '@/lib/api-keys'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { toast } from 'sonner'
+import { useState, useEffect } from 'react';
+import { useApiKeys, API_SERVICES, type ApiServiceKey } from '@/lib/api-keys';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { toast } from 'sonner';
 import { 
   Key, 
   Shield, 
@@ -21,7 +21,7 @@ import {
   Activity,
   AlertTriangle,
   Info
-} from '@phosphor-icons/react'
+} from '@phosphor-icons/react';
 
 interface ApiKeySettingsProps {
   open: boolean
@@ -40,106 +40,106 @@ export function ApiKeySettings({ open, onOpenChange }: ApiKeySettingsProps) {
     refreshAllKeys,
     getServiceStats,
     loadApiKeys
-  } = useApiKeys()
+  } = useApiKeys();
 
-  const [selectedService, setSelectedService] = useState<ApiServiceKey | null>(null)
-  const [keyInput, setKeyInput] = useState('')
-  const [validating, setValidating] = useState(false)
-  const [refreshing, setRefreshing] = useState(false)
-  const [serviceStats, setServiceStats] = useState<Record<string, any>>({})
+  const [selectedService, setSelectedService] = useState<ApiServiceKey | null>(null);
+  const [keyInput, setKeyInput] = useState('');
+  const [validating, setValidating] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [serviceStats, setServiceStats] = useState<Record<string, any>>({});
 
   useEffect(() => {
     if (open) {
-      loadData()
+      loadData();
     }
-  }, [open])
+  }, [open]);
 
   const loadData = async () => {
-    await loadApiKeys()
-    setServiceStats(getServiceStats())
-  }
+    await loadApiKeys();
+    setServiceStats(getServiceStats());
+  };
 
   const handleSaveKey = async () => {
-    if (!selectedService || !keyInput.trim()) return
+    if (!selectedService || !keyInput.trim()) {return;}
 
-    setValidating(true)
+    setValidating(true);
     try {
-      await saveApiKey(selectedService, keyInput.trim())
-      setKeyInput('')
-      setSelectedService(null)
-      await loadData()
+      await saveApiKey(selectedService, keyInput.trim());
+      setKeyInput('');
+      setSelectedService(null);
+      await loadData();
     } catch (error) {
-      toast.error('Failed to save API key')
+      toast.error('Failed to save API key');
     } finally {
-      setValidating(false)
+      setValidating(false);
     }
-  }
+  };
 
   const handleRemoveKey = async (service: ApiServiceKey) => {
     try {
-      await removeApiKey(service)
-      await loadData()
+      await removeApiKey(service);
+      await loadData();
     } catch (error) {
-      toast.error('Failed to remove API key')
+      toast.error('Failed to remove API key');
     }
-  }
+  };
 
   const handleToggleKey = async (service: ApiServiceKey, enabled: boolean) => {
     try {
-      await toggleApiKey(service, enabled)
-      await loadData()
+      await toggleApiKey(service, enabled);
+      await loadData();
     } catch (error) {
-      toast.error('Failed to toggle API key')
+      toast.error('Failed to toggle API key');
     }
-  }
+  };
 
   const handleRefreshAll = async () => {
-    setRefreshing(true)
+    setRefreshing(true);
     try {
-      const result = await refreshAllKeys()
-      toast.success(`Refreshed ${result.success} keys successfully${result.failed > 0 ? `, ${result.failed} failed` : ''}`)
-      await loadData()
+      const result = await refreshAllKeys();
+      toast.success(`Refreshed ${result.success} keys successfully${result.failed > 0 ? `, ${result.failed} failed` : ''}`);
+      await loadData();
     } catch (error) {
-      toast.error('Failed to refresh API keys')
+      toast.error('Failed to refresh API keys');
     } finally {
-      setRefreshing(false)
+      setRefreshing(false);
     }
-  }
+  };
 
   const getStatusBadge = (service: ApiServiceKey) => {
-    const stats = serviceStats[service]
-    if (!stats) return null
+    const stats = serviceStats[service];
+    if (!stats) {return null;}
 
     if (!stats.enabled) {
-      return <Badge variant="secondary" className="text-xs">Disabled</Badge>
+      return <Badge variant="secondary" className="text-xs">Disabled</Badge>;
     }
 
     if (stats.valid === false) {
       return <Badge variant="destructive" className="text-xs flex items-center gap-1">
         <XCircle size={12} />
         Invalid
-      </Badge>
+      </Badge>;
     }
 
     if (stats.valid === true) {
       return <Badge variant="default" className="text-xs flex items-center gap-1 bg-green-600/20 text-green-400 border-green-600/30">
         <CheckCircle size={12} />
         Active
-      </Badge>
+      </Badge>;
     }
 
     return <Badge variant="outline" className="text-xs flex items-center gap-1">
       <Clock size={12} />
       Unknown
-    </Badge>
-  }
+    </Badge>;
+  };
 
   const getRateLimitInfo = (service: ApiServiceKey) => {
-    const stats = serviceStats[service]
-    if (!stats?.rateLimit) return null
+    const stats = serviceStats[service];
+    if (!stats?.rateLimit) {return null;}
 
-    const { remaining, requestsPerHour } = stats.rateLimit
-    const percentage = (remaining / requestsPerHour) * 100
+    const { remaining, requestsPerHour } = stats.rateLimit;
+    const percentage = (remaining / requestsPerHour) * 100;
 
     return (
       <div className="text-xs text-muted-foreground">
@@ -154,29 +154,29 @@ export function ApiKeySettings({ open, onOpenChange }: ApiKeySettingsProps) {
           />
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   const bugBountyServices = Object.entries(API_SERVICES).filter(([_, config]) => 
     ['HackerOne', 'Bugcrowd', 'Intigriti', 'YesWeHack'].includes(config.name)
-  ) as [ApiServiceKey, typeof API_SERVICES[ApiServiceKey]][]
+  ) as [ApiServiceKey, typeof API_SERVICES[ApiServiceKey]][];
 
   const threatIntelServices = Object.entries(API_SERVICES).filter(([_, config]) => 
     ['Shodan', 'VirusTotal', 'National Vulnerability Database', 'CVE Search (CIRCL)', 'MITRE ATT&CK'].includes(config.name)
-  ) as [ApiServiceKey, typeof API_SERVICES[ApiServiceKey]][]
+  ) as [ApiServiceKey, typeof API_SERVICES[ApiServiceKey]][];
 
   const projectDiscoveryServices = Object.entries(API_SERVICES).filter(([_, config]) => 
     ['Nuclei Templates', 'Chaos (Project Discovery)'].includes(config.name)
-  ) as [ApiServiceKey, typeof API_SERVICES[ApiServiceKey]][]
+  ) as [ApiServiceKey, typeof API_SERVICES[ApiServiceKey]][];
 
   const securityFeedServices = Object.entries(API_SERVICES).filter(([_, config]) => 
     ['Exploit Database', 'GitHub Security Advisories'].includes(config.name)
-  ) as [ApiServiceKey, typeof API_SERVICES[ApiServiceKey]][]
+  ) as [ApiServiceKey, typeof API_SERVICES[ApiServiceKey]][];
 
   const ServiceCard = ({ service, config }: { service: ApiServiceKey; config: typeof API_SERVICES[ApiServiceKey] }) => {
-    const isEnabled = isServiceEnabled(service)
-    const hasKey = !!getApiKey(service)
-    const stats = serviceStats[service]
+    const isEnabled = isServiceEnabled(service);
+    const hasKey = !!getApiKey(service);
+    const stats = serviceStats[service];
 
     return (
       <Card className="glass-card">
@@ -240,8 +240,8 @@ export function ApiKeySettings({ open, onOpenChange }: ApiKeySettingsProps) {
                     size="sm"
                     className="flex-1 text-xs"
                     onClick={() => {
-                      setSelectedService(service)
-                      setKeyInput('')
+                      setSelectedService(service);
+                      setKeyInput('');
                     }}
                   >
                     <Key size={12} className="mr-1" />
@@ -263,8 +263,8 @@ export function ApiKeySettings({ open, onOpenChange }: ApiKeySettingsProps) {
                 size="sm"
                 className="w-full text-xs"
                 onClick={() => {
-                  setSelectedService(service)
-                  setKeyInput('')
+                  setSelectedService(service);
+                  setKeyInput('');
                 }}
               >
                 <Key size={12} className="mr-1" />
@@ -274,8 +274,8 @@ export function ApiKeySettings({ open, onOpenChange }: ApiKeySettingsProps) {
           </div>
         </CardContent>
       </Card>
-    )
-  }
+    );
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -456,5 +456,5 @@ export function ApiKeySettings({ open, onOpenChange }: ApiKeySettingsProps) {
         )}
       </DialogContent>
     </Dialog>
-  )
+  );
 }

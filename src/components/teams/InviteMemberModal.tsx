@@ -1,28 +1,28 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Team, User, TeamInvitation, TeamRole } from '@/types'
-import { MatrixDots } from '@/components/ui/loading-animations'
-import { Search, UserPlus, Send } from '@phosphor-icons/react'
+} from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Team, User, TeamInvitation, TeamRole } from '@/types';
+import { MatrixDots } from '@/components/ui/loading-animations';
+import { Search, UserPlus, Send } from '@phosphor-icons/react';
 
 interface InviteMemberModalProps {
   team: Team
@@ -32,21 +32,21 @@ interface InviteMemberModalProps {
 }
 
 export function InviteMemberModal({ team, currentUser, onClose, onInvitationSent }: InviteMemberModalProps) {
-  const [users] = useKVWithFallback<User[]>('users', [])
-  const [teamRoles] = useKVWithFallback<TeamRole[]>('teamRoles', [])
-  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
+  const [users] = useKVWithFallback<User[]>('users', []);
+  const [teamRoles] = useKVWithFallback<TeamRole[]>('teamRoles', []);
+  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', []);
   
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
-  const [selectedRole, setSelectedRole] = useState('')
-  const [message, setMessage] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedRole, setSelectedRole] = useState('');
+  const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   // Filter available users (exclude current team members and users with pending invitations)
-  const teamMemberIds = team.members.map(m => m.userId)
+  const teamMemberIds = team.members.map(m => m.userId);
   const pendingInviteUserIds = invitations
     .filter(inv => inv.teamId === team.id && inv.status === 'pending')
-    .map(inv => inv.targetUserId)
+    .map(inv => inv.targetUserId);
 
   const availableUsers = users.filter(user => 
     !teamMemberIds.includes(user.id) && 
@@ -57,37 +57,37 @@ export function InviteMemberModal({ team, currentUser, onClose, onInvitationSent
      user.displayName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
      user.specializations.some(spec => spec.toLowerCase().includes(searchQuery.toLowerCase()))
     )
-  )
+  );
 
   // Get roles that can be assigned based on current user's permissions
-  const currentMember = team.members.find(m => m.userId === currentUser.id)
-  const canAssignAllRoles = currentMember?.permissions.includes('manage-roles') || team.leaderId === currentUser.id
+  const currentMember = team.members.find(m => m.userId === currentUser.id);
+  const canAssignAllRoles = currentMember?.permissions.includes('manage-roles') || team.leaderId === currentUser.id;
   
   const assignableRoles = teamRoles.filter(role => {
-    if (canAssignAllRoles) return true
+    if (canAssignAllRoles) {return true;}
     // Non-managers can only invite to junior roles
-    return role.priority <= 40
-  })
+    return role.priority <= 40;
+  });
 
   const handleSendInvitation = async () => {
     if (!selectedUser || !selectedRole) {
-      toast.error('Please select a user and role')
-      return
+      toast.error('Please select a user and role');
+      return;
     }
 
-    const selectedRoleData = teamRoles.find(r => r.id === selectedRole)
+    const selectedRoleData = teamRoles.find(r => r.id === selectedRole);
     if (!selectedRoleData) {
-      toast.error('Invalid role selected')
-      return
+      toast.error('Invalid role selected');
+      return;
     }
 
     // Check team capacity
     if (team.members.length >= team.maxMembers) {
-      toast.error('Team is at maximum capacity')
-      return
+      toast.error('Team is at maximum capacity');
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       const newInvitation: TeamInvitation = {
@@ -103,23 +103,23 @@ export function InviteMemberModal({ team, currentUser, onClose, onInvitationSent
         status: 'pending',
         sentAt: new Date().toISOString(),
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days
-      }
+      };
 
-      await setInvitations(current => [...current, newInvitation])
+      await setInvitations(current => [...current, newInvitation]);
       
-      toast.success(`Invitation sent to ${selectedUser.username}`)
-      onInvitationSent()
-      onClose()
+      toast.success(`Invitation sent to ${selectedUser.username}`);
+      onInvitationSent();
+      onClose();
     } catch (error) {
-      toast.error('Failed to send invitation')
+      toast.error('Failed to send invitation');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const defaultMessage = selectedUser && selectedRole 
     ? `Hi ${selectedUser.username}! We'd love to have you join ${team.name} as a ${teamRoles.find(r => r.id === selectedRole)?.name}. Your expertise would be a great addition to our team!`
-    : ''
+    : '';
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -303,5 +303,5 @@ export function InviteMemberModal({ team, currentUser, onClose, onInvitationSent
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

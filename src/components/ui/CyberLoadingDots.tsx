@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
 interface CyberLoadingDotsProps {
   size?: 'sm' | 'md' | 'lg'
@@ -6,23 +6,23 @@ interface CyberLoadingDotsProps {
 }
 
 export function CyberLoadingDots({ size = 'md', className = '' }: CyberLoadingDotsProps) {
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % 3)
-    }, 400)
+      setActiveIndex((prev) => (prev + 1) % 3);
+    }, 400);
 
-    return () => clearInterval(interval)
-  }, [])
+    return () => clearInterval(interval);
+  }, []);
 
   const sizeClasses = {
     sm: 'w-1 h-1',
     md: 'w-2 h-2',
     lg: 'w-3 h-3'
-  }
+  };
 
-  const dotSize = sizeClasses[size]
+  const dotSize = sizeClasses[size];
 
   return (
     <div className={`flex items-center gap-1 ${className}`}>
@@ -50,5 +50,5 @@ export function CyberLoadingDots({ size = 'md', className = '' }: CyberLoadingDo
         />
       ))}
     </div>
-  )
+  );
 }

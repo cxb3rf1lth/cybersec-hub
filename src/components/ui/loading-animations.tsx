@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 interface LoadingProps {
   className?: string
@@ -11,7 +11,7 @@ export function HexSpinner({ className, size = 'md' }: LoadingProps) {
     sm: 'w-6 h-6',
     md: 'w-8 h-8', 
     lg: 'w-12 h-12'
-  }
+  };
 
   return (
     <div className={cn('hex-spinner', sizeClasses[size], className)}>
@@ -21,7 +21,7 @@ export function HexSpinner({ className, size = 'md' }: LoadingProps) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 // Matrix-style dots loading animation
@@ -30,13 +30,13 @@ export function MatrixDots({ className, size = 'md' }: LoadingProps) {
     sm: 'gap-1',
     md: 'gap-2',
     lg: 'gap-3'
-  }
+  };
 
   const dotSizes = {
     sm: 'w-2 h-2',
     md: 'w-3 h-3',
     lg: 'w-4 h-4'
-  }
+  };
 
   return (
     <div className={cn('flex items-center justify-center', sizeClasses[size], className)}>
@@ -51,7 +51,7 @@ export function MatrixDots({ className, size = 'md' }: LoadingProps) {
         />
       ))}
     </div>
-  )
+  );
 }
 
 // Cyberpunk progress bar with hexagonal indicators
@@ -89,7 +89,7 @@ export function CyberProgress({
         </span>
       )}
     </div>
-  )
+  );
 }
 
 // Hexagonal grid loading overlay
@@ -106,7 +106,7 @@ export function HexGrid({ className }: { className?: string }) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 // Scanning line effect for data loading
@@ -115,7 +115,7 @@ export function ScanLine({ className }: { className?: string }) {
     <div className={cn('scan-line-container', className)}>
       <div className="scan-line" />
     </div>
-  )
+  );
 }
 
 // Binary rain loading effect
@@ -135,35 +135,35 @@ export function BinaryRain({
   const getChars = () => {
     switch (variant) {
       case 'matrix':
-        return ['0', '1', '|', '/', '\\', '-', '_', '.', ':', ';', '▋', '▌', '▍', '▎']
+        return ['0', '1', '|', '/', '\\', '-', '_', '.', ':', ';', '▋', '▌', '▍', '▎'];
       case 'cyber':
-        return ['▊', '▋', '▌', '▍', '▎', '│', '┃', '┊', '┆', '╱', '╲', '╳', '※', '◈']
+        return ['▊', '▋', '▌', '▍', '▎', '│', '┃', '┊', '┆', '╱', '╲', '╳', '※', '◈'];
       case 'minimal':
-        return ['0', '1', '•', '·', '‧']
+        return ['0', '1', '•', '·', '‧'];
       default:
-        return ['0', '1', '|', '/', '\\', '-', '_', '.', ':', ';']
+        return ['0', '1', '|', '/', '\\', '-', '_', '.', ':', ';'];
     }
-  }
+  };
 
   const getAnimationDuration = () => {
     switch (speed) {
-      case 'slow': return { column: '5s', char: '1.2s' }
-      case 'fast': return { column: '2s', char: '0.6s' }
-      default: return { column: '3.5s', char: '0.8s' }
+      case 'slow': return { column: '5s', char: '1.2s' };
+      case 'fast': return { column: '2s', char: '0.6s' };
+      default: return { column: '3.5s', char: '0.8s' };
     }
-  }
+  };
 
   const getCharCount = () => {
     switch (density) {
-      case 'sparse': return 8
-      case 'dense': return 20
-      default: return 15
+      case 'sparse': return 8;
+      case 'dense': return 20;
+      default: return 15;
     }
-  }
+  };
 
-  const binaryChars = getChars()
-  const { column: columnDuration, char: charDuration } = getAnimationDuration()
-  const charCount = getCharCount()
+  const binaryChars = getChars();
+  const { column: columnDuration, char: charDuration } = getAnimationDuration();
+  const charCount = getCharCount();
   
   return (
     <div className={cn('binary-rain-container', className)}>
@@ -191,7 +191,7 @@ export function BinaryRain({
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 // Immersive binary rain showcase for special areas
@@ -275,7 +275,7 @@ export function ImmersiveBinaryRain({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // Full screen cyberpunk loading overlay
@@ -286,7 +286,7 @@ export function CyberpunkLoader({
   isVisible?: boolean
   message?: string
 }) {
-  if (!isVisible) return null
+  if (!isVisible) {return null;}
 
   return (
     <div className="fixed inset-0 bg-background/95 backdrop-blur-sm z-50 flex items-center justify-center">
@@ -305,5 +305,5 @@ export function CyberpunkLoader({
         <ScanLine />
       </div>
     </div>
-  )
+  );
 }

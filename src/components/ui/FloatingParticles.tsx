@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
 interface Particle {
   id: number
@@ -24,22 +24,22 @@ export function FloatingParticles({
   density = 'medium', 
   includeDataStreams = true 
 }: FloatingParticlesProps) {
-  const [particles, setParticles] = useState<Particle[]>([])
-  const [dataStreams, setDataStreams] = useState<DataStream[]>([])
+  const [particles, setParticles] = useState<Particle[]>([]);
+  const [dataStreams, setDataStreams] = useState<DataStream[]>([]);
 
   useEffect(() => {
     const densityConfig = {
       low: { particles: 8, dataStreams: 2 },
       medium: { particles: 12, dataStreams: 3 },
       high: { particles: 18, dataStreams: 4 }
-    }
+    };
 
-    const config = densityConfig[density]
+    const config = densityConfig[density];
 
     // Generate floating particles
     const newParticles: Particle[] = Array.from({ length: config.particles }, (_, i) => {
-      const types: Particle['type'][] = ['small', 'small', 'medium', 'large', 'accent']
-      const type = types[Math.floor(Math.random() * types.length)]
+      const types: Particle['type'][] = ['small', 'small', 'medium', 'large', 'accent'];
+      const type = types[Math.floor(Math.random() * types.length)];
       
       return {
         id: i,
@@ -47,10 +47,10 @@ export function FloatingParticles({
         x: Math.random() * 100,
         delay: Math.random() * 15,
         special: Math.random() > 0.7 ? 'pulse' : undefined
-      }
-    })
+      };
+    });
 
-    setParticles(newParticles)
+    setParticles(newParticles);
 
     // Generate data streams if enabled
     if (includeDataStreams) {
@@ -59,11 +59,11 @@ export function FloatingParticles({
         type: Math.random() > 0.6 ? 'horizontal' : 'vertical',
         position: Math.random() * 100,
         delay: Math.random() * 10
-      }))
+      }));
 
-      setDataStreams(newDataStreams)
+      setDataStreams(newDataStreams);
     }
-  }, [density, includeDataStreams])
+  }, [density, includeDataStreams]);
 
   return (
     <div className="floating-particles">
@@ -91,5 +91,5 @@ export function FloatingParticles({
         />
       ))}
     </div>
-  )
+  );
 }

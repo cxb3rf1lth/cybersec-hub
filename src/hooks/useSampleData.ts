@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { User } from '@/types/user'
+import { useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { User } from '@/types/user';
 import { 
   Template, 
   ToolRepository, 
@@ -8,7 +8,7 @@ import {
   TeamProject, 
   TemplateBranch, 
   TemplateCommit 
-} from '@/types/templates'
+} from '@/types/templates';
 
 const SAMPLE_USERS: User[] = [
   {
@@ -233,7 +233,7 @@ const SAMPLE_USERS: User[] = [
       expiryDate: '2025-05-18'
     }
   }
-]
+];
 
 const SAMPLE_TEMPLATES: Template[] = [
   {
@@ -396,7 +396,7 @@ if __name__ == "__main__":
     license: 'GPL-3.0',
     framework: 'python'
   }
-]
+];
 
 const SAMPLE_REPOSITORIES: ToolRepository[] = [
   {
@@ -476,7 +476,7 @@ const SAMPLE_REPOSITORIES: ToolRepository[] = [
     updatedAt: new Date('2024-02-10'),
     tags: ['forensics', 'incident-response', 'memory-analysis', 'investigation']
   }
-]
+];
 
 // Sample Teams
 const SAMPLE_TEAMS: TeamInfo[] = [
@@ -540,7 +540,7 @@ const SAMPLE_TEAMS: TeamInfo[] = [
     createdAt: new Date('2023-01-15'),
     isPublic: true
   }
-]
+];
 
 // Sample Team Projects
 const SAMPLE_TEAM_PROJECTS: TeamProject[] = [
@@ -579,7 +579,7 @@ const SAMPLE_TEAM_PROJECTS: TeamProject[] = [
       }
     ]
   }
-]
+];
 
 // Update existing templates with collaborative features
 const COLLABORATIVE_TEMPLATES: Template[] = SAMPLE_TEMPLATES.map((template, index) => ({
@@ -632,39 +632,39 @@ const COLLABORATIVE_TEMPLATES: Template[] = SAMPLE_TEMPLATES.map((template, inde
       status: 'active'
     }
   ] : undefined
-}))
+}));
 
 export function useSampleData() {
-  const [allUsers, setAllUsers] = useKVWithFallback<User[]>('allUsers', [])
-  const [templates, setTemplates] = useKVWithFallback<Template[]>('templates', [])
-  const [repositories, setRepositories] = useKVWithFallback<ToolRepository[]>('toolRepositories', [])
-  const [teams, setTeams] = useKVWithFallback<TeamInfo[]>('teams', [])
-  const [teamProjects, setTeamProjects] = useKVWithFallback<TeamProject[]>('teamProjects', [])
+  const [allUsers, setAllUsers] = useKVWithFallback<User[]>('allUsers', []);
+  const [templates, setTemplates] = useKVWithFallback<Template[]>('templates', []);
+  const [repositories, setRepositories] = useKVWithFallback<ToolRepository[]>('toolRepositories', []);
+  const [teams, setTeams] = useKVWithFallback<TeamInfo[]>('teams', []);
+  const [teamProjects, setTeamProjects] = useKVWithFallback<TeamProject[]>('teamProjects', []);
 
   useEffect(() => {
     // Only initialize sample data if no users exist
     if (allUsers.length === 0) {
-      setAllUsers(SAMPLE_USERS)
+      setAllUsers(SAMPLE_USERS);
     }
     
     // Initialize templates with collaborative features
     if (templates.length === 0) {
-      setTemplates(COLLABORATIVE_TEMPLATES)
+      setTemplates(COLLABORATIVE_TEMPLATES);
     }
     
     // Initialize repositories if none exist  
     if (repositories.length === 0) {
-      setRepositories(SAMPLE_REPOSITORIES)
+      setRepositories(SAMPLE_REPOSITORIES);
     }
     
     // Initialize teams if none exist
     if (teams.length === 0) {
-      setTeams(SAMPLE_TEAMS)
+      setTeams(SAMPLE_TEAMS);
     }
     
     // Initialize team projects if none exist
     if (teamProjects.length === 0) {
-      setTeamProjects(SAMPLE_TEAM_PROJECTS)
+      setTeamProjects(SAMPLE_TEAM_PROJECTS);
     }
   }, [
     allUsers.length, 
@@ -677,5 +677,5 @@ export function useSampleData() {
     setRepositories,
     setTeams,
     setTeamProjects
-  ])
+  ]);
 }

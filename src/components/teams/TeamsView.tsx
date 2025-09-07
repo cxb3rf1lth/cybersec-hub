@@ -1,56 +1,56 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Progress } from '@/components/ui/progress'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CreateTeamModal } from './CreateTeamModal'
-import { TeamCard } from './TeamCard'
-import { TeamDetailsModal } from './TeamDetailsModal'
-import { JoinTeamModal } from './JoinTeamModal'
-import { ProposalManagementView } from '@/components/marketplace/ProposalManagementView'
-import { MatrixDots, BinaryRain } from '@/components/ui/loading-animations'
-import { Team } from '@/types/teams'
-import { User } from '@/types/user'
-import { useSampleTeamData } from '@/hooks/useSampleTeamData'
-import { Plus, Users, TrendingUp, Star, Filter } from '@phosphor-icons/react'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CreateTeamModal } from './CreateTeamModal';
+import { TeamCard } from './TeamCard';
+import { TeamDetailsModal } from './TeamDetailsModal';
+import { JoinTeamModal } from './JoinTeamModal';
+import { ProposalManagementView } from '@/components/marketplace/ProposalManagementView';
+import { MatrixDots, BinaryRain } from '@/components/ui/loading-animations';
+import { Team } from '@/types/teams';
+import { User } from '@/types/user';
+import { useSampleTeamData } from '@/hooks/useSampleTeamData';
+import { Plus, Users, TrendingUp, Star, Filter } from '@phosphor-icons/react';
 
 interface TeamsViewProps {
   currentUser: User
 }
 
 export function TeamsView({ currentUser }: TeamsViewProps) {
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [showJoinModal, setShowJoinModal] = useState(false)
-  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null)
-  const [filter, setFilter] = useState<'all' | 'my-teams' | 'recruiting' | 'proposals'>('all')
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
+  const [filter, setFilter] = useState<'all' | 'my-teams' | 'recruiting' | 'proposals'>('all');
   
-  const { teams } = useSampleTeamData()
-  const [myTeams] = useKVWithFallback<string[]>('userTeams', [])
+  const { teams } = useSampleTeamData();
+  const [myTeams] = useKVWithFallback<string[]>('userTeams', []);
 
   const userTeams = teams.filter(team => 
     team.members.some(member => member.userId === currentUser.id)
-  )
+  );
 
   const filteredTeams = teams.filter(team => {
     switch (filter) {
       case 'my-teams':
-        return userTeams.includes(team)
+        return userTeams.includes(team);
       case 'recruiting':
-        return team.status === 'recruiting'
+        return team.status === 'recruiting';
       default:
-        return true
+        return true;
     }
-  })
+  });
 
   const stats = {
     totalTeams: teams.length,
     myTeams: userTeams.length,
     totalEarnings: userTeams.reduce((sum, team) => sum + team.totalEarnings, 0),
     activeContracts: userTeams.reduce((sum, team) => sum + team.activeContracts, 0)
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -234,5 +234,5 @@ export function TeamsView({ currentUser }: TeamsViewProps) {
         />
       )}
     </div>
-  )
+  );
 }

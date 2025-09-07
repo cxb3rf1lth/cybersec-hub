@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { X, Calendar, User, AlertTriangle } from '@phosphor-icons/react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Project, Task, User as UserType, Team } from '@/types'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { X, Calendar, User, AlertTriangle } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Project, Task, User as UserType, Team } from '@/types';
 
 interface CreateTaskModalProps {
   project: Project
@@ -18,8 +18,8 @@ interface CreateTaskModalProps {
 }
 
 export function CreateTaskModal({ project, currentUser, onClose, onCreateTask }: CreateTaskModalProps) {
-  const [allUsers] = useKVWithFallback<UserType[]>('allUsers', [])
-  const [teams] = useKVWithFallback<Team[]>('teams', [])
+  const [allUsers] = useKVWithFallback<UserType[]>('allUsers', []);
+  const [teams] = useKVWithFallback<Team[]>('teams', []);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -28,28 +28,28 @@ export function CreateTaskModal({ project, currentUser, onClose, onCreateTask }:
     dueDate: '',
     estimatedHours: '',
     labels: [] as string[]
-  })
-  const [labelInput, setLabelInput] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  });
+  const [labelInput, setLabelInput] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get team members for assignment
-  const team = teams.find(t => t.id === project.teamId)
+  const team = teams.find(t => t.id === project.teamId);
   const teamMembers = team ? 
     team.members.map(member => allUsers.find(user => user.id === member.userId)).filter(Boolean) as UserType[] :
-    [currentUser]
+    [currentUser];
 
   const priorities = [
     { value: 'low', label: 'Low', color: 'text-green-400' },
     { value: 'medium', label: 'Medium', color: 'text-yellow-400' },
     { value: 'high', label: 'High', color: 'text-orange-400' },
     { value: 'critical', label: 'Critical', color: 'text-red-400' }
-  ]
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!formData.title.trim()) return
+    e.preventDefault();
+    if (!formData.title.trim()) {return;}
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     
     const taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'comments'> = {
       title: formData.title.trim(),
@@ -61,35 +61,35 @@ export function CreateTaskModal({ project, currentUser, onClose, onCreateTask }:
       estimatedHours: formData.estimatedHours ? parseInt(formData.estimatedHours) : undefined,
       actualHours: undefined,
       labels: formData.labels
-    }
+    };
 
-    onCreateTask(taskData)
-    setIsSubmitting(false)
-  }
+    onCreateTask(taskData);
+    setIsSubmitting(false);
+  };
 
   const addLabel = () => {
     if (labelInput.trim() && !formData.labels.includes(labelInput.trim())) {
       setFormData(prev => ({
         ...prev,
         labels: [...prev.labels, labelInput.trim()]
-      }))
-      setLabelInput('')
+      }));
+      setLabelInput('');
     }
-  }
+  };
 
   const removeLabel = (labelToRemove: string) => {
     setFormData(prev => ({
       ...prev,
       labels: prev.labels.filter(label => label !== labelToRemove)
-    }))
-  }
+    }));
+  };
 
   const handleLabelInputKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      e.preventDefault()
-      addLabel()
+      e.preventDefault();
+      addLabel();
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -238,5 +238,5 @@ export function CreateTaskModal({ project, currentUser, onClose, onCreateTask }:
         </form>
       </div>
     </div>
-  )
+  );
 }

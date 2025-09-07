@@ -1,8 +1,8 @@
-import { CSSProperties } from "react"
-import { Toaster as Sonner, ToasterProps } from "sonner"
+import { CSSProperties } from "react";
+import { Toaster as Sonner, ToasterProps } from "sonner";
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const theme = "dark" // Use our dark theme directly
+  const theme = "dark"; // Use our dark theme directly
 
   return (
     <Sonner
@@ -17,7 +17,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }
       {...props}
     />
-  )
-}
+  );
+};
 
-export { Toaster }
+export { Toaster };

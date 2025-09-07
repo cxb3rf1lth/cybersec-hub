@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { TeamInvitation, User, Team, TeamRole, TeamMember } from '@/types'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { TeamInvitation, User, Team, TeamRole, TeamMember } from '@/types';
 import { 
   Check, 
   X, 
@@ -13,8 +13,8 @@ import {
   Calendar,
   Users,
   AlertTriangle
-} from '@phosphor-icons/react'
-import { toast } from 'sonner'
+} from '@phosphor-icons/react';
+import { toast } from 'sonner';
 
 interface InvitationCardProps {
   invitation: TeamInvitation
@@ -23,27 +23,27 @@ interface InvitationCardProps {
 }
 
 export function InvitationCard({ invitation, currentUser, onResponseSent }: InvitationCardProps) {
-  const [teams, setTeams] = useKVWithFallback<Team[]>('teams', [])
-  const [teamRoles] = useKVWithFallback<TeamRole[]>('teamRoles', [])
-  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
-  const [isLoading, setIsLoading] = useState(false)
+  const [teams, setTeams] = useKVWithFallback<Team[]>('teams', []);
+  const [teamRoles] = useKVWithFallback<TeamRole[]>('teamRoles', []);
+  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', []);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const team = teams.find(t => t.id === invitation.teamId)
-  const role = teamRoles.find(r => r.id === invitation.role)
-  const isExpired = new Date(invitation.expiresAt) <= new Date()
+  const team = teams.find(t => t.id === invitation.teamId);
+  const role = teamRoles.find(r => r.id === invitation.role);
+  const isExpired = new Date(invitation.expiresAt) <= new Date();
 
   const handleAcceptInvitation = async () => {
     if (!team || !role) {
-      toast.error('Invalid invitation data')
-      return
+      toast.error('Invalid invitation data');
+      return;
     }
 
     if (team.members.length >= team.maxMembers) {
-      toast.error('Team is at maximum capacity')
-      return
+      toast.error('Team is at maximum capacity');
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       // Create new team member
@@ -59,7 +59,7 @@ export function InvitationCard({ invitation, currentUser, onResponseSent }: Invi
         status: 'active',
         specializations: currentUser.specializations,
         contribution: 0
-      }
+      };
 
       // Update team with new member
       await setTeams(current => 
@@ -68,7 +68,7 @@ export function InvitationCard({ invitation, currentUser, onResponseSent }: Invi
             ? { ...t, members: [...t.members, newMember] }
             : t
         )
-      )
+      );
 
       // Update invitation status
       await setInvitations(current =>
@@ -81,19 +81,19 @@ export function InvitationCard({ invitation, currentUser, onResponseSent }: Invi
               }
             : inv
         )
-      )
+      );
 
-      toast.success(`Successfully joined ${team.name}!`)
-      onResponseSent()
+      toast.success(`Successfully joined ${team.name}!`);
+      onResponseSent();
     } catch (error) {
-      toast.error('Failed to accept invitation')
+      toast.error('Failed to accept invitation');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleDeclineInvitation = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       await setInvitations(current =>
@@ -106,34 +106,34 @@ export function InvitationCard({ invitation, currentUser, onResponseSent }: Invi
               }
             : inv
         )
-      )
+      );
 
-      toast.success('Invitation declined')
-      onResponseSent()
+      toast.success('Invitation declined');
+      onResponseSent();
     } catch (error) {
-      toast.error('Failed to decline invitation')
+      toast.error('Failed to decline invitation');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const formatTimeRemaining = (expiresAt: string) => {
-    const now = new Date()
-    const expires = new Date(expiresAt)
-    const diff = expires.getTime() - now.getTime()
+    const now = new Date();
+    const expires = new Date(expiresAt);
+    const diff = expires.getTime() - now.getTime();
     
-    if (diff <= 0) return 'Expired'
+    if (diff <= 0) {return 'Expired';}
     
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     
-    if (days > 0) return `Expires in ${days}d ${hours}h`
-    if (hours > 0) return `Expires in ${hours}h`
-    return 'Expires soon'
-  }
+    if (days > 0) {return `Expires in ${days}d ${hours}h`;}
+    if (hours > 0) {return `Expires in ${hours}h`;}
+    return 'Expires soon';
+  };
 
   if (!team || !role) {
-    return null
+    return null;
   }
 
   return (
@@ -266,7 +266,7 @@ export function InvitationCard({ invitation, currentUser, onResponseSent }: Invi
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
 
 interface TeamInvitationsViewProps {
@@ -274,25 +274,25 @@ interface TeamInvitationsViewProps {
 }
 
 export function TeamInvitationsView({ currentUser }: TeamInvitationsViewProps) {
-  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
-  const [refreshKey, setRefreshKey] = useState(0)
+  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', []);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // Filter invitations for current user
   const userInvitations = invitations.filter(inv => 
     inv.targetUserId === currentUser.id
-  )
+  );
 
   const pendingInvitations = userInvitations.filter(inv => 
     inv.status === 'pending' && new Date(inv.expiresAt) > new Date()
-  )
+  );
 
   const expiredInvitations = userInvitations.filter(inv => 
     inv.status === 'pending' && new Date(inv.expiresAt) <= new Date()
-  )
+  );
 
   const handleResponseSent = () => {
-    setRefreshKey(prev => prev + 1)
-  }
+    setRefreshKey(prev => prev + 1);
+  };
 
   const handleClearExpired = async () => {
     try {
@@ -302,12 +302,12 @@ export function TeamInvitationsView({ currentUser }: TeamInvitationsViewProps) {
             inv.status === 'pending' && 
             new Date(inv.expiresAt) <= new Date())
         )
-      )
-      toast.success('Expired invitations cleared')
+      );
+      toast.success('Expired invitations cleared');
     } catch (error) {
-      toast.error('Failed to clear expired invitations')
+      toast.error('Failed to clear expired invitations');
     }
-  }
+  };
 
   if (userInvitations.length === 0) {
     return (
@@ -318,7 +318,7 @@ export function TeamInvitationsView({ currentUser }: TeamInvitationsViewProps) {
           When teams invite you to join, your invitations will appear here.
         </p>
       </div>
-    )
+    );
   }
 
   return (
@@ -379,5 +379,5 @@ export function TeamInvitationsView({ currentUser }: TeamInvitationsViewProps) {
         </div>
       )}
     </div>
-  )
+  );
 }

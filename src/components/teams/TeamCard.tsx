@@ -1,9 +1,9 @@
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Progress } from '@/components/ui/progress'
-import { Button } from '@/components/ui/button'
-import { Team, User } from '@/types'
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
+import { Team, User } from '@/types';
 import { 
   Users, 
   Shield, 
@@ -17,7 +17,7 @@ import {
   Star,
   Clock,
   MapPin
-} from '@phosphor-icons/react'
+} from '@phosphor-icons/react';
 
 interface TeamCardProps {
   team: Team
@@ -36,7 +36,7 @@ const teamTypeIcons = {
   'forensics': FileText,
   'compliance': FileText,
   'education': Book
-}
+};
 
 const teamTypeColors = {
   'red-team': 'bg-destructive/10 text-destructive',
@@ -48,15 +48,15 @@ const teamTypeColors = {
   'forensics': 'bg-purple-500/10 text-purple-500',
   'compliance': 'bg-blue-500/10 text-blue-500',
   'education': 'bg-emerald-500/10 text-emerald-500'
-}
+};
 
 export function TeamCard({ team, currentUser, showMemberRole = false, onClick }: TeamCardProps) {
-  const Icon = teamTypeIcons[team.type]
-  const isMember = team.members.some(member => member.userId === currentUser.id)
-  const memberRole = team.members.find(member => member.userId === currentUser.id)?.role.name
-  const memberCount = team.members.length
-  const maxMembers = team.maxMembers
-  const fillPercentage = (memberCount / maxMembers) * 100
+  const Icon = teamTypeIcons[team.type];
+  const isMember = team.members.some(member => member.userId === currentUser.id);
+  const memberRole = team.members.find(member => member.userId === currentUser.id)?.role.name;
+  const memberCount = team.members.length;
+  const maxMembers = team.maxMembers;
+  const fillPercentage = (memberCount / maxMembers) * 100;
 
   return (
     <Card 
@@ -183,5 +183,5 @@ export function TeamCard({ team, currentUser, showMemberRole = false, onClick }:
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

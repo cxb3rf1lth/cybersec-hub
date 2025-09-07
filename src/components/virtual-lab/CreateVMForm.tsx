@@ -1,21 +1,21 @@
-import { useState } from 'react'
-import type { Distro, VMProvisionRequest } from '@/types/virtual-lab'
+import { useState } from 'react';
+import type { Distro, VMProvisionRequest } from '@/types/virtual-lab';
 
 interface Props {
   onCreate: (req: { name: string; distro: Distro; notes?: string }) => void
 }
 
 export function CreateVMForm({ onCreate }: Props) {
-  const [name, setName] = useState('Lab VM')
-  const [distro, setDistro] = useState<Distro>('kali')
-  const [notes, setNotes] = useState('')
+  const [name, setName] = useState('Lab VM');
+  const [distro, setDistro] = useState<Distro>('kali');
+  const [notes, setNotes] = useState('');
 
   return (
     <form
       className="space-y-3"
       onSubmit={(e) => {
-        e.preventDefault()
-        onCreate({ name, distro, notes })
+        e.preventDefault();
+        onCreate({ name, distro, notes });
       }}
     >
       <div className="grid grid-cols-2 gap-3">
@@ -55,5 +55,5 @@ export function CreateVMForm({ onCreate }: Props) {
       </div>
       <button type="submit" className="glass-button px-4 py-2 rounded-md hover-red-glow">Create VM</button>
     </form>
-  )
+  );
 }

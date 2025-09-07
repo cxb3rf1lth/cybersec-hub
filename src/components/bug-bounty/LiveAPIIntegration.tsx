@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { useProductionAPI, PLATFORM_CONFIGS, APIConnection } from '@/lib/production-api'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { AlertCircle, CheckCircle, Clock, Key, Shield, Zap, RefreshCw, ExternalLink, Eye, EyeOff } from '@phosphor-icons/react'
-import { toast } from 'sonner'
+import React, { useState, useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { useProductionAPI, PLATFORM_CONFIGS, APIConnection } from '@/lib/production-api';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AlertCircle, CheckCircle, Clock, Key, Shield, Zap, RefreshCw, ExternalLink, Eye, EyeOff } from '@phosphor-icons/react';
+import { toast } from 'sonner';
 
 interface LiveProgram {
   id: string
@@ -31,131 +31,131 @@ interface RealTimeStats {
 }
 
 export function LiveAPIIntegration() {
-  const [connections, setConnections] = useKVWithFallback<APIConnection[]>('live_api_connections', [])
-  const [livePrograms, setLivePrograms] = useKVWithFallback<LiveProgram[]>('live_bug_bounty_programs', [])
+  const [connections, setConnections] = useKVWithFallback<APIConnection[]>('live_api_connections', []);
+  const [livePrograms, setLivePrograms] = useKVWithFallback<LiveProgram[]>('live_bug_bounty_programs', []);
   const [stats, setStats] = useKVWithFallback<RealTimeStats>('live_bb_stats', {
     totalPrograms: 0,
     activeBounties: 0,
     totalRewards: 0,
     recentFindings: 0,
     lastSync: new Date().toISOString()
-  })
+  });
   
-  const [selectedPlatform, setSelectedPlatform] = useState<string>('hackerone')
-  const [apiKey, setApiKey] = useState('')
-  const [isConnecting, setIsConnecting] = useState(false)
-  const [isSyncing, setIsSyncing] = useState(false)
-  const [showApiKey, setShowApiKey] = useState(false)
-  const [syncInterval, setSyncInterval] = useKV('api_sync_interval', 300000) // 5 minutes
+  const [selectedPlatform, setSelectedPlatform] = useState<string>('hackerone');
+  const [apiKey, setApiKey] = useState('');
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [showApiKey, setShowApiKey] = useState(false);
+  const [syncInterval, setSyncInterval] = useKV('api_sync_interval', 300000); // 5 minutes
   
-  const api = useProductionAPI()
+  const api = useProductionAPI();
 
   // Auto-sync on interval
   useEffect(() => {
     const interval = setInterval(() => {
       if (connections.length > 0) {
-        syncAllData()
+        syncAllData();
       }
-    }, syncInterval)
+    }, syncInterval);
 
-    return () => clearInterval(interval)
-  }, [connections, syncInterval])
+    return () => clearInterval(interval);
+  }, [connections, syncInterval]);
 
   // Load existing connections on mount
   useEffect(() => {
-    loadConnections()
-  }, [])
+    loadConnections();
+  }, []);
 
   const loadConnections = async () => {
-    const allConnections = api.getAllConnections()
-    setConnections(allConnections)
-  }
+    const allConnections = api.getAllConnections();
+    setConnections(allConnections);
+  };
 
   const handleConnect = async () => {
     if (!apiKey.trim()) {
-      toast.error('Please enter an API key')
-      return
+      toast.error('Please enter an API key');
+      return;
     }
 
-    setIsConnecting(true)
+    setIsConnecting(true);
     try {
       // Validate key format first
       if (!api.validateKeyFormat(selectedPlatform, apiKey)) {
-        toast.error(`Invalid API key format for ${PLATFORM_CONFIGS[selectedPlatform].name}`)
-        return
+        toast.error(`Invalid API key format for ${PLATFORM_CONFIGS[selectedPlatform].name}`);
+        return;
       }
 
       // Test connection
-      const connection = await api.connectPlatform(selectedPlatform, apiKey)
+      const connection = await api.connectPlatform(selectedPlatform, apiKey);
       
       // Update connections list
       setConnections(prev => {
-        const filtered = prev.filter(c => c.platform !== selectedPlatform)
-        return [...filtered, connection]
-      })
+        const filtered = prev.filter(c => c.platform !== selectedPlatform);
+        return [...filtered, connection];
+      });
 
-      setApiKey('')
-      toast.success(`Successfully connected to ${PLATFORM_CONFIGS[selectedPlatform].name}`)
+      setApiKey('');
+      toast.success(`Successfully connected to ${PLATFORM_CONFIGS[selectedPlatform].name}`);
       
       // Immediately sync data from this platform
-      syncPlatformData(selectedPlatform)
+      syncPlatformData(selectedPlatform);
     } catch (error) {
-      console.error('Connection failed:', error)
-      toast.error(`Failed to connect: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      console.error('Connection failed:', error);
+      toast.error(`Failed to connect: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
-      setIsConnecting(false)
+      setIsConnecting(false);
     }
-  }
+  };
 
   const handleDisconnect = async (platform: string) => {
     try {
-      await api.disconnectPlatform(platform)
-      setConnections(prev => prev.filter(c => c.platform !== platform))
+      await api.disconnectPlatform(platform);
+      setConnections(prev => prev.filter(c => c.platform !== platform));
       
       // Remove programs from this platform
-      setLivePrograms(prev => prev.filter(p => p.platform !== PLATFORM_CONFIGS[platform].name))
+      setLivePrograms(prev => prev.filter(p => p.platform !== PLATFORM_CONFIGS[platform].name));
       
-      toast.success(`Disconnected from ${PLATFORM_CONFIGS[platform].name}`)
+      toast.success(`Disconnected from ${PLATFORM_CONFIGS[platform].name}`);
     } catch (error) {
-      console.error('Disconnect failed:', error)
-      toast.error('Failed to disconnect')
+      console.error('Disconnect failed:', error);
+      toast.error('Failed to disconnect');
     }
-  }
+  };
 
   const syncPlatformData = async (platform: string) => {
     try {
-      const programs = await api.fetchPrograms()
+      const programs = await api.fetchPrograms();
       const platformPrograms = programs.filter(p => 
         p.platform === PLATFORM_CONFIGS[platform].name
-      )
+      );
 
       setLivePrograms(prev => {
-        const filtered = prev.filter(p => p.platform !== PLATFORM_CONFIGS[platform].name)
+        const filtered = prev.filter(p => p.platform !== PLATFORM_CONFIGS[platform].name);
         return [...filtered, ...platformPrograms.map(p => ({
           ...p,
           lastUpdated: new Date().toISOString()
-        }))]
-      })
+        }))];
+      });
 
-      return platformPrograms.length
+      return platformPrograms.length;
     } catch (error) {
-      console.error(`Failed to sync ${platform}:`, error)
-      toast.error(`Failed to sync data from ${PLATFORM_CONFIGS[platform].name}`)
-      return 0
+      console.error(`Failed to sync ${platform}:`, error);
+      toast.error(`Failed to sync data from ${PLATFORM_CONFIGS[platform].name}`);
+      return 0;
     }
-  }
+  };
 
   const syncAllData = async () => {
-    if (isSyncing) return
+    if (isSyncing) {return;}
     
-    setIsSyncing(true)
+    setIsSyncing(true);
     try {
-      let totalSynced = 0
-      const connectedPlatforms = connections.filter(c => c.status === 'connected')
+      let totalSynced = 0;
+      const connectedPlatforms = connections.filter(c => c.status === 'connected');
       
       for (const connection of connectedPlatforms) {
-        const count = await syncPlatformData(connection.platform)
-        totalSynced += count
+        const count = await syncPlatformData(connection.platform);
+        totalSynced += count;
       }
 
       // Update stats
@@ -165,50 +165,50 @@ export function LiveAPIIntegration() {
         totalRewards: livePrograms.reduce((sum, p) => sum + (p.maxBounty || 0), 0),
         recentFindings: Math.floor(Math.random() * 50) + 10, // Simulated for demo
         lastSync: new Date().toISOString()
-      }
+      };
       
-      setStats(newStats)
+      setStats(newStats);
       
       if (totalSynced > 0) {
-        toast.success(`Synced ${totalSynced} programs from ${connectedPlatforms.length} platforms`)
+        toast.success(`Synced ${totalSynced} programs from ${connectedPlatforms.length} platforms`);
       }
     } catch (error) {
-      console.error('Sync failed:', error)
-      toast.error('Failed to sync data')
+      console.error('Sync failed:', error);
+      toast.error('Failed to sync data');
     } finally {
-      setIsSyncing(false)
+      setIsSyncing(false);
     }
-  }
+  };
 
   const testConnection = async (platform: string) => {
-    const connection = connections.find(c => c.platform === platform)
-    if (!connection) return
+    const connection = connections.find(c => c.platform === platform);
+    if (!connection) {return;}
 
     try {
-      const result = await api.testConnection(platform, connection.apiKey)
+      const result = await api.testConnection(platform, connection.apiKey);
       if (result.success) {
-        toast.success(`${PLATFORM_CONFIGS[platform].name} connection is healthy`)
+        toast.success(`${PLATFORM_CONFIGS[platform].name} connection is healthy`);
       } else {
-        toast.error(`Connection test failed: ${result.error}`)
+        toast.error(`Connection test failed: ${result.error}`);
       }
     } catch (error) {
-      toast.error('Connection test failed')
+      toast.error('Connection test failed');
     }
-  }
+  };
 
   const formatTimeAgo = (timestamp: string) => {
-    const now = new Date()
-    const past = new Date(timestamp)
-    const diffMs = now.getTime() - past.getTime()
-    const diffMins = Math.floor(diffMs / 60000)
+    const now = new Date();
+    const past = new Date(timestamp);
+    const diffMs = now.getTime() - past.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
     
-    if (diffMins < 1) return 'Just now'
-    if (diffMins < 60) return `${diffMins}m ago`
-    const diffHours = Math.floor(diffMins / 60)
-    if (diffHours < 24) return `${diffHours}h ago`
-    const diffDays = Math.floor(diffHours / 24)
-    return `${diffDays}d ago`
-  }
+    if (diffMins < 1) {return 'Just now';}
+    if (diffMins < 60) {return `${diffMins}m ago`;}
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) {return `${diffHours}h ago`;}
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays}d ago`;
+  };
 
   return (
     <div className="space-y-6">
@@ -362,8 +362,8 @@ export function LiveAPIIntegration() {
           {/* Active Connections */}
           <div className="grid grid-cols-1 gap-4">
             {connections.map((connection) => {
-              const config = PLATFORM_CONFIGS[connection.platform]
-              const rateLimit = api.getRateLimit(connection.platform)
+              const config = PLATFORM_CONFIGS[connection.platform];
+              const rateLimit = api.getRateLimit(connection.platform);
               
               return (
                 <Card key={connection.platform} className="glass-card">
@@ -416,7 +416,7 @@ export function LiveAPIIntegration() {
                     )}
                   </CardContent>
                 </Card>
-              )
+              );
             })}
           </div>
 
@@ -519,5 +519,5 @@ export function LiveAPIIntegration() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

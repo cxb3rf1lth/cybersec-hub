@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { TeamHunt, BountyPartnerRequest, PartnerApplication } from '@/types/bug-bounty'
-import { User } from '@/types/user'
+import { useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { TeamHunt, BountyPartnerRequest, PartnerApplication } from '@/types/bug-bounty';
+import { User } from '@/types/user';
 
 // Sample team hunts for demonstration
 const SAMPLE_TEAM_HUNTS: TeamHunt[] = [
@@ -213,7 +213,7 @@ const SAMPLE_TEAM_HUNTS: TeamHunt[] = [
     createdAt: new Date(Date.now() - 172800000).toISOString(),
     createdBy: 'user-4'
   }
-]
+];
 
 // Sample bounty partner requests
 const SAMPLE_PARTNER_REQUESTS: BountyPartnerRequest[] = [
@@ -296,23 +296,23 @@ const SAMPLE_PARTNER_REQUESTS: BountyPartnerRequest[] = [
     createdAt: new Date(Date.now() - 172800000).toISOString(),
     expiresAt: new Date(Date.now() + 1209600000).toISOString() // 14 days from creation
   }
-]
+];
 
 export function useTeamHunts() {
-  const [teamHunts, setTeamHunts] = useKVWithFallback<TeamHunt[]>('team-hunts', [])
-  const [partnerRequests, setPartnerRequests] = useKVWithFallback<BountyPartnerRequest[]>('partner-requests', [])
+  const [teamHunts, setTeamHunts] = useKVWithFallback<TeamHunt[]>('team-hunts', []);
+  const [partnerRequests, setPartnerRequests] = useKVWithFallback<BountyPartnerRequest[]>('partner-requests', []);
 
   useEffect(() => {
     if (teamHunts.length === 0) {
-      setTeamHunts(SAMPLE_TEAM_HUNTS)
+      setTeamHunts(SAMPLE_TEAM_HUNTS);
     }
-  }, [teamHunts.length, setTeamHunts])
+  }, [teamHunts.length, setTeamHunts]);
 
   useEffect(() => {
     if (partnerRequests.length === 0) {
-      setPartnerRequests(SAMPLE_PARTNER_REQUESTS)
+      setPartnerRequests(SAMPLE_PARTNER_REQUESTS);
     }
-  }, [partnerRequests.length, setPartnerRequests])
+  }, [partnerRequests.length, setPartnerRequests]);
 
   const createTeamHunt = (hunt: Omit<TeamHunt, 'id' | 'createdAt'>, createdBy: string) => {
     const newHunt: TeamHunt = {
@@ -320,18 +320,18 @@ export function useTeamHunts() {
       id: `hunt-${Date.now()}`,
       createdAt: new Date().toISOString(),
       createdBy
-    }
-    setTeamHunts((current) => [newHunt, ...current])
-    return newHunt
-  }
+    };
+    setTeamHunts((current) => [newHunt, ...current]);
+    return newHunt;
+  };
 
   const updateTeamHunt = (huntId: string, updates: Partial<TeamHunt>) => {
     setTeamHunts((current) =>
       current.map((hunt) =>
         hunt.id === huntId ? { ...hunt, ...updates } : hunt
       )
-    )
-  }
+    );
+  };
 
   const joinTeamHunt = (huntId: string, user: User) => {
     setTeamHunts((current) =>
@@ -346,16 +346,16 @@ export function useTeamHunts() {
             joinedAt: new Date().toISOString(),
             status: 'active' as const,
             contributionScore: 0
-          }
+          };
           return {
             ...hunt,
             participants: [...hunt.participants, newParticipant]
-          }
+          };
         }
-        return hunt
+        return hunt;
       })
-    )
-  }
+    );
+  };
 
   const leaveTeamHunt = (huntId: string, userId: string) => {
     setTeamHunts((current) =>
@@ -364,12 +364,12 @@ export function useTeamHunts() {
           return {
             ...hunt,
             participants: hunt.participants.filter(p => p.userId !== userId)
-          }
+          };
         }
-        return hunt
+        return hunt;
       })
-    )
-  }
+    );
+  };
 
   const updateObjectiveStatus = (huntId: string, objectiveId: string, status: 'pending' | 'in-progress' | 'completed') => {
     setTeamHunts((current) =>
@@ -386,12 +386,12 @@ export function useTeamHunts() {
                   } 
                 : obj
             )
-          }
+          };
         }
-        return hunt
+        return hunt;
       })
-    )
-  }
+    );
+  };
 
   const createPartnerRequest = (request: Omit<BountyPartnerRequest, 'id' | 'createdAt' | 'expiresAt' | 'applications'>) => {
     const newRequest: BountyPartnerRequest = {
@@ -400,17 +400,17 @@ export function useTeamHunts() {
       applications: [],
       createdAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 604800000).toISOString() // 7 days
-    }
-    setPartnerRequests((current) => [newRequest, ...current])
-    return newRequest
-  }
+    };
+    setPartnerRequests((current) => [newRequest, ...current]);
+    return newRequest;
+  };
 
   const applyToPartnerRequest = (requestId: string, application: Omit<PartnerApplication, 'id' | 'submittedAt'>) => {
     const newApplication: PartnerApplication = {
       ...application,
       id: `app-${Date.now()}`,
       submittedAt: new Date().toISOString()
-    }
+    };
 
     setPartnerRequests((current) =>
       current.map((request) =>
@@ -418,9 +418,9 @@ export function useTeamHunts() {
           ? { ...request, applications: [...request.applications, newApplication] }
           : request
       )
-    )
-    return newApplication
-  }
+    );
+    return newApplication;
+  };
 
   const respondToApplication = (requestId: string, applicationId: string, response: 'accepted' | 'rejected', feedback?: string) => {
     setPartnerRequests((current) =>
@@ -435,7 +435,7 @@ export function useTeamHunts() {
                   reviewerNotes: feedback
                 }
               : app
-          )
+          );
           
           // If accepted, mark request as matched
           const updatedRequest = response === 'accepted' 
@@ -445,14 +445,14 @@ export function useTeamHunts() {
                 status: 'matched' as const,
                 selectedPartnerId: request.applications.find(app => app.id === applicationId)?.applicantId
               }
-            : { ...request, applications: updatedApplications }
+            : { ...request, applications: updatedApplications };
             
-          return updatedRequest
+          return updatedRequest;
         }
-        return request
+        return request;
       })
-    )
-  }
+    );
+  };
 
   return {
     teamHunts,
@@ -467,5 +467,5 @@ export function useTeamHunts() {
     createPartnerRequest,
     applyToPartnerRequest,
     respondToApplication
-  }
+  };
 }

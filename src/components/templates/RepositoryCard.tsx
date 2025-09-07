@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Star, GitFork, FolderOpen, Eye, Copy } from '@phosphor-icons/react'
-import { ToolRepository } from '@/types/templates'
-import { User } from '@/types/user'
-import { RepositoryDetailModal } from './RepositoryDetailModal'
-import { toast } from 'sonner'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Star, GitFork, FolderOpen, Eye, Copy } from '@phosphor-icons/react';
+import { ToolRepository } from '@/types/templates';
+import { User } from '@/types/user';
+import { RepositoryDetailModal } from './RepositoryDetailModal';
+import { toast } from 'sonner';
 
 interface RepositoryCardProps {
   repository: ToolRepository
@@ -16,25 +16,25 @@ interface RepositoryCardProps {
 }
 
 export function RepositoryCard({ repository, currentUser }: RepositoryCardProps) {
-  const [repositories, setRepositories] = useKVWithFallback<ToolRepository[]>('toolRepositories', [])
-  const [showDetail, setShowDetail] = useState(false)
-  const [isStarred, setIsStarred] = useState(false) // In real app, track user's stars
+  const [repositories, setRepositories] = useKVWithFallback<ToolRepository[]>('toolRepositories', []);
+  const [showDetail, setShowDetail] = useState(false);
+  const [isStarred, setIsStarred] = useState(false); // In real app, track user's stars
 
   const handleStar = async () => {
     try {
-      setIsStarred(!isStarred)
+      setIsStarred(!isStarred);
       const updatedRepositories = repositories.map(r => 
         r.id === repository.id 
           ? { ...r, stars: isStarred ? r.stars - 1 : r.stars + 1 }
           : r
-      )
-      setRepositories(updatedRepositories)
-      toast.success(isStarred ? 'Removed from starred' : 'Added to starred')
+      );
+      setRepositories(updatedRepositories);
+      toast.success(isStarred ? 'Removed from starred' : 'Added to starred');
     } catch (error) {
-      console.error('Error starring repository:', error)
-      toast.error('Failed to star repository')
+      console.error('Error starring repository:', error);
+      toast.error('Failed to star repository');
     }
-  }
+  };
 
   const handleFork = async () => {
     try {
@@ -43,26 +43,26 @@ export function RepositoryCard({ repository, currentUser }: RepositoryCardProps)
         r.id === repository.id 
           ? { ...r, forks: r.forks + 1 }
           : r
-      )
-      setRepositories(updatedRepositories)
-      toast.success('Repository forked to your account!')
+      );
+      setRepositories(updatedRepositories);
+      toast.success('Repository forked to your account!');
     } catch (error) {
-      console.error('Error forking repository:', error)
-      toast.error('Failed to fork repository')
+      console.error('Error forking repository:', error);
+      toast.error('Failed to fork repository');
     }
-  }
+  };
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'reconnaissance': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-      case 'exploitation': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      case 'post-exploitation': return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
-      case 'defense': return 'bg-green-500/20 text-green-400 border-green-500/30'
-      case 'analysis': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'automation': return 'bg-purple-500/20 text-purple-400 border-purple-500/30'
-      default: return 'bg-muted'
+      case 'reconnaissance': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'exploitation': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      case 'post-exploitation': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+      case 'defense': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'analysis': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'automation': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+      default: return 'bg-muted';
     }
-  }
+  };
 
   return (
     <>
@@ -85,8 +85,8 @@ export function RepositoryCard({ repository, currentUser }: RepositoryCardProps)
                 size="sm"
                 variant="ghost"
                 onClick={(e) => {
-                  e.stopPropagation()
-                  handleStar()
+                  e.stopPropagation();
+                  handleStar();
                 }}
                 className={`p-1 h-auto ${isStarred ? 'text-yellow-400' : 'text-muted-foreground'}`}
               >
@@ -168,8 +168,8 @@ export function RepositoryCard({ repository, currentUser }: RepositoryCardProps)
               size="sm"
               variant="outline"
               onClick={(e) => {
-                e.stopPropagation()
-                setShowDetail(true)
+                e.stopPropagation();
+                setShowDetail(true);
               }}
               className="flex-1"
             >
@@ -179,8 +179,8 @@ export function RepositoryCard({ repository, currentUser }: RepositoryCardProps)
             <Button
               size="sm"
               onClick={(e) => {
-                e.stopPropagation()
-                handleFork()
+                e.stopPropagation();
+                handleFork();
               }}
               className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
             >
@@ -200,5 +200,5 @@ export function RepositoryCard({ repository, currentUser }: RepositoryCardProps)
         />
       )}
     </>
-  )
+  );
 }

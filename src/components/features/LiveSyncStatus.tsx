@@ -3,14 +3,14 @@
  * Real-time display of synchronization activity and metrics
  */
 
-import React, { useState, useEffect } from 'react'
-import { useAutoSync } from '@/hooks/useAutoSync'
-import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Separator } from '@/components/ui/separator'
+import React, { useState, useEffect } from 'react';
+import { useAutoSync } from '@/hooks/useAutoSync';
+import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Separator } from '@/components/ui/separator';
 import { 
   Activity, 
   RefreshCw, 
@@ -29,7 +29,7 @@ import {
   Shield,
   Target,
   Globe
-} from '@phosphor-icons/react'
+} from '@phosphor-icons/react';
 
 interface SyncActivity {
   id: string
@@ -58,12 +58,12 @@ export function LiveSyncStatus() {
     connectedPlatforms,
     disconnectedPlatforms,
     calculateSuccessRate
-  } = useAutoSync()
+  } = useAutoSync();
 
-  const { isLoading, lastUpdate } = useBugBountyIntegration()
+  const { isLoading, lastUpdate } = useBugBountyIntegration();
   
-  const [syncActivity, setSyncActivity] = useState<SyncActivity[]>([])
-  const [isLoadingAction, setIsLoadingAction] = useState(false)
+  const [syncActivity, setSyncActivity] = useState<SyncActivity[]>([]);
+  const [isLoadingAction, setIsLoadingAction] = useState(false);
 
   // Monitor sync events and update activity log
   useEffect(() => {
@@ -78,11 +78,11 @@ export function LiveSyncStatus() {
           reports: syncData.reports.length,
           earnings: syncData.earnings.length
         }
-      }
+      };
       
-      setSyncActivity(prev => [activity, ...prev.slice(0, 9)]) // Keep last 10 activities
+      setSyncActivity(prev => [activity, ...prev.slice(0, 9)]); // Keep last 10 activities
     }
-  }, [syncData])
+  }, [syncData]);
 
   // Monitor connection status changes
   useEffect(() => {
@@ -94,96 +94,96 @@ export function LiveSyncStatus() {
           type: 'platform_connect',
           platform,
           message: `${platform} connected successfully`
-        }
+        };
         
         setSyncActivity(prev => {
           const exists = prev.some(a => 
             a.platform === platform && 
             a.type === 'platform_connect' &&
             new Date(a.timestamp).getTime() > Date.now() - 30000 // Within last 30 seconds
-          )
+          );
           
           if (!exists) {
-            return [activity, ...prev.slice(0, 9)]
+            return [activity, ...prev.slice(0, 9)];
           }
-          return prev
-        })
+          return prev;
+        });
       }
-    })
-  }, [connectionStatus])
+    });
+  }, [connectionStatus]);
 
   const handleForceSync = async () => {
-    setIsLoadingAction(true)
+    setIsLoadingAction(true);
     
     const startActivity: SyncActivity = {
       id: `sync-start-${Date.now()}`,
       timestamp: new Date().toISOString(),
       type: 'sync_start',
       message: 'Manual sync initiated'
-    }
+    };
     
-    setSyncActivity(prev => [startActivity, ...prev.slice(0, 9)])
+    setSyncActivity(prev => [startActivity, ...prev.slice(0, 9)]);
     
     try {
-      const success = await forceSync()
+      const success = await forceSync();
       
       const endActivity: SyncActivity = {
         id: `sync-end-${Date.now()}`,
         timestamp: new Date().toISOString(),
         type: success ? 'sync_complete' : 'sync_error',
         message: success ? 'Manual sync completed successfully' : 'Manual sync failed'
-      }
+      };
       
-      setSyncActivity(prev => [endActivity, ...prev.slice(0, 9)])
+      setSyncActivity(prev => [endActivity, ...prev.slice(0, 9)]);
     } finally {
-      setIsLoadingAction(false)
+      setIsLoadingAction(false);
     }
-  }
+  };
 
   const getActivityIcon = (type: SyncActivity['type']) => {
     switch (type) {
       case 'sync_start':
-        return <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />
+        return <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />;
       case 'sync_complete':
-        return <CheckCircle className="h-4 w-4 text-green-500" />
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
       case 'sync_error':
-        return <XCircle className="h-4 w-4 text-red-500" />
+        return <XCircle className="h-4 w-4 text-red-500" />;
       case 'platform_connect':
-        return <CheckCircle className="h-4 w-4 text-green-500" />
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
       case 'platform_disconnect':
-        return <XCircle className="h-4 w-4 text-red-500" />
+        return <XCircle className="h-4 w-4 text-red-500" />;
       default:
-        return <Activity className="h-4 w-4 text-muted-foreground" />
+        return <Activity className="h-4 w-4 text-muted-foreground" />;
     }
-  }
+  };
 
   const getActivityColor = (type: SyncActivity['type']) => {
     switch (type) {
       case 'sync_start':
-        return 'border-blue-500/20 bg-blue-500/5'
+        return 'border-blue-500/20 bg-blue-500/5';
       case 'sync_complete':
       case 'platform_connect':
-        return 'border-green-500/20 bg-green-500/5'
+        return 'border-green-500/20 bg-green-500/5';
       case 'sync_error':
       case 'platform_disconnect':
-        return 'border-red-500/20 bg-red-500/5'
+        return 'border-red-500/20 bg-red-500/5';
       default:
-        return 'border-border bg-card'
+        return 'border-border bg-card';
     }
-  }
+  };
 
   const formatTime = (timestamp: string) => {
-    const date = new Date(timestamp)
-    const now = new Date()
-    const diff = now.getTime() - date.getTime()
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
     
-    if (diff < 60000) return 'Just now'
-    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`
-    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`
-    return date.toLocaleDateString()
-  }
+    if (diff < 60000) {return 'Just now';}
+    if (diff < 3600000) {return `${Math.floor(diff / 60000)}m ago`;}
+    if (diff < 86400000) {return `${Math.floor(diff / 3600000)}h ago`;}
+    return date.toLocaleDateString();
+  };
 
-  const successRate = calculateSuccessRate()
+  const successRate = calculateSuccessRate();
 
   return (
     <div className="space-y-6">
@@ -415,7 +415,7 @@ export function LiveSyncStatus() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
 
-export default LiveSyncStatus
+export default LiveSyncStatus;

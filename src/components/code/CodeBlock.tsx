@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Copy, Check } from '@phosphor-icons/react'
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Copy, Check } from '@phosphor-icons/react';
 
 interface CodeBlockProps {
   code: string
@@ -15,17 +15,17 @@ export function CodeBlock({
   maxHeight = '400px',
   showCopyButton = true 
 }: CodeBlockProps) {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(code)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy code:', err)
+      console.error('Failed to copy code:', err);
     }
-  }
+  };
 
   return (
     <div className="relative group">
@@ -53,5 +53,5 @@ export function CodeBlock({
         </code>
       </pre>
     </div>
-  )
+  );
 }

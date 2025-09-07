@@ -1,9 +1,9 @@
-import { Star, Trophy, DollarSign, Users, Target, TrendUp } from '@phosphor-icons/react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Team, User } from '@/types'
+import { Star, Trophy, DollarSign, Users, Target, TrendUp } from '@phosphor-icons/react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Team, User } from '@/types';
 
 interface BugBountyTeamCardProps {
   team: Team
@@ -14,13 +14,13 @@ interface BugBountyTeamCardProps {
 export function BugBountyTeamCard({ team, allUsers, showJoinButton = false }: BugBountyTeamCardProps) {
   const teamMembers = team.members.map(member => 
     allUsers.find(user => user.id === member.userId)
-  ).filter(Boolean) as User[]
+  ).filter(Boolean) as User[];
 
   const averageReputation = teamMembers.length > 0 
     ? Math.round(teamMembers.reduce((sum, user) => sum + (user.reputation || 0), 0) / teamMembers.length)
-    : 0
+    : 0;
 
-  const totalFindings = teamMembers.reduce((sum, user) => sum + (user.successfulFindings || 0), 0)
+  const totalFindings = teamMembers.reduce((sum, user) => sum + (user.successfulFindings || 0), 0);
 
   return (
     <Card className="hover:bg-muted/50 transition-colors border-orange-500/20 bg-gradient-to-br from-orange-500/5 to-transparent">
@@ -152,5 +152,5 @@ export function BugBountyTeamCard({ team, allUsers, showJoinButton = false }: Bu
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

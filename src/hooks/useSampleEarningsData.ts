@@ -1,10 +1,10 @@
-import { useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Earning, EarningsGoal, EarningType, EarningSource, PaymentStatus } from '@/types/earnings'
+import { useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Earning, EarningsGoal, EarningType, EarningSource, PaymentStatus } from '@/types/earnings';
 
 export function useSampleEarningsData() {
-  const [earnings, setEarnings] = useKVWithFallback<Earning[]>('sample-earnings', [])
-  const [goals, setGoals] = useKVWithFallback<EarningsGoal[]>('sample-goals', [])
+  const [earnings, setEarnings] = useKVWithFallback<Earning[]>('sample-earnings', []);
+  const [goals, setGoals] = useKVWithFallback<EarningsGoal[]>('sample-goals', []);
 
   useEffect(() => {
     // Only generate sample data if none exists
@@ -179,9 +179,9 @@ export function useSampleEarningsData() {
           fees: 42,
           netAmount: 4158
         }
-      ]
+      ];
 
-      setEarnings(sampleEarnings)
+      setEarnings(sampleEarnings);
     }
 
     // Generate sample goals if none exist
@@ -229,11 +229,11 @@ export function useSampleEarningsData() {
           status: 'active',
           createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
         }
-      ]
+      ];
 
-      setGoals(sampleGoals)
+      setGoals(sampleGoals);
     }
-  }, [earnings.length, goals.length, setEarnings, setGoals])
+  }, [earnings.length, goals.length, setEarnings, setGoals]);
 
-  return { earnings, goals }
+  return { earnings, goals };
 }

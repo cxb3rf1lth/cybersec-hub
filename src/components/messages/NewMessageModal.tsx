@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { MagnifyingGlass, X } from '@phosphor-icons/react'
-import { User } from '@/types/user'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { MagnifyingGlass, X } from '@phosphor-icons/react';
+import { User } from '@/types/user';
 
 interface NewMessageModalProps {
   currentUser: User
@@ -15,8 +15,8 @@ interface NewMessageModalProps {
 }
 
 export function NewMessageModal({ currentUser, onClose, onStartConversation }: NewMessageModalProps) {
-  const [users] = useKVWithFallback<User[]>('allUsers', [])
-  const [searchQuery, setSearchQuery] = useState('')
+  const [users] = useKVWithFallback<User[]>('allUsers', []);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Filter users excluding current user and based on search query
   const filteredUsers = users.filter(user => 
@@ -25,11 +25,11 @@ export function NewMessageModal({ currentUser, onClose, onStartConversation }: N
      user.specializations.some(spec => 
        spec.toLowerCase().includes(searchQuery.toLowerCase())
      ))
-  )
+  );
 
   const handleStartConversation = (userId: string) => {
-    onStartConversation(userId)
-  }
+    onStartConversation(userId);
+  };
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -106,5 +106,5 @@ export function NewMessageModal({ currentUser, onClose, onStartConversation }: N
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

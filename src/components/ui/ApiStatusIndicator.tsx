@@ -1,30 +1,30 @@
-import { useEffect, useState } from 'react'
-import { useApiKeys } from '@/lib/api-keys'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
-import { CheckCircle, XCircle, Settings } from '@phosphor-icons/react'
+import { useEffect, useState } from 'react';
+import { useApiKeys } from '@/lib/api-keys';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { CheckCircle, XCircle, Settings } from '@phosphor-icons/react';
 
 export function ApiStatusIndicator() {
-  const { getAllApiKeys, getServiceStats } = useApiKeys()
-  const [stats, setStats] = useState<Record<string, any>>({})
+  const { getAllApiKeys, getServiceStats } = useApiKeys();
+  const [stats, setStats] = useState<Record<string, any>>({});
 
   useEffect(() => {
     const updateStats = () => {
-      setStats(getServiceStats())
-    }
+      setStats(getServiceStats());
+    };
 
-    updateStats()
+    updateStats();
     
     // Update stats every 30 seconds
-    const interval = setInterval(updateStats, 30000)
-    return () => clearInterval(interval)
-  }, [getServiceStats])
+    const interval = setInterval(updateStats, 30000);
+    return () => clearInterval(interval);
+  }, [getServiceStats]);
 
-  const enabledServices = Object.entries(stats).filter(([_, stat]) => stat.enabled)
-  const activeServices = enabledServices.filter(([_, stat]) => stat.valid === true)
+  const enabledServices = Object.entries(stats).filter(([_, stat]) => stat.enabled);
+  const activeServices = enabledServices.filter(([_, stat]) => stat.valid === true);
 
   if (enabledServices.length === 0) {
-    return null
+    return null;
   }
 
   return (
@@ -55,5 +55,5 @@ export function ApiStatusIndicator() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

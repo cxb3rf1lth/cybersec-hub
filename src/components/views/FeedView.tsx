@@ -1,34 +1,34 @@
-import { useState, useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Plus, Code } from '@phosphor-icons/react'
-import { PostCard } from '@/components/posts/PostCard'
-import { CreatePostModal } from '@/components/posts/CreatePostModal'
-import { MatrixDots, ScanLine } from '@/components/ui/loading-animations'
-import { LiveThreatFeedWidget } from '@/components/feeds/LiveThreatFeedWidget'
-import { BugBountyAlertsWidget } from '@/components/feeds/BugBountyAlertsWidget'
-import { SecurityDashboardWidget } from '@/components/feeds/SecurityDashboardWidget'
-import { User, Post, Activity } from '@/types/user'
+import { useState, useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Plus, Code } from '@phosphor-icons/react';
+import { PostCard } from '@/components/posts/PostCard';
+import { CreatePostModal } from '@/components/posts/CreatePostModal';
+import { MatrixDots, ScanLine } from '@/components/ui/loading-animations';
+import { LiveThreatFeedWidget } from '@/components/feeds/LiveThreatFeedWidget';
+import { BugBountyAlertsWidget } from '@/components/feeds/BugBountyAlertsWidget';
+import { SecurityDashboardWidget } from '@/components/feeds/SecurityDashboardWidget';
+import { User, Post, Activity } from '@/types/user';
 
 interface FeedViewProps {
   currentUser: User
 }
 
 export function FeedView({ currentUser }: FeedViewProps) {
-  const [showCreatePost, setShowCreatePost] = useState(false)
-  const [posts, setPosts] = useKVWithFallback<Post[]>('posts', [])
-  const [activities, setActivities] = useKVWithFallback<Activity[]>('activities', [])
-  const [isLoading, setIsLoading] = useState(true)
+  const [showCreatePost, setShowCreatePost] = useState(false);
+  const [posts, setPosts] = useKVWithFallback<Post[]>('posts', []);
+  const [activities, setActivities] = useKVWithFallback<Activity[]>('activities', []);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Simulate initial loading
-    const timer = setTimeout(() => setIsLoading(false), 1500)
-    return () => clearTimeout(timer)
-  }, [])
+    const timer = setTimeout(() => setIsLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleCreatePost = (newPost: Post) => {
-    setPosts(current => [newPost, ...current])
+    setPosts(current => [newPost, ...current]);
     
     const activity: Activity = {
       id: Date.now().toString(),
@@ -36,32 +36,32 @@ export function FeedView({ currentUser }: FeedViewProps) {
       type: 'post',
       targetId: newPost.id,
       createdAt: new Date().toISOString()
-    }
-    setActivities(current => [activity, ...current])
-    setShowCreatePost(false)
-  }
+    };
+    setActivities(current => [activity, ...current]);
+    setShowCreatePost(false);
+  };
 
   const handleLikePost = (postId: string) => {
     setPosts(current =>
       current.map(post => {
         if (post.id === postId) {
-          const isLiked = post.likes.includes(currentUser.id)
+          const isLiked = post.likes.includes(currentUser.id);
           return {
             ...post,
             likes: isLiked 
               ? post.likes.filter(id => id !== currentUser.id)
               : [...post.likes, currentUser.id]
-          }
+          };
         }
-        return post
+        return post;
       })
-    )
-  }
+    );
+  };
 
   const feedPosts = posts.filter(post => 
     post.authorId === currentUser.id || 
     currentUser.following.includes(post.authorId)
-  )
+  );
 
   return (
     <div className="flex h-full">
@@ -156,5 +156,5 @@ export function FeedView({ currentUser }: FeedViewProps) {
         <BugBountyAlertsWidget />
       </div>
     </div>
-  )
+  );
 }

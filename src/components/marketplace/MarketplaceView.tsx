@@ -1,18 +1,18 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Search, Filter, Star, Clock, DollarSign, Users, Award, TrendingUp } from '@/lib/phosphor-icons-wrapper'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { MarketplaceListing, MarketplaceFilters } from '@/types/marketplace'
-import { Team } from '@/types/teams'
-import { User } from '@/types/user'
-import { MarketplaceListingCard } from './MarketplaceListingCard'
-import { MarketplaceStats } from './MarketplaceStats'
-import { MarketplaceFilters as FiltersPanel } from './MarketplaceFilters'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Search, Filter, Star, Clock, DollarSign, Users, Award, TrendingUp } from '@/lib/phosphor-icons-wrapper';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { MarketplaceListing, MarketplaceFilters } from '@/types/marketplace';
+import { Team } from '@/types/teams';
+import { User } from '@/types/user';
+import { MarketplaceListingCard } from './MarketplaceListingCard';
+import { MarketplaceStats } from './MarketplaceStats';
+import { MarketplaceFilters as FiltersPanel } from './MarketplaceFilters';
 
 interface MarketplaceViewProps {
   currentUser: User
@@ -20,29 +20,29 @@ interface MarketplaceViewProps {
 }
 
 export function MarketplaceView({ currentUser, onTabChange }: MarketplaceViewProps) {
-  const [listings] = useKVWithFallback<MarketplaceListing[]>('marketplaceListings', [])
-  const [teams] = useKVWithFallback<Team[]>('teams', [])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [filters, setFilters] = useState<MarketplaceFilters>({})
-  const [sortBy, setSortBy] = useState<'rating' | 'price' | 'recent' | 'popular'>('rating')
-  const [showFilters, setShowFilters] = useState(false)
+  const [listings] = useKVWithFallback<MarketplaceListing[]>('marketplaceListings', []);
+  const [teams] = useKVWithFallback<Team[]>('teams', []);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<MarketplaceFilters>({});
+  const [sortBy, setSortBy] = useState<'rating' | 'price' | 'recent' | 'popular'>('rating');
+  const [showFilters, setShowFilters] = useState(false);
 
   // Filter and sort listings
   const filteredListings = (listings ?? [])
     .filter(listing => {
       // Search filter
       if (searchQuery) {
-        const query = searchQuery.toLowerCase()
+        const query = searchQuery.toLowerCase();
         const matchesSearch = 
           listing.title.toLowerCase().includes(query) ||
           listing.description.toLowerCase().includes(query) ||
-          listing.skills.some(skill => skill.toLowerCase().includes(query))
-        if (!matchesSearch) return false
+          listing.skills.some(skill => skill.toLowerCase().includes(query));
+        if (!matchesSearch) {return false;}
       }
 
       // Category filter
       if (filters.category && filters.category.length > 0) {
-        if (!filters.category.includes(listing.category)) return false
+        if (!filters.category.includes(listing.category)) {return false;}
       }
 
       // Skills filter
@@ -51,46 +51,46 @@ export function MarketplaceView({ currentUser, onTabChange }: MarketplaceViewPro
           listing.skills.some(listingSkill => 
             listingSkill.toLowerCase().includes(skill.toLowerCase())
           )
-        )
-        if (!hasSkill) return false
+        );
+        if (!hasSkill) {return false;}
       }
 
       // Price range filter
       if (filters.priceRange) {
         if (listing.priceRange.min > filters.priceRange.max || 
             listing.priceRange.max < filters.priceRange.min) {
-          return false
+          return false;
         }
       }
 
       // Rating filter
       if (filters.rating && listing.rating < filters.rating) {
-        return false
+        return false;
       }
 
       // Availability filter
       if (filters.availability && filters.availability.length > 0) {
-        if (!filters.availability.includes(listing.availability)) return false
+        if (!filters.availability.includes(listing.availability)) {return false;}
       }
 
-      return listing.status === 'active'
+      return listing.status === 'active';
     })
     .sort((a, b) => {
       switch (sortBy) {
         case 'rating':
-          return b.rating - a.rating
+          return b.rating - a.rating;
         case 'price':
-          return a.priceRange.min - b.priceRange.min
+          return a.priceRange.min - b.priceRange.min;
         case 'recent':
-          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
         case 'popular':
-          return b.reviewCount - a.reviewCount
+          return b.reviewCount - a.reviewCount;
         default:
-          return 0
+          return 0;
       }
-    })
+    });
 
-  const featuredListings = (listings ?? []).filter(listing => listing.featured && listing.status === 'active')
+  const featuredListings = (listings ?? []).filter(listing => listing.featured && listing.status === 'active');
 
   const categories = [
     { value: 'penetration-testing', label: 'Penetration Testing' },
@@ -101,7 +101,7 @@ export function MarketplaceView({ currentUser, onTabChange }: MarketplaceViewPro
     { value: 'consultation', label: 'Consultation' },
     { value: 'training', label: 'Training' },
     { value: 'other', label: 'Other' }
-  ]
+  ];
 
   return (
     <div className="space-y-6">
@@ -170,7 +170,7 @@ export function MarketplaceView({ currentUser, onTabChange }: MarketplaceViewPro
           <h2 className="text-xl font-semibold text-foreground">Featured Teams</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {featuredListings.slice(0, 4).map(listing => {
-              const team = (teams ?? []).find(t => t.id === listing.teamId)
+              const team = (teams ?? []).find(t => t.id === listing.teamId);
               return (
                 <MarketplaceListingCard
                   key={listing.id}
@@ -178,7 +178,7 @@ export function MarketplaceView({ currentUser, onTabChange }: MarketplaceViewPro
                   team={team}
                   featured={true}
                 />
-              )
+              );
             })}
           </div>
         </div>
@@ -206,18 +206,18 @@ export function MarketplaceView({ currentUser, onTabChange }: MarketplaceViewPro
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {filteredListings.map(listing => {
-              const team = (teams ?? []).find(t => t.id === listing.teamId)
+              const team = (teams ?? []).find(t => t.id === listing.teamId);
               return (
                 <MarketplaceListingCard
                   key={listing.id}
                   listing={listing}
                   team={team}
                 />
-              )
+              );
             })}
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }

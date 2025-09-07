@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Progress } from '@/components/ui/progress'
-import { BinaryRain } from '@/components/ui/BinaryRain'
-import { Eye, Globe, Shield, Activity, Target, AlertTriangle, Code, Database, Search, TrendingUp, Clock, Users } from '@/lib/phosphor-icons-wrapper'
+import { useState, useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
+import { BinaryRain } from '@/components/ui/BinaryRain';
+import { Eye, Globe, Shield, Activity, Target, AlertTriangle, Code, Database, Search, TrendingUp, Clock, Users } from '@/lib/phosphor-icons-wrapper';
 
 interface ThreatSource {
   id: string
@@ -122,39 +122,39 @@ const THREAT_SOURCES: ThreatSource[] = [
     description: 'Real-time threat intelligence feeds',
     url: 'https://rules.emergingthreats.net/'
   }
-]
+];
 
 export function ProductionThreatIntegration() {
-  const [sources] = useKVWithFallback<ThreatSource[]>('production-threat-sources', THREAT_SOURCES)
-  const [feeds, setFeeds] = useKVWithFallback<ThreatFeed[]>('production-threat-feeds', [])
-  const [selectedSource, setSelectedSource] = useState<ThreatSource | null>(null)
-  const [activeTab, setActiveTab] = useState<'overview' | 'sources' | 'feeds' | 'analytics'>('overview')
+  const [sources] = useKVWithFallback<ThreatSource[]>('production-threat-sources', THREAT_SOURCES);
+  const [feeds, setFeeds] = useKVWithFallback<ThreatFeed[]>('production-threat-feeds', []);
+  const [selectedSource, setSelectedSource] = useState<ThreatSource | null>(null);
+  const [activeTab, setActiveTab] = useState<'overview' | 'sources' | 'feeds' | 'analytics'>('overview');
 
   // Simulate real-time feed updates
   useEffect(() => {
     const interval = setInterval(() => {
       // Generate new threat feed entry
-  const activeSources = (sources ?? []).filter(s => s.status === 'active')
-      if (activeSources.length === 0) return
+  const activeSources = (sources ?? []).filter(s => s.status === 'active');
+      if (activeSources.length === 0) {return;}
 
-      const randomSource = activeSources[Math.floor(Math.random() * activeSources.length)]
-      const feedTypes = ['ip', 'domain', 'hash', 'url'] as const
-      const feedType = feedTypes[Math.floor(Math.random() * feedTypes.length)]
+      const randomSource = activeSources[Math.floor(Math.random() * activeSources.length)];
+      const feedTypes = ['ip', 'domain', 'hash', 'url'] as const;
+      const feedType = feedTypes[Math.floor(Math.random() * feedTypes.length)];
       
       const generateValue = (type: string) => {
         switch (type) {
           case 'ip':
-            return `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`
+            return `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
           case 'domain':
-            return `${Math.random().toString(36).substr(2, 8)}.${['com', 'net', 'org', 'ru', 'cn', 'tk'][Math.floor(Math.random() * 6)]}`
+            return `${Math.random().toString(36).substr(2, 8)}.${['com', 'net', 'org', 'ru', 'cn', 'tk'][Math.floor(Math.random() * 6)]}`;
           case 'hash':
-            return Array.from({ length: 32 }, () => Math.floor(Math.random() * 16).toString(16)).join('')
+            return Array.from({ length: 32 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
           case 'url':
-            return `http://${Math.random().toString(36).substr(2, 8)}.com/${Math.random().toString(36).substr(2, 6)}`
+            return `http://${Math.random().toString(36).substr(2, 8)}.com/${Math.random().toString(36).substr(2, 6)}`;
           default:
-            return 'unknown'
+            return 'unknown';
         }
-      }
+      };
 
       const newFeed: ThreatFeed = {
         id: `feed-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
@@ -168,38 +168,38 @@ export function ProductionThreatIntegration() {
               randomSource.type === 'phishing' ? ['phishing', 'suspicious'] :
               ['scanning', 'reconnaissance'],
         description: `Detected by ${randomSource.name} - ${randomSource.type} activity`
-      }
+      };
 
-  setFeeds((current = []) => [newFeed, ...current.slice(0, 199)]) // Keep last 200 feeds
-    }, 5000) // New feed every 5 seconds
+  setFeeds((current = []) => [newFeed, ...current.slice(0, 199)]); // Keep last 200 feeds
+    }, 5000); // New feed every 5 seconds
 
-    return () => clearInterval(interval)
-  }, [sources, setFeeds])
+    return () => clearInterval(interval);
+  }, [sources, setFeeds]);
 
   const getSourceStatusColor = (status: ThreatSource['status']) => {
     switch (status) {
-      case 'active': return 'bg-green-500'
-      case 'inactive': return 'bg-yellow-500'
-      case 'error': return 'bg-red-500'
-      default: return 'bg-gray-500'
+      case 'active': return 'bg-green-500';
+      case 'inactive': return 'bg-yellow-500';
+      case 'error': return 'bg-red-500';
+      default: return 'bg-gray-500';
     }
-  }
+  };
 
   const getTypeIcon = (type: ThreatSource['type']) => {
     switch (type) {
-      case 'malware': return '🦠'
-      case 'phishing': return '🎣'
-      case 'c2': return '📡'
-      case 'vulnerability': return '🔓'
-      case 'osint': return '🔍'
-      case 'honeypot': return '🍯'
-      default: return '⚠️'
+      case 'malware': return '🦠';
+      case 'phishing': return '🎣';
+      case 'c2': return '📡';
+      case 'vulnerability': return '🔓';
+      case 'osint': return '🔍';
+      case 'honeypot': return '🍯';
+      default: return '⚠️';
     }
-  }
+  };
 
-  const totalFeeds = (feeds ?? []).length
-  const activeSources = (sources ?? []).filter(s => s.status === 'active').length
-  const avgReliability = (sources ?? []).reduce((sum, s) => sum + s.reliability, 0) / ((sources ?? []).length || 1)
+  const totalFeeds = (feeds ?? []).length;
+  const activeSources = (sources ?? []).filter(s => s.status === 'active').length;
+  const avgReliability = (sources ?? []).reduce((sum, s) => sum + s.reliability, 0) / ((sources ?? []).length || 1);
 
   return (
     <div className="space-y-6">
@@ -390,7 +390,7 @@ export function ProductionThreatIntegration() {
             <CardContent>
               <div className="space-y-2 max-h-[600px] overflow-y-auto">
                 {(feeds ?? []).slice(0, 50).map((feed) => {
-                  const source = (sources ?? []).find(s => s.id === feed.sourceId)
+                  const source = (sources ?? []).find(s => s.id === feed.sourceId);
                   return (
                     <div key={feed.id} className="flex items-center gap-3 p-3 rounded border text-sm">
                       <Badge variant="outline" className="text-xs">
@@ -409,7 +409,7 @@ export function ProductionThreatIntegration() {
                         {new Date(feed.firstSeen).toLocaleTimeString()}
                       </span>
                     </div>
-                  )
+                  );
                 })}
               </div>
             </CardContent>
@@ -425,8 +425,8 @@ export function ProductionThreatIntegration() {
               <CardContent>
                 <div className="space-y-3">
                   {['ip', 'domain', 'hash', 'url'].map((type) => {
-                    const count = (feeds ?? []).filter(f => f.type === type).length
-                    const percentage = totalFeeds > 0 ? Math.round((count / totalFeeds) * 100) : 0
+                    const count = (feeds ?? []).filter(f => f.type === type).length;
+                    const percentage = totalFeeds > 0 ? Math.round((count / totalFeeds) * 100) : 0;
                     return (
                       <div key={type} className="space-y-1">
                         <div className="flex justify-between text-sm">
@@ -435,7 +435,7 @@ export function ProductionThreatIntegration() {
                         </div>
                         <Progress value={percentage} className="h-2" />
                       </div>
-                    )
+                    );
                   })}
                 </div>
               </CardContent>
@@ -529,5 +529,5 @@ export function ProductionThreatIntegration() {
         </div>
       )}
     </div>
-  )
+  );
 }

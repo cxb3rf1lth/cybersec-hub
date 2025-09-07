@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import { 
   Shield, 
   TrendingUp, 
@@ -9,8 +9,8 @@ import {
   Activity,
   AlertTriangle,
   CheckCircle
-} from '@phosphor-icons/react'
-import { formatDistanceToNow } from 'date-fns'
+} from '@phosphor-icons/react';
+import { formatDistanceToNow } from 'date-fns';
 
 interface SecurityMetric {
   id: string
@@ -65,7 +65,7 @@ export function SecurityDashboardWidget() {
       trend: 'down',
       category: 'incident'
     }
-  ]
+  ];
 
   // Mock recent security events
   const recentEvents: SecurityEvent[] = [
@@ -93,34 +93,34 @@ export function SecurityDashboardWidget() {
       timestamp: new Date(Date.now() - 900000).toISOString(),
       affected: 'DMZ Network'
     }
-  ]
+  ];
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'bg-destructive text-destructive-foreground'
-      case 'high': return 'bg-orange-500 text-white'
-      case 'medium': return 'bg-yellow-500 text-black'
-      case 'low': return 'bg-blue-500 text-white'
-      default: return 'bg-muted text-muted-foreground'
+      case 'critical': return 'bg-destructive text-destructive-foreground';
+      case 'high': return 'bg-orange-500 text-white';
+      case 'medium': return 'bg-yellow-500 text-black';
+      case 'low': return 'bg-blue-500 text-white';
+      default: return 'bg-muted text-muted-foreground';
     }
-  }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'active': return <AlertTriangle className="w-3 h-3 text-destructive" />
-      case 'investigating': return <Activity className="w-3 h-3 text-orange-500" />
-      case 'resolved': return <CheckCircle className="w-3 h-3 text-green-500" />
-      default: return <Clock className="w-3 h-3 text-muted-foreground" />
+      case 'active': return <AlertTriangle className="w-3 h-3 text-destructive" />;
+      case 'investigating': return <Activity className="w-3 h-3 text-orange-500" />;
+      case 'resolved': return <CheckCircle className="w-3 h-3 text-green-500" />;
+      default: return <Clock className="w-3 h-3 text-muted-foreground" />;
     }
-  }
+  };
 
   const getTrendColor = (trend: string) => {
     switch (trend) {
-      case 'up': return 'text-green-500'
-      case 'down': return 'text-red-500'
-      default: return 'text-muted-foreground'
+      case 'up': return 'text-green-500';
+      case 'down': return 'text-red-500';
+      default: return 'text-muted-foreground';
     }
-  }
+  };
 
   return (
     <Card className="border-primary/20">
@@ -183,5 +183,5 @@ export function SecurityDashboardWidget() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,9 +1,9 @@
-import { BinaryRain } from '@/components/ui/loading-animations'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { useThreatSources } from '@/hooks/useThreatSources'
-import { useState, useEffect } from 'react'
+import { BinaryRain } from '@/components/ui/loading-animations';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { useThreatSources } from '@/hooks/useThreatSources';
+import { useState, useEffect } from 'react';
 import { 
   Database, 
   Activity, 
@@ -13,19 +13,19 @@ import {
   TrendingUp,
   Clock,
   Zap
-} from '@phosphor-icons/react'
-import { formatDistanceToNow } from 'date-fns'
+} from '@phosphor-icons/react';
+import { formatDistanceToNow } from 'date-fns';
 
 export function ThreatSourceDashboard() {
-  const { sources, getSourceStats } = useThreatSources()
-  const [totalFeeds, setTotalFeeds] = useState(0)
-  const [activeSources, setActiveSources] = useState(0)
-  const [recentActivity, setRecentActivity] = useState<any[]>([])
+  const { sources, getSourceStats } = useThreatSources();
+  const [totalFeeds, setTotalFeeds] = useState(0);
+  const [activeSources, setActiveSources] = useState(0);
+  const [recentActivity, setRecentActivity] = useState<any[]>([]);
 
   useEffect(() => {
     // Calculate dashboard stats
-    const total = sources.reduce((sum, source) => sum + (source.totalItems || 0), 0)
-    const active = sources.filter(source => source.isActive).length
+    const total = sources.reduce((sum, source) => sum + (source.totalItems || 0), 0);
+    const active = sources.filter(source => source.isActive).length;
     
     // Get recent activity from sources
     const activity = sources
@@ -39,32 +39,32 @@ export function ThreatSourceDashboard() {
         itemCount: source.totalItems || 0
       }))
       .sort((a, b) => new Date(b.lastUpdate!).getTime() - new Date(a.lastUpdate!).getTime())
-      .slice(0, 5)
+      .slice(0, 5);
 
-    setTotalFeeds(total)
-    setActiveSources(active)
-    setRecentActivity(activity)
-  }, [sources])
+    setTotalFeeds(total);
+    setActiveSources(active);
+    setRecentActivity(activity);
+  }, [sources]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'success': return <CheckCircle className="w-4 h-4 text-green-500" />
-      case 'error': return <XCircle className="w-4 h-4 text-red-500" />
-      case 'warning': return <AlertTriangle className="w-4 h-4 text-yellow-500" />
-      default: return <Activity className="w-4 h-4 text-muted-foreground" />
+      case 'success': return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case 'error': return <XCircle className="w-4 h-4 text-red-500" />;
+      case 'warning': return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+      default: return <Activity className="w-4 h-4 text-muted-foreground" />;
     }
-  }
+  };
 
   const getCategoryColor = (type: string) => {
     switch (type) {
-      case 'vulnerability': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      case 'malware': return 'bg-purple-500/20 text-purple-400 border-purple-500/30'
-      case 'threat-intel': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-      case 'bug-bounty': return 'bg-green-500/20 text-green-400 border-green-500/30'
-      case 'news': return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
-      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+      case 'vulnerability': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      case 'malware': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+      case 'threat-intel': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'bug-bounty': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'news': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
     }
-  }
+  };
 
   return (
     <div className="space-y-6 relative">
@@ -134,8 +134,8 @@ export function ThreatSourceDashboard() {
                 <p className="text-2xl font-bold text-yellow-400">
                   {sources.length > 0 ? Math.round(
                     sources.reduce((sum, source) => {
-                      const stats = getSourceStats(source.id)
-                      return sum + (stats ? (stats.successfulRequests / Math.max(stats.totalRequests, 1)) * 100 : 0)
+                      const stats = getSourceStats(source.id);
+                      return sum + (stats ? (stats.successfulRequests / Math.max(stats.totalRequests, 1)) * 100 : 0);
                     }, 0) / sources.length
                   ) : 0}%
                 </p>
@@ -205,10 +205,10 @@ export function ThreatSourceDashboard() {
           {sources.length > 0 ? (
             <div className="grid gap-3">
               {sources.map((source) => {
-                const stats = getSourceStats(source.id)
+                const stats = getSourceStats(source.id);
                 const successRate = stats 
                   ? Math.round((stats.successfulRequests / Math.max(stats.totalRequests, 1)) * 100)
-                  : 0
+                  : 0;
 
                 return (
                   <div key={source.id} className="flex items-center justify-between p-3 border border-border rounded-lg">
@@ -246,7 +246,7 @@ export function ThreatSourceDashboard() {
                       )}
                     </div>
                   </div>
-                )
+                );
               })}
             </div>
           ) : (
@@ -262,5 +262,5 @@ export function ThreatSourceDashboard() {
       </Card>
       </div>
     </div>
-  )
+  );
 }

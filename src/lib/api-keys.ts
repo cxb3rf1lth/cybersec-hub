@@ -3,8 +3,8 @@
  * Secure configuration and management of external service API keys
  */
 
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { toast } from 'sonner'
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { toast } from 'sonner';
 
 // API Key Types and Interfaces
 export interface ApiKeyConfig {
@@ -147,33 +147,33 @@ export const API_SERVICES = {
     requiredScopes: ['security_events'],
     documentation: 'https://docs.github.com/en/rest/security-advisories'
   }
-} as const
+} as const;
 
 export type ApiServiceKey = keyof typeof API_SERVICES
 
 // API Key Management Class
 export class ApiKeyManager {
-  private static instance: ApiKeyManager
-  private keys: Map<ApiServiceKey, ApiKeyConfig> = new Map()
-  private validationCache: Map<string, { result: ApiKeyValidationResult; timestamp: number }> = new Map()
-  private readonly CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+  private static instance: ApiKeyManager;
+  private keys: Map<ApiServiceKey, ApiKeyConfig> = new Map();
+  private validationCache: Map<string, { result: ApiKeyValidationResult; timestamp: number }> = new Map();
+  private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
   static getInstance(): ApiKeyManager {
     if (!ApiKeyManager.instance) {
-      ApiKeyManager.instance = new ApiKeyManager()
+      ApiKeyManager.instance = new ApiKeyManager();
     }
-    return ApiKeyManager.instance
+    return ApiKeyManager.instance;
   }
 
   async loadApiKeys(): Promise<void> {
     try {
-      const storedKeys = await spark.kv.get<Record<string, ApiKeyConfig>>('api_keys') || {}
+      const storedKeys = await spark.kv.get<Record<string, ApiKeyConfig>>('api_keys') || {};
       
       for (const [service, config] of Object.entries(storedKeys)) {
-        this.keys.set(service as ApiServiceKey, config)
+        this.keys.set(service as ApiServiceKey, config);
       }
     } catch (error) {
-      console.error('Failed to load API keys:', error)
+      console.error('Failed to load API keys:', error);
     }
   }
 
@@ -182,74 +182,74 @@ export class ApiKeyManager {
       key,
       enabled: true,
       lastValidated: Date.now()
-    }
+    };
 
-    this.keys.set(service, config)
+    this.keys.set(service, config);
     
-    await this.persistKeys()
+    await this.persistKeys();
     
     // Validate the new key
-    const validation = await this.validateApiKey(service, key)
+    const validation = await this.validateApiKey(service, key);
     if (!validation.valid) {
-      toast.error(`Invalid API key for ${API_SERVICES[service].name}: ${validation.error}`)
-      return
+      toast.error(`Invalid API key for ${API_SERVICES[service].name}: ${validation.error}`);
+      return;
     }
 
     // Update config with validation results
-    config.metadata = validation.metadata
-    config.rateLimit = validation.rateLimit
-    this.keys.set(service, config)
-    await this.persistKeys()
+    config.metadata = validation.metadata;
+    config.rateLimit = validation.rateLimit;
+    this.keys.set(service, config);
+    await this.persistKeys();
 
-    toast.success(`${API_SERVICES[service].name} API key configured successfully`)
+    toast.success(`${API_SERVICES[service].name} API key configured successfully`);
   }
 
   async removeApiKey(service: ApiServiceKey): Promise<void> {
-    this.keys.delete(service)
-    await this.persistKeys()
-    toast.success(`${API_SERVICES[service].name} API key removed`)
+    this.keys.delete(service);
+    await this.persistKeys();
+    toast.success(`${API_SERVICES[service].name} API key removed`);
   }
 
   async toggleApiKey(service: ApiServiceKey, enabled: boolean): Promise<void> {
-    const config = this.keys.get(service)
+    const config = this.keys.get(service);
     if (config) {
-      config.enabled = enabled
-      this.keys.set(service, config)
-      await this.persistKeys()
+      config.enabled = enabled;
+      this.keys.set(service, config);
+      await this.persistKeys();
     }
   }
 
   getApiKey(service: ApiServiceKey): ApiKeyConfig | null {
-    return this.keys.get(service) || null
+    return this.keys.get(service) || null;
   }
 
   getAllApiKeys(): Map<ApiServiceKey, ApiKeyConfig> {
-    return new Map(this.keys)
+    return new Map(this.keys);
   }
 
   isServiceEnabled(service: ApiServiceKey): boolean {
-    const config = this.keys.get(service)
-    return config?.enabled && !!config.key || false
+    const config = this.keys.get(service);
+    return config?.enabled && !!config.key || false;
   }
 
   private async persistKeys(): Promise<void> {
-    const keysObject = Object.fromEntries(this.keys.entries())
-    await spark.kv.set('api_keys', keysObject)
+    const keysObject = Object.fromEntries(this.keys.entries());
+    await spark.kv.set('api_keys', keysObject);
   }
 
   async validateApiKey(service: ApiServiceKey, key: string): Promise<ApiKeyValidationResult> {
-    const cacheKey = `${service}:${key.slice(-8)}`
-    const cached = this.validationCache.get(cacheKey)
+    const cacheKey = `${service}:${key.slice(-8)}`;
+    const cached = this.validationCache.get(cacheKey);
     
     if (cached && Date.now() - cached.timestamp < this.CACHE_TTL) {
-      return cached.result
+      return cached.result;
     }
 
-    const serviceConfig = API_SERVICES[service]
-    const result = await this.performValidation(service, key, serviceConfig)
+    const serviceConfig = API_SERVICES[service];
+    const result = await this.performValidation(service, key, serviceConfig);
     
-    this.validationCache.set(cacheKey, { result, timestamp: Date.now() })
-    return result
+    this.validationCache.set(cacheKey, { result, timestamp: Date.now() });
+    return result;
   }
 
   private async performValidation(
@@ -261,73 +261,73 @@ export class ApiKeyManager {
       const headers: Record<string, string> = {
         'User-Agent': 'CyberConnect/1.0',
         'Accept': 'application/json'
-      }
+      };
 
       // Add authentication based on service type
       if (config.authType === 'bearer') {
-        headers['Authorization'] = `Bearer ${key}`
+        headers['Authorization'] = `Bearer ${key}`;
       } else if (config.authType === 'api_key') {
-        headers['X-API-Key'] = key
+        headers['X-API-Key'] = key;
       }
 
       // Special handling for different services
-      let testUrl = `${config.baseUrl}${config.testEndpoint}`
+      let testUrl = `${config.baseUrl}${config.testEndpoint}`;
       if (service === 'SHODAN') {
-        testUrl += `?key=${key}`
+        testUrl += `?key=${key}`;
       } else if (service === 'VIRUSTOTAL') {
-        testUrl += `?apikey=${key}&resource=44d88612fea8a8f36de82e1278abb02f`
+        testUrl += `?apikey=${key}&resource=44d88612fea8a8f36de82e1278abb02f`;
       }
 
       const response = await fetch(testUrl, { 
         headers,
         method: 'GET',
         timeout: 10000
-      })
+      });
 
       if (!response.ok) {
         return {
           valid: false,
           error: `HTTP ${response.status}: ${response.statusText}`
-        }
+        };
       }
 
-      const data = await response.json()
+      const data = await response.json();
       
       // Extract rate limit information from headers
-      const rateLimit = this.extractRateLimit(response.headers)
+      const rateLimit = this.extractRateLimit(response.headers);
       
       // Service-specific validation
-      const validation = this.validateServiceResponse(service, data)
+      const validation = this.validateServiceResponse(service, data);
       
       return {
         valid: validation.valid,
         error: validation.error,
         metadata: validation.metadata,
         rateLimit
-      }
+      };
       
     } catch (error) {
       return {
         valid: false,
         error: error instanceof Error ? error.message : 'Validation failed'
-      }
+      };
     }
   }
 
   private extractRateLimit(headers: Headers): ApiKeyValidationResult['rateLimit'] {
-    const remaining = headers.get('X-RateLimit-Remaining') || headers.get('X-Rate-Limit-Remaining')
-    const limit = headers.get('X-RateLimit-Limit') || headers.get('X-Rate-Limit-Limit')
-    const reset = headers.get('X-RateLimit-Reset') || headers.get('X-Rate-Limit-Reset')
+    const remaining = headers.get('X-RateLimit-Remaining') || headers.get('X-Rate-Limit-Remaining');
+    const limit = headers.get('X-RateLimit-Limit') || headers.get('X-Rate-Limit-Limit');
+    const reset = headers.get('X-RateLimit-Reset') || headers.get('X-Rate-Limit-Reset');
 
     if (remaining && limit && reset) {
       return {
         requestsPerHour: parseInt(limit),
         remaining: parseInt(remaining),
         resetTime: parseInt(reset) * 1000 // Convert to milliseconds
-      }
+      };
     }
 
-    return undefined
+    return undefined;
   }
 
   private validateServiceResponse(service: ApiServiceKey, data: any): { valid: boolean; error?: string; metadata?: any } {
@@ -336,91 +336,91 @@ export class ApiKeyManager {
         return {
           valid: !!data.id,
           metadata: { username: data.attributes?.username, reputation: data.attributes?.reputation }
-        }
+        };
       
       case 'BUGCROWD':
         return {
           valid: !!data.uuid,
           metadata: { email: data.email, points: data.points }
-        }
+        };
       
       case 'SHODAN':
         return {
           valid: !!data.plan,
           metadata: { plan: data.plan, query_credits: data.query_credits, scan_credits: data.scan_credits }
-        }
+        };
       
       case 'VIRUSTOTAL':
         return {
           valid: data.response_code !== undefined,
           metadata: { response_code: data.response_code }
-        }
+        };
       
       case 'INTIGRITI':
         return {
           valid: !!data.id,
           metadata: { username: data.userName, points: data.points }
-        }
+        };
       
       case 'YESWEHACK':
         return {
           valid: !!data.username,
           metadata: { username: data.username, rank: data.rank }
-        }
+        };
       
       default:
-        return { valid: true, metadata: data }
+        return { valid: true, metadata: data };
     }
   }
 
   async refreshAllKeys(): Promise<{ success: number; failed: number }> {
-    let success = 0
-    let failed = 0
+    let success = 0;
+    let failed = 0;
 
     for (const [service, config] of this.keys.entries()) {
-      if (!config.enabled) continue
+      if (!config.enabled) {continue;}
 
       try {
-        const validation = await this.validateApiKey(service, config.key)
+        const validation = await this.validateApiKey(service, config.key);
         if (validation.valid) {
-          config.lastValidated = Date.now()
-          config.metadata = validation.metadata
-          config.rateLimit = validation.rateLimit
-          success++
+          config.lastValidated = Date.now();
+          config.metadata = validation.metadata;
+          config.rateLimit = validation.rateLimit;
+          success++;
         } else {
-          failed++
-          console.warn(`API key validation failed for ${service}:`, validation.error)
+          failed++;
+          console.warn(`API key validation failed for ${service}:`, validation.error);
         }
       } catch (error) {
-        failed++
-        console.error(`Error validating ${service}:`, error)
+        failed++;
+        console.error(`Error validating ${service}:`, error);
       }
     }
 
-    await this.persistKeys()
-    return { success, failed }
+    await this.persistKeys();
+    return { success, failed };
   }
 
   getServiceStats(): Record<ApiServiceKey, { enabled: boolean; valid?: boolean; lastValidated?: Date; rateLimit?: ApiKeyConfig['rateLimit'] }> {
-    const stats: any = {}
+    const stats: any = {};
     
     for (const service of Object.keys(API_SERVICES) as ApiServiceKey[]) {
-      const config = this.keys.get(service)
+      const config = this.keys.get(service);
       stats[service] = {
         enabled: config?.enabled || false,
         valid: config ? Date.now() - (config.lastValidated || 0) < 24 * 60 * 60 * 1000 : undefined,
         lastValidated: config?.lastValidated ? new Date(config.lastValidated) : undefined,
         rateLimit: config?.rateLimit
-      }
+      };
     }
     
-    return stats
+    return stats;
   }
 }
 
 // React hook for API key management
 export function useApiKeys() {
-  const manager = ApiKeyManager.getInstance()
+  const manager = ApiKeyManager.getInstance();
   
   return {
     saveApiKey: manager.saveApiKey.bind(manager),
@@ -433,54 +433,54 @@ export function useApiKeys() {
     refreshAllKeys: manager.refreshAllKeys.bind(manager),
     getServiceStats: manager.getServiceStats.bind(manager),
     loadApiKeys: manager.loadApiKeys.bind(manager)
-  }
+  };
 }
 
 // Initialize API key manager
-export const apiKeyManager = ApiKeyManager.getInstance()
+export const apiKeyManager = ApiKeyManager.getInstance();
 
 // Production API service wrapper with automatic authentication
 export class AuthenticatedApiService {
-  private keyManager = apiKeyManager
+  private keyManager = apiKeyManager;
 
   async makeAuthenticatedRequest(
     service: ApiServiceKey,
     endpoint: string,
     options: RequestInit = {}
   ): Promise<Response> {
-    const keyConfig = this.keyManager.getApiKey(service)
+    const keyConfig = this.keyManager.getApiKey(service);
     if (!keyConfig || !keyConfig.enabled) {
-      throw new Error(`API key not configured for ${service}`)
+      throw new Error(`API key not configured for ${service}`);
     }
 
-    const serviceConfig = API_SERVICES[service]
+    const serviceConfig = API_SERVICES[service];
     const headers = {
       'User-Agent': 'CyberConnect/1.0',
       'Accept': 'application/json',
       ...options.headers
-    }
+    };
 
     // Add authentication
     if (serviceConfig.authType === 'bearer') {
-      headers['Authorization'] = `Bearer ${keyConfig.key}`
+      headers['Authorization'] = `Bearer ${keyConfig.key}`;
     } else if (serviceConfig.authType === 'api_key') {
-      headers['X-API-Key'] = keyConfig.key
+      headers['X-API-Key'] = keyConfig.key;
     }
 
-    const url = endpoint.startsWith('http') ? endpoint : `${serviceConfig.baseUrl}${endpoint}`
+    const url = endpoint.startsWith('http') ? endpoint : `${serviceConfig.baseUrl}${endpoint}`;
     
     return fetch(url, {
       ...options,
       headers
-    })
+    });
   }
 
   async get(service: ApiServiceKey, endpoint: string): Promise<any> {
-    const response = await this.makeAuthenticatedRequest(service, endpoint)
+    const response = await this.makeAuthenticatedRequest(service, endpoint);
     if (!response.ok) {
-      throw new Error(`API request failed: ${response.status} ${response.statusText}`)
+      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
     }
-    return response.json()
+    return response.json();
   }
 
   async post(service: ApiServiceKey, endpoint: string, data: any): Promise<any> {
@@ -488,12 +488,12 @@ export class AuthenticatedApiService {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
-    })
+    });
     if (!response.ok) {
-      throw new Error(`API request failed: ${response.status} ${response.statusText}`)
+      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
     }
-    return response.json()
+    return response.json();
   }
 }
 
-export const authenticatedApiService = new AuthenticatedApiService()
+export const authenticatedApiService = new AuthenticatedApiService();

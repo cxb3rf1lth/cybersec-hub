@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { CheckCircle, X, Eye, DollarSign, Calendar, Clock, Filter } from '@phosphor-icons/react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { toast } from 'sonner'
-import { MarketplaceProposal } from '@/types/marketplace'
-import { User } from '@/types/user'
-import { Team } from '@/types/teams'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { CheckCircle, X, Eye, DollarSign, Calendar, Clock, Filter } from '@phosphor-icons/react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { toast } from 'sonner';
+import { MarketplaceProposal } from '@/types/marketplace';
+import { User } from '@/types/user';
+import { Team } from '@/types/teams';
 
 interface ProposalManagementViewProps {
   currentUser: User
@@ -19,24 +19,24 @@ interface ProposalManagementViewProps {
 }
 
 export function ProposalManagementView({ currentUser, userTeams }: ProposalManagementViewProps) {
-  const [proposals, setProposals] = useKVWithFallback<MarketplaceProposal[]>('marketplaceProposals', [])
-  const [allUsers] = useKVWithFallback<User[]>('allUsers', [])
-  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected' | 'in-progress' | 'completed'>('all')
-  const [selectedProposal, setSelectedProposal] = useState<MarketplaceProposal | null>(null)
-  const [response, setResponse] = useState('')
+  const [proposals, setProposals] = useKVWithFallback<MarketplaceProposal[]>('marketplaceProposals', []);
+  const [allUsers] = useKVWithFallback<User[]>('allUsers', []);
+  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected' | 'in-progress' | 'completed'>('all');
+  const [selectedProposal, setSelectedProposal] = useState<MarketplaceProposal | null>(null);
+  const [response, setResponse] = useState('');
 
   // Get team IDs where current user is a member
   const teamIds = userTeams
     .filter(team => team.members.some(member => member.userId === currentUser.id))
-    .map(team => team.id)
+    .map(team => team.id);
 
   // Filter proposals for user's teams
-  const teamProposals = proposals.filter(proposal => teamIds.includes(proposal.teamId))
+  const teamProposals = proposals.filter(proposal => teamIds.includes(proposal.teamId));
 
   const filteredProposals = teamProposals.filter(proposal => {
-    if (statusFilter === 'all') return true
-    return proposal.status === statusFilter
-  })
+    if (statusFilter === 'all') {return true;}
+    return proposal.status === statusFilter;
+  });
 
   const handleUpdateProposalStatus = (
     proposalId: string, 
@@ -53,19 +53,19 @@ export function ProposalManagementView({ currentUser, userTeams }: ProposalManag
             }
           : proposal
       )
-    )
+    );
 
     const statusMessages = {
       accepted: 'Proposal accepted successfully!',
       rejected: 'Proposal rejected',
       'in-progress': 'Project marked as in progress',
       completed: 'Project marked as completed'
-    }
+    };
 
-    toast.success(statusMessages[newStatus])
-    setSelectedProposal(null)
-    setResponse('')
-  }
+    toast.success(statusMessages[newStatus]);
+    setSelectedProposal(null);
+    setResponse('');
+  };
 
   const getStatusColor = (status: string) => {
     const colors = {
@@ -74,20 +74,20 @@ export function ProposalManagementView({ currentUser, userTeams }: ProposalManag
       rejected: 'bg-red-500/10 text-red-400 border-red-500/20',
       'in-progress': 'bg-blue-500/10 text-blue-400 border-blue-500/20',
       completed: 'bg-purple-500/10 text-purple-400 border-purple-500/20'
-    }
-    return colors[status as keyof typeof colors] || colors.pending
-  }
+    };
+    return colors[status as keyof typeof colors] || colors.pending;
+  };
 
   const getClient = (clientId: string) => {
-    return allUsers.find(user => user.id === clientId)
-  }
+    return allUsers.find(user => user.id === clientId);
+  };
 
   const formatCurrency = (amount: number, currency: string) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency
-    }).format(amount)
-  }
+    }).format(amount);
+  };
 
   const proposalCounts = {
     all: teamProposals.length,
@@ -95,7 +95,7 @@ export function ProposalManagementView({ currentUser, userTeams }: ProposalManag
     accepted: teamProposals.filter(p => p.status === 'accepted').length,
     'in-progress': teamProposals.filter(p => p.status === 'in-progress').length,
     completed: teamProposals.filter(p => p.status === 'completed').length
-  }
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -146,8 +146,8 @@ export function ProposalManagementView({ currentUser, userTeams }: ProposalManag
       ) : (
         <div className="space-y-4">
           {filteredProposals.map(proposal => {
-            const client = getClient(proposal.clientId)
-            const team = userTeams.find(t => t.id === proposal.teamId)
+            const client = getClient(proposal.clientId);
+            const team = userTeams.find(t => t.id === proposal.teamId);
             
             return (
               <Card key={proposal.id}>
@@ -279,7 +279,7 @@ export function ProposalManagementView({ currentUser, userTeams }: ProposalManag
                   </div>
                 </CardContent>
               </Card>
-            )
+            );
           })}
         </div>
       )}
@@ -364,5 +364,5 @@ export function ProposalManagementView({ currentUser, userTeams }: ProposalManag
         </Dialog>
       )}
     </div>
-  )
+  );
 }

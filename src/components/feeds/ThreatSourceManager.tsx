@@ -1,19 +1,19 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Separator } from '@/components/ui/separator'
-import { ImmersiveBinaryRain } from '@/components/ui/loading-animations'
-import { useThreatSources } from '@/hooks/useThreatSources'
-import { ThreatSource, SourceTemplate } from '@/types/threat-sources'
-import { ThreatSourceDashboard } from '@/components/feeds/ThreatSourceDashboard'
-import { useState } from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
+import { ImmersiveBinaryRain } from '@/components/ui/loading-animations';
+import { useThreatSources } from '@/hooks/useThreatSources';
+import { ThreatSource, SourceTemplate } from '@/types/threat-sources';
+import { ThreatSourceDashboard } from '@/components/feeds/ThreatSourceDashboard';
+import { useState } from 'react';
 import { 
   Plus, 
   Settings, 
@@ -36,9 +36,9 @@ import {
   TrendingUp,
   Zap,
   BarChart
-} from '@phosphor-icons/react'
-import { toast } from 'sonner'
-import { formatDistanceToNow } from 'date-fns'
+} from '@phosphor-icons/react';
+import { toast } from 'sonner';
+import { formatDistanceToNow } from 'date-fns';
 
 interface ThreatSourceManagerProps {
   onClose?: () => void
@@ -55,14 +55,14 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
     getSourceStats, 
     getSourceLogs,
     isLoading 
-  } = useThreatSources()
+  } = useThreatSources();
   
-  const [activeTab, setActiveTab] = useState('dashboard')
-  const [selectedSource, setSelectedSource] = useState<ThreatSource | null>(null)
-  const [showCreateDialog, setShowCreateDialog] = useState(false)
-  const [showTemplateDialog, setShowTemplateDialog] = useState(false)
-  const [selectedTemplate, setSelectedTemplate] = useState<SourceTemplate | null>(null)
-  const [testingSourceId, setTestingSourceId] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [selectedSource, setSelectedSource] = useState<ThreatSource | null>(null);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showTemplateDialog, setShowTemplateDialog] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<SourceTemplate | null>(null);
+  const [testingSourceId, setTestingSourceId] = useState<string | null>(null);
 
   // Create source form state
   const [formData, setFormData] = useState({
@@ -79,12 +79,12 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
     includeKeywords: '',
     excludeKeywords: '',
     severityFilter: [] as string[]
-  })
+  });
 
   const handleCreateSource = async () => {
     if (!formData.name || !formData.url) {
-      toast.error('Name and URL are required')
-      return
+      toast.error('Name and URL are required');
+      return;
     }
 
     try {
@@ -118,15 +118,15 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
           excludeKeywords: formData.excludeKeywords ? formData.excludeKeywords.split(',').map(k => k.trim()) : undefined,
           severityFilter: formData.severityFilter.length > 0 ? formData.severityFilter : undefined
         }
-      }
+      };
 
-      await createSource(sourceData)
-      setShowCreateDialog(false)
-      resetForm()
+      await createSource(sourceData);
+      setShowCreateDialog(false);
+      resetForm();
     } catch (error) {
-      toast.error('Failed to create source')
+      toast.error('Failed to create source');
     }
-  }
+  };
 
   const handleCreateFromTemplate = async (template: SourceTemplate) => {
     setFormData({
@@ -143,11 +143,11 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
       includeKeywords: '',
       excludeKeywords: '',
       severityFilter: []
-    })
-    setSelectedTemplate(template)
-    setShowTemplateDialog(false)
-    setShowCreateDialog(true)
-  }
+    });
+    setSelectedTemplate(template);
+    setShowTemplateDialog(false);
+    setShowCreateDialog(true);
+  };
 
   const resetForm = () => {
     setFormData({
@@ -164,48 +164,48 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
       includeKeywords: '',
       excludeKeywords: '',
       severityFilter: []
-    })
-    setSelectedTemplate(null)
-  }
+    });
+    setSelectedTemplate(null);
+  };
 
   const handleToggleSource = async (sourceId: string, isActive: boolean) => {
-    await updateSource(sourceId, { isActive })
-  }
+    await updateSource(sourceId, { isActive });
+  };
 
   const handleTestSource = async (source: ThreatSource) => {
-    setTestingSourceId(source.id)
+    setTestingSourceId(source.id);
     
     // Simulate testing with binary rain effect
     setTimeout(async () => {
-      const result = await testSource(source)
+      const result = await testSource(source);
       if (result.success) {
-        toast.success(result.message)
+        toast.success(result.message);
       } else {
-        toast.error(result.message)
+        toast.error(result.message);
       }
-      setTestingSourceId(null)
-    }, 2000 + Math.random() * 1000) // Random test duration 2-3 seconds
-  }
+      setTestingSourceId(null);
+    }, 2000 + Math.random() * 1000); // Random test duration 2-3 seconds
+  };
 
   const handleDeleteSource = async (sourceId: string) => {
     if (confirm('Are you sure you want to delete this source?')) {
-      await deleteSource(sourceId)
+      await deleteSource(sourceId);
     }
-  }
+  };
 
   const getStatusColor = (source: ThreatSource) => {
-    if (!source.isActive) return 'bg-gray-500'
-    if (source.lastError) return 'bg-red-500'
-    if (source.lastUpdate) return 'bg-green-500'
-    return 'bg-yellow-500'
-  }
+    if (!source.isActive) {return 'bg-gray-500';}
+    if (source.lastError) {return 'bg-red-500';}
+    if (source.lastUpdate) {return 'bg-green-500';}
+    return 'bg-yellow-500';
+  };
 
   const getStatusText = (source: ThreatSource) => {
-    if (!source.isActive) return 'Inactive'
-    if (source.lastError) return 'Error'
-    if (source.lastUpdate) return 'Active'
-    return 'Pending'
-  }
+    if (!source.isActive) {return 'Inactive';}
+    if (source.lastError) {return 'Error';}
+    if (source.lastUpdate) {return 'Active';}
+    return 'Pending';
+  };
 
   return (
     <div className="space-y-6">
@@ -505,7 +505,7 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
           ) : (
             <div className="grid gap-4">
               {sources.map((source) => {
-                const stats = getSourceStats(source.id)
+                const stats = getSourceStats(source.id);
                 return (
                   <Card key={source.id} className="hover-border-flow transition-all duration-300 relative">
                     <CardHeader>
@@ -608,7 +608,7 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
                       </div>
                     )}
                   </Card>
-                )
+                );
               })}
             </div>
           )}
@@ -670,10 +670,10 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
             <CardContent>
               <div className="space-y-4">
                 {sources.map((source) => {
-                  const stats = getSourceStats(source.id)
+                  const stats = getSourceStats(source.id);
                   const successRate = stats 
                     ? Math.round((stats.successfulRequests / Math.max(stats.totalRequests, 1)) * 100)
-                    : 0
+                    : 0;
                   
                   return (
                     <div key={source.id} className="space-y-2">
@@ -688,7 +688,7 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
                         />
                       </div>
                     </div>
-                  )
+                  );
                 })}
               </div>
             </CardContent>
@@ -698,8 +698,8 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
         <TabsContent value="logs" className="space-y-4 mt-6">
           <div className="space-y-4">
             {sources.map((source) => {
-              const logs = getSourceLogs(source.id, 10)
-              if (logs.length === 0) return null
+              const logs = getSourceLogs(source.id, 10);
+              if (logs.length === 0) {return null;}
 
               return (
                 <Card key={source.id}>
@@ -735,11 +735,11 @@ export function ThreatSourceManager({ onClose }: ThreatSourceManagerProps) {
                     </div>
                   </CardContent>
                 </Card>
-              )
+              );
             })}
           </div>
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

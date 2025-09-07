@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar } from '@/components/ui/avatar'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar } from '@/components/ui/avatar';
 import { 
   Users, 
   Plus, 
@@ -18,63 +18,63 @@ import {
   GitBranch,
   Calendar,
   Activity
-} from '@phosphor-icons/react'
-import { TeamInfo, TeamMember, User, TeamProject } from '@/types'
-import { CreateTeamModal } from './CreateTeamModal'
-import { TeamDetailModal } from './TeamDetailModal'
-import { format } from 'date-fns'
+} from '@phosphor-icons/react';
+import { TeamInfo, TeamMember, User, TeamProject } from '@/types';
+import { CreateTeamModal } from './CreateTeamModal';
+import { TeamDetailModal } from './TeamDetailModal';
+import { format } from 'date-fns';
 
 interface TeamDashboardProps {
   currentUser: User
 }
 
 export function TeamDashboard({ currentUser }: TeamDashboardProps) {
-  const [teams] = useKVWithFallback<TeamInfo[]>('teams', [])
-  const [teamProjects] = useKVWithFallback<TeamProject[]>('teamProjects', [])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [selectedTeam, setSelectedTeam] = useState<TeamInfo | null>(null)
-  const [filter, setFilter] = useState<'all' | 'my-teams' | 'public'>('all')
+  const [teams] = useKVWithFallback<TeamInfo[]>('teams', []);
+  const [teamProjects] = useKVWithFallback<TeamProject[]>('teamProjects', []);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState<TeamInfo | null>(null);
+  const [filter, setFilter] = useState<'all' | 'my-teams' | 'public'>('all');
 
   // Filter teams based on search and user membership
   const filteredTeams = teams.filter(team => {
     const matchesSearch = team.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         team.description.toLowerCase().includes(searchQuery.toLowerCase())
+                         team.description.toLowerCase().includes(searchQuery.toLowerCase());
     
-    if (!matchesSearch) return false
+    if (!matchesSearch) {return false;}
 
     switch (filter) {
       case 'my-teams':
-        return team.members.some(member => member.id === currentUser.id)
+        return team.members.some(member => member.id === currentUser.id);
       case 'public':
-        return team.isPublic
+        return team.isPublic;
       default:
-        return true
+        return true;
     }
-  })
+  });
 
   const getRoleIcon = (role: TeamMember['role']) => {
     switch (role) {
       case 'owner':
-        return <Crown className="w-4 h-4 text-yellow-500" />
+        return <Crown className="w-4 h-4 text-yellow-500" />;
       case 'admin':
-        return <Shield className="w-4 h-4 text-blue-500" />
+        return <Shield className="w-4 h-4 text-blue-500" />;
       case 'maintainer':
-        return <Wrench className="w-4 h-4 text-green-500" />
+        return <Wrench className="w-4 h-4 text-green-500" />;
       case 'developer':
-        return <Code className="w-4 h-4 text-purple-500" />
+        return <Code className="w-4 h-4 text-purple-500" />;
       default:
-        return <Eye className="w-4 h-4 text-gray-500" />
+        return <Eye className="w-4 h-4 text-gray-500" />;
     }
-  }
+  };
 
   const getTeamProjects = (teamId: string) => {
-    return teamProjects.filter(project => project.team.id === teamId)
-  }
+    return teamProjects.filter(project => project.team.id === teamId);
+  };
 
   const isUserMember = (team: TeamInfo) => {
-    return team.members.some(member => member.id === currentUser.id)
-  }
+    return team.members.some(member => member.id === currentUser.id);
+  };
 
   return (
     <div className="space-y-6">
@@ -122,8 +122,8 @@ export function TeamDashboard({ currentUser }: TeamDashboardProps) {
       {/* Teams Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filteredTeams.map(team => {
-          const userMembership = team.members.find(member => member.id === currentUser.id)
-          const projects = getTeamProjects(team.id)
+          const userMembership = team.members.find(member => member.id === currentUser.id);
+          const projects = getTeamProjects(team.id);
           
           return (
             <Card 
@@ -219,7 +219,7 @@ export function TeamDashboard({ currentUser }: TeamDashboardProps) {
                 )}
               </div>
             </Card>
-          )
+          );
         })}
       </div>
 
@@ -246,8 +246,8 @@ export function TeamDashboard({ currentUser }: TeamDashboardProps) {
           currentUser={currentUser}
           onClose={() => setShowCreateModal(false)}
           onTeamCreated={(team) => {
-            setSelectedTeam(team)
-            setShowCreateModal(false)
+            setSelectedTeam(team);
+            setShowCreateModal(false);
           }}
         />
       )}
@@ -261,5 +261,5 @@ export function TeamDashboard({ currentUser }: TeamDashboardProps) {
         />
       )}
     </div>
-  )
+  );
 }

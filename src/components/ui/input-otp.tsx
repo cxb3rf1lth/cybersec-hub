@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { ComponentProps, useContext } from "react"
-import { OTPInput, OTPInputContext } from "input-otp"
-import MinusIcon from "lucide-react/dist/esm/icons/minus"
+import { ComponentProps, useContext } from "react";
+import { OTPInput, OTPInputContext } from "input-otp";
+import MinusIcon from "lucide-react/dist/esm/icons/minus";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 function InputOTP({
   className,
@@ -23,7 +23,7 @@ function InputOTP({
       className={cn("disabled:cursor-not-allowed", className)}
       {...props}
     />
-  )
+  );
 }
 
 function InputOTPGroup({ className, ...props }: ComponentProps<"div">) {
@@ -33,7 +33,7 @@ function InputOTPGroup({ className, ...props }: ComponentProps<"div">) {
       className={cn("flex items-center", className)}
       {...props}
     />
-  )
+  );
 }
 
 function InputOTPSlot({
@@ -43,8 +43,8 @@ function InputOTPSlot({
 }: ComponentProps<"div"> & {
   index: number
 }) {
-  const inputOTPContext = useContext(OTPInputContext)
-  const { char, hasFakeCaret, isActive } = inputOTPContext?.slots[index] ?? {}
+  const inputOTPContext = useContext(OTPInputContext);
+  const { char, hasFakeCaret, isActive } = inputOTPContext?.slots[index] ?? {};
 
   return (
     <div
@@ -63,7 +63,7 @@ function InputOTPSlot({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 function InputOTPSeparator({ ...props }: ComponentProps<"div">) {
@@ -71,7 +71,7 @@ function InputOTPSeparator({ ...props }: ComponentProps<"div">) {
     <div data-slot="input-otp-separator" role="separator" {...props}>
       <MinusIcon />
     </div>
-  )
+  );
 }
 
-export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator }
+export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator };

@@ -1,11 +1,11 @@
-import { useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
-import { SecurityBadge, SecurityCertification, UserStatus } from '@/types/user'
+import { useEffect } from 'react';
+import { useKV } from '@github/spark/hooks';
+import { SecurityBadge, SecurityCertification, UserStatus } from '@/types/user';
 
 export function useSampleStatusData() {
-  const [, setUserStatuses] = useKV<Record<string, UserStatus>>('userStatuses', {})
-  const [, setBadges] = useKV<Record<string, SecurityBadge[]>>('userBadges', {})
-  const [, setCertifications] = useKV<Record<string, SecurityCertification[]>>('userCertifications', {})
+  const [, setUserStatuses] = useKV<Record<string, UserStatus>>('userStatuses', {});
+  const [, setBadges] = useKV<Record<string, SecurityBadge[]>>('userBadges', {});
+  const [, setCertifications] = useKV<Record<string, SecurityCertification[]>>('userCertifications', {});
 
   useEffect(() => {
     // Sample user statuses
@@ -35,7 +35,7 @@ export function useSampleStatusData() {
         customMessage: 'Deep diving into binary analysis',
         currentProject: 'Malware Research'
       }
-    }
+    };
 
     // Sample security badges
     const sampleBadges: Record<string, SecurityBadge[]> = {
@@ -170,7 +170,7 @@ export function useSampleStatusData() {
           }
         }
       ]
-    }
+    };
 
     // Sample certifications
     const sampleCertifications: Record<string, SecurityCertification[]> = {
@@ -253,10 +253,10 @@ export function useSampleStatusData() {
           category: 'cloud-security'
         }
       ]
-    }
+    };
 
-    setUserStatuses(sampleStatuses)
-    setBadges(sampleBadges)
-    setCertifications(sampleCertifications)
-  }, [setUserStatuses, setBadges, setCertifications])
+    setUserStatuses(sampleStatuses);
+    setBadges(sampleBadges);
+    setCertifications(sampleCertifications);
+  }, [setUserStatuses, setBadges, setCertifications]);
 }

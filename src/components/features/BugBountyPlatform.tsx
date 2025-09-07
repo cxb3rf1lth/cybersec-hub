@@ -1,15 +1,15 @@
-import { useState } from 'react'
-import { BugBountyProgram, LiveThreatFeed, TeamHunt, PartnerRequest } from '@/hooks/useBugBountyIntegration'
-import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { BinaryRain } from '@/components/ui/BinaryRain'
-import { CyberLoadingDots } from '@/components/ui/CyberLoadingDots'
+import { useState } from 'react';
+import { BugBountyProgram, LiveThreatFeed, TeamHunt, PartnerRequest } from '@/hooks/useBugBountyIntegration';
+import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { BinaryRain } from '@/components/ui/BinaryRain';
+import { CyberLoadingDots } from '@/components/ui/CyberLoadingDots';
 import { 
   Shield, 
   Target, 
@@ -27,8 +27,8 @@ import {
   Database,
   Network,
   Eye
-} from '@phosphor-icons/react'
-import { toast } from 'sonner'
+} from '@phosphor-icons/react';
+import { toast } from 'sonner';
 
 interface BugBountyPlatformProps {
   currentUserId: string
@@ -48,31 +48,31 @@ export function BugBountyPlatform({ currentUserId }: BugBountyPlatformProps) {
     respondToPartnerRequest,
     connectPlatform,
     syncPlatformData
-  } = useBugBountyIntegration()
+  } = useBugBountyIntegration();
 
-  const [activeTab, setActiveTab] = useState('programs')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedProgram, setSelectedProgram] = useState<BugBountyProgram | null>(null)
-  const [showPartnerRequest, setShowPartnerRequest] = useState(false)
+  const [activeTab, setActiveTab] = useState('programs');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedProgram, setSelectedProgram] = useState<BugBountyProgram | null>(null);
+  const [showPartnerRequest, setShowPartnerRequest] = useState(false);
 
   const filteredPrograms = programs.filter(program =>
     program.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     program.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
     program.type.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  );
 
   const pendingRequests = partnerRequests.filter(req => 
     req.toUserId === currentUserId && req.status === 'pending'
-  )
+  );
 
   const handleJoinHunt = (huntId: string) => {
-    joinTeamHunt(huntId, currentUserId)
-    toast.success('Successfully joined team hunt!')
-  }
+    joinTeamHunt(huntId, currentUserId);
+    toast.success('Successfully joined team hunt!');
+  };
 
   const handleCreatePartnerRequest = (programId: string) => {
-    const program = programs.find(p => p.id === programId)
-    if (!program) return
+    const program = programs.find(p => p.id === programId);
+    if (!program) {return;}
 
     createPartnerRequest({
       fromUserId: currentUserId,
@@ -85,33 +85,33 @@ export function BugBountyPlatform({ currentUserId }: BugBountyPlatformProps) {
       splitProposal: '50/50',
       status: 'pending',
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
-    })
+    });
     
-    setShowPartnerRequest(false)
-    toast.success('Partner request sent!')
-  }
+    setShowPartnerRequest(false);
+    toast.success('Partner request sent!');
+  };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      case 'high': return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
-      case 'medium': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'low': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+      case 'critical': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      case 'high': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+      case 'medium': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'low': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
     }
-  }
+  };
 
   const getPlatformIcon = (platform: string) => {
     switch (platform) {
-      case 'hackerone': return <Shield className="w-4 h-4 text-green-400" />
-      case 'bugcrowd': return <Target className="w-4 h-4 text-blue-400" />
-      case 'intigriti': return <Globe className="w-4 h-4 text-purple-400" />
-      case 'yeswehack': return <Eye className="w-4 h-4 text-red-400" />
-      case 'shodan': return <Network className="w-4 h-4 text-orange-400" />
-      case 'projectdiscovery': return <Database className="w-4 h-4 text-cyan-400" />
-      default: return <Shield className="w-4 h-4" />
+      case 'hackerone': return <Shield className="w-4 h-4 text-green-400" />;
+      case 'bugcrowd': return <Target className="w-4 h-4 text-blue-400" />;
+      case 'intigriti': return <Globe className="w-4 h-4 text-purple-400" />;
+      case 'yeswehack': return <Eye className="w-4 h-4 text-red-400" />;
+      case 'shodan': return <Network className="w-4 h-4 text-orange-400" />;
+      case 'projectdiscovery': return <Database className="w-4 h-4 text-cyan-400" />;
+      default: return <Shield className="w-4 h-4" />;
     }
-  }
+  };
 
   return (
     <div className="space-y-6 relative">
@@ -622,5 +622,5 @@ export function BugBountyPlatform({ currentUserId }: BugBountyPlatformProps) {
         </Dialog>
       )}
     </div>
-  )
+  );
 }

@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Plus, Calendar, User, AlertCircle, Clock, MessageCircle } from '@phosphor-icons/react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { CreateTaskModal } from '@/components/projects/CreateTaskModal'
-import { TaskDetailsModal } from '@/components/projects/TaskDetailsModal'
-import { Project, Task, User as UserType } from '@/types'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Plus, Calendar, User, AlertCircle, Clock, MessageCircle } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { CreateTaskModal } from '@/components/projects/CreateTaskModal';
+import { TaskDetailsModal } from '@/components/projects/TaskDetailsModal';
+import { Project, Task, User as UserType } from '@/types';
 
 interface ProjectKanbanProps {
   project: Project
@@ -16,17 +16,17 @@ interface ProjectKanbanProps {
 }
 
 export function ProjectKanban({ project, currentUser, onUpdateProject }: ProjectKanbanProps) {
-  const [allUsers] = useKVWithFallback<UserType[]>('allUsers', [])
-  const [showCreateTaskModal, setShowCreateTaskModal] = useState(false)
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null)
-  const [draggedTask, setDraggedTask] = useState<Task | null>(null)
+  const [allUsers] = useKVWithFallback<UserType[]>('allUsers', []);
+  const [showCreateTaskModal, setShowCreateTaskModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [draggedTask, setDraggedTask] = useState<Task | null>(null);
 
   const columns = [
     { id: 'todo', title: 'To Do', status: 'todo' as const },
     { id: 'in-progress', title: 'In Progress', status: 'in-progress' as const },
     { id: 'review', title: 'Review', status: 'review' as const },
     { id: 'completed', title: 'Completed', status: 'completed' as const }
-  ]
+  ];
 
   const handleCreateTask = (taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'comments'>) => {
     const newTask: Task = {
@@ -35,68 +35,68 @@ export function ProjectKanban({ project, currentUser, onUpdateProject }: Project
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       comments: []
-    }
+    };
 
     const updatedProject = {
       ...project,
       tasks: [...project.tasks, newTask],
       updatedAt: new Date().toISOString()
-    }
+    };
 
-    onUpdateProject(updatedProject)
-    setShowCreateTaskModal(false)
-  }
+    onUpdateProject(updatedProject);
+    setShowCreateTaskModal(false);
+  };
 
   const handleUpdateTask = (updatedTask: Task) => {
     const updatedProject = {
       ...project,
       tasks: project.tasks.map(task => task.id === updatedTask.id ? updatedTask : task),
       updatedAt: new Date().toISOString()
-    }
+    };
 
-    onUpdateProject(updatedProject)
-    setSelectedTask(updatedTask)
-  }
+    onUpdateProject(updatedProject);
+    setSelectedTask(updatedTask);
+  };
 
   const handleDragStart = (task: Task) => {
-    setDraggedTask(task)
-  }
+    setDraggedTask(task);
+  };
 
   const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-  }
+    e.preventDefault();
+  };
 
   const handleDrop = (e: React.DragEvent, newStatus: Task['status']) => {
-    e.preventDefault()
-    if (!draggedTask) return
+    e.preventDefault();
+    if (!draggedTask) {return;}
 
     const updatedTask = {
       ...draggedTask,
       status: newStatus,
       updatedAt: new Date().toISOString()
-    }
+    };
 
-    handleUpdateTask(updatedTask)
-    setDraggedTask(null)
-  }
+    handleUpdateTask(updatedTask);
+    setDraggedTask(null);
+  };
 
   const getPriorityColor = (priority: Task['priority']) => {
     switch (priority) {
-      case 'critical': return 'bg-red-500/20 text-red-300 border-red-500/30'
-      case 'high': return 'bg-orange-500/20 text-orange-300 border-orange-500/30'
-      case 'medium': return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
-      case 'low': return 'bg-green-500/20 text-green-300 border-green-500/30'
-      default: return 'bg-gray-500/20 text-gray-300 border-gray-500/30'
+      case 'critical': return 'bg-red-500/20 text-red-300 border-red-500/30';
+      case 'high': return 'bg-orange-500/20 text-orange-300 border-orange-500/30';
+      case 'medium': return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+      case 'low': return 'bg-green-500/20 text-green-300 border-green-500/30';
+      default: return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
     }
-  }
+  };
 
   const isOverdue = (task: Task) => {
-    return task.dueDate && new Date(task.dueDate) < new Date() && task.status !== 'completed'
-  }
+    return task.dueDate && new Date(task.dueDate) < new Date() && task.status !== 'completed';
+  };
 
   const TaskCard = ({ task }: { task: Task }) => {
-    const assignee = task.assigneeId ? allUsers.find(u => u.id === task.assigneeId) : null
-    const overdue = isOverdue(task)
+    const assignee = task.assigneeId ? allUsers.find(u => u.id === task.assigneeId) : null;
+    const overdue = isOverdue(task);
 
     return (
       <Card
@@ -181,14 +181,14 @@ export function ProjectKanban({ project, currentUser, onUpdateProject }: Project
           </div>
         </CardContent>
       </Card>
-    )
-  }
+    );
+  };
 
   return (
     <div className="flex-1 overflow-hidden">
       <div className="h-full flex gap-6 p-6 overflow-x-auto">
         {columns.map((column) => {
-          const columnTasks = project.tasks.filter(task => task.status === column.status)
+          const columnTasks = project.tasks.filter(task => task.status === column.status);
           
           return (
             <div 
@@ -229,7 +229,7 @@ export function ProjectKanban({ project, currentUser, onUpdateProject }: Project
                 </div>
               </div>
             </div>
-          )
+          );
         })}
       </div>
 
@@ -252,5 +252,5 @@ export function ProjectKanban({ project, currentUser, onUpdateProject }: Project
         />
       )}
     </div>
-  )
+  );
 }

@@ -1,112 +1,112 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Separator } from '@/components/ui/separator'
-import { MagnifyingGlass, Plus, Star, Download, Code, FolderOpen, Filter, Users } from '@/lib/phosphor-icons-wrapper'
-import { Template, ToolRepository, TemplateSearchFilters, RepositorySearchFilters } from '@/types/templates'
-import { User } from '@/types/user'
-import { TemplateCard } from '@/components/templates/TemplateCard'
-import { RepositoryCard } from '@/components/templates/RepositoryCard'
-import { CreateTemplateModal } from '@/components/templates/CreateTemplateModal'
-import { CreateRepositoryModal } from '@/components/templates/CreateRepositoryModal'
-import { TeamDashboard } from '@/components/templates/TeamDashboard'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { MagnifyingGlass, Plus, Star, Download, Code, FolderOpen, Filter, Users } from '@/lib/phosphor-icons-wrapper';
+import { Template, ToolRepository, TemplateSearchFilters, RepositorySearchFilters } from '@/types/templates';
+import { User } from '@/types/user';
+import { TemplateCard } from '@/components/templates/TemplateCard';
+import { RepositoryCard } from '@/components/templates/RepositoryCard';
+import { CreateTemplateModal } from '@/components/templates/CreateTemplateModal';
+import { CreateRepositoryModal } from '@/components/templates/CreateRepositoryModal';
+import { TeamDashboard } from '@/components/templates/TeamDashboard';
 
 interface TemplatesViewProps {
   currentUser: User
 }
 
 export function TemplatesView({ currentUser }: TemplatesViewProps) {
-  const [templates] = useKVWithFallback<Template[]>('templates', [])
-  const [repositories] = useKVWithFallback<ToolRepository[]>('toolRepositories', [])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [activeTab, setActiveTab] = useState<'templates' | 'repositories' | 'teams'>('templates')
-  const [showCreateTemplate, setShowCreateTemplate] = useState(false)
-  const [showCreateRepository, setShowCreateRepository] = useState(false)
+  const [templates] = useKVWithFallback<Template[]>('templates', []);
+  const [repositories] = useKVWithFallback<ToolRepository[]>('toolRepositories', []);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState<'templates' | 'repositories' | 'teams'>('templates');
+  const [showCreateTemplate, setShowCreateTemplate] = useState(false);
+  const [showCreateRepository, setShowCreateRepository] = useState(false);
   const [templateFilters, setTemplateFilters] = useState<TemplateSearchFilters>({
     sortBy: 'stars',
     sortOrder: 'desc'
-  })
+  });
   const [repositoryFilters, setRepositoryFilters] = useState<RepositorySearchFilters>({
     sortBy: 'stars',
     sortOrder: 'desc'
-  })
+  });
 
   // Filter and search templates
   const filteredTemplates = (templates ?? [])
     .filter(template => {
-      if (!template.isPublic && template.author.id !== currentUser.id) return false
+      if (!template.isPublic && template.author.id !== currentUser.id) {return false;}
       
       const matchesSearch = template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            template.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           template.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+                           template.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
       
-      const matchesCategory = !templateFilters.category || template.category === templateFilters.category
-      const matchesDifficulty = !templateFilters.difficulty || template.difficulty === templateFilters.difficulty
-      const matchesFramework = !templateFilters.framework || template.framework === templateFilters.framework
+      const matchesCategory = !templateFilters.category || template.category === templateFilters.category;
+      const matchesDifficulty = !templateFilters.difficulty || template.difficulty === templateFilters.difficulty;
+      const matchesFramework = !templateFilters.framework || template.framework === templateFilters.framework;
       
-      return matchesSearch && matchesCategory && matchesDifficulty && matchesFramework
+      return matchesSearch && matchesCategory && matchesDifficulty && matchesFramework;
     })
     .sort((a, b) => {
-      const { sortBy, sortOrder } = templateFilters
-      let comparison = 0
+      const { sortBy, sortOrder } = templateFilters;
+      let comparison = 0;
       
       switch (sortBy) {
         case 'stars':
-          comparison = a.stars - b.stars
-          break
+          comparison = a.stars - b.stars;
+          break;
         case 'downloads':
-          comparison = a.downloads - b.downloads
-          break
+          comparison = a.downloads - b.downloads;
+          break;
         case 'recent':
-          comparison = new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
-          break
+          comparison = new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
+          break;
         case 'name':
-          comparison = a.name.localeCompare(b.name)
-          break
+          comparison = a.name.localeCompare(b.name);
+          break;
       }
       
-      return sortOrder === 'desc' ? -comparison : comparison
-    })
+      return sortOrder === 'desc' ? -comparison : comparison;
+    });
 
   // Filter and search repositories
   const filteredRepositories = (repositories ?? [])
     .filter(repo => {
-      if (!repo.isPublic && repo.author.id !== currentUser.id) return false
+      if (!repo.isPublic && repo.author.id !== currentUser.id) {return false;}
       
       const matchesSearch = repo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            repo.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           repo.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+                           repo.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
       
-      const matchesCategory = !repositoryFilters.category || repo.category === repositoryFilters.category
+      const matchesCategory = !repositoryFilters.category || repo.category === repositoryFilters.category;
       
-      return matchesSearch && matchesCategory
+      return matchesSearch && matchesCategory;
     })
     .sort((a, b) => {
-      const { sortBy, sortOrder } = repositoryFilters
-      let comparison = 0
+      const { sortBy, sortOrder } = repositoryFilters;
+      let comparison = 0;
       
       switch (sortBy) {
         case 'stars':
-          comparison = a.stars - b.stars
-          break
+          comparison = a.stars - b.stars;
+          break;
         case 'forks':
-          comparison = a.forks - b.forks
-          break
+          comparison = a.forks - b.forks;
+          break;
         case 'recent':
-          comparison = new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
-          break
+          comparison = new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
+          break;
         case 'name':
-          comparison = a.name.localeCompare(b.name)
-          break
+          comparison = a.name.localeCompare(b.name);
+          break;
       }
       
-      return sortOrder === 'desc' ? -comparison : comparison
-    })
+      return sortOrder === 'desc' ? -comparison : comparison;
+    });
 
   const templateCategories = [
     { value: 'web-app', label: 'Web Applications' },
@@ -116,7 +116,7 @@ export function TemplatesView({ currentUser }: TemplatesViewProps) {
     { value: 'networking', label: 'Networking' },
     { value: 'forensics', label: 'Forensics' },
     { value: 'automation', label: 'Automation' }
-  ]
+  ];
 
   const repositoryCategories = [
     { value: 'reconnaissance', label: 'Reconnaissance' },
@@ -125,7 +125,7 @@ export function TemplatesView({ currentUser }: TemplatesViewProps) {
     { value: 'defense', label: 'Defense' },
     { value: 'analysis', label: 'Analysis' },
     { value: 'automation', label: 'Automation' }
-  ]
+  ];
 
   return (
     <div className="space-y-6">
@@ -347,5 +347,5 @@ export function TemplatesView({ currentUser }: TemplatesViewProps) {
         />
       )}
     </div>
-  )
+  );
 }

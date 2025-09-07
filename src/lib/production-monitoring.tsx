@@ -3,9 +3,9 @@
  * Comprehensive error handling, logging, and recovery for production deployment
  */
 
-import React, { Component, ErrorInfo, ReactNode } from 'react'
-import { CONFIG, MONITORING_CONFIG } from '@/lib/environment'
-import { toast } from 'sonner'
+import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { CONFIG, MONITORING_CONFIG } from '@/lib/environment';
+import { toast } from 'sonner';
 
 interface Props {
   children: ReactNode
@@ -21,8 +21,8 @@ interface State {
 
 export class ProductionErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
-    super(props)
-    this.state = { hasError: false }
+    super(props);
+    this.state = { hasError: false };
   }
 
   static getDerivedStateFromError(error: Error): State {
@@ -31,20 +31,20 @@ export class ProductionErrorBoundary extends Component<Props, State> {
       hasError: true,
       error,
       errorId: Date.now().toString(36)
-    }
+    };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Production Error Boundary caught an error:', error, errorInfo)
+    console.error('Production Error Boundary caught an error:', error, errorInfo);
     
     this.setState({
       error,
       errorInfo,
       errorId: Date.now().toString(36)
-    })
+    });
 
     // Log error to monitoring service
-    this.logError(error, errorInfo)
+    this.logError(error, errorInfo);
 
     // Show user-friendly error message
     if (CONFIG.IS_PRODUCTION) {
@@ -54,7 +54,7 @@ export class ProductionErrorBoundary extends Component<Props, State> {
           label: 'Report Issue',
           onClick: () => this.reportIssue(error, errorInfo)
         }
-      })
+      });
     }
   }
 
@@ -71,7 +71,7 @@ export class ProductionErrorBoundary extends Component<Props, State> {
         sessionId: sessionStorage.getItem('sessionId'),
         buildVersion: import.meta.env.VITE_BUILD_VERSION || 'unknown',
         environment: CONFIG.NODE_ENV
-      }
+      };
 
       // Send to monitoring service (Sentry, LogRocket, etc.)
       if (MONITORING_CONFIG.SENTRY_DSN && CONFIG.IS_PRODUCTION) {
@@ -80,19 +80,19 @@ export class ProductionErrorBoundary extends Component<Props, State> {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(errorData)
-        })
+        });
       }
 
       // Log to console in development
       if (CONFIG.IS_DEVELOPMENT) {
-        console.group('🔥 Error Details')
-        console.error('Error:', error)
-        console.error('Error Info:', errorInfo)
-        console.error('Error Data:', errorData)
-        console.groupEnd()
+        console.group('🔥 Error Details');
+        console.error('Error:', error);
+        console.error('Error Info:', errorInfo);
+        console.error('Error Data:', errorData);
+        console.groupEnd();
       }
     } catch (loggingError) {
-      console.error('Failed to log error:', loggingError)
+      console.error('Failed to log error:', loggingError);
     }
   }
 
@@ -118,21 +118,21 @@ ${errorInfo.componentStack}
 - Timestamp: ${new Date().toISOString()}
 - Build Version: ${import.meta.env.VITE_BUILD_VERSION || 'unknown'}
       `.trim()
-    }
+    };
 
     // Open GitHub issues or support form
-    const githubUrl = `https://github.com/cyberconnect/issues/new?title=${encodeURIComponent(issueData.title)}&body=${encodeURIComponent(issueData.description)}`
-    window.open(githubUrl, '_blank')
+    const githubUrl = `https://github.com/cyberconnect/issues/new?title=${encodeURIComponent(issueData.title)}&body=${encodeURIComponent(issueData.description)}`;
+    window.open(githubUrl, '_blank');
   }
 
   private retry = () => {
-    this.setState({ hasError: false, error: undefined, errorInfo: undefined })
-  }
+    this.setState({ hasError: false, error: undefined, errorInfo: undefined });
+  };
 
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
-        return this.props.fallback
+        return this.props.fallback;
       }
 
       return (
@@ -187,132 +187,132 @@ ${errorInfo.componentStack}
             </div>
           </div>
         </div>
-      )
+      );
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }
 
 // Production Performance Monitor
 export class PerformanceMonitor {
-  private static instance: PerformanceMonitor
-  private metrics: Map<string, number[]> = new Map()
-  private observers: PerformanceObserver[] = []
+  private static instance: PerformanceMonitor;
+  private metrics: Map<string, number[]> = new Map();
+  private observers: PerformanceObserver[] = [];
 
   static getInstance(): PerformanceMonitor {
     if (!PerformanceMonitor.instance) {
-      PerformanceMonitor.instance = new PerformanceMonitor()
+      PerformanceMonitor.instance = new PerformanceMonitor();
     }
-    return PerformanceMonitor.instance
+    return PerformanceMonitor.instance;
   }
 
   initialize() {
     if (!CONFIG.IS_PRODUCTION || !MONITORING_CONFIG.PERFORMANCE_SAMPLE_RATE) {
-      return
+      return;
     }
 
     // Monitor Core Web Vitals
-    this.observeCoreWebVitals()
+    this.observeCoreWebVitals();
     
     // Monitor resource loading
-    this.observeResourcePerformance()
+    this.observeResourcePerformance();
     
     // Monitor long tasks
-    this.observeLongTasks()
+    this.observeLongTasks();
 
-    console.log('🔍 Performance monitoring initialized')
+    console.log('🔍 Performance monitoring initialized');
   }
 
   private observeCoreWebVitals() {
     try {
       // Largest Contentful Paint (LCP)
       const lcpObserver = new PerformanceObserver((list) => {
-        const entries = list.getEntries()
-        const lastEntry = entries[entries.length - 1] as any
-        this.recordMetric('LCP', lastEntry.startTime)
-      })
-      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] })
-      this.observers.push(lcpObserver)
+        const entries = list.getEntries();
+        const lastEntry = entries[entries.length - 1] as any;
+        this.recordMetric('LCP', lastEntry.startTime);
+      });
+      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+      this.observers.push(lcpObserver);
 
       // First Input Delay (FID)
       const fidObserver = new PerformanceObserver((list) => {
-        const entries = list.getEntries()
+        const entries = list.getEntries();
         entries.forEach((entry: any) => {
-          this.recordMetric('FID', entry.processingStart - entry.startTime)
-        })
-      })
-      fidObserver.observe({ entryTypes: ['first-input'] })
-      this.observers.push(fidObserver)
+          this.recordMetric('FID', entry.processingStart - entry.startTime);
+        });
+      });
+      fidObserver.observe({ entryTypes: ['first-input'] });
+      this.observers.push(fidObserver);
 
       // Cumulative Layout Shift (CLS)
-      let clsValue = 0
+      let clsValue = 0;
       const clsObserver = new PerformanceObserver((list) => {
-        const entries = list.getEntries()
+        const entries = list.getEntries();
         entries.forEach((entry: any) => {
           if (!entry.hadRecentInput) {
-            clsValue += entry.value
+            clsValue += entry.value;
           }
-        })
-        this.recordMetric('CLS', clsValue)
-      })
-      clsObserver.observe({ entryTypes: ['layout-shift'] })
-      this.observers.push(clsObserver)
+        });
+        this.recordMetric('CLS', clsValue);
+      });
+      clsObserver.observe({ entryTypes: ['layout-shift'] });
+      this.observers.push(clsObserver);
     } catch (error) {
-      console.warn('Core Web Vitals monitoring not supported:', error)
+      console.warn('Core Web Vitals monitoring not supported:', error);
     }
   }
 
   private observeResourcePerformance() {
     try {
       const resourceObserver = new PerformanceObserver((list) => {
-        const entries = list.getEntries()
+        const entries = list.getEntries();
         entries.forEach((entry) => {
           if (entry.duration > 1000) { // Resources taking more than 1s
-            this.recordMetric('SLOW_RESOURCE', entry.duration)
-            console.warn('Slow resource detected:', entry.name, entry.duration)
+            this.recordMetric('SLOW_RESOURCE', entry.duration);
+            console.warn('Slow resource detected:', entry.name, entry.duration);
           }
-        })
-      })
-      resourceObserver.observe({ entryTypes: ['resource'] })
-      this.observers.push(resourceObserver)
+        });
+      });
+      resourceObserver.observe({ entryTypes: ['resource'] });
+      this.observers.push(resourceObserver);
     } catch (error) {
-      console.warn('Resource performance monitoring not supported:', error)
+      console.warn('Resource performance monitoring not supported:', error);
     }
   }
 
   private observeLongTasks() {
     try {
       const longTaskObserver = new PerformanceObserver((list) => {
-        const entries = list.getEntries()
+        const entries = list.getEntries();
         entries.forEach((entry) => {
-          this.recordMetric('LONG_TASK', entry.duration)
-          console.warn('Long task detected:', entry.duration)
-        })
-      })
-      longTaskObserver.observe({ entryTypes: ['longtask'] })
-      this.observers.push(longTaskObserver)
+          this.recordMetric('LONG_TASK', entry.duration);
+          console.warn('Long task detected:', entry.duration);
+        });
+      });
+      longTaskObserver.observe({ entryTypes: ['longtask'] });
+      this.observers.push(longTaskObserver);
     } catch (error) {
-      console.warn('Long task monitoring not supported:', error)
+      console.warn('Long task monitoring not supported:', error);
     }
   }
 
   private recordMetric(name: string, value: number) {
     if (!this.metrics.has(name)) {
-      this.metrics.set(name, [])
+      this.metrics.set(name, []);
     }
     
-    const values = this.metrics.get(name)!
-    values.push(value)
+    const values = this.metrics.get(name)!;
+    values.push(value);
     
     // Keep only last 100 measurements
     if (values.length > 100) {
-      values.shift()
+      values.shift();
     }
 
     // Send to analytics if sampling allows
     if (Math.random() < MONITORING_CONFIG.PERFORMANCE_SAMPLE_RATE) {
-      this.sendMetric(name, value)
+      this.sendMetric(name, value);
     }
   }
 
@@ -329,7 +329,7 @@ export class PerformanceMonitor {
             url: window.location.href,
             sessionId: sessionStorage.getItem('sessionId')
           })
-        })
+        });
       }
     } catch (error) {
       // Silently fail - don't impact user experience
@@ -337,28 +337,28 @@ export class PerformanceMonitor {
   }
 
   getMetrics(): Record<string, number[]> {
-    return Object.fromEntries(this.metrics)
+    return Object.fromEntries(this.metrics);
   }
 
   getAverageMetric(name: string): number {
-    const values = this.metrics.get(name) || []
-    return values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0
+    const values = this.metrics.get(name) || [];
+    return values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0;
   }
 
   cleanup() {
-    this.observers.forEach(observer => observer.disconnect())
-    this.observers = []
-    this.metrics.clear()
+    this.observers.forEach(observer => observer.disconnect());
+    this.observers = [];
+    this.metrics.clear();
   }
 }
 
 // Initialize performance monitoring
-export const performanceMonitor = PerformanceMonitor.getInstance()
+export const performanceMonitor = PerformanceMonitor.getInstance();
 
 // Global error handler for unhandled promises
 if (typeof window !== 'undefined') {
   window.addEventListener('unhandledrejection', (event) => {
-    console.error('Unhandled promise rejection:', event.reason)
+    console.error('Unhandled promise rejection:', event.reason);
     
     if (CONFIG.IS_PRODUCTION) {
       // Log to monitoring service
@@ -373,21 +373,21 @@ if (typeof window !== 'undefined') {
         })
       }).catch(() => {
         // Silently fail
-      })
+      });
     }
-  })
+  });
 }
 
 // React Hook for monitoring component performance
 export function usePerformanceMonitor(componentName: string) {
   React.useEffect(() => {
-    const startTime = performance.now()
+    const startTime = performance.now();
     
     return () => {
-      const duration = performance.now() - startTime
-      performanceMonitor['recordMetric'](`COMPONENT_${componentName.toUpperCase()}`, duration)
-    }
-  }, [componentName])
+      const duration = performance.now() - startTime;
+      performanceMonitor['recordMetric'](`COMPONENT_${componentName.toUpperCase()}`, duration);
+    };
+  }, [componentName]);
 }
 
-export default ProductionErrorBoundary
+export default ProductionErrorBoundary;

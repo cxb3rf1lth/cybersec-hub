@@ -1,51 +1,51 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Plus, Users, Star, Trophy, Search, Filter, Crown, Shield } from '@phosphor-icons/react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CreateTeamModal } from '@/components/teams/CreateTeamModal'
-import { TeamDetailsModal } from '@/components/teams/TeamDetailsModal'
-import { BugBountyTeamCard } from '@/components/teams/BugBountyTeamCard'
-import { Team, User, Project } from '@/types'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Plus, Users, Star, Trophy, Search, Filter, Crown, Shield } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CreateTeamModal } from '@/components/teams/CreateTeamModal';
+import { TeamDetailsModal } from '@/components/teams/TeamDetailsModal';
+import { BugBountyTeamCard } from '@/components/teams/BugBountyTeamCard';
+import { Team, User, Project } from '@/types';
 
 interface TeamsViewProps {
   currentUser: User
 }
 
 export function TeamsView({ currentUser }: TeamsViewProps) {
-  const [teams, setTeams] = useKVWithFallback<Team[]>('teams', [])
-  const [allUsers] = useKVWithFallback<User[]>('allUsers', [])
-  const [projects] = useKVWithFallback<Project[]>('projects', [])
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [typeFilter, setTypeFilter] = useState<string>('all')
-  const [activeTab, setActiveTab] = useState<'my-teams' | 'discover' | 'invitations'>('my-teams')
+  const [teams, setTeams] = useKVWithFallback<Team[]>('teams', []);
+  const [allUsers] = useKVWithFallback<User[]>('allUsers', []);
+  const [projects] = useKVWithFallback<Project[]>('projects', []);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [activeTab, setActiveTab] = useState<'my-teams' | 'discover' | 'invitations'>('my-teams');
 
   // Get user's teams
   const userTeams = teams.filter(team => 
     team.members.some(member => member.userId === currentUser.id)
-  )
+  );
 
   // Get public teams for discovery
   const publicTeams = teams.filter(team => 
     team.isPublic && !team.members.some(member => member.userId === currentUser.id)
-  )
+  );
 
   // Filter teams based on search and type
   const filterTeams = (teamList: Team[]) => {
     return teamList.filter(team => {
       const matchesSearch = team.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           team.description.toLowerCase().includes(searchQuery.toLowerCase())
-      const matchesType = typeFilter === 'all' || team.type === typeFilter
-      return matchesSearch && matchesType
-    })
-  }
+                           team.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesType = typeFilter === 'all' || team.type === typeFilter;
+      return matchesSearch && matchesType;
+    });
+  };
 
   const handleCreateTeam = (teamData: Omit<Team, 'id' | 'createdAt'>) => {
     const newTeam: Team = {
@@ -70,33 +70,33 @@ export function TeamsView({ currentUser }: TeamsViewProps) {
       reputation: 0,
       successfulProjects: 0,
       createdAt: new Date().toISOString()
-    }
-    setTeams(current => [...current, newTeam])
-    setShowCreateModal(false)
-  }
+    };
+    setTeams(current => [...current, newTeam]);
+    setShowCreateModal(false);
+  };
 
   const getTypeColor = (type: Team['type']) => {
     switch (type) {
-      case 'bug-bounty': return 'bg-orange-500/20 text-orange-300'
-      case 'research': return 'bg-cyan-500/20 text-cyan-300'
-      case 'development': return 'bg-blue-500/20 text-blue-300'
-      case 'red-team': return 'bg-red-500/20 text-red-300'
-      case 'blue-team': return 'bg-blue-600/20 text-blue-400'
-      default: return 'bg-gray-500/20 text-gray-300'
+      case 'bug-bounty': return 'bg-orange-500/20 text-orange-300';
+      case 'research': return 'bg-cyan-500/20 text-cyan-300';
+      case 'development': return 'bg-blue-500/20 text-blue-300';
+      case 'red-team': return 'bg-red-500/20 text-red-300';
+      case 'blue-team': return 'bg-blue-600/20 text-blue-400';
+      default: return 'bg-gray-500/20 text-gray-300';
     }
-  }
+  };
 
   const getRoleIcon = (role: Team['members'][0]['role']) => {
     switch (role) {
-      case 'owner': return <Crown className="w-4 h-4 text-yellow-400" />
-      case 'admin': return <Shield className="w-4 h-4 text-blue-400" />
-      default: return null
+      case 'owner': return <Crown className="w-4 h-4 text-yellow-400" />;
+      case 'admin': return <Shield className="w-4 h-4 text-blue-400" />;
+      default: return null;
     }
-  }
+  };
 
   const TeamCard = ({ team, showJoinButton = false }: { team: Team; showJoinButton?: boolean }) => {
-    const teamProjects = projects.filter(p => p.teamId === team.id)
-    const userRole = team.members.find(m => m.userId === currentUser.id)?.role
+    const teamProjects = projects.filter(p => p.teamId === team.id);
+    const userRole = team.members.find(m => m.userId === currentUser.id)?.role;
 
     return (
       <Card className="hover:bg-muted/50 transition-colors">
@@ -113,7 +113,7 @@ export function TeamsView({ currentUser }: TeamsViewProps) {
             </div>
             {showJoinButton && (
               <Button size="sm" onClick={(e) => {
-                e.stopPropagation()
+                e.stopPropagation();
                 // Handle join team request
               }}>
                 Join
@@ -180,8 +180,8 @@ export function TeamsView({ currentUser }: TeamsViewProps) {
           <div className="flex items-center gap-2">
             <div className="flex -space-x-2">
               {team.members.slice(0, 4).map((member) => {
-                const user = allUsers.find(u => u.id === member.userId)
-                if (!user) return null
+                const user = allUsers.find(u => u.id === member.userId);
+                if (!user) {return null;}
                 return (
                   <Avatar key={member.userId} className="w-6 h-6 border-2 border-background">
                     <AvatarImage src={user.avatar} />
@@ -189,7 +189,7 @@ export function TeamsView({ currentUser }: TeamsViewProps) {
                       {user.username[0].toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                )
+                );
               })}
               {team.members.length > 4 && (
                 <div className="w-6 h-6 rounded-full bg-muted border-2 border-background flex items-center justify-center">
@@ -202,8 +202,8 @@ export function TeamsView({ currentUser }: TeamsViewProps) {
           </div>
         </CardContent>
       </Card>
-    )
-  }
+    );
+  };
 
   return (
     <div className="h-full flex flex-col">
@@ -341,11 +341,11 @@ export function TeamsView({ currentUser }: TeamsViewProps) {
           onUpdateTeam={(updatedTeam) => {
             setTeams(current => 
               current.map(t => t.id === updatedTeam.id ? updatedTeam : t)
-            )
-            setSelectedTeam(updatedTeam)
+            );
+            setSelectedTeam(updatedTeam);
           }}
         />
       )}
     </div>
-  )
+  );
 }

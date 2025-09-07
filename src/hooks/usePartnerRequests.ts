@@ -1,8 +1,8 @@
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { PartnerRequest, PartnerApplication, SkillCategory, PartnerMatch } from '@/types/partner-requests'
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { PartnerRequest, PartnerApplication, SkillCategory, PartnerMatch } from '@/types/partner-requests';
 
 export function usePartnerRequests() {
-  const [partnerRequests, setPartnerRequests] = useKVWithFallback<PartnerRequest[]>('partner-requests', [])
+  const [partnerRequests, setPartnerRequests] = useKVWithFallback<PartnerRequest[]>('partner-requests', []);
   const [skillCategories] = useKVWithFallback<SkillCategory[]>('skill-categories', [
     {
       id: 'penetration-testing',
@@ -40,7 +40,7 @@ export function usePartnerRequests() {
       icon: '🔬',
       skills: ['Vulnerability Research', 'Exploit Development', 'Zero-day Discovery', 'CVE Analysis', 'PoC Development']
     }
-  ])
+  ]);
 
   const createPartnerRequest = (requestData: Omit<PartnerRequest, 'id' | 'applications' | 'createdAt' | 'updatedAt' | 'status'>) => {
     const newRequest: PartnerRequest = {
@@ -50,11 +50,11 @@ export function usePartnerRequests() {
       status: 'open',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
-    }
+    };
 
-    setPartnerRequests(current => [newRequest, ...current])
-    return newRequest
-  }
+    setPartnerRequests(current => [newRequest, ...current]);
+    return newRequest;
+  };
 
   const updatePartnerRequest = (requestId: string, updates: Partial<PartnerRequest>) => {
     setPartnerRequests(current => 
@@ -63,8 +63,8 @@ export function usePartnerRequests() {
           ? { ...request, ...updates, updatedAt: new Date().toISOString() }
           : request
       )
-    )
-  }
+    );
+  };
 
   const applyToPartnerRequest = (requestId: string, application: Omit<PartnerApplication, 'id' | 'appliedAt' | 'status'>) => {
     const newApplication: PartnerApplication = {
@@ -72,7 +72,7 @@ export function usePartnerRequests() {
       ...application,
       status: 'pending',
       appliedAt: new Date().toISOString()
-    }
+    };
 
     setPartnerRequests(current => 
       current.map(request => 
@@ -84,10 +84,10 @@ export function usePartnerRequests() {
             }
           : request
       )
-    )
+    );
 
-    return newApplication
-  }
+    return newApplication;
+  };
 
   const updateApplicationStatus = (requestId: string, applicationId: string, status: PartnerApplication['status']) => {
     setPartnerRequests(current => 
@@ -102,28 +102,28 @@ export function usePartnerRequests() {
             }
           : request
       )
-    )
-  }
+    );
+  };
 
   const getMyRequests = (userId: string) => {
-    return partnerRequests.filter(request => request.requesterId === userId)
-  }
+    return partnerRequests.filter(request => request.requesterId === userId);
+  };
 
   const getMyApplications = (userId: string) => {
-    const applications: Array<{ request: PartnerRequest; application: PartnerApplication }> = []
+    const applications: Array<{ request: PartnerRequest; application: PartnerApplication }> = [];
     
     partnerRequests.forEach(request => {
-      const userApplication = request.applications.find(app => app.applicantId === userId)
+      const userApplication = request.applications.find(app => app.applicantId === userId);
       if (userApplication) {
-        applications.push({ request, application: userApplication })
+        applications.push({ request, application: userApplication });
       }
-    })
+    });
     
-    return applications
-  }
+    return applications;
+  };
 
   const findMatches = (userId: string, userSkills: string[]): PartnerMatch[] => {
-    const matches: PartnerMatch[] = []
+    const matches: PartnerMatch[] = [];
     
     partnerRequests
       .filter(request => request.requesterId !== userId && request.status === 'open')
@@ -133,24 +133,24 @@ export function usePartnerRequests() {
             userSkill.toLowerCase().includes(skill.toLowerCase()) ||
             skill.toLowerCase().includes(userSkill.toLowerCase())
           )
-        ).length
+        ).length;
         
         const skillsOfferedMatches = userSkills.filter(skill => 
           request.skillsOffered.some(offeredSkill => 
             skill.toLowerCase().includes(offeredSkill.toLowerCase()) ||
             offeredSkill.toLowerCase().includes(skill.toLowerCase())
           )
-        ).length
+        ).length;
 
         if (skillMatches > 0 || skillsOfferedMatches > 0) {
-          const matchScore = (skillMatches * 2 + skillsOfferedMatches) * 20
-          const compatibilityReasons = []
+          const matchScore = (skillMatches * 2 + skillsOfferedMatches) * 20;
+          const compatibilityReasons = [];
           
           if (skillMatches > 0) {
-            compatibilityReasons.push(`You have ${skillMatches} skills they need`)
+            compatibilityReasons.push(`You have ${skillMatches} skills they need`);
           }
           if (skillsOfferedMatches > 0) {
-            compatibilityReasons.push(`They offer ${skillsOfferedMatches} skills you could learn`)
+            compatibilityReasons.push(`They offer ${skillsOfferedMatches} skills you could learn`);
           }
           
           matches.push({
@@ -162,12 +162,12 @@ export function usePartnerRequests() {
             matchScore: Math.min(matchScore, 100),
             compatibilityReasons,
             suggestedAt: new Date().toISOString()
-          })
+          });
         }
-      })
+      });
     
-    return matches.sort((a, b) => b.matchScore - a.matchScore)
-  }
+    return matches.sort((a, b) => b.matchScore - a.matchScore);
+  };
 
   return {
     partnerRequests,
@@ -179,5 +179,5 @@ export function usePartnerRequests() {
     getMyRequests,
     getMyApplications,
     findMatches
-  }
+  };
 }

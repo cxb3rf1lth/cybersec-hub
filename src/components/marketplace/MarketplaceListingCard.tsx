@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import { Star, Clock, DollarSign, Users, Award, CheckCircle } from '@/lib/phosphor-icons-wrapper'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { MarketplaceListing } from '@/types/marketplace'
-import type { Team } from '@/types/teams'
-import { CreateProposalModal } from './CreateProposalModal'
-import { User } from '@/types/user'
-import { useKVWithFallback } from '@/lib/kv-fallback'
+import { useState } from 'react';
+import { Star, Clock, DollarSign, Users, Award, CheckCircle } from '@/lib/phosphor-icons-wrapper';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { MarketplaceListing } from '@/types/marketplace';
+import type { Team } from '@/types/teams';
+import { CreateProposalModal } from './CreateProposalModal';
+import { User } from '@/types/user';
+import { useKVWithFallback } from '@/lib/kv-fallback';
 
 interface MarketplaceListingCardProps {
   listing: MarketplaceListing
@@ -17,8 +17,8 @@ interface MarketplaceListingCardProps {
 }
 
 export function MarketplaceListingCard({ listing, team, featured = false }: MarketplaceListingCardProps) {
-  const [currentUser] = useKVWithFallback<User>('currentUser', undefined)
-  const [showProposalModal, setShowProposalModal] = useState(false)
+  const [currentUser] = useKVWithFallback<User>('currentUser', undefined);
+  const [showProposalModal, setShowProposalModal] = useState(false);
   const getCategoryColor = (category: string) => {
     const colors = {
       'penetration-testing': 'bg-red-500/10 text-red-400 border-red-500/20',
@@ -29,9 +29,9 @@ export function MarketplaceListingCard({ listing, team, featured = false }: Mark
       'consultation': 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
       'training': 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
       'other': 'bg-gray-500/10 text-gray-400 border-gray-500/20'
-    }
-    return colors[category as keyof typeof colors] || colors.other
-  }
+    };
+    return colors[category as keyof typeof colors] || colors.other;
+  };
 
   const getAvailabilityColor = (availability: string) => {
     const colors = {
@@ -39,9 +39,9 @@ export function MarketplaceListingCard({ listing, team, featured = false }: Mark
       'within-week': 'text-yellow-400',
       'within-month': 'text-orange-400',
       'future': 'text-gray-400'
-    }
-    return colors[availability as keyof typeof colors] || colors.future
-  }
+    };
+    return colors[availability as keyof typeof colors] || colors.future;
+  };
 
   const formatPrice = (min: number, max: number, currency: string) => {
     const formatter = new Intl.NumberFormat('en-US', {
@@ -49,9 +49,9 @@ export function MarketplaceListingCard({ listing, team, featured = false }: Mark
       currency: currency,
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
-    })
-    return `${formatter.format(min)} - ${formatter.format(max)}`
-  }
+    });
+    return `${formatter.format(min)} - ${formatter.format(max)}`;
+  };
 
   return (
     <Card className={`relative overflow-hidden transition-all hover:shadow-lg ${featured ? 'ring-2 ring-accent/20' : ''}`}>
@@ -210,5 +210,5 @@ export function MarketplaceListingCard({ listing, team, featured = false }: Mark
         />
       )}
     </Card>
-  )
+  );
 }

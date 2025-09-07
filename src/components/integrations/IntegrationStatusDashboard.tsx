@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   Activity, 
   Clock, 
@@ -27,12 +27,12 @@ import {
   Pause,
   Timer,
   Settings
-} from '@/lib/phosphor-icons-wrapper'
-import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
-import { useAutoSync } from '@/hooks/useAutoSync'
-import { SyncConfiguration } from '@/components/features/SyncConfiguration'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { toast } from 'sonner'
+} from '@/lib/phosphor-icons-wrapper';
+import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration';
+import { useAutoSync } from '@/hooks/useAutoSync';
+import { SyncConfiguration } from '@/components/features/SyncConfiguration';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { toast } from 'sonner';
 
 interface MetricData {
   timestamp: string
@@ -59,7 +59,7 @@ export function IntegrationStatusDashboard() {
     lastUpdate,
     syncErrors = {},
     refreshAllData
-  } = useBugBountyIntegration()
+  } = useBugBountyIntegration();
 
   // Auto-sync functionality
   const {
@@ -74,38 +74,38 @@ export function IntegrationStatusDashboard() {
     nextSyncFormatted,
     connectedPlatforms = [],
     disconnectedPlatforms = []
-  } = useAutoSync()
+  } = useAutoSync();
 
-  const [healthMetrics = [], setHealthMetrics] = useKVWithFallback<ConnectionHealth[]>('connection_health', [])
-  const [realTimeData = [], setRealTimeData] = useKVWithFallback<MetricData[]>('realtime_metrics', [])
-  const [monitoringEnabled, setMonitoringEnabled] = useState(true)
-  const [showSyncConfig, setShowSyncConfig] = useState(false)
-  const [isLoadingAction, setIsLoadingAction] = useState(false)
+  const [healthMetrics = [], setHealthMetrics] = useKVWithFallback<ConnectionHealth[]>('connection_health', []);
+  const [realTimeData = [], setRealTimeData] = useKVWithFallback<MetricData[]>('realtime_metrics', []);
+  const [monitoringEnabled, setMonitoringEnabled] = useState(true);
+  const [showSyncConfig, setShowSyncConfig] = useState(false);
+  const [isLoadingAction, setIsLoadingAction] = useState(false);
 
   // Initialize health monitoring
   useEffect(() => {
     if (monitoringEnabled) {
       const interval = setInterval(() => {
-        updateHealthMetrics()
-        collectRealTimeMetrics()
-      }, 30000) // Update every 30 seconds
+        updateHealthMetrics();
+        collectRealTimeMetrics();
+      }, 30000); // Update every 30 seconds
 
-      return () => clearInterval(interval)
+      return () => clearInterval(interval);
     }
-  }, [integrations, monitoringEnabled])
+  }, [integrations, monitoringEnabled]);
 
   const updateHealthMetrics = async () => {
-    const newHealthMetrics: ConnectionHealth[] = []
+    const newHealthMetrics: ConnectionHealth[] = [];
 
   for (const integration of (integrations ?? []).filter(int => int.connected)) {
       try {
-        const startTime = Date.now()
+        const startTime = Date.now();
         
         // Simulate health check - in production, this would ping the actual API
-        const healthResponse = await simulateHealthCheck(integration.name)
-        const responseTime = Date.now() - startTime
+        const healthResponse = await simulateHealthCheck(integration.name);
+        const responseTime = Date.now() - startTime;
 
-  const existingHealth = (healthMetrics ?? []).find(h => h.platform === integration.name)
+  const existingHealth = (healthMetrics ?? []).find(h => h.platform === integration.name);
         
         newHealthMetrics.push({
           platform: integration.name,
@@ -122,11 +122,11 @@ export function IntegrationStatusDashboard() {
               type: 'requests'
             }
           ]
-        })
+        });
       } catch (error) {
-        console.error(`Health check failed for ${integration.name}:`, error)
+        console.error(`Health check failed for ${integration.name}:`, error);
         
-  const existingHealth = (healthMetrics ?? []).find(h => h.platform === integration.name)
+  const existingHealth = (healthMetrics ?? []).find(h => h.platform === integration.name);
         newHealthMetrics.push({
           platform: integration.name,
           status: 'down',
@@ -134,74 +134,74 @@ export function IntegrationStatusDashboard() {
           uptime: 0,
           lastError: error instanceof Error ? error.message : 'Unknown error',
           dataPoints: existingHealth?.dataPoints || []
-        })
+        });
       }
     }
 
-    setHealthMetrics(newHealthMetrics)
-  }
+    setHealthMetrics(newHealthMetrics);
+  };
 
   const simulateHealthCheck = async (platform: string): Promise<{ status: 'healthy' | 'degraded' | 'down', error?: string }> => {
     // Simulate API health check with random delays and occasional failures
-    const delay = Math.random() * 1000 + 200 // 200ms to 1.2s
-    await new Promise(resolve => setTimeout(resolve, delay))
+    const delay = Math.random() * 1000 + 200; // 200ms to 1.2s
+    await new Promise(resolve => setTimeout(resolve, delay));
 
     // 5% chance of failure for demo purposes
     if (Math.random() < 0.05) {
-      throw new Error('Connection timeout')
+      throw new Error('Connection timeout');
     }
 
     // 10% chance of degraded performance
     if (Math.random() < 0.1) {
-      return { status: 'degraded', error: 'High response time detected' }
+      return { status: 'degraded', error: 'High response time detected' };
     }
 
-    return { status: 'healthy' }
-  }
+    return { status: 'healthy' };
+  };
 
   // Auto-sync control functions
   const handleToggleSync = async () => {
-    setIsLoadingAction(true)
+    setIsLoadingAction(true);
     try {
       if (syncEnabled) {
-        disableSync()
-        toast.success('Automatic sync disabled')
+        disableSync();
+        toast.success('Automatic sync disabled');
       } else {
-        const success = await enableSync()
+        const success = await enableSync();
         if (success) {
-          toast.success('Automatic sync enabled')
+          toast.success('Automatic sync enabled');
         } else {
-          toast.error('Failed to enable sync - check platform connections')
+          toast.error('Failed to enable sync - check platform connections');
         }
       }
     } finally {
-      setIsLoadingAction(false)
+      setIsLoadingAction(false);
     }
-  }
+  };
 
   const handleForceSync = async () => {
-    setIsLoadingAction(true)
+    setIsLoadingAction(true);
     try {
-      const success = await forceSync()
+      const success = await forceSync();
       if (success) {
-        toast.success('Manual sync completed')
+        toast.success('Manual sync completed');
       } else {
-        toast.error('Manual sync failed')
+        toast.error('Manual sync failed');
       }
     } finally {
-      setIsLoadingAction(false)
+      setIsLoadingAction(false);
     }
-  }
+  };
 
   const collectRealTimeMetrics = () => {
-    const now = new Date().toISOString()
-    const newMetrics: MetricData[] = []
+    const now = new Date().toISOString();
+    const newMetrics: MetricData[] = [];
 
     // Collect program counts
   const programsByPlatform = (programs ?? []).reduce((acc, program) => {
-      acc[program.platform] = (acc[program.platform] || 0) + 1
-      return acc
-    }, {} as Record<string, number>)
+      acc[program.platform] = (acc[program.platform] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
 
   Object.entries(programsByPlatform).forEach(([platform, count]) => {
       newMetrics.push({
@@ -209,14 +209,14 @@ export function IntegrationStatusDashboard() {
         value: count,
         platform,
         type: 'programs'
-      })
-    })
+      });
+    });
 
     // Collect threat counts
   const threatsBySource = (threatFeed ?? []).reduce((acc, threat) => {
-      acc[threat.source] = (acc[threat.source] || 0) + 1
-      return acc
-    }, {} as Record<string, number>)
+      acc[threat.source] = (acc[threat.source] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
 
   Object.entries(threatsBySource).forEach(([source, count]) => {
       newMetrics.push({
@@ -224,49 +224,49 @@ export function IntegrationStatusDashboard() {
         value: count,
         platform: source,
         type: 'threats'
-      })
-    })
+      });
+    });
 
     // Add to existing data and keep last 50 points
-  setRealTimeData(current => [...(current ?? []), ...newMetrics].slice(-50))
-  }
+  setRealTimeData(current => [...(current ?? []), ...newMetrics].slice(-50));
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'healthy': return 'bg-green-500'
-      case 'degraded': return 'bg-yellow-500'
-      case 'down': return 'bg-red-500'
-      default: return 'bg-gray-500'
+      case 'healthy': return 'bg-green-500';
+      case 'degraded': return 'bg-yellow-500';
+      case 'down': return 'bg-red-500';
+      default: return 'bg-gray-500';
     }
-  }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'healthy': return <CheckCircle size={16} className="text-green-500" />
-      case 'degraded': return <AlertTriangle size={16} className="text-yellow-500" />
-      case 'down': return <XCircle size={16} className="text-red-500" />
-      default: return <Activity size={16} className="text-gray-500" />
+      case 'healthy': return <CheckCircle size={16} className="text-green-500" />;
+      case 'degraded': return <AlertTriangle size={16} className="text-yellow-500" />;
+      case 'down': return <XCircle size={16} className="text-red-500" />;
+      default: return <Activity size={16} className="text-gray-500" />;
     }
-  }
+  };
 
   const calculateUptime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600)
-    const minutes = Math.floor((seconds % 3600) / 60)
-    return `${hours}h ${minutes}m`
-  }
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}h ${minutes}m`;
+  };
 
   const formatResponseTime = (ms: number) => {
-    if (ms < 1000) return `${ms.toFixed(0)}ms`
-    return `${(ms / 1000).toFixed(1)}s`
-  }
+    if (ms < 1000) {return `${ms.toFixed(0)}ms`;}
+    return `${(ms / 1000).toFixed(1)}s`;
+  };
 
   // Calculate summary stats
-  const connectedPlatformCount = (integrations ?? []).filter(int => int.connected).length
-  const totalPrograms = (programs ?? []).length
-  const totalThreats = (threatFeed ?? []).length
-  const activeConnections = (healthMetrics ?? []).filter(h => h.status === 'healthy').length
-  const degradedConnections = (healthMetrics ?? []).filter(h => h.status === 'degraded').length
-  const downConnections = (healthMetrics ?? []).filter(h => h.status === 'down').length
+  const connectedPlatformCount = (integrations ?? []).filter(int => int.connected).length;
+  const totalPrograms = (programs ?? []).length;
+  const totalThreats = (threatFeed ?? []).length;
+  const activeConnections = (healthMetrics ?? []).filter(h => h.status === 'healthy').length;
+  const degradedConnections = (healthMetrics ?? []).filter(h => h.status === 'degraded').length;
+  const downConnections = (healthMetrics ?? []).filter(h => h.status === 'down').length;
 
   return (
     <div className="space-y-6">
@@ -552,8 +552,8 @@ export function IntegrationStatusDashboard() {
                   {(integrations ?? []).filter(int => int.connected).map((integration) => {
                     const platformPrograms = (programs ?? []).filter(p => 
                       p.platform.toLowerCase() === integration.name.toLowerCase().split(' ')[0]
-                    ).length
-                    const percentage = totalPrograms > 0 ? (platformPrograms / totalPrograms) * 100 : 0
+                    ).length;
+                    const percentage = totalPrograms > 0 ? (platformPrograms / totalPrograms) * 100 : 0;
 
                     return (
                       <div key={integration.id} className="space-y-2">
@@ -567,7 +567,7 @@ export function IntegrationStatusDashboard() {
                         </div>
                         <Progress value={percentage} className="h-2" />
                       </div>
-                    )
+                    );
                   })}
                 </div>
               </CardContent>
@@ -645,8 +645,8 @@ export function IntegrationStatusDashboard() {
               <div className="space-y-4">
                 {Object.entries(
                   (programs ?? []).reduce((acc, program) => {
-                    acc[program.platform] = (acc[program.platform] || 0) + 1
-                    return acc
+                    acc[program.platform] = (acc[program.platform] || 0) + 1;
+                    return acc;
                   }, {} as Record<string, number>)
                 ).map(([platform, count]) => (
                   <div key={platform} className="flex items-center justify-between p-3 rounded-lg border border-border/50">
@@ -673,13 +673,13 @@ export function IntegrationStatusDashboard() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 {['critical', 'high', 'medium', 'low'].map((severity) => {
-                  const count = (threatFeed ?? []).filter(t => t.severity === severity).length
+                  const count = (threatFeed ?? []).filter(t => t.severity === severity).length;
                   return (
                     <div key={severity} className="text-center">
                       <p className="text-2xl font-bold text-foreground">{count}</p>
                       <p className="text-sm text-muted-foreground capitalize">{severity} Threats</p>
                     </div>
-                  )
+                  );
                 })}
               </div>
 
@@ -778,5 +778,5 @@ export function IntegrationStatusDashboard() {
         </div>
       )}
     </div>
-  )
+  );
 }

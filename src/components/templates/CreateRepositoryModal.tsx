@@ -1,20 +1,20 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
-import { Separator } from '@/components/ui/separator'
-import { Plus, X, Wrench, Settings, List } from '@phosphor-icons/react'
-import { ToolRepository, Tool } from '@/types/templates'
-import { User } from '@/types/user'
-import { toast } from 'sonner'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
+import { Plus, X, Wrench, Settings, List } from '@phosphor-icons/react';
+import { ToolRepository, Tool } from '@/types/templates';
+import { User } from '@/types/user';
+import { toast } from 'sonner';
 
 interface CreateRepositoryModalProps {
   currentUser: User
@@ -22,14 +22,14 @@ interface CreateRepositoryModalProps {
 }
 
 export function CreateRepositoryModal({ currentUser, onClose }: CreateRepositoryModalProps) {
-  const [repositories, setRepositories] = useKVWithFallback<ToolRepository[]>('toolRepositories', [])
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [category, setCategory] = useState<string>('')
-  const [isPublic, setIsPublic] = useState(true)
-  const [tags, setTags] = useState<string[]>([])
-  const [newTag, setNewTag] = useState('')
-  const [tools, setTools] = useState<Tool[]>([])
+  const [repositories, setRepositories] = useKVWithFallback<ToolRepository[]>('toolRepositories', []);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState<string>('');
+  const [isPublic, setIsPublic] = useState(true);
+  const [tags, setTags] = useState<string[]>([]);
+  const [newTag, setNewTag] = useState('');
+  const [tools, setTools] = useState<Tool[]>([]);
   const [newTool, setNewTool] = useState({
     name: '',
     description: '',
@@ -41,10 +41,10 @@ export function CreateRepositoryModal({ currentUser, onClose }: CreateRepository
     dependencies: [] as string[],
     category: '',
     complexity: 'simple'
-  })
-  const [newPlatform, setNewPlatform] = useState('')
-  const [newDependency, setNewDependency] = useState('')
-  const [activeTab, setActiveTab] = useState('basic')
+  });
+  const [newPlatform, setNewPlatform] = useState('');
+  const [newDependency, setNewDependency] = useState('');
+  const [activeTab, setActiveTab] = useState('basic');
 
   const repositoryCategories = [
     { value: 'reconnaissance', label: 'Reconnaissance' },
@@ -53,7 +53,7 @@ export function CreateRepositoryModal({ currentUser, onClose }: CreateRepository
     { value: 'defense', label: 'Defense' },
     { value: 'analysis', label: 'Analysis' },
     { value: 'automation', label: 'Automation' }
-  ]
+  ];
 
   const toolCategories = [
     { value: 'scanner', label: 'Scanner' },
@@ -63,70 +63,70 @@ export function CreateRepositoryModal({ currentUser, onClose }: CreateRepository
     { value: 'decoder', label: 'Decoder' },
     { value: 'analyzer', label: 'Analyzer' },
     { value: 'monitor', label: 'Monitor' }
-  ]
+  ];
 
   const complexityLevels = [
     { value: 'simple', label: 'Simple' },
     { value: 'moderate', label: 'Moderate' },
     { value: 'complex', label: 'Complex' }
-  ]
+  ];
 
   const platforms = [
     { value: 'linux', label: 'Linux' },
     { value: 'windows', label: 'Windows' },
     { value: 'macos', label: 'macOS' },
     { value: 'web', label: 'Web' }
-  ]
+  ];
 
   const addTag = () => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
-      setTags([...tags, newTag.trim()])
-      setNewTag('')
+      setTags([...tags, newTag.trim()]);
+      setNewTag('');
     }
-  }
+  };
 
   const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter(tag => tag !== tagToRemove))
-  }
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
 
   const addPlatformToTool = () => {
     if (newPlatform && !newTool.platform.includes(newPlatform)) {
       setNewTool(prev => ({
         ...prev,
         platform: [...prev.platform, newPlatform]
-      }))
-      setNewPlatform('')
+      }));
+      setNewPlatform('');
     }
-  }
+  };
 
   const removePlatformFromTool = (platform: string) => {
     setNewTool(prev => ({
       ...prev,
       platform: prev.platform.filter(p => p !== platform)
-    }))
-  }
+    }));
+  };
 
   const addDependencyToTool = () => {
     if (newDependency.trim() && !newTool.dependencies.includes(newDependency.trim())) {
       setNewTool(prev => ({
         ...prev,
         dependencies: [...prev.dependencies, newDependency.trim()]
-      }))
-      setNewDependency('')
+      }));
+      setNewDependency('');
     }
-  }
+  };
 
   const removeDependencyFromTool = (dependency: string) => {
     setNewTool(prev => ({
       ...prev,
       dependencies: prev.dependencies.filter(d => d !== dependency)
-    }))
-  }
+    }));
+  };
 
   const addTool = () => {
     if (!newTool.name.trim() || !newTool.description.trim() || !newTool.category) {
-      toast.error('Please fill in all required tool fields')
-      return
+      toast.error('Please fill in all required tool fields');
+      return;
     }
 
     const tool: Tool = {
@@ -141,9 +141,9 @@ export function CreateRepositoryModal({ currentUser, onClose }: CreateRepository
       dependencies: newTool.dependencies,
       category: newTool.category as any,
       complexity: newTool.complexity as any
-    }
+    };
 
-    setTools(prev => [...prev, tool])
+    setTools(prev => [...prev, tool]);
     setNewTool({
       name: '',
       description: '',
@@ -155,23 +155,23 @@ export function CreateRepositoryModal({ currentUser, onClose }: CreateRepository
       dependencies: [],
       category: '',
       complexity: 'simple'
-    })
-    toast.success('Tool added successfully')
-  }
+    });
+    toast.success('Tool added successfully');
+  };
 
   const removeTool = (toolId: string) => {
-    setTools(tools.filter(tool => tool.id !== toolId))
-  }
+    setTools(tools.filter(tool => tool.id !== toolId));
+  };
 
   const handleSubmit = async () => {
     if (!name.trim() || !description.trim() || !category) {
-      toast.error('Please fill in all required fields')
-      return
+      toast.error('Please fill in all required fields');
+      return;
     }
 
     if (tools.length === 0) {
-      toast.error('Please add at least one tool')
-      return
+      toast.error('Please add at least one tool');
+      return;
     }
 
     try {
@@ -192,16 +192,16 @@ export function CreateRepositoryModal({ currentUser, onClose }: CreateRepository
         createdAt: new Date(),
         updatedAt: new Date(),
         tags
-      }
+      };
 
-      setRepositories(prev => [repository, ...prev])
-      toast.success('Repository created successfully!')
-      onClose()
+      setRepositories(prev => [repository, ...prev]);
+      toast.success('Repository created successfully!');
+      onClose();
     } catch (error) {
-      console.error('Error creating repository:', error)
-      toast.error('Failed to create repository')
+      console.error('Error creating repository:', error);
+      toast.error('Failed to create repository');
     }
-  }
+  };
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -538,5 +538,5 @@ export function CreateRepositoryModal({ currentUser, onClose }: CreateRepository
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

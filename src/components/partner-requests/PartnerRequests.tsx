@@ -1,60 +1,60 @@
-import { useState } from 'react'
-import { usePartnerRequests } from '@/hooks/usePartnerRequests'
-import { useSamplePartnerRequests } from '@/hooks/useSamplePartnerRequests'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CreatePartnerRequestModal } from './CreatePartnerRequestModal'
-import { PartnerRequestDetailsModal } from './PartnerRequestDetailsModal'
-import { PartnerMatchesCard } from './PartnerMatchesCard'
-import { PartnerRequest, User } from '@/types'
-import { Plus, Users, Target, Clock, DollarSign, Star } from '@phosphor-icons/react'
+import { useState } from 'react';
+import { usePartnerRequests } from '@/hooks/usePartnerRequests';
+import { useSamplePartnerRequests } from '@/hooks/useSamplePartnerRequests';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CreatePartnerRequestModal } from './CreatePartnerRequestModal';
+import { PartnerRequestDetailsModal } from './PartnerRequestDetailsModal';
+import { PartnerMatchesCard } from './PartnerMatchesCard';
+import { PartnerRequest, User } from '@/types';
+import { Plus, Users, Target, Clock, DollarSign, Star } from '@phosphor-icons/react';
 
 interface PartnerRequestsProps {
   currentUser: User
 }
 
 export function PartnerRequests({ currentUser }: PartnerRequestsProps) {
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [selectedRequest, setSelectedRequest] = useState<PartnerRequest | null>(null)
-  const [activeTab, setActiveTab] = useState<'browse' | 'my-requests' | 'my-applications' | 'matches'>('browse')
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<PartnerRequest | null>(null);
+  const [activeTab, setActiveTab] = useState<'browse' | 'my-requests' | 'my-applications' | 'matches'>('browse');
 
   const {
     partnerRequests,
     getMyRequests,
     getMyApplications,
     findMatches
-  } = usePartnerRequests()
+  } = usePartnerRequests();
 
   // Initialize sample data
-  useSamplePartnerRequests()
+  useSamplePartnerRequests();
 
-  const myRequests = getMyRequests(currentUser.id)
-  const myApplications = getMyApplications(currentUser.id)
-  const matches = findMatches(currentUser.id, currentUser.skills || [])
+  const myRequests = getMyRequests(currentUser.id);
+  const myApplications = getMyApplications(currentUser.id);
+  const matches = findMatches(currentUser.id, currentUser.skills || []);
 
   const getProjectTypeIcon = (type: PartnerRequest['projectType']) => {
     switch (type) {
-      case 'bug-bounty': return '🎯'
-      case 'red-team': return '⚔️'
-      case 'blue-team': return '🛡️'
-      case 'research': return '🔬'
-      case 'tool-development': return '🛠️'
-      case 'ctf': return '🚩'
-      default: return '💼'
+      case 'bug-bounty': return '🎯';
+      case 'red-team': return '⚔️';
+      case 'blue-team': return '🛡️';
+      case 'research': return '🔬';
+      case 'tool-development': return '🛠️';
+      case 'ctf': return '🚩';
+      default: return '💼';
     }
-  }
+  };
 
   const getCompensationColor = (compensation: PartnerRequest['compensation']) => {
     switch (compensation) {
-      case 'revenue-share': return 'bg-green-500/20 text-green-400'
-      case 'fixed-payment': return 'bg-blue-500/20 text-blue-400'
-      case 'equity': return 'bg-purple-500/20 text-purple-400'
-      case 'experience': return 'bg-orange-500/20 text-orange-400'
-      default: return 'bg-muted text-muted-foreground'
+      case 'revenue-share': return 'bg-green-500/20 text-green-400';
+      case 'fixed-payment': return 'bg-blue-500/20 text-blue-400';
+      case 'equity': return 'bg-purple-500/20 text-purple-400';
+      case 'experience': return 'bg-orange-500/20 text-orange-400';
+      default: return 'bg-muted text-muted-foreground';
     }
-  }
+  };
 
   const PartnerRequestCard = ({ request }: { request: PartnerRequest }) => (
     <Card 
@@ -141,7 +141,7 @@ export function PartnerRequests({ currentUser }: PartnerRequestsProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 
   return (
     <div className="space-y-6">
@@ -272,8 +272,8 @@ export function PartnerRequests({ currentUser }: PartnerRequestsProps) {
             matches={matches} 
             currentUser={currentUser}
             onViewRequest={(requestId) => {
-              const request = partnerRequests.find(r => r.id === requestId)
-              if (request) setSelectedRequest(request)
+              const request = partnerRequests.find(r => r.id === requestId);
+              if (request) {setSelectedRequest(request);}
             }}
           />
         </TabsContent>
@@ -294,5 +294,5 @@ export function PartnerRequests({ currentUser }: PartnerRequestsProps) {
         />
       )}
     </div>
-  )
+  );
 }

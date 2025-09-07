@@ -1,6 +1,6 @@
-export { MarketplaceView } from './MarketplaceView'
-export { MarketplaceListingCard } from './MarketplaceListingCard'
-export { MarketplaceStats } from './MarketplaceStats'
-export { MarketplaceFilters } from './MarketplaceFilters'
-export { CreateProposalModal } from './CreateProposalModal'
-export { ProposalManagementView } from './ProposalManagementView'
+export { MarketplaceView } from './MarketplaceView';
+export { MarketplaceListingCard } from './MarketplaceListingCard';
+export { MarketplaceStats } from './MarketplaceStats';
+export { MarketplaceFilters } from './MarketplaceFilters';
+export { CreateProposalModal } from './CreateProposalModal';
+export { ProposalManagementView } from './ProposalManagementView';

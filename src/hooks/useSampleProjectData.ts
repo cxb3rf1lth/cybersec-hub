@@ -1,10 +1,10 @@
-import { useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Project, Team, Task } from '@/types'
+import { useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Project, Team, Task } from '@/types';
 
 export function useSampleProjectData() {
-  const [projects, setProjects] = useKVWithFallback<Project[]>('projects', [])
-  const [teams, setTeams] = useKVWithFallback<Team[]>('teams', [])
+  const [projects, setProjects] = useKVWithFallback<Project[]>('projects', []);
+  const [teams, setTeams] = useKVWithFallback<Team[]>('teams', []);
 
   useEffect(() => {
     // Only initialize if no projects exist
@@ -58,7 +58,7 @@ export function useSampleProjectData() {
           projectApprovalRequired: true,
           maxProjectsPerMember: 3
         }
-      }
+      };
 
       const sampleTasks: Task[] = [
         {
@@ -123,7 +123,7 @@ export function useSampleProjectData() {
           labels: ['documentation', 'reporting'],
           estimatedHours: 6
         }
-      ]
+      ];
 
       const sampleProject: Project = {
         id: 'project-1',
@@ -173,11 +173,11 @@ export function useSampleProjectData() {
         visibility: 'team',
         createdAt: '2024-12-10T09:00:00Z',
         updatedAt: '2024-12-20T14:15:00Z'
-      }
+      };
 
       // Set the sample data
-      setTeams([sampleTeam])
-      setProjects([sampleProject])
+      setTeams([sampleTeam]);
+      setProjects([sampleProject]);
     }
-  }, [projects.length, setProjects, setTeams])
+  }, [projects.length, setProjects, setTeams]);
 }

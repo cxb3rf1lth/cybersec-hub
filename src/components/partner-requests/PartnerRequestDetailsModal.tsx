@@ -1,21 +1,21 @@
-import { useState } from 'react'
-import { usePartnerRequests } from '@/hooks/usePartnerRequests'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Separator } from '@/components/ui/separator'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { PartnerRequest, PartnerApplication, User } from '@/types'
+import { useState } from 'react';
+import { usePartnerRequests } from '@/hooks/usePartnerRequests';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { PartnerRequest, PartnerApplication, User } from '@/types';
 import { 
   X, Clock, Users, DollarSign, Target, Calendar, 
   Check, X as Reject, User as UserIcon, MessageCircle,
   Portfolio, Skills
-} from '@phosphor-icons/react'
-import { toast } from 'sonner'
+} from '@phosphor-icons/react';
+import { toast } from 'sonner';
 
 interface PartnerRequestDetailsModalProps {
   request: PartnerRequest
@@ -28,52 +28,52 @@ export function PartnerRequestDetailsModal({
   currentUser, 
   onClose 
 }: PartnerRequestDetailsModalProps) {
-  const { applyToPartnerRequest, updateApplicationStatus } = usePartnerRequests()
-  const [activeTab, setActiveTab] = useState<'details' | 'applications'>('details')
-  const [showApplicationForm, setShowApplicationForm] = useState(false)
+  const { applyToPartnerRequest, updateApplicationStatus } = usePartnerRequests();
+  const [activeTab, setActiveTab] = useState<'details' | 'applications'>('details');
+  const [showApplicationForm, setShowApplicationForm] = useState(false);
   
   const [applicationData, setApplicationData] = useState({
     message: '',
     availability: '',
     portfolioItems: ''
-  })
+  });
 
-  const isOwner = request.requesterId === currentUser.id
-  const hasApplied = request.applications.some(app => app.applicantId === currentUser.id)
-  const userApplication = request.applications.find(app => app.applicantId === currentUser.id)
+  const isOwner = request.requesterId === currentUser.id;
+  const hasApplied = request.applications.some(app => app.applicantId === currentUser.id);
+  const userApplication = request.applications.find(app => app.applicantId === currentUser.id);
 
   const getProjectTypeIcon = (type: PartnerRequest['projectType']) => {
     switch (type) {
-      case 'bug-bounty': return '🎯'
-      case 'red-team': return '⚔️'
-      case 'blue-team': return '🛡️'
-      case 'research': return '🔬'
-      case 'tool-development': return '🛠️'
-      case 'ctf': return '🚩'
-      default: return '💼'
+      case 'bug-bounty': return '🎯';
+      case 'red-team': return '⚔️';
+      case 'blue-team': return '🛡️';
+      case 'research': return '🔬';
+      case 'tool-development': return '🛠️';
+      case 'ctf': return '🚩';
+      default: return '💼';
     }
-  }
+  };
 
   const getCompensationColor = (compensation: PartnerRequest['compensation']) => {
     switch (compensation) {
-      case 'revenue-share': return 'bg-green-500/20 text-green-400'
-      case 'fixed-payment': return 'bg-blue-500/20 text-blue-400'
-      case 'equity': return 'bg-purple-500/20 text-purple-400'
-      case 'experience': return 'bg-orange-500/20 text-orange-400'
-      default: return 'bg-muted text-muted-foreground'
+      case 'revenue-share': return 'bg-green-500/20 text-green-400';
+      case 'fixed-payment': return 'bg-blue-500/20 text-blue-400';
+      case 'equity': return 'bg-purple-500/20 text-purple-400';
+      case 'experience': return 'bg-orange-500/20 text-orange-400';
+      default: return 'bg-muted text-muted-foreground';
     }
-  }
+  };
 
   const handleApply = () => {
     if (!applicationData.message.trim()) {
-      toast.error('Please provide a message explaining your interest')
-      return
+      toast.error('Please provide a message explaining your interest');
+      return;
     }
 
     const portfolioItems = applicationData.portfolioItems
       .split('\n')
       .map(item => item.trim())
-      .filter(item => item.length > 0)
+      .filter(item => item.length > 0);
 
     applyToPartnerRequest(request.id, {
       applicantId: currentUser.id,
@@ -83,26 +83,26 @@ export function PartnerRequestDetailsModal({
       skillsHighlight: currentUser.skills || [],
       portfolioItems,
       availability: applicationData.availability.trim()
-    })
+    });
 
-    toast.success('Application submitted successfully!')
-    setShowApplicationForm(false)
-    setApplicationData({ message: '', availability: '', portfolioItems: '' })
-  }
+    toast.success('Application submitted successfully!');
+    setShowApplicationForm(false);
+    setApplicationData({ message: '', availability: '', portfolioItems: '' });
+  };
 
   const handleApplicationAction = (applicationId: string, status: PartnerApplication['status']) => {
-    updateApplicationStatus(request.id, applicationId, status)
-    const action = status === 'accepted' ? 'accepted' : 'rejected'
-    toast.success(`Application ${action} successfully`)
-  }
+    updateApplicationStatus(request.id, applicationId, status);
+    const action = status === 'accepted' ? 'accepted' : 'rejected';
+    toast.success(`Application ${action} successfully`);
+  };
 
   const getStatusBadgeVariant = (status: PartnerApplication['status']) => {
     switch (status) {
-      case 'accepted': return 'default'
-      case 'rejected': return 'destructive'
-      default: return 'secondary'
+      case 'accepted': return 'default';
+      case 'rejected': return 'destructive';
+      default: return 'secondary';
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -430,5 +430,5 @@ export function PartnerRequestDetailsModal({
         </div>
       </div>
     </div>
-  )
+  );
 }

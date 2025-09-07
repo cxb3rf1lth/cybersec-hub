@@ -1,20 +1,20 @@
-import { useState, useEffect } from 'react'
-import { Plus, Play, Stop, Trash, Settings, Terminal, Network, Shield, DesktopTower, Code, Database, Eye, Target, Users, Clock, HardDrives, Cpu, Activity, Binoculars } from '@phosphor-icons/react'
-import { useVirtualLab } from '@/hooks/useVirtualLab'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import type { User } from '@/types/user'
-import type { VM } from '@/types/virtual-lab'
-import { CreateVMForm } from '@/components/virtual-lab/CreateVMForm'
-import { VMConsole } from '@/components/virtual-lab/VMConsole'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Progress } from '@/components/ui/progress'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { Input } from '@/components/ui/input'
-import { BinaryRain } from '@/components/ui/loading-animations'
+import { useState, useEffect } from 'react';
+import { Plus, Play, Stop, Trash, Settings, Terminal, Network, Shield, DesktopTower, Code, Database, Eye, Target, Users, Clock, HardDrives, Cpu, Activity, Binoculars } from '@phosphor-icons/react';
+import { useVirtualLab } from '@/hooks/useVirtualLab';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import type { User } from '@/types/user';
+import type { VM } from '@/types/virtual-lab';
+import { CreateVMForm } from '@/components/virtual-lab/CreateVMForm';
+import { VMConsole } from '@/components/virtual-lab/VMConsole';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { BinaryRain } from '@/components/ui/loading-animations';
 
 interface VMTemplate {
   id: string
@@ -56,14 +56,14 @@ interface Props {
 }
 
 export function EnhancedVirtualLabView({ currentUser }: Props) {
-  const { vms, provision, start, stop, destroy } = useVirtualLab(currentUser.id)
-  const [templates, setTemplates] = useKVWithFallback<VMTemplate[]>('vm-templates', [])
-  const [topologies, setTopologies] = useKVWithFallback<NetworkTopology[]>('network-topologies', [])
-  const [showCreate, setShowCreate] = useState(vms.length === 0)
-  const [selected, setSelected] = useState<VM | null>(vms[0] ?? null)
-  const [activeTab, setActiveTab] = useState('lab')
-  const [isProvisioning, setIsProvisioning] = useState(false)
-  const [selectedTemplate, setSelectedTemplate] = useState<VMTemplate | null>(null)
+  const { vms, provision, start, stop, destroy } = useVirtualLab(currentUser.id);
+  const [templates, setTemplates] = useKVWithFallback<VMTemplate[]>('vm-templates', []);
+  const [topologies, setTopologies] = useKVWithFallback<NetworkTopology[]>('network-topologies', []);
+  const [showCreate, setShowCreate] = useState(vms.length === 0);
+  const [selected, setSelected] = useState<VM | null>(vms[0] ?? null);
+  const [activeTab, setActiveTab] = useState('lab');
+  const [isProvisioning, setIsProvisioning] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<VMTemplate | null>(null);
 
   // Initialize templates
   useEffect(() => {
@@ -213,8 +213,8 @@ export function EnhancedVirtualLabView({ currentUser }: Props) {
           networkConfig: 'bridged',
           isSecure: true
         }
-      ]
-      setTemplates(sampleTemplates)
+      ];
+      setTemplates(sampleTemplates);
     }
 
     if (topologies.length === 0) {
@@ -276,13 +276,13 @@ export function EnhancedVirtualLabView({ currentUser }: Props) {
             { source: '*', destination: 'Blue-Team-SOC', ports: '9200,5601', protocol: 'TCP', action: 'allow' }
           ]
         }
-      ]
-      setTopologies(sampleTopologies)
+      ];
+      setTopologies(sampleTopologies);
     }
-  }, [templates.length, topologies.length, setTemplates, setTopologies])
+  }, [templates.length, topologies.length, setTemplates, setTopologies]);
 
   async function handleCreateFromTemplate(template: VMTemplate, customConfig?: { name: string; notes?: string }) {
-    setIsProvisioning(true)
+    setIsProvisioning(true);
     
     try {
       const vmData = {
@@ -291,47 +291,47 @@ export function EnhancedVirtualLabView({ currentUser }: Props) {
         notes: customConfig?.notes || `Created from ${template.name} template. Pre-installed tools: ${template.preInstalledTools.join(', ')}`,
         templateId: template.id,
         resources: template.resources
-      }
+      };
       
-      const vm = provision(vmData)
-      setShowCreate(false)
-      setSelected(vm)
+      const vm = provision(vmData);
+      setShowCreate(false);
+      setSelected(vm);
       
       // Simulate template-specific provisioning
-      await new Promise(resolve => setTimeout(resolve, 3000))
+      await new Promise(resolve => setTimeout(resolve, 3000));
     } finally {
-      setIsProvisioning(false)
+      setIsProvisioning(false);
     }
   }
 
   function handleCreate(data: { name: string; distro: 'kali' | 'arch' | 'ubuntu' | 'centos' | 'windows-10' | 'windows-server'; notes?: string }) {
-    const vm = provision(data)
-    setShowCreate(false)
-    setSelected(vm)
+    const vm = provision(data);
+    setShowCreate(false);
+    setSelected(vm);
   }
 
   const getStatusColor = (status: VM['status']) => {
     switch (status) {
-      case 'running': return 'bg-green-500/20 text-green-400 border-green-500/30'
-      case 'stopped': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      case 'starting': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'stopping': return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
-      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+      case 'running': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'stopped': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      case 'starting': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'stopping': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
     }
-  }
+  };
 
   const getCategoryIcon = (category: VMTemplate['category']) => {
     switch (category) {
-      case 'red-team': return <Target className="w-5 h-5 text-red-400" />
-      case 'blue-team': return <Shield className="w-5 h-5 text-blue-400" />
-      case 'penetration-testing': return <Eye className="w-5 h-5 text-purple-400" />
-      case 'malware-analysis': return <Code className="w-5 h-5 text-orange-400" />
-      case 'forensics': return <Database className="w-5 h-5 text-green-400" />
-      case 'research': return <Activity className="w-5 h-5 text-indigo-400" />
-      case 'reconnaissance': return <Binoculars className="w-5 h-5 text-yellow-400" />
-      default: return <DesktopTower className="w-5 h-5 text-gray-400" />
+      case 'red-team': return <Target className="w-5 h-5 text-red-400" />;
+      case 'blue-team': return <Shield className="w-5 h-5 text-blue-400" />;
+      case 'penetration-testing': return <Eye className="w-5 h-5 text-purple-400" />;
+      case 'malware-analysis': return <Code className="w-5 h-5 text-orange-400" />;
+      case 'forensics': return <Database className="w-5 h-5 text-green-400" />;
+      case 'research': return <Activity className="w-5 h-5 text-indigo-400" />;
+      case 'reconnaissance': return <Binoculars className="w-5 h-5 text-yellow-400" />;
+      default: return <DesktopTower className="w-5 h-5 text-gray-400" />;
     }
-  }
+  };
 
   return (
     <div className="p-6 space-y-6 relative">
@@ -437,7 +437,7 @@ export function EnhancedVirtualLabView({ currentUser }: Props) {
                               size="sm" 
                               variant="outline"
                               className="flex-1 glass-button" 
-                              onClick={(e) => { e.stopPropagation(); start(vm.id) }}
+                              onClick={(e) => { e.stopPropagation(); start(vm.id); }}
                             >
                               <Play className="w-3 h-3 mr-1" />
                               Start
@@ -447,7 +447,7 @@ export function EnhancedVirtualLabView({ currentUser }: Props) {
                               size="sm" 
                               variant="outline"
                               className="flex-1 glass-button" 
-                              onClick={(e) => { e.stopPropagation(); stop(vm.id) }}
+                              onClick={(e) => { e.stopPropagation(); stop(vm.id); }}
                             >
                               <Stop className="w-3 h-3 mr-1" />
                               Stop
@@ -460,7 +460,7 @@ export function EnhancedVirtualLabView({ currentUser }: Props) {
                             onClick={(e) => { 
                               e.stopPropagation(); 
                               destroy(vm.id); 
-                              if (selected?.id === vm.id) setSelected(null) 
+                              if (selected?.id === vm.id) {setSelected(null);} 
                             }}
                           >
                             <Trash className="w-3 h-3" />
@@ -720,5 +720,5 @@ export function EnhancedVirtualLabView({ currentUser }: Props) {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

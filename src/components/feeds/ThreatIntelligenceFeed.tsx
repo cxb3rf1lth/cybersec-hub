@@ -1,15 +1,15 @@
-import { BinaryRain } from '@/components/ui/loading-animations'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { useThreatFeeds } from '@/hooks/useThreatFeeds'
-import { ThreatFeed, BugBountyProgram, ThreatIntelligence, CyberSecNews, FeedFilter } from '@/types/threat-feeds'
-import { ThreatSourceManager } from '@/components/feeds/ThreatSourceManager'
-import { ProductionThreatIntegration } from '@/components/threats/ProductionThreatIntegration'
-import { toast } from 'sonner'
+import { BinaryRain } from '@/components/ui/loading-animations';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useThreatFeeds } from '@/hooks/useThreatFeeds';
+import { ThreatFeed, BugBountyProgram, ThreatIntelligence, CyberSecNews, FeedFilter } from '@/types/threat-feeds';
+import { ThreatSourceManager } from '@/components/feeds/ThreatSourceManager';
+import { ProductionThreatIntegration } from '@/components/threats/ProductionThreatIntegration';
+import { toast } from 'sonner';
 import { 
   RefreshCw, 
   AlertTriangle, 
@@ -26,9 +26,9 @@ import {
   Zap,
   Settings,
   Database
-} from '@phosphor-icons/react'
-import { useState, useMemo, useEffect } from 'react'
-import { formatDistanceToNow } from 'date-fns'
+} from '@phosphor-icons/react';
+import { useState, useMemo, useEffect } from 'react';
+import { formatDistanceToNow } from 'date-fns';
 
 interface ThreatIntelligenceFeedProps {
   onClose?: () => void
@@ -43,68 +43,68 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
     lastUpdate, 
     isUpdating, 
     refreshFeeds 
-  } = useThreatFeeds()
+  } = useThreatFeeds();
 
-  const [activeTab, setActiveTab] = useState('feeds')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [severityFilter, setSeverityFilter] = useState<string>('all')
-  const [showFilters, setShowFilters] = useState(false)
+  const [activeTab, setActiveTab] = useState('feeds');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [severityFilter, setSeverityFilter] = useState<string>('all');
+  const [showFilters, setShowFilters] = useState(false);
   
   const handleRefresh = async () => {
     toast.info('Refreshing threat intelligence feeds...', {
       description: 'Experience the immersive binary rain animations while data updates',
       duration: 3000
-    })
-    await refreshFeeds()
+    });
+    await refreshFeeds();
     toast.success('Threat intelligence feeds updated successfully', {
       description: 'Latest cybersecurity data has been synchronized'
-    })
-  }
+    });
+  };
 
   // Add keyboard shortcut for easy testing (Ctrl+R or F5)
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if ((event.ctrlKey && event.key === 'r') || event.key === 'F5') {
-        event.preventDefault()
-        handleRefresh()
+        event.preventDefault();
+        handleRefresh();
       }
-    }
+    };
 
-    window.addEventListener('keydown', handleKeyPress)
-    return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [])
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
 
   // Combine and filter all feeds
   const allFeeds = useMemo(() => {
-    let combined: any[] = []
+    let combined: any[] = [];
     
     if (activeTab === 'feeds' || activeTab === 'threats') {
       combined = [...combined, ...threatFeeds.map(item => ({ 
         ...item, 
         type: 'threat',
         tags: Array.isArray(item.tags) ? item.tags : []
-      }))]
+      }))];
     }
     if (activeTab === 'feeds' || activeTab === 'bounties') {
       combined = [...combined, ...bugBountyPrograms.map(item => ({ 
         ...item, 
         type: 'bounty',
         scope: Array.isArray(item.scope) ? item.scope : []
-      }))]
+      }))];
     }
     if (activeTab === 'feeds' || activeTab === 'intel') {
       combined = [...combined, ...threatIntel.map(item => ({ 
         ...item, 
         type: 'intel',
         indicators: Array.isArray(item.indicators) ? item.indicators : []
-      }))]
+      }))];
     }
     if (activeTab === 'feeds' || activeTab === 'news') {
       combined = [...combined, ...cyberNews.map(item => ({ 
         ...item, 
         type: 'news',
         tags: Array.isArray(item.tags) ? item.tags : []
-      }))]
+      }))];
     }
 
     // Apply filters
@@ -113,7 +113,7 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
         (item.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         (item.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         (item.company || '').toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      );
     }
 
     if (severityFilter !== 'all') {
@@ -121,45 +121,45 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
         item.severity === severityFilter || 
         item.confidence === severityFilter ||
         item.difficulty === severityFilter
-      )
+      );
     }
 
     // Sort by timestamp/lastUpdated/publishedAt
     combined.sort((a, b) => {
-      const timeA = new Date(a.timestamp || a.lastUpdated || a.publishedAt || 0).getTime()
-      const timeB = new Date(b.timestamp || b.lastUpdated || b.publishedAt || 0).getTime()
-      return timeB - timeA
-    })
+      const timeA = new Date(a.timestamp || a.lastUpdated || a.publishedAt || 0).getTime();
+      const timeB = new Date(b.timestamp || b.lastUpdated || b.publishedAt || 0).getTime();
+      return timeB - timeA;
+    });
 
-    return combined
-  }, [threatFeeds, bugBountyPrograms, threatIntel, cyberNews, activeTab, searchQuery, severityFilter])
+    return combined;
+  }, [threatFeeds, bugBountyPrograms, threatIntel, cyberNews, activeTab, searchQuery, severityFilter]);
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'bg-destructive text-destructive-foreground'
-      case 'high': return 'bg-orange-500 text-white'
-      case 'medium': return 'bg-yellow-500 text-black'
-      case 'low': return 'bg-blue-500 text-white'
-      case 'expert': return 'bg-purple-500 text-white'
-      case 'advanced': return 'bg-red-500 text-white'
-      case 'intermediate': return 'bg-orange-500 text-white'
-      case 'beginner': return 'bg-green-500 text-white'
-      default: return 'bg-muted text-muted-foreground'
+      case 'critical': return 'bg-destructive text-destructive-foreground';
+      case 'high': return 'bg-orange-500 text-white';
+      case 'medium': return 'bg-yellow-500 text-black';
+      case 'low': return 'bg-blue-500 text-white';
+      case 'expert': return 'bg-purple-500 text-white';
+      case 'advanced': return 'bg-red-500 text-white';
+      case 'intermediate': return 'bg-orange-500 text-white';
+      case 'beginner': return 'bg-green-500 text-white';
+      default: return 'bg-muted text-muted-foreground';
     }
-  }
+  };
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'threat': return <AlertTriangle className="w-4 h-4" />
-      case 'bounty': return <Bug className="w-4 h-4" />
-      case 'intel': return <Eye className="w-4 h-4" />
-      case 'news': return <TrendingUp className="w-4 h-4" />
-      default: return <Shield className="w-4 h-4" />
+      case 'threat': return <AlertTriangle className="w-4 h-4" />;
+      case 'bounty': return <Bug className="w-4 h-4" />;
+      case 'intel': return <Eye className="w-4 h-4" />;
+      case 'news': return <TrendingUp className="w-4 h-4" />;
+      default: return <Shield className="w-4 h-4" />;
     }
-  }
+  };
 
   const renderFeedItem = (item: any) => {
-    const timeAgo = formatDistanceToNow(new Date(item.timestamp || item.lastUpdated || item.publishedAt), { addSuffix: true })
+    const timeAgo = formatDistanceToNow(new Date(item.timestamp || item.lastUpdated || item.publishedAt), { addSuffix: true });
     
     return (
       <Card key={item.id} className={`hover-border-flow transition-all duration-300 ${item.isPinned ? 'border-primary' : ''}`}>
@@ -259,8 +259,8 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
           </div>
         </CardContent>
       </Card>
-    )
-  }
+    );
+  };
 
   const renderFeedContent = () => (
     <>
@@ -306,7 +306,7 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
         )}
       </div>
     </>
-  )
+  );
 
   return (
     <div className="space-y-6 relative">
@@ -488,5 +488,5 @@ export function ThreatIntelligenceFeed({ onClose }: ThreatIntelligenceFeedProps)
       </Tabs>
       </div>
     </div>
-  )
+  );
 }

@@ -1,19 +1,19 @@
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { TrendingUp, Users, Star, CheckCircle } from '@/lib/phosphor-icons-wrapper'
-import { Card, CardContent } from '@/components/ui/card'
-import { MarketplaceListing } from '@/types/marketplace'
-import { Team } from '@/types/teams'
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { TrendingUp, Users, Star, CheckCircle } from '@/lib/phosphor-icons-wrapper';
+import { Card, CardContent } from '@/components/ui/card';
+import { MarketplaceListing } from '@/types/marketplace';
+import { Team } from '@/types/teams';
 
 export function MarketplaceStats() {
-  const [listings] = useKVWithFallback<MarketplaceListing[]>('marketplaceListings', [])
-  const [teams] = useKVWithFallback<Team[]>('teams', [])
+  const [listings] = useKVWithFallback<MarketplaceListing[]>('marketplaceListings', []);
+  const [teams] = useKVWithFallback<Team[]>('teams', []);
 
-  const activeListings = (listings ?? []).filter(listing => listing.status === 'active')
-  const totalProjects = activeListings.reduce((sum, listing) => sum + listing.completedProjects, 0)
+  const activeListings = (listings ?? []).filter(listing => listing.status === 'active');
+  const totalProjects = activeListings.reduce((sum, listing) => sum + listing.completedProjects, 0);
   const averageRating = activeListings.length > 0 
     ? activeListings.reduce((sum, listing) => sum + listing.rating, 0) / activeListings.length 
-    : 0
-  const activeTeams = new Set(activeListings.map(listing => listing.teamId)).size
+    : 0;
+  const activeTeams = new Set(activeListings.map(listing => listing.teamId)).size;
 
   const stats = [
     {
@@ -40,12 +40,12 @@ export function MarketplaceStats() {
       icon: TrendingUp,
       color: 'text-purple-400'
     }
-  ]
+  ];
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {stats.map((stat, index) => {
-        const Icon = stat.icon
+        const Icon = stat.icon;
         return (
           <Card key={index}>
             <CardContent className="p-4">
@@ -60,8 +60,8 @@ export function MarketplaceStats() {
               </div>
             </CardContent>
           </Card>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

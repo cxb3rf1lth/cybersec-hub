@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Star, Download, Code, Copy, Eye, Users, GitBranch } from '@phosphor-icons/react'
-import { Template } from '@/types/templates'
-import { User } from '@/types/user'
-import { TemplateDetailModal } from './TemplateDetailModal'
-import { toast } from 'sonner'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Star, Download, Code, Copy, Eye, Users, GitBranch } from '@phosphor-icons/react';
+import { Template } from '@/types/templates';
+import { User } from '@/types/user';
+import { TemplateDetailModal } from './TemplateDetailModal';
+import { toast } from 'sonner';
 
 interface TemplateCardProps {
   template: Template
@@ -16,25 +16,25 @@ interface TemplateCardProps {
 }
 
 export function TemplateCard({ template, currentUser }: TemplateCardProps) {
-  const [templates, setTemplates] = useKVWithFallback<Template[]>('templates', [])
-  const [showDetail, setShowDetail] = useState(false)
-  const [isStarred, setIsStarred] = useState(false) // In real app, track user's stars
+  const [templates, setTemplates] = useKVWithFallback<Template[]>('templates', []);
+  const [showDetail, setShowDetail] = useState(false);
+  const [isStarred, setIsStarred] = useState(false); // In real app, track user's stars
 
   const handleStar = async () => {
     try {
-      setIsStarred(!isStarred)
+      setIsStarred(!isStarred);
       const updatedTemplates = templates.map(t => 
         t.id === template.id 
           ? { ...t, stars: isStarred ? t.stars - 1 : t.stars + 1 }
           : t
-      )
-      setTemplates(updatedTemplates)
-      toast.success(isStarred ? 'Removed from starred' : 'Added to starred')
+      );
+      setTemplates(updatedTemplates);
+      toast.success(isStarred ? 'Removed from starred' : 'Added to starred');
     } catch (error) {
-      console.error('Error starring template:', error)
-      toast.error('Failed to star template')
+      console.error('Error starring template:', error);
+      toast.error('Failed to star template');
     }
-  }
+  };
 
   const handleUseTemplate = async () => {
     try {
@@ -43,37 +43,37 @@ export function TemplateCard({ template, currentUser }: TemplateCardProps) {
         t.id === template.id 
           ? { ...t, downloads: t.downloads + 1 }
           : t
-      )
-      setTemplates(updatedTemplates)
-      toast.success('Template copied to your projects!')
+      );
+      setTemplates(updatedTemplates);
+      toast.success('Template copied to your projects!');
     } catch (error) {
-      console.error('Error using template:', error)
-      toast.error('Failed to use template')
+      console.error('Error using template:', error);
+      toast.error('Failed to use template');
     }
-  }
+  };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'beginner': return 'bg-green-500/20 text-green-400 border-green-500/30'
-      case 'intermediate': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'advanced': return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
-      case 'expert': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      default: return 'bg-muted'
+      case 'beginner': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'intermediate': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'advanced': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+      case 'expert': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      default: return 'bg-muted';
     }
-  }
+  };
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'web-app': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-      case 'cli-tool': return 'bg-purple-500/20 text-purple-400 border-purple-500/30'
-      case 'exploitation': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      case 'analysis': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'networking': return 'bg-green-500/20 text-green-400 border-green-500/30'
-      case 'forensics': return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'
-      case 'automation': return 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30'
-      default: return 'bg-muted'
+      case 'web-app': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'cli-tool': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+      case 'exploitation': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      case 'analysis': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'networking': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'forensics': return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30';
+      case 'automation': return 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30';
+      default: return 'bg-muted';
     }
-  }
+  };
 
   return (
     <>
@@ -93,8 +93,8 @@ export function TemplateCard({ template, currentUser }: TemplateCardProps) {
                 size="sm"
                 variant="ghost"
                 onClick={(e) => {
-                  e.stopPropagation()
-                  handleStar()
+                  e.stopPropagation();
+                  handleStar();
                 }}
                 className={`p-1 h-auto ${isStarred ? 'text-yellow-400' : 'text-muted-foreground'}`}
               >
@@ -178,8 +178,8 @@ export function TemplateCard({ template, currentUser }: TemplateCardProps) {
               size="sm"
               variant="outline"
               onClick={(e) => {
-                e.stopPropagation()
-                setShowDetail(true)
+                e.stopPropagation();
+                setShowDetail(true);
               }}
               className="flex-1"
             >
@@ -189,8 +189,8 @@ export function TemplateCard({ template, currentUser }: TemplateCardProps) {
             <Button
               size="sm"
               onClick={(e) => {
-                e.stopPropagation()
-                handleUseTemplate()
+                e.stopPropagation();
+                handleUseTemplate();
               }}
               className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
             >
@@ -210,5 +210,5 @@ export function TemplateCard({ template, currentUser }: TemplateCardProps) {
         />
       )}
     </>
-  )
+  );
 }

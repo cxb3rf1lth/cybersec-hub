@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ArrowLeft, Star, GitFork, Eye, Lock, Globe, File, Folder, GitBranch, Bug, GitPullRequest, Download, Clone } from '@phosphor-icons/react'
-import { Repository, User, RepositoryFile } from '@/types/user'
-import { FileTree } from '@/components/code/FileTree'
-import { IssuesTab } from '@/components/code/IssuesTab'
-import { PullRequestsTab } from '@/components/code/PullRequestsTab'
-import { CommitsTab } from '@/components/code/CommitsTab'
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ArrowLeft, Star, GitFork, Eye, Lock, Globe, File, Folder, GitBranch, Bug, GitPullRequest, Download, Clone } from '@phosphor-icons/react';
+import { Repository, User, RepositoryFile } from '@/types/user';
+import { FileTree } from '@/components/code/FileTree';
+import { IssuesTab } from '@/components/code/IssuesTab';
+import { PullRequestsTab } from '@/components/code/PullRequestsTab';
+import { CommitsTab } from '@/components/code/CommitsTab';
 
 interface RepositoryViewProps {
   repository: Repository
@@ -18,16 +18,16 @@ interface RepositoryViewProps {
 }
 
 export function RepositoryView({ repository, currentUser, onFileSelect, onBack }: RepositoryViewProps) {
-  const [activeTab, setActiveTab] = useState('code')
-  const [selectedBranch, setSelectedBranch] = useState(repository.defaultBranch)
+  const [activeTab, setActiveTab] = useState('code');
+  const [selectedBranch, setSelectedBranch] = useState(repository.defaultBranch);
 
-  const isOwner = repository.ownerId === currentUser.id
-  const isCollaborator = repository.collaborators.includes(currentUser.id)
-  const isStarred = repository.stars.includes(currentUser.id)
+  const isOwner = repository.ownerId === currentUser.id;
+  const isCollaborator = repository.collaborators.includes(currentUser.id);
+  const isStarred = repository.stars.includes(currentUser.id);
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString()
-  }
+    return new Date(dateString).toLocaleDateString();
+  };
 
   const getLanguageColor = (language: string) => {
     const colors: { [key: string]: string } = {
@@ -39,9 +39,9 @@ export function RepositoryView({ repository, currentUser, onFileSelect, onBack }
       'C++': '#f34b7d',
       Shell: '#89e051',
       PowerShell: '#012456'
-    }
-    return colors[language] || '#6b7280'
-  }
+    };
+    return colors[language] || '#6b7280';
+  };
 
   return (
     <div className="h-full flex flex-col">
@@ -187,5 +187,5 @@ export function RepositoryView({ repository, currentUser, onFileSelect, onBack }
         </div>
       </Tabs>
     </div>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { BugBountyPlatform, BugBountyProgram, LiveBountyFeed, PlatformConfiguration } from '@/types/bug-bounty'
+import { useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { BugBountyPlatform, BugBountyProgram, LiveBountyFeed, PlatformConfiguration } from '@/types/bug-bounty';
 
 // Production-ready bug bounty platforms with real integrations
 const BUG_BOUNTY_PLATFORMS: BugBountyPlatform[] = [
@@ -285,7 +285,7 @@ const BUG_BOUNTY_PLATFORMS: BugBountyPlatform[] = [
       nextSync: new Date(Date.now() + 1500000).toISOString()
     }
   }
-]
+];
 
 // Sample bug bounty programs from various platforms
 const SAMPLE_PROGRAMS: BugBountyProgram[] = [
@@ -470,7 +470,7 @@ const SAMPLE_PROGRAMS: BugBountyProgram[] = [
     lastUpdated: new Date().toISOString(),
     createdAt: '2023-06-01T00:00:00Z'
   }
-]
+];
 
 // Live feed sample data
 const SAMPLE_LIVE_FEED: LiveBountyFeed[] = [
@@ -527,43 +527,43 @@ const SAMPLE_LIVE_FEED: LiveBountyFeed[] = [
     readBy: [],
     bookmarkedBy: []
   }
-]
+];
 
 export function useBugBountyPlatforms() {
-  const [platforms, setPlatforms] = useKVWithFallback<BugBountyPlatform[]>('bug-bounty-platforms', [])
-  const [programs, setPrograms] = useKVWithFallback<BugBountyProgram[]>('bug-bounty-programs', [])
-  const [liveFeed, setLiveFeed] = useKVWithFallback<LiveBountyFeed[]>('bug-bounty-live-feed', [])
-  const [configurations, setConfigurations] = useKVWithFallback<PlatformConfiguration[]>('platform-configurations', [])
+  const [platforms, setPlatforms] = useKVWithFallback<BugBountyPlatform[]>('bug-bounty-platforms', []);
+  const [programs, setPrograms] = useKVWithFallback<BugBountyProgram[]>('bug-bounty-programs', []);
+  const [liveFeed, setLiveFeed] = useKVWithFallback<LiveBountyFeed[]>('bug-bounty-live-feed', []);
+  const [configurations, setConfigurations] = useKVWithFallback<PlatformConfiguration[]>('platform-configurations', []);
 
   useEffect(() => {
     if (platforms.length === 0) {
-      setPlatforms(BUG_BOUNTY_PLATFORMS)
+      setPlatforms(BUG_BOUNTY_PLATFORMS);
     }
-  }, [platforms.length, setPlatforms])
+  }, [platforms.length, setPlatforms]);
 
   useEffect(() => {
     if (programs.length === 0) {
-      setPrograms(SAMPLE_PROGRAMS)
+      setPrograms(SAMPLE_PROGRAMS);
     }
-  }, [programs.length, setPrograms])
+  }, [programs.length, setPrograms]);
 
   useEffect(() => {
     if (liveFeed.length === 0) {
-      setLiveFeed(SAMPLE_LIVE_FEED)
+      setLiveFeed(SAMPLE_LIVE_FEED);
     }
-  }, [liveFeed.length, setLiveFeed])
+  }, [liveFeed.length, setLiveFeed]);
 
   // Simulate live feed updates
   useEffect(() => {
     const interval = setInterval(() => {
-      const feedTypes = ['bounty_awarded', 'new_program', 'program_update', 'leaderboard_change'] as const
-      const platforms = ['HackerOne', 'Bugcrowd', 'Intigriti', 'YesWeHack']
-      const severities = ['critical', 'high', 'medium', 'low'] as const
+      const feedTypes = ['bounty_awarded', 'new_program', 'program_update', 'leaderboard_change'] as const;
+      const platforms = ['HackerOne', 'Bugcrowd', 'Intigriti', 'YesWeHack'];
+      const severities = ['critical', 'high', 'medium', 'low'] as const;
       
-      const randomType = feedTypes[Math.floor(Math.random() * feedTypes.length)]
-      const randomPlatform = platforms[Math.floor(Math.random() * platforms.length)]
+      const randomType = feedTypes[Math.floor(Math.random() * feedTypes.length)];
+      const randomPlatform = platforms[Math.floor(Math.random() * platforms.length)];
       
-      let newFeedItem: LiveBountyFeed
+      let newFeedItem: LiveBountyFeed;
       
       switch (randomType) {
         case 'bounty_awarded':
@@ -582,8 +582,8 @@ export function useBugBountyPlatforms() {
             category: ['bounty', 'award'],
             readBy: [],
             bookmarkedBy: []
-          }
-          break
+          };
+          break;
         default:
           newFeedItem = {
             id: `feed-${Date.now()}`,
@@ -597,14 +597,14 @@ export function useBugBountyPlatforms() {
             category: ['update'],
             readBy: [],
             bookmarkedBy: []
-          }
+          };
       }
       
-      setLiveFeed((currentFeed) => [newFeedItem, ...currentFeed.slice(0, 49)]) // Keep last 50 items
-    }, 30000) // Update every 30 seconds
+      setLiveFeed((currentFeed) => [newFeedItem, ...currentFeed.slice(0, 49)]); // Keep last 50 items
+    }, 30000); // Update every 30 seconds
 
-    return () => clearInterval(interval)
-  }, [setLiveFeed])
+    return () => clearInterval(interval);
+  }, [setLiveFeed]);
 
   return {
     platforms,
@@ -615,5 +615,5 @@ export function useBugBountyPlatforms() {
     setPrograms,
     setLiveFeed,
     setConfigurations
-  }
+  };
 }

@@ -1,55 +1,55 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Plus, Calendar, Users, Target, Filter, Search, MoreHorizontal } from '@/lib/phosphor-icons-wrapper'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { CreateProjectModal } from '@/components/projects/CreateProjectModal'
-import { ProjectDetailsModal } from '@/components/projects/ProjectDetailsModal'
-import { ProjectKanban } from '@/components/projects/ProjectKanban'
-import { Team } from '@/types'
-import type { Project } from '@/types/projects'
-import type { User } from '@/types/user'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Plus, Calendar, Users, Target, Filter, Search, MoreHorizontal } from '@/lib/phosphor-icons-wrapper';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { CreateProjectModal } from '@/components/projects/CreateProjectModal';
+import { ProjectDetailsModal } from '@/components/projects/ProjectDetailsModal';
+import { ProjectKanban } from '@/components/projects/ProjectKanban';
+import { Team } from '@/types';
+import type { Project } from '@/types/projects';
+import type { User } from '@/types/user';
 
 interface ProjectsViewProps {
   currentUser: User
 }
 
 export function ProjectsView({ currentUser }: ProjectsViewProps) {
-  const [projects, setProjects] = useKVWithFallback<Project[]>('projects', [])
-  const [teams] = useKVWithFallback<Team[]>('teams', [])
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-  const [view, setView] = useState<'grid' | 'kanban'>('grid')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState<string>('all')
-  const [typeFilter, setTypeFilter] = useState<string>('all')
+  const [projects, setProjects] = useKVWithFallback<Project[]>('projects', []);
+  const [teams] = useKVWithFallback<Team[]>('teams', []);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [view, setView] = useState<'grid' | 'kanban'>('grid');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
 
   // Get user's teams for project access
   const userTeams = (teams ?? []).filter(team =>
     team.members.some(member => member.userId === currentUser.id)
-  )
+  );
 
   // Filter projects user has access to
   const accessibleProjects = (projects ?? []).filter(project => {
-    const isOwner = project.ownerId === currentUser.id
-    const isTeamMember = userTeams.some(team => team.id === project.teamId)
-    const isPublic = project.visibility === 'public'
-    return isOwner || isTeamMember || isPublic
-  })
+    const isOwner = project.ownerId === currentUser.id;
+    const isTeamMember = userTeams.some(team => team.id === project.teamId);
+    const isPublic = project.visibility === 'public';
+    return isOwner || isTeamMember || isPublic;
+  });
 
   // Apply filters
   const filteredProjects = accessibleProjects.filter(project => {
     const matchesSearch = project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         project.description.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesStatus = statusFilter === 'all' || project.status === statusFilter
-    const matchesType = typeFilter === 'all' || project.type === typeFilter
-    return matchesSearch && matchesStatus && matchesType
-  })
+                         project.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || project.status === statusFilter;
+    const matchesType = typeFilter === 'all' || project.type === typeFilter;
+    return matchesSearch && matchesStatus && matchesType;
+  });
 
   const handleCreateProject = (projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) => {
     const newProject: Project = {
@@ -57,38 +57,38 @@ export function ProjectsView({ currentUser }: ProjectsViewProps) {
       id: `project-${Date.now()}`,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
-    }
-  setProjects((current = []) => [...current, newProject])
-    setShowCreateModal(false)
-  }
+    };
+  setProjects((current = []) => [...current, newProject]);
+    setShowCreateModal(false);
+  };
 
   const getStatusColor = (status: Project['status']) => {
     switch (status) {
-      case 'planning': return 'bg-blue-500/20 text-blue-300'
-      case 'active': return 'bg-green-500/20 text-green-300'
-      case 'on-hold': return 'bg-yellow-500/20 text-yellow-300'
-      case 'completed': return 'bg-purple-500/20 text-purple-300'
-      case 'cancelled': return 'bg-red-500/20 text-red-300'
-      default: return 'bg-gray-500/20 text-gray-300'
+      case 'planning': return 'bg-blue-500/20 text-blue-300';
+      case 'active': return 'bg-green-500/20 text-green-300';
+      case 'on-hold': return 'bg-yellow-500/20 text-yellow-300';
+      case 'completed': return 'bg-purple-500/20 text-purple-300';
+      case 'cancelled': return 'bg-red-500/20 text-red-300';
+      default: return 'bg-gray-500/20 text-gray-300';
     }
-  }
+  };
 
   const getTypeColor = (type: Project['type']) => {
     switch (type) {
-      case 'bug-bounty': return 'bg-orange-500/20 text-orange-300'
-      case 'research': return 'bg-cyan-500/20 text-cyan-300'
-      case 'development': return 'bg-blue-500/20 text-blue-300'
-      case 'red-team': return 'bg-red-500/20 text-red-300'
-      case 'blue-team': return 'bg-blue-600/20 text-blue-400'
-      default: return 'bg-gray-500/20 text-gray-300'
+      case 'bug-bounty': return 'bg-orange-500/20 text-orange-300';
+      case 'research': return 'bg-cyan-500/20 text-cyan-300';
+      case 'development': return 'bg-blue-500/20 text-blue-300';
+      case 'red-team': return 'bg-red-500/20 text-red-300';
+      case 'blue-team': return 'bg-blue-600/20 text-blue-400';
+      default: return 'bg-gray-500/20 text-gray-300';
     }
-  }
+  };
 
   const calculateProgress = (project: Project) => {
-    if (project.tasks.length === 0) return 0
-    const completedTasks = project.tasks.filter(task => task.status === 'completed').length
-    return Math.round((completedTasks / project.tasks.length) * 100)
-  }
+    if (project.tasks.length === 0) {return 0;}
+    const completedTasks = project.tasks.filter(task => task.status === 'completed').length;
+    return Math.round((completedTasks / project.tasks.length) * 100);
+  };
 
   if (view === 'kanban' && selectedProject) {
     return (
@@ -115,12 +115,12 @@ export function ProjectsView({ currentUser }: ProjectsViewProps) {
           onUpdateProject={(updatedProject) => {
             setProjects(current => 
               (current ?? []).map(p => p.id === updatedProject.id ? updatedProject : p)
-            )
-            setSelectedProject(updatedProject)
+            );
+            setSelectedProject(updatedProject);
           }}
         />
       </div>
-    )
+    );
   }
 
   return (
@@ -208,11 +208,11 @@ export function ProjectsView({ currentUser }: ProjectsViewProps) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProjects.map((project) => {
-              const team = (teams ?? []).find(t => t.id === project.teamId)
-              const progress = calculateProgress(project)
+              const team = (teams ?? []).find(t => t.id === project.teamId);
+              const progress = calculateProgress(project);
               const overdueTasks = project.tasks.filter(task => 
                 task.dueDate && new Date(task.dueDate) < new Date() && task.status !== 'completed'
-              ).length
+              ).length;
 
               return (
                 <Card 
@@ -236,14 +236,14 @@ export function ProjectsView({ currentUser }: ProjectsViewProps) {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           <DropdownMenuItem onClick={(e) => {
-                            e.stopPropagation()
-                            setSelectedProject(project)
-                            setView('kanban')
+                            e.stopPropagation();
+                            setSelectedProject(project);
+                            setView('kanban');
                           }}>
                             Open Kanban
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={(e) => {
-                            e.stopPropagation()
+                            e.stopPropagation();
                             // Handle edit project
                           }}>
                             Edit Project
@@ -301,7 +301,7 @@ export function ProjectsView({ currentUser }: ProjectsViewProps) {
                     </div>
                   </CardContent>
                 </Card>
-              )
+              );
             })}
           </div>
         )}
@@ -324,11 +324,11 @@ export function ProjectsView({ currentUser }: ProjectsViewProps) {
           onUpdateProject={(updatedProject) => {
             setProjects(current => 
               (current ?? []).map(p => p.id === updatedProject.id ? updatedProject : p)
-            )
-            setSelectedProject(updatedProject)
+            );
+            setSelectedProject(updatedProject);
           }}
         />
       )}
     </div>
-  )
+  );
 }

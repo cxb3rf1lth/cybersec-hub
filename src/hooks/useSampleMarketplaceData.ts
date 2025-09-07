@@ -1,11 +1,11 @@
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { useEffect } from 'react'
-import { MarketplaceListing, MarketplaceProposal, MarketplaceReview } from '@/types/marketplace'
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { useEffect } from 'react';
+import { MarketplaceListing, MarketplaceProposal, MarketplaceReview } from '@/types/marketplace';
 
 export function useSampleMarketplaceData() {
-  const [listings, setListings] = useKVWithFallback<MarketplaceListing[]>('marketplaceListings', [])
-  const [proposals, setProposals] = useKVWithFallback<MarketplaceProposal[]>('marketplaceProposals', [])
-  const [reviews, setReviews] = useKVWithFallback<MarketplaceReview[]>('marketplaceReviews', [])
+  const [listings, setListings] = useKVWithFallback<MarketplaceListing[]>('marketplaceListings', []);
+  const [proposals, setProposals] = useKVWithFallback<MarketplaceProposal[]>('marketplaceProposals', []);
+  const [reviews, setReviews] = useKVWithFallback<MarketplaceReview[]>('marketplaceReviews', []);
 
   useEffect(() => {
     if (listings.length === 0) {
@@ -176,9 +176,9 @@ export function useSampleMarketplaceData() {
           updatedAt: '2024-01-17T00:00:00Z',
           status: 'active'
         }
-      ]
+      ];
 
-      setListings(sampleListings)
+      setListings(sampleListings);
     }
 
     if (proposals.length === 0) {
@@ -229,9 +229,9 @@ export function useSampleMarketplaceData() {
           updatedAt: '2024-01-20T09:15:00Z',
           deadline: '2024-03-01T00:00:00Z'
         }
-      ]
+      ];
 
-      setProposals(sampleProposals)
+      setProposals(sampleProposals);
     }
 
     if (reviews.length === 0) {
@@ -275,9 +275,9 @@ export function useSampleMarketplaceData() {
           helpful: 5,
           verified: true
         }
-      ]
+      ];
 
-      setReviews(sampleReviews)
+      setReviews(sampleReviews);
     }
-  }, [listings.length, proposals.length, reviews.length, setListings, setProposals, setReviews])
+  }, [listings.length, proposals.length, reviews.length, setListings, setProposals, setReviews]);
 }

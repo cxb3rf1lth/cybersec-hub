@@ -3,7 +3,7 @@
  * Handles API keys, environment variables, and security settings
  */
 
-import { useKVWithFallback } from '@/lib/kv-fallback'
+import { useKVWithFallback } from '@/lib/kv-fallback';
 
 export interface APIKeyConfig {
   platform: string
@@ -100,7 +100,7 @@ export const API_CONFIGS: Record<string, APIKeyConfig> = {
     testEndpoint: '/api/v1/user/me',
     scopesRequired: ['read']
   }
-}
+};
 
 // Security configuration
 export const SECURITY_CONFIG: SecurityConfig = {
@@ -112,7 +112,7 @@ export const SECURITY_CONFIG: SecurityConfig = {
     requestsPerMinute: 60,
     burstLimit: 10
   }
-}
+};
 
 // Environment-specific settings
 export const ENVIRONMENT_CONFIG = {
@@ -126,37 +126,37 @@ export const ENVIRONMENT_CONFIG = {
     enableMocking: false,
     strictSSL: true
   }
-}
+};
 
 /**
  * Secure API Key Management Hook
  */
 export function useAPIKeys() {
-  const [encryptedKeys, setEncryptedKeys] = useKVWithFallback<Record<string, string>>('encrypted_api_keys', {})
+  const [encryptedKeys, setEncryptedKeys] = useKVWithFallback<Record<string, string>>('encrypted_api_keys', {});
   const [keyMetadata, setKeyMetadata] = useKVWithFallback<Record<string, { 
     created: string
     lastUsed: string
     rotationDue: boolean
     usage: number
-  }>>('api_key_metadata', {})
+  }>>('api_key_metadata', {});
 
   // Simple encryption for client-side storage (in production, use proper encryption)
   const encryptKey = (key: string): string => {
-    return btoa(key).split('').reverse().join('')
-  }
+    return btoa(key).split('').reverse().join('');
+  };
 
   const decryptKey = (encryptedKey: string): string => {
-    return atob(encryptedKey.split('').reverse().join(''))
-  }
+    return atob(encryptedKey.split('').reverse().join(''));
+  };
 
   const setAPIKey = (platform: string, apiKey: string) => {
-    const encrypted = encryptKey(apiKey)
-    const now = new Date().toISOString()
+    const encrypted = encryptKey(apiKey);
+    const now = new Date().toISOString();
     
     setEncryptedKeys(current => ({
       ...current,
       [platform]: encrypted
-    }))
+    }));
 
     setKeyMetadata(current => ({
       ...current,
@@ -166,15 +166,15 @@ export function useAPIKeys() {
         rotationDue: false,
         usage: (current[platform]?.usage || 0) + 1
       }
-    }))
-  }
+    }));
+  };
 
   const getAPIKey = (platform: string): string | null => {
-    const encrypted = encryptedKeys[platform]
-    if (!encrypted) return null
+    const encrypted = encryptedKeys[platform];
+    if (!encrypted) {return null;}
 
     // Update last used timestamp
-    const now = new Date().toISOString()
+    const now = new Date().toISOString();
     setKeyMetadata(current => ({
       ...current,
       [platform]: {
@@ -182,33 +182,33 @@ export function useAPIKeys() {
         lastUsed: now,
         usage: (current[platform]?.usage || 0) + 1
       }
-    }))
+    }));
 
-    return decryptKey(encrypted)
-  }
+    return decryptKey(encrypted);
+  };
 
   const removeAPIKey = (platform: string) => {
     setEncryptedKeys(current => {
-      const updated = { ...current }
-      delete updated[platform]
-      return updated
-    })
+      const updated = { ...current };
+      delete updated[platform];
+      return updated;
+    });
 
     setKeyMetadata(current => {
-      const updated = { ...current }
-      delete updated[platform]
-      return updated
-    })
-  }
+      const updated = { ...current };
+      delete updated[platform];
+      return updated;
+    });
+  };
 
   const isKeyExpired = (platform: string): boolean => {
-    const metadata = keyMetadata[platform]
-    if (!metadata) return false
+    const metadata = keyMetadata[platform];
+    if (!metadata) {return false;}
 
-    const created = new Date(metadata.created).getTime()
-    const now = Date.now()
-    return (now - created) > SECURITY_CONFIG.keyRotationInterval
-  }
+    const created = new Date(metadata.created).getTime();
+    const now = Date.now();
+    return (now - created) > SECURITY_CONFIG.keyRotationInterval;
+  };
 
   const getAllPlatformStatuses = () => {
     return Object.keys(API_CONFIGS).map(platform => ({
@@ -217,8 +217,8 @@ export function useAPIKeys() {
       hasKey: !!encryptedKeys[platform],
       metadata: keyMetadata[platform],
       expired: isKeyExpired(platform)
-    }))
-  }
+    }));
+  };
 
   return {
     setAPIKey,
@@ -227,7 +227,7 @@ export function useAPIKeys() {
     isKeyExpired,
     getAllPlatformStatuses,
     keyMetadata
-  }
+  };
 }
 
 /**
@@ -243,13 +243,13 @@ export class APIKeyValidator {
     projectdiscovery: /^pd_[A-Za-z0-9]{40}$/,
     virustotal: /^[a-f0-9]{64}$/,
     alienvault: /^[a-f0-9]{64}$/
-  }
+  };
 
   static validateFormat(platform: string, apiKey: string): boolean {
-    if (!apiKey || apiKey.length < 8) return false
+    if (!apiKey || apiKey.length < 8) {return false;}
     
-    const pattern = this.patterns[platform]
-    return pattern ? pattern.test(apiKey) : apiKey.length >= 16
+    const pattern = this.patterns[platform];
+    return pattern ? pattern.test(apiKey) : apiKey.length >= 16;
   }
 
   static async testConnection(platform: string, apiKey: string): Promise<{
@@ -257,18 +257,18 @@ export class APIKeyValidator {
     error?: string
     info?: any
   }> {
-    const config = API_CONFIGS[platform]
+    const config = API_CONFIGS[platform];
     if (!config || !config.testEndpoint) {
-      return { valid: false, error: 'No test endpoint configured' }
+      return { valid: false, error: 'No test endpoint configured' };
     }
 
     try {
       // Import API client dynamically to avoid circular dependencies
-      const { apiClient, API_CONFIG } = await import('./api')
+      const { apiClient, API_CONFIG } = await import('./api');
       
-      const platformConfig = API_CONFIG[platform as keyof typeof API_CONFIG]
+      const platformConfig = API_CONFIG[platform as keyof typeof API_CONFIG];
       if (!platformConfig) {
-        return { valid: false, error: 'Platform not configured' }
+        return { valid: false, error: 'Platform not configured' };
       }
 
       // Test the API key with a simple request
@@ -277,7 +277,7 @@ export class APIKeyValidator {
         config.testEndpoint,
         { method: 'GET' },
         apiKey
-      )
+      );
 
       return { 
         valid: true, 
@@ -287,12 +287,12 @@ export class APIKeyValidator {
           testEndpoint: config.testEndpoint,
           response: response
         }
-      }
+      };
     } catch (error) {
       return { 
         valid: false, 
         error: error instanceof Error ? error.message : 'Connection test failed'
-      }
+      };
     }
   }
 }
@@ -306,11 +306,11 @@ export class QuotaManager {
     resetTime: number
     limit: number
     burst: number
-  }>()
+  }>();
 
   checkQuota(platform: string): boolean {
-    const quota = this.quotas.get(platform)
-    const now = Date.now()
+    const quota = this.quotas.get(platform);
+    const now = Date.now();
 
     if (!quota) {
       // Initialize quota for new platform
@@ -319,45 +319,45 @@ export class QuotaManager {
         resetTime: now + 60000, // Reset in 1 minute
         limit: SECURITY_CONFIG.rateLimitSettings.requestsPerMinute,
         burst: SECURITY_CONFIG.rateLimitSettings.burstLimit
-      })
-      return true
+      });
+      return true;
     }
 
     // Reset if time window passed
     if (now > quota.resetTime) {
-      quota.requests = 0
-      quota.resetTime = now + 60000
+      quota.requests = 0;
+      quota.resetTime = now + 60000;
     }
 
     // Check if within limits
     if (quota.requests >= quota.limit) {
-      return false
+      return false;
     }
 
-    quota.requests++
-    return true
+    quota.requests++;
+    return true;
   }
 
   getRemainingQuota(platform: string): number {
-    const quota = this.quotas.get(platform)
-    if (!quota) return SECURITY_CONFIG.rateLimitSettings.requestsPerMinute
+    const quota = this.quotas.get(platform);
+    if (!quota) {return SECURITY_CONFIG.rateLimitSettings.requestsPerMinute;}
 
-    const now = Date.now()
+    const now = Date.now();
     if (now > quota.resetTime) {
-      return quota.limit
+      return quota.limit;
     }
 
-    return Math.max(0, quota.limit - quota.requests)
+    return Math.max(0, quota.limit - quota.requests);
   }
 
   getQuotaResetTime(platform: string): number {
-    const quota = this.quotas.get(platform)
-    return quota?.resetTime || Date.now() + 60000
+    const quota = this.quotas.get(platform);
+    return quota?.resetTime || Date.now() + 60000;
   }
 }
 
 // Global quota manager instance
-export const quotaManager = new QuotaManager()
+export const quotaManager = new QuotaManager();
 
 /**
  * Secure Configuration Store
@@ -379,7 +379,7 @@ export function useSecureConfig() {
       shodan: 1800000,   // 30 minutes
       cve: 3600000       // 1 hour
     }
-  })
+  });
 
   const updateSyncTime = (platform: string) => {
     setConfig(current => ({
@@ -388,8 +388,8 @@ export function useSecureConfig() {
         ...current.lastSync,
         [platform]: new Date().toISOString()
       }
-    }))
-  }
+    }));
+  };
 
   const setSyncInterval = (platform: string, intervalMs: number) => {
     setConfig(current => ({
@@ -398,22 +398,22 @@ export function useSecureConfig() {
         ...current.syncIntervals,
         [platform]: intervalMs
       }
-    }))
-  }
+    }));
+  };
 
   const enablePlatform = (platform: string) => {
     setConfig(current => ({
       ...current,
       enabledPlatforms: [...new Set([...current.enabledPlatforms, platform])]
-    }))
-  }
+    }));
+  };
 
   const disablePlatform = (platform: string) => {
     setConfig(current => ({
       ...current,
       enabledPlatforms: current.enabledPlatforms.filter(p => p !== platform)
-    }))
-  }
+    }));
+  };
 
   return {
     config,
@@ -422,5 +422,5 @@ export function useSecureConfig() {
     enablePlatform,
     disablePlatform,
     setConfig
-  }
+  };
 }

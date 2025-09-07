@@ -1,6 +1,6 @@
-import { UserStatus } from '@/types/user'
-import { Badge } from '@/components/ui/badge'
-import { Circle, Target, Zap, Clock, Coffee, User } from '@phosphor-icons/react'
+import { UserStatus } from '@/types/user';
+import { Badge } from '@/components/ui/badge';
+import { Circle, Target, Zap, Clock, Coffee, User } from '@phosphor-icons/react';
 
 interface StatusIndicatorProps {
   status: UserStatus
@@ -18,67 +18,67 @@ export function StatusIndicator({ status, size = 'md', showMessage = false, clas
           label: 'Available',
           icon: Circle,
           variant: 'success' as const
-        }
+        };
       case 'busy':
         return {
           color: 'bg-red-500',
           label: 'Busy',
           icon: Circle,
           variant: 'destructive' as const
-        }
+        };
       case 'away':
         return {
           color: 'bg-yellow-500',
           label: 'Away',
           icon: Clock,
           variant: 'warning' as const
-        }
+        };
       case 'in-meeting':
         return {
           color: 'bg-purple-500',
           label: 'In Meeting',
           icon: User,
           variant: 'secondary' as const
-        }
+        };
       case 'on-hunt':
         return {
           color: 'bg-accent',
           label: 'Bug Hunting',
           icon: Target,
           variant: 'default' as const
-        }
+        };
       case 'analyzing':
         return {
           color: 'bg-blue-500',
           label: 'Analyzing',
           icon: Zap,
           variant: 'secondary' as const
-        }
+        };
       case 'offline':
         return {
           color: 'bg-gray-500',
           label: 'Offline',
           icon: Circle,
           variant: 'outline' as const
-        }
+        };
       default:
         return {
           color: 'bg-gray-500',
           label: 'Unknown',
           icon: Circle,
           variant: 'outline' as const
-        }
+        };
     }
-  }
+  };
 
-  const config = getStatusConfig(status.type)
-  const Icon = config.icon
+  const config = getStatusConfig(status.type);
+  const Icon = config.icon;
 
   const sizeClasses = {
     sm: 'w-2 h-2',
     md: 'w-3 h-3',
     lg: 'w-4 h-4'
-  }
+  };
 
   if (showMessage) {
     return (
@@ -110,7 +110,7 @@ export function StatusIndicator({ status, size = 'md', showMessage = false, clas
           )}
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -121,5 +121,5 @@ export function StatusIndicator({ status, size = 'md', showMessage = false, clas
         )}
       </div>
     </div>
-  )
+  );
 }

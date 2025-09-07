@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { 
   Target, 
   Plus, 
@@ -19,19 +19,19 @@ import {
   CheckCircle,
   Clock,
   AlertCircle
-} from '@phosphor-icons/react'
-import { User } from '@/types/user'
-import { EarningsGoal } from '@/types/earnings'
-import { toast } from 'sonner'
+} from '@phosphor-icons/react';
+import { User } from '@/types/user';
+import { EarningsGoal } from '@/types/earnings';
+import { toast } from 'sonner';
 
 interface EarningsGoalsViewProps {
   currentUser: User
 }
 
 export function EarningsGoalsView({ currentUser }: EarningsGoalsViewProps) {
-  const [goals, setGoals] = useKVWithFallback<EarningsGoal[]>(`goals-${currentUser.id}`, [])
-  const [showCreateDialog, setShowCreateDialog] = useState(false)
-  const [editingGoal, setEditingGoal] = useState<EarningsGoal | null>(null)
+  const [goals, setGoals] = useKVWithFallback<EarningsGoal[]>(`goals-${currentUser.id}`, []);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [editingGoal, setEditingGoal] = useState<EarningsGoal | null>(null);
 
   // Form state for creating/editing goals
   const [formData, setFormData] = useState({
@@ -41,7 +41,7 @@ export function EarningsGoalsView({ currentUser }: EarningsGoalsViewProps) {
     deadline: '',
     category: '',
     priority: 'medium' as 'low' | 'medium' | 'high'
-  })
+  });
 
   const resetForm = () => {
     setFormData({
@@ -51,13 +51,13 @@ export function EarningsGoalsView({ currentUser }: EarningsGoalsViewProps) {
       deadline: '',
       category: '',
       priority: 'medium'
-    })
-  }
+    });
+  };
 
   const handleCreateGoal = () => {
     if (!formData.title || !formData.targetAmount || !formData.deadline) {
-      toast.error('Please fill in all required fields')
-      return
+      toast.error('Please fill in all required fields');
+      return;
     }
 
     const newGoal: EarningsGoal = {
@@ -73,18 +73,18 @@ export function EarningsGoalsView({ currentUser }: EarningsGoalsViewProps) {
       priority: formData.priority,
       status: 'active',
       createdAt: new Date().toISOString()
-    }
+    };
 
-    setGoals(current => [...current, newGoal])
-    setShowCreateDialog(false)
-    resetForm()
-    toast.success('Goal created successfully!')
-  }
+    setGoals(current => [...current, newGoal]);
+    setShowCreateDialog(false);
+    resetForm();
+    toast.success('Goal created successfully!');
+  };
 
   const handleUpdateGoal = () => {
     if (!editingGoal || !formData.title || !formData.targetAmount || !formData.deadline) {
-      toast.error('Please fill in all required fields')
-      return
+      toast.error('Please fill in all required fields');
+      return;
     }
 
     const updatedGoal: EarningsGoal = {
@@ -95,32 +95,32 @@ export function EarningsGoalsView({ currentUser }: EarningsGoalsViewProps) {
       deadline: formData.deadline,
       category: formData.category,
       priority: formData.priority
-    }
+    };
 
     setGoals(current => current.map(goal => 
       goal.id === editingGoal.id ? updatedGoal : goal
-    ))
-    setEditingGoal(null)
-    resetForm()
-    toast.success('Goal updated successfully!')
-  }
+    ));
+    setEditingGoal(null);
+    resetForm();
+    toast.success('Goal updated successfully!');
+  };
 
   const handleDeleteGoal = (goalId: string) => {
-    setGoals(current => current.filter(goal => goal.id !== goalId))
-    toast.success('Goal deleted successfully!')
-  }
+    setGoals(current => current.filter(goal => goal.id !== goalId));
+    toast.success('Goal deleted successfully!');
+  };
 
   const handleCompleteGoal = (goalId: string) => {
     setGoals(current => current.map(goal => 
       goal.id === goalId 
         ? { ...goal, status: 'completed', completedAt: new Date().toISOString() }
         : goal
-    ))
-    toast.success('Congratulations! Goal completed!')
-  }
+    ));
+    toast.success('Congratulations! Goal completed!');
+  };
 
   const startEditGoal = (goal: EarningsGoal) => {
-    setEditingGoal(goal)
+    setEditingGoal(goal);
     setFormData({
       title: goal.title,
       description: goal.description,
@@ -128,38 +128,38 @@ export function EarningsGoalsView({ currentUser }: EarningsGoalsViewProps) {
       deadline: goal.deadline.split('T')[0], // Convert to date input format
       category: goal.category,
       priority: goal.priority
-    })
-  }
+    });
+  };
 
   const getGoalStatusIcon = (goal: EarningsGoal) => {
-    if (goal.status === 'completed') return <CheckCircle className="h-5 w-5 text-accent" />
-    if (new Date(goal.deadline) < new Date()) return <AlertCircle className="h-5 w-5 text-destructive" />
-    return <Clock className="h-5 w-5 text-primary" />
-  }
+    if (goal.status === 'completed') {return <CheckCircle className="h-5 w-5 text-accent" />;}
+    if (new Date(goal.deadline) < new Date()) {return <AlertCircle className="h-5 w-5 text-destructive" />;}
+    return <Clock className="h-5 w-5 text-primary" />;
+  };
 
   const getGoalStatusColor = (goal: EarningsGoal) => {
-    if (goal.status === 'completed') return 'bg-accent text-accent-foreground'
-    if (new Date(goal.deadline) < new Date()) return 'bg-destructive text-destructive-foreground'
-    return 'bg-primary text-primary-foreground'
-  }
+    if (goal.status === 'completed') {return 'bg-accent text-accent-foreground';}
+    if (new Date(goal.deadline) < new Date()) {return 'bg-destructive text-destructive-foreground';}
+    return 'bg-primary text-primary-foreground';
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return 'bg-destructive text-destructive-foreground'
-      case 'medium': return 'bg-primary text-primary-foreground'
-      case 'low': return 'bg-secondary text-secondary-foreground'
-      default: return 'bg-muted text-muted-foreground'
+      case 'high': return 'bg-destructive text-destructive-foreground';
+      case 'medium': return 'bg-primary text-primary-foreground';
+      case 'low': return 'bg-secondary text-secondary-foreground';
+      default: return 'bg-muted text-muted-foreground';
     }
-  }
+  };
 
-  const activeGoals = goals.filter(goal => goal.status === 'active')
-  const completedGoals = goals.filter(goal => goal.status === 'completed')
-  const overdueGoals = activeGoals.filter(goal => new Date(goal.deadline) < new Date())
+  const activeGoals = goals.filter(goal => goal.status === 'active');
+  const completedGoals = goals.filter(goal => goal.status === 'completed');
+  const overdueGoals = activeGoals.filter(goal => new Date(goal.deadline) < new Date());
 
   // Calculate total progress
-  const totalTargetAmount = activeGoals.reduce((sum, goal) => sum + goal.targetAmount, 0)
-  const totalCurrentAmount = activeGoals.reduce((sum, goal) => sum + goal.currentAmount, 0)
-  const overallProgress = totalTargetAmount > 0 ? (totalCurrentAmount / totalTargetAmount) * 100 : 0
+  const totalTargetAmount = activeGoals.reduce((sum, goal) => sum + goal.targetAmount, 0);
+  const totalCurrentAmount = activeGoals.reduce((sum, goal) => sum + goal.currentAmount, 0);
+  const overallProgress = totalTargetAmount > 0 ? (totalCurrentAmount / totalTargetAmount) * 100 : 0;
 
   return (
     <div className="space-y-6">
@@ -307,9 +307,9 @@ export function EarningsGoalsView({ currentUser }: EarningsGoalsViewProps) {
       <div className="space-y-4">
         {activeGoals.length > 0 ? (
           activeGoals.map(goal => {
-            const progress = (goal.currentAmount / goal.targetAmount) * 100
-            const isOverdue = new Date(goal.deadline) < new Date()
-            const daysLeft = Math.ceil((new Date(goal.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+            const progress = (goal.currentAmount / goal.targetAmount) * 100;
+            const isOverdue = new Date(goal.deadline) < new Date();
+            const daysLeft = Math.ceil((new Date(goal.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
 
             return (
               <Card key={goal.id} className={isOverdue ? 'border-destructive' : ''}>
@@ -378,7 +378,7 @@ export function EarningsGoalsView({ currentUser }: EarningsGoalsViewProps) {
                   </div>
                 </CardContent>
               </Card>
-            )
+            );
           })
         ) : (
           <Card>
@@ -503,5 +503,5 @@ export function EarningsGoalsView({ currentUser }: EarningsGoalsViewProps) {
         </Dialog>
       )}
     </div>
-  )
+  );
 }

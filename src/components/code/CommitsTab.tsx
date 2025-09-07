@@ -1,7 +1,7 @@
-import { Repository, Commit } from '@/types/user'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { GitCommit, User, Calendar, FileText, Plus, Minus } from '@phosphor-icons/react'
+import { Repository, Commit } from '@/types/user';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { GitCommit, User, Calendar, FileText, Plus, Minus } from '@phosphor-icons/react';
 
 interface CommitsTabProps {
   repository: Repository
@@ -63,42 +63,42 @@ export function CommitsTab({ repository, selectedBranch }: CommitsTabProps) {
       deletions: 12,
       createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
     }
-  ]
+  ];
 
-  const commits = repository.commits.length > 0 ? repository.commits : sampleCommits
+  const commits = repository.commits.length > 0 ? repository.commits : sampleCommits;
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffTime = Math.abs(now.getTime() - date.getTime())
-    const diffHours = Math.floor(diffTime / (1000 * 60 * 60))
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     
-    if (diffHours < 24) return `${diffHours} hours ago`
-    if (diffDays === 1) return 'yesterday'
-    if (diffDays < 7) return `${diffDays} days ago`
-    return date.toLocaleDateString()
-  }
+    if (diffHours < 24) {return `${diffHours} hours ago`;}
+    if (diffDays === 1) {return 'yesterday';}
+    if (diffDays < 7) {return `${diffDays} days ago`;}
+    return date.toLocaleDateString();
+  };
 
   const getFileTypeIcon = (type: string) => {
     switch (type) {
-      case 'added': return <Plus className="w-4 h-4 text-green-500" />
-      case 'deleted': return <Minus className="w-4 h-4 text-red-500" />
-      case 'modified': return <FileText className="w-4 h-4 text-yellow-500" />
-      case 'renamed': return <FileText className="w-4 h-4 text-blue-500" />
-      default: return <FileText className="w-4 h-4 text-muted-foreground" />
+      case 'added': return <Plus className="w-4 h-4 text-green-500" />;
+      case 'deleted': return <Minus className="w-4 h-4 text-red-500" />;
+      case 'modified': return <FileText className="w-4 h-4 text-yellow-500" />;
+      case 'renamed': return <FileText className="w-4 h-4 text-blue-500" />;
+      default: return <FileText className="w-4 h-4 text-muted-foreground" />;
     }
-  }
+  };
 
   const getFileTypeColor = (type: string) => {
     switch (type) {
-      case 'added': return 'text-green-500'
-      case 'deleted': return 'text-red-500'
-      case 'modified': return 'text-yellow-500'
-      case 'renamed': return 'text-blue-500'
-      default: return 'text-muted-foreground'
+      case 'added': return 'text-green-500';
+      case 'deleted': return 'text-red-500';
+      case 'modified': return 'text-yellow-500';
+      case 'renamed': return 'text-blue-500';
+      default: return 'text-muted-foreground';
     }
-  }
+  };
 
   return (
     <div className="p-6 h-full flex flex-col">
@@ -190,5 +190,5 @@ export function CommitsTab({ repository, selectedBranch }: CommitsTabProps) {
         )}
       </div>
     </div>
-  )
+  );
 }

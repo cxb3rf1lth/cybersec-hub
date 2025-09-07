@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Globe, 
   Key, 
@@ -20,10 +20,10 @@ import {
   Activity,
   Clock,
   DollarSign
-} from '@phosphor-icons/react'
-import { BugBountyPlatform, PlatformConfiguration } from '@/types/bug-bounty'
-import { User } from '@/types/user'
-import { toast } from 'sonner'
+} from '@phosphor-icons/react';
+import { BugBountyPlatform, PlatformConfiguration } from '@/types/bug-bounty';
+import { User } from '@/types/user';
+import { toast } from 'sonner';
 
 interface PlatformConfigurationProps {
   platforms: BugBountyPlatform[]
@@ -38,17 +38,17 @@ export function PlatformConfigurationView({
   currentUser, 
   onUpdateConfiguration 
 }: PlatformConfigurationProps) {
-  const [activeTab, setActiveTab] = useState('platforms')
-  const [editingPlatform, setEditingPlatform] = useState<string | null>(null)
-  const [formData, setFormData] = useState<Partial<PlatformConfiguration>>({})
+  const [activeTab, setActiveTab] = useState('platforms');
+  const [editingPlatform, setEditingPlatform] = useState<string | null>(null);
+  const [formData, setFormData] = useState<Partial<PlatformConfiguration>>({});
 
   const getConfigForPlatform = (platformId: string) => {
-    return configurations.find(c => c.platformId === platformId && c.userId === currentUser.id)
-  }
+    return configurations.find(c => c.platformId === platformId && c.userId === currentUser.id);
+  };
 
   const handleConfigureClick = (platform: BugBountyPlatform) => {
-    const existingConfig = getConfigForPlatform(platform.id)
-    setEditingPlatform(platform.id)
+    const existingConfig = getConfigForPlatform(platform.id);
+    setEditingPlatform(platform.id);
     setFormData(existingConfig || {
       platformId: platform.id,
       userId: currentUser.id,
@@ -77,11 +77,11 @@ export function PlatformConfigurationView({
       isConfigured: false,
       lastConfigured: new Date().toISOString(),
       configuredBy: currentUser.id
-    })
-  }
+    });
+  };
 
   const handleSaveConfiguration = () => {
-    if (!editingPlatform || !formData) return
+    if (!editingPlatform || !formData) {return;}
 
     const config: PlatformConfiguration = {
       ...formData,
@@ -90,32 +90,32 @@ export function PlatformConfigurationView({
       isConfigured: true,
       lastConfigured: new Date().toISOString(),
       configuredBy: currentUser.id
-    } as PlatformConfiguration
+    } as PlatformConfiguration;
 
-    onUpdateConfiguration(config)
-    setEditingPlatform(null)
-    setFormData({})
-    toast.success('Platform configuration saved successfully!')
-  }
+    onUpdateConfiguration(config);
+    setEditingPlatform(null);
+    setFormData({});
+    toast.success('Platform configuration saved successfully!');
+  };
 
   const handleTestConnection = async (platform: BugBountyPlatform) => {
-    toast.info('Testing connection...')
+    toast.info('Testing connection...');
     // Simulate API test
     setTimeout(() => {
-      toast.success(`Successfully connected to ${platform.displayName}!`)
-    }, 2000)
-  }
+      toast.success(`Successfully connected to ${platform.displayName}!`);
+    }, 2000);
+  };
 
   const platformStats = platforms.map(platform => {
-    const config = getConfigForPlatform(platform.id)
+    const config = getConfigForPlatform(platform.id);
     return {
       platform,
       config,
       isConfigured: config?.isConfigured || false,
       lastSync: platform.integration.lastSync,
       status: platform.integration.status
-    }
-  })
+    };
+  });
 
   return (
     <div className="space-y-6">
@@ -512,5 +512,5 @@ export function PlatformConfigurationView({
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

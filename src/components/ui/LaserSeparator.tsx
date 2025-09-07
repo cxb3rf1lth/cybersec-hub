@@ -3,5 +3,5 @@ interface LaserSeparatorProps {
 }
 
 export function LaserSeparator({ className = '' }: LaserSeparatorProps) {
-  return <div className={`laser-separator ${className}`} />
+  return <div className={`laser-separator ${className}`} />;
 }

@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { 
   Users, 
   Calendar, 
@@ -21,10 +21,10 @@ import {
   Award,
   TrendingUp,
   Activity
-} from '@phosphor-icons/react'
-import { TeamHunt, TeamHuntParticipant } from '@/types/bug-bounty'
-import { User } from '@/types/user'
-import { toast } from 'sonner'
+} from '@phosphor-icons/react';
+import { TeamHunt, TeamHuntParticipant } from '@/types/bug-bounty';
+import { User } from '@/types/user';
+import { toast } from 'sonner';
 
 interface TeamHuntDetailsProps {
   hunt: TeamHunt
@@ -41,28 +41,28 @@ export function TeamHuntDetails({
   onLeaveHunt, 
   onUpdateObjective 
 }: TeamHuntDetailsProps) {
-  const [activeTab, setActiveTab] = useState('overview')
-  const [showBinaryRain, setShowBinaryRain] = useState(false)
+  const [activeTab, setActiveTab] = useState('overview');
+  const [showBinaryRain, setShowBinaryRain] = useState(false);
 
-  const isParticipant = hunt.participants.some(p => p.userId === currentUser.id)
-  const canJoin = !isParticipant && hunt.participants.length < hunt.maxParticipants && hunt.status === 'active'
+  const isParticipant = hunt.participants.some(p => p.userId === currentUser.id);
+  const canJoin = !isParticipant && hunt.participants.length < hunt.maxParticipants && hunt.status === 'active';
   
-  const completedObjectives = hunt.objectives.filter(o => o.status === 'completed').length
-  const progressPercentage = (completedObjectives / hunt.objectives.length) * 100
+  const completedObjectives = hunt.objectives.filter(o => o.status === 'completed').length;
+  const progressPercentage = (completedObjectives / hunt.objectives.length) * 100;
 
-  const startDate = new Date(hunt.startDate)
-  const endDate = new Date(hunt.endDate)
-  const now = new Date()
-  const timeLeft = endDate.getTime() - now.getTime()
-  const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24))
+  const startDate = new Date(hunt.startDate);
+  const endDate = new Date(hunt.endDate);
+  const now = new Date();
+  const timeLeft = endDate.getTime() - now.getTime();
+  const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
 
   const handleObjectiveUpdate = (objectiveId: string, newStatus: 'pending' | 'in-progress' | 'completed') => {
-    onUpdateObjective(hunt.id, objectiveId, newStatus)
-    toast.success(`Objective updated to ${newStatus}`)
-  }
+    onUpdateObjective(hunt.id, objectiveId, newStatus);
+    toast.success(`Objective updated to ${newStatus}`);
+  };
 
   const renderBinaryRain = () => {
-    if (!showBinaryRain) return null
+    if (!showBinaryRain) {return null;}
     
     return (
       <div className="absolute inset-0 pointer-events-none opacity-10 overflow-hidden">
@@ -81,8 +81,8 @@ export function TeamHuntDetails({
           ))}
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="space-y-6 relative">
@@ -532,5 +532,5 @@ export function TeamHuntDetails({
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

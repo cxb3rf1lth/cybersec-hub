@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Plus, Bug, Clock, CheckCircle, X, User, Calendar, MessageCircle } from '@phosphor-icons/react'
-import { Repository, User as UserType, Issue } from '@/types/user'
-import { toast } from 'sonner'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Plus, Bug, Clock, CheckCircle, X, User, Calendar, MessageCircle } from '@phosphor-icons/react';
+import { Repository, User as UserType, Issue } from '@/types/user';
+import { toast } from 'sonner';
 
 interface IssuesTabProps {
   repository: Repository
@@ -19,28 +19,28 @@ interface IssuesTabProps {
 }
 
 export function IssuesTab({ repository, currentUser, isOwner }: IssuesTabProps) {
-  const [repositories, setRepositories] = useKVWithFallback<Repository[]>('repositories', [])
-  const [showCreateDialog, setShowCreateDialog] = useState(false)
-  const [filterStatus, setFilterStatus] = useState<'all' | 'open' | 'closed'>('all')
+  const [repositories, setRepositories] = useKVWithFallback<Repository[]>('repositories', []);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [filterStatus, setFilterStatus] = useState<'all' | 'open' | 'closed'>('all');
   
   const [newIssue, setNewIssue] = useState({
     title: '',
     description: '',
     priority: 'medium' as 'low' | 'medium' | 'high' | 'critical',
     labels: ''
-  })
+  });
 
-  const issues = repository.issues || []
+  const issues = repository.issues || [];
   
   const filteredIssues = issues.filter(issue => {
-    if (filterStatus === 'all') return true
-    return issue.status === filterStatus
-  })
+    if (filterStatus === 'all') {return true;}
+    return issue.status === filterStatus;
+  });
 
   const handleCreateIssue = () => {
     if (!newIssue.title.trim()) {
-      toast.error('Issue title is required')
-      return
+      toast.error('Issue title is required');
+      return;
     }
 
     const issue: Issue = {
@@ -54,18 +54,18 @@ export function IssuesTab({ repository, currentUser, isOwner }: IssuesTabProps) 
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       comments: []
-    }
+    };
 
     setRepositories(prev => prev.map(repo => 
       repo.id === repository.id 
         ? { ...repo, issues: [issue, ...repo.issues] }
         : repo
-    ))
+    ));
 
-    setShowCreateDialog(false)
-    setNewIssue({ title: '', description: '', priority: 'medium', labels: '' })
-    toast.success('Issue created successfully')
-  }
+    setShowCreateDialog(false);
+    setNewIssue({ title: '', description: '', priority: 'medium', labels: '' });
+    toast.success('Issue created successfully');
+  };
 
   const handleStatusChange = (issueId: string, newStatus: 'open' | 'closed') => {
     setRepositories(prev => prev.map(repo => 
@@ -84,33 +84,33 @@ export function IssuesTab({ repository, currentUser, isOwner }: IssuesTabProps) 
             )
           }
         : repo
-    ))
+    ));
 
-    toast.success(`Issue ${newStatus === 'closed' ? 'closed' : 'reopened'}`)
-  }
+    toast.success(`Issue ${newStatus === 'closed' ? 'closed' : 'reopened'}`);
+  };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString()
-  }
+    return new Date(dateString).toLocaleDateString();
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'critical': return 'bg-red-500'
-      case 'high': return 'bg-orange-500'
-      case 'medium': return 'bg-yellow-500'
-      case 'low': return 'bg-green-500'
-      default: return 'bg-gray-500'
+      case 'critical': return 'bg-red-500';
+      case 'high': return 'bg-orange-500';
+      case 'medium': return 'bg-yellow-500';
+      case 'low': return 'bg-green-500';
+      default: return 'bg-gray-500';
     }
-  }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'open': return <Bug className="w-4 h-4 text-red-500" />
-      case 'closed': return <CheckCircle className="w-4 h-4 text-green-500" />
-      case 'in_progress': return <Clock className="w-4 h-4 text-yellow-500" />
-      default: return <Bug className="w-4 h-4" />
+      case 'open': return <Bug className="w-4 h-4 text-red-500" />;
+      case 'closed': return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case 'in_progress': return <Clock className="w-4 h-4 text-yellow-500" />;
+      default: return <Bug className="w-4 h-4" />;
     }
-  }
+  };
 
   return (
     <div className="p-6 h-full flex flex-col">
@@ -276,5 +276,5 @@ export function IssuesTab({ repository, currentUser, isOwner }: IssuesTabProps) 
         )}
       </div>
     </div>
-  )
+  );
 }

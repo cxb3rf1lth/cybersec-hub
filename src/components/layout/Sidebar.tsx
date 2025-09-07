@@ -1,12 +1,12 @@
-import { Shield, House, Compass, User, Code, SignOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, BugBeetle, Handshake, DesktopTower, CaretRight, Target, Terminal, Globe, Activity } from '@phosphor-icons/react'
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { User as UserType, Conversation } from '@/types/user'
-import { TeamInvitation } from '@/types/teams'
+import { Shield, House, Compass, User, Code, SignOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, BugBeetle, Handshake, DesktopTower, CaretRight, Target, Terminal, Globe, Activity } from '@phosphor-icons/react';
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { User as UserType, Conversation } from '@/types/user';
+import { TeamInvitation } from '@/types/teams';
 
 interface SidebarProps {
   currentUser: UserType
@@ -16,29 +16,29 @@ interface SidebarProps {
 }
 
 export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: SidebarProps) {
-  const [conversations] = useKVWithFallback<Conversation[]>('conversations', [])
-  const [teamInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
+  const [conversations] = useKVWithFallback<Conversation[]>('conversations', []);
+  const [teamInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', []);
   const [expandedSections, setExpandedSections] = useState({
     operations: true,
     collaboration: false,
     development: false,
     integrations: false
-  })
+  });
   
   // Calculate total unread messages
   const totalUnread = (conversations ?? []).reduce((total, conv) => {
     if (conv.participants.includes(currentUser.id)) {
-      return total + conv.unreadCount
+      return total + conv.unreadCount;
     }
-    return total
-  }, 0)
+    return total;
+  }, 0);
 
   // Calculate pending team invitations
   const pendingInvitations = (teamInvitations ?? []).filter(inv => 
     inv.targetUserId === currentUser.id && 
     inv.status === 'pending' && 
     new Date(inv.expiresAt) > new Date()
-  ).length
+  ).length;
 
   const navigationSections = {
     main: [
@@ -71,14 +71,14 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
       { id: 'integrations' as const, label: 'Platform Connections', icon: Terminal },
       { id: 'api-status' as const, label: 'Status Monitor', icon: Globe },
     ]
-  }
+  };
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
       ...prev,
       [section]: !prev[section]
-    }))
-  }
+    }));
+  };
 
   return (
     <div className="w-64 glass-card h-screen flex flex-col relative overflow-hidden border-r-2 border-border">
@@ -115,7 +115,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
         {/* Main Section */}
         <div className="space-y-1 mb-4">
           {navigationSections.main.map((item) => {
-            const Icon = item.icon
+            const Icon = item.icon;
             return (
               <Button
                 key={item.id}
@@ -129,7 +129,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
                 <Icon className="w-4 h-4 mr-3 shrink-0" />
                 <span className="truncate">{item.label}</span>
               </Button>
-            )
+            );
           })}
         </div>
 
@@ -143,7 +143,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-1 mb-4">
             {navigationSections.operations.map((item) => {
-              const Icon = item.icon
+              const Icon = item.icon;
               return (
                 <Button
                   key={item.id}
@@ -157,7 +157,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
                   <Icon className="w-4 h-4 mr-3 shrink-0" />
                   <span className="truncate">{item.label}</span>
                 </Button>
-              )
+              );
             })}
           </CollapsibleContent>
         </Collapsible>
@@ -172,7 +172,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-1 mb-4">
             {navigationSections.collaboration.map((item) => {
-              const Icon = item.icon
+              const Icon = item.icon;
               return (
                 <Button
                   key={item.id}
@@ -194,7 +194,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
                     </Badge>
                   )}
                 </Button>
-              )
+              );
             })}
           </CollapsibleContent>
         </Collapsible>
@@ -209,7 +209,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-1">
             {navigationSections.development.map((item) => {
-              const Icon = item.icon
+              const Icon = item.icon;
               return (
                 <Button
                   key={item.id}
@@ -223,7 +223,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
                   <Icon className="w-4 h-4 mr-3 shrink-0" />
                   <span className="truncate">{item.label}</span>
                 </Button>
-              )
+              );
             })}
           </CollapsibleContent>
         </Collapsible>
@@ -238,7 +238,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-1 mb-4">
             {navigationSections.integrations.map((item) => {
-              const Icon = item.icon
+              const Icon = item.icon;
               return (
                 <Button
                   key={item.id}
@@ -252,7 +252,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
                   <Icon className="w-4 h-4 mr-3 shrink-0" />
                   <span className="truncate">{item.label}</span>
                 </Button>
-              )
+              );
             })}
           </CollapsibleContent>
         </Collapsible>
@@ -271,5 +271,5 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
         </Button>
       </div>
     </div>
-  )
+  );
 }

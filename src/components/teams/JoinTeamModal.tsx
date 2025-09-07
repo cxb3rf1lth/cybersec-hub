@@ -1,22 +1,22 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
 import { 
   Dialog, 
   DialogContent, 
   DialogHeader, 
   DialogTitle,
   DialogDescription 
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
-import { TeamCard } from './TeamCard'
-import { Team, User, TeamApplication } from '@/types'
-import { useSampleTeamData } from '@/hooks/useSampleTeamData'
-import { Search, Filter, Users, Star, TrendingUp } from '@phosphor-icons/react'
-import { toast } from 'sonner'
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { TeamCard } from './TeamCard';
+import { Team, User, TeamApplication } from '@/types';
+import { useSampleTeamData } from '@/hooks/useSampleTeamData';
+import { Search, Filter, Users, Star, TrendingUp } from '@phosphor-icons/react';
+import { toast } from 'sonner';
 
 interface JoinTeamModalProps {
   onClose: () => void
@@ -24,24 +24,24 @@ interface JoinTeamModalProps {
 }
 
 export function JoinTeamModal({ onClose, currentUser }: JoinTeamModalProps) {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null)
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [application, setApplication] = useState({
     motivation: '',
     experience: '',
     desiredRole: 'security-engineer'
-  })
-  const [submitting, setSubmitting] = useState(false)
+  });
+  const [submitting, setSubmitting] = useState(false);
 
-  const { teams, teamRoles } = useSampleTeamData()
-  const [applications, setApplications] = useKVWithFallback<TeamApplication[]>('teamApplications', [])
+  const { teams, teamRoles } = useSampleTeamData();
+  const [applications, setApplications] = useKVWithFallback<TeamApplication[]>('teamApplications', []);
 
   // Filter teams where user is not already a member
   const availableTeams = teams.filter(team => 
     !team.members.some(member => member.userId === currentUser.id) &&
     team.status !== 'inactive' &&
     team.members.length < team.maxMembers
-  )
+  );
 
   const filteredTeams = availableTeams.filter(team =>
     team.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -49,15 +49,15 @@ export function JoinTeamModal({ onClose, currentUser }: JoinTeamModalProps) {
     team.specialization.some(spec => 
       spec.toLowerCase().includes(searchTerm.toLowerCase())
     )
-  )
+  );
 
   const handleApply = async (team: Team) => {
     if (!application.motivation.trim()) {
-      toast.error('Please provide motivation for joining')
-      return
+      toast.error('Please provide motivation for joining');
+      return;
     }
 
-    setSubmitting(true)
+    setSubmitting(true);
 
     try {
       const newApplication: TeamApplication = {
@@ -73,18 +73,18 @@ export function JoinTeamModal({ onClose, currentUser }: JoinTeamModalProps) {
         portfolio: [], // TODO: Get from user profile
         status: 'pending',
         submittedAt: new Date().toISOString()
-      }
+      };
 
-      setApplications(prev => [...prev, newApplication])
+      setApplications(prev => [...prev, newApplication]);
       
-      toast.success(`Application submitted to ${team.name}`)
-      onClose()
+      toast.success(`Application submitted to ${team.name}`);
+      onClose();
     } catch (error) {
-      toast.error('Failed to submit application')
+      toast.error('Failed to submit application');
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }
+  };
 
   if (selectedTeam) {
     return (
@@ -171,7 +171,7 @@ export function JoinTeamModal({ onClose, currentUser }: JoinTeamModalProps) {
           </div>
         </DialogContent>
       </Dialog>
-    )
+    );
   }
 
   return (
@@ -240,8 +240,8 @@ export function JoinTeamModal({ onClose, currentUser }: JoinTeamModalProps) {
                   <Button
                     size="sm"
                     onClick={(e) => {
-                      e.stopPropagation()
-                      setSelectedTeam(team)
+                      e.stopPropagation();
+                      setSelectedTeam(team);
                     }}
                   >
                     Apply
@@ -273,5 +273,5 @@ export function JoinTeamModal({ onClose, currentUser }: JoinTeamModalProps) {
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

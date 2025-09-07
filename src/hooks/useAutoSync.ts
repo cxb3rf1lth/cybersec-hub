@@ -3,11 +3,11 @@
  * Manages real-time sync with multiple bug bounty platforms
  */
 
-import { useState, useEffect, useCallback } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { bugBountySyncService, SyncedBugBountyData } from '@/lib/real-time-sync'
-import { apiManager } from '@/lib/production-api'
-import { toast } from 'sonner'
+import { useState, useEffect, useCallback } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { bugBountySyncService, SyncedBugBountyData } from '@/lib/real-time-sync';
+import { apiManager } from '@/lib/production-api';
+import { toast } from 'sonner';
 
 export interface AutoSyncConfig {
   enabled: boolean
@@ -47,11 +47,11 @@ const DEFAULT_CONFIG: AutoSyncConfig = {
   },
   totalSyncs: 0,
   errors: 0
-}
+};
 
 export function useAutoSync() {
-  const [config, setConfig] = useKVWithFallback<AutoSyncConfig>('auto_sync_config', DEFAULT_CONFIG)
-  const [syncData, setSyncData] = useState<SyncedBugBountyData | null>(null)
+  const [config, setConfig] = useKVWithFallback<AutoSyncConfig>('auto_sync_config', DEFAULT_CONFIG);
+  const [syncData, setSyncData] = useState<SyncedBugBountyData | null>(null);
   const [metrics, setMetrics] = useState<SyncMetrics>({
     programsCount: 0,
     reportsCount: 0,
@@ -59,111 +59,111 @@ export function useAutoSync() {
     lastSyncDuration: 0,
     successRate: 100,
     nextSyncIn: 0
-  })
-  const [isInitialized, setIsInitialized] = useState(false)
-  const [connectionStatus, setConnectionStatus] = useState<Record<string, 'connected' | 'disconnected' | 'error'>>({})
+  });
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<Record<string, 'connected' | 'disconnected' | 'error'>>({});
 
   // Initialize sync service
   useEffect(() => {
     if (!isInitialized) {
-      initializeSync()
-      setIsInitialized(true)
+      initializeSync();
+      setIsInitialized(true);
     }
-  }, [isInitialized])
+  }, [isInitialized]);
 
   // Monitor connection status
   useEffect(() => {
     const updateConnectionStatus = () => {
-      const connections = apiManager.getAllConnections()
-      const status: Record<string, 'connected' | 'disconnected' | 'error'> = {}
+      const connections = apiManager.getAllConnections();
+      const status: Record<string, 'connected' | 'disconnected' | 'error'> = {};
       
       config.platforms.forEach(platform => {
-        const connection = connections.find(c => c.platform === platform)
-        status[platform] = connection?.status || 'disconnected'
-      })
+        const connection = connections.find(c => c.platform === platform);
+        status[platform] = connection?.status || 'disconnected';
+      });
       
-      setConnectionStatus(status)
-    }
+      setConnectionStatus(status);
+    };
 
-    updateConnectionStatus()
-    const interval = setInterval(updateConnectionStatus, 10000) // Check every 10 seconds
+    updateConnectionStatus();
+    const interval = setInterval(updateConnectionStatus, 10000); // Check every 10 seconds
     
-    return () => clearInterval(interval)
-  }, [config.platforms])
+    return () => clearInterval(interval);
+  }, [config.platforms]);
 
   // Update next sync countdown
   useEffect(() => {
-    if (!config.enabled || !config.lastSync) return
+    if (!config.enabled || !config.lastSync) {return;}
 
     const updateNextSync = () => {
-      const lastSyncTime = new Date(config.lastSync!).getTime()
-      const nextSyncTime = lastSyncTime + config.interval
-      const now = Date.now()
-      const timeUntilNext = Math.max(0, nextSyncTime - now)
+      const lastSyncTime = new Date(config.lastSync!).getTime();
+      const nextSyncTime = lastSyncTime + config.interval;
+      const now = Date.now();
+      const timeUntilNext = Math.max(0, nextSyncTime - now);
       
       setMetrics(prev => ({
         ...prev,
         nextSyncIn: timeUntilNext
-      }))
-    }
+      }));
+    };
 
-    updateNextSync()
-    const interval = setInterval(updateNextSync, 1000)
+    updateNextSync();
+    const interval = setInterval(updateNextSync, 1000);
     
-    return () => clearInterval(interval)
-  }, [config.enabled, config.lastSync, config.interval])
+    return () => clearInterval(interval);
+  }, [config.enabled, config.lastSync, config.interval]);
 
   const initializeSync = async () => {
     try {
       // Load cached data
-      const cachedData = await bugBountySyncService.getCachedData()
+      const cachedData = await bugBountySyncService.getCachedData();
       if (cachedData) {
-        setSyncData(cachedData)
-        updateMetrics(cachedData)
+        setSyncData(cachedData);
+        updateMetrics(cachedData);
       }
 
       // Set up sync listener
-      bugBountySyncService.addSyncListener(handleSyncUpdate)
+      bugBountySyncService.addSyncListener(handleSyncUpdate);
 
       // Configure sync service
-      bugBountySyncService.setSyncInterval(config.interval)
+      bugBountySyncService.setSyncInterval(config.interval);
 
       // Start sync if enabled and connections exist
-      const connections = apiManager.getAllConnections()
+      const connections = apiManager.getAllConnections();
       const hasActiveConnections = connections.some(c => 
         config.platforms.includes(c.platform) && c.status === 'connected'
-      )
+      );
 
       if (config.enabled && hasActiveConnections) {
-        await bugBountySyncService.startSync()
+        await bugBountySyncService.startSync();
         if (config.notifications) {
-          toast.success('Automatic sync enabled')
+          toast.success('Automatic sync enabled');
         }
       }
     } catch (error) {
-      console.error('Failed to initialize auto sync:', error)
+      console.error('Failed to initialize auto sync:', error);
       if (config.notifications) {
-        toast.error('Failed to initialize automatic sync')
+        toast.error('Failed to initialize automatic sync');
       }
     }
-  }
+  };
 
   const handleSyncUpdate = useCallback((data: SyncedBugBountyData) => {
-    setSyncData(data)
-    updateMetrics(data)
+    setSyncData(data);
+    updateMetrics(data);
     
     // Update config with sync statistics
     setConfig(prev => ({
       ...prev,
       lastSync: data.lastSync,
       totalSyncs: prev.totalSyncs + 1
-    }))
+    }));
 
     if (config.notifications) {
-      const totalItems = data.programs.length + data.reports.length + data.earnings.length
-      toast.success(`Sync completed: ${totalItems} items updated`)
+      const totalItems = data.programs.length + data.reports.length + data.earnings.length;
+      toast.success(`Sync completed: ${totalItems} items updated`);
     }
-  }, [config.notifications, setConfig])
+  }, [config.notifications, setConfig]);
 
   const updateMetrics = (data: SyncedBugBountyData) => {
     setMetrics(prev => {
@@ -174,145 +174,145 @@ export function useAutoSync() {
         lastSyncDuration: prev.lastSyncDuration, // Would be calculated from actual sync timing
         successRate: calculateSuccessRate(),
         nextSyncIn: prev.nextSyncIn
-      }
-      return newMetrics
-    })
-  }
+      };
+      return newMetrics;
+    });
+  };
 
   const calculateSuccessRate = (): number => {
-    if (config.totalSyncs === 0) return 100
-    return Math.max(0, ((config.totalSyncs - config.errors) / config.totalSyncs) * 100)
-  }
+    if (config.totalSyncs === 0) {return 100;}
+    return Math.max(0, ((config.totalSyncs - config.errors) / config.totalSyncs) * 100);
+  };
 
   const enableSync = async () => {
     try {
-      const connections = apiManager.getAllConnections()
+      const connections = apiManager.getAllConnections();
       const hasActiveConnections = connections.some(c => 
         config.platforms.includes(c.platform) && c.status === 'connected'
-      )
+      );
 
       if (!hasActiveConnections) {
-        toast.error('No active platform connections found')
-        return false
+        toast.error('No active platform connections found');
+        return false;
       }
 
-      setConfig(prev => ({ ...prev, enabled: true }))
-      await bugBountySyncService.startSync()
+      setConfig(prev => ({ ...prev, enabled: true }));
+      await bugBountySyncService.startSync();
       
       if (config.notifications) {
-        toast.success('Automatic sync enabled')
+        toast.success('Automatic sync enabled');
       }
       
-      return true
+      return true;
     } catch (error) {
-      console.error('Failed to enable sync:', error)
+      console.error('Failed to enable sync:', error);
       if (config.notifications) {
-        toast.error('Failed to enable automatic sync')
+        toast.error('Failed to enable automatic sync');
       }
-      return false
+      return false;
     }
-  }
+  };
 
   const disableSync = () => {
-    setConfig(prev => ({ ...prev, enabled: false }))
-    bugBountySyncService.stopSync()
+    setConfig(prev => ({ ...prev, enabled: false }));
+    bugBountySyncService.stopSync();
     
     if (config.notifications) {
-      toast.info('Automatic sync disabled')
+      toast.info('Automatic sync disabled');
     }
-  }
+  };
 
   const updateInterval = (interval: number) => {
-    setConfig(prev => ({ ...prev, interval }))
-    bugBountySyncService.setSyncInterval(interval)
+    setConfig(prev => ({ ...prev, interval }));
+    bugBountySyncService.setSyncInterval(interval);
     
     if (config.notifications) {
-      const minutes = Math.floor(interval / 60000)
-      toast.success(`Sync interval updated to ${minutes} minutes`)
+      const minutes = Math.floor(interval / 60000);
+      toast.success(`Sync interval updated to ${minutes} minutes`);
     }
-  }
+  };
 
   const updatePlatforms = (platforms: string[]) => {
-    setConfig(prev => ({ ...prev, platforms }))
+    setConfig(prev => ({ ...prev, platforms }));
     
     if (config.notifications) {
-      toast.success(`Sync platforms updated: ${platforms.join(', ')}`)
+      toast.success(`Sync platforms updated: ${platforms.join(', ')}`);
     }
-  }
+  };
 
   const updateDataTypes = (dataTypes: ('programs' | 'reports' | 'earnings')[]) => {
-    setConfig(prev => ({ ...prev, dataTypes }))
+    setConfig(prev => ({ ...prev, dataTypes }));
     
     if (config.notifications) {
-      toast.success(`Sync data types updated: ${dataTypes.join(', ')}`)
+      toast.success(`Sync data types updated: ${dataTypes.join(', ')}`);
     }
-  }
+  };
 
   const forceSync = async () => {
     try {
-      const startTime = Date.now()
-      await bugBountySyncService.forcSync()
-      const duration = Date.now() - startTime
+      const startTime = Date.now();
+      await bugBountySyncService.forcSync();
+      const duration = Date.now() - startTime;
       
-      setMetrics(prev => ({ ...prev, lastSyncDuration: duration }))
+      setMetrics(prev => ({ ...prev, lastSyncDuration: duration }));
       
       if (config.notifications) {
-        toast.success(`Manual sync completed in ${duration}ms`)
+        toast.success(`Manual sync completed in ${duration}ms`);
       }
       
-      return true
+      return true;
     } catch (error) {
-      console.error('Force sync failed:', error)
-      setConfig(prev => ({ ...prev, errors: prev.errors + 1 }))
+      console.error('Force sync failed:', error);
+      setConfig(prev => ({ ...prev, errors: prev.errors + 1 }));
       
       if (config.notifications) {
-        toast.error('Manual sync failed')
+        toast.error('Manual sync failed');
       }
       
-      return false
+      return false;
     }
-  }
+  };
 
   const getConnectedPlatforms = (): string[] => {
     return Object.entries(connectionStatus)
       .filter(([_, status]) => status === 'connected')
-      .map(([platform, _]) => platform)
-  }
+      .map(([platform, _]) => platform);
+  };
 
   const getDisconnectedPlatforms = (): string[] => {
     return Object.entries(connectionStatus)
       .filter(([_, status]) => status !== 'connected')
-      .map(([platform, _]) => platform)
-  }
+      .map(([platform, _]) => platform);
+  };
 
   const getNextSyncTime = (): Date | null => {
-    if (!config.lastSync) return null
-    return new Date(new Date(config.lastSync).getTime() + config.interval)
-  }
+    if (!config.lastSync) {return null;}
+    return new Date(new Date(config.lastSync).getTime() + config.interval);
+  };
 
   const formatNextSyncTime = (): string => {
-    if (metrics.nextSyncIn === 0) return 'Now'
+    if (metrics.nextSyncIn === 0) {return 'Now';}
     
-    const minutes = Math.floor(metrics.nextSyncIn / 60000)
-    const seconds = Math.floor((metrics.nextSyncIn % 60000) / 1000)
+    const minutes = Math.floor(metrics.nextSyncIn / 60000);
+    const seconds = Math.floor((metrics.nextSyncIn % 60000) / 1000);
     
     if (minutes > 0) {
-      return `${minutes}m ${seconds}s`
+      return `${minutes}m ${seconds}s`;
     }
-    return `${seconds}s`
-  }
+    return `${seconds}s`;
+  };
 
   const resetStats = () => {
     setConfig(prev => ({
       ...prev,
       totalSyncs: 0,
       errors: 0
-    }))
+    }));
     
     if (config.notifications) {
-      toast.success('Sync statistics reset')
+      toast.success('Sync statistics reset');
     }
-  }
+  };
 
   return {
     // Configuration
@@ -343,7 +343,7 @@ export function useAutoSync() {
     
     // Utilities
     calculateSuccessRate,
-  }
+  };
 }
 
-export default useAutoSync
+export default useAutoSync;

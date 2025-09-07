@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { X } from '@/lib/phosphor-icons-wrapper'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Slider } from '@/components/ui/slider'
-import { MarketplaceFilters as Filters } from '@/types/marketplace'
+import { useState } from 'react';
+import { X } from '@/lib/phosphor-icons-wrapper';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Slider } from '@/components/ui/slider';
+import { MarketplaceFilters as Filters } from '@/types/marketplace';
 
 interface MarketplaceFiltersProps {
   filters: Filters
@@ -19,7 +19,7 @@ export function MarketplaceFilters({ filters, onFiltersChange, categories }: Mar
   const [priceRange, setPriceRange] = useState([
     filters.priceRange?.min || 0,
     filters.priceRange?.max || 100000
-  ])
+  ]);
 
   const skills = [
     'OWASP Top 10',
@@ -47,78 +47,78 @@ export function MarketplaceFilters({ filters, onFiltersChange, categories }: Mar
     'Secure Coding',
     'Incident Response',
     'Security Awareness'
-  ]
+  ];
 
   const availabilityOptions = [
     { value: 'immediate', label: 'Immediate' },
     { value: 'within-week', label: 'Within a week' },
     { value: 'within-month', label: 'Within a month' },
     { value: 'future', label: 'Future availability' }
-  ]
+  ];
 
   const handleCategoryChange = (category: string, checked: boolean) => {
-    const currentCategories = filters.category || []
+    const currentCategories = filters.category || [];
     const newCategories = checked
       ? [...currentCategories, category]
-      : currentCategories.filter(c => c !== category)
+      : currentCategories.filter(c => c !== category);
     
     onFiltersChange({
       ...filters,
       category: newCategories.length > 0 ? newCategories : undefined
-    })
-  }
+    });
+  };
 
   const handleSkillChange = (skill: string, checked: boolean) => {
-    const currentSkills = filters.skills || []
+    const currentSkills = filters.skills || [];
     const newSkills = checked
       ? [...currentSkills, skill]
-      : currentSkills.filter(s => s !== skill)
+      : currentSkills.filter(s => s !== skill);
     
     onFiltersChange({
       ...filters,
       skills: newSkills.length > 0 ? newSkills : undefined
-    })
-  }
+    });
+  };
 
   const handleAvailabilityChange = (availability: string, checked: boolean) => {
-    const currentAvailability = filters.availability || []
+    const currentAvailability = filters.availability || [];
     const newAvailability = checked
       ? [...currentAvailability, availability]
-      : currentAvailability.filter(a => a !== availability)
+      : currentAvailability.filter(a => a !== availability);
     
     onFiltersChange({
       ...filters,
       availability: newAvailability.length > 0 ? newAvailability : undefined
-    })
-  }
+    });
+  };
 
   const handlePriceRangeChange = (values: number[]) => {
-    setPriceRange(values)
+    setPriceRange(values);
     onFiltersChange({
       ...filters,
       priceRange: {
         min: values[0],
         max: values[1]
       }
-    })
-  }
+    });
+  };
 
   const handleRatingChange = (rating: number) => {
     onFiltersChange({
       ...filters,
       rating: rating === filters.rating ? undefined : rating
-    })
-  }
+    });
+  };
 
   const clearAllFilters = () => {
-    onFiltersChange({})
-    setPriceRange([0, 100000])
-  }
+    onFiltersChange({});
+    setPriceRange([0, 100000]);
+  };
 
   const hasActiveFilters = Object.keys(filters).some(key => {
-    const value = filters[key as keyof Filters]
-    return Array.isArray(value) ? value.length > 0 : value !== undefined
-  })
+    const value = filters[key as keyof Filters];
+    return Array.isArray(value) ? value.length > 0 : value !== undefined;
+  });
 
   return (
     <Card>
@@ -285,5 +285,5 @@ export function MarketplaceFilters({ filters, onFiltersChange, categories }: Mar
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Progress } from '@/components/ui/progress'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { BinaryRain } from '@/components/ui/loading-animations'
+import { useState, useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { BinaryRain } from '@/components/ui/loading-animations';
 import { 
   Target, 
   Shield, 
@@ -44,8 +44,8 @@ import {
   Code,
   Robot,
   Crown
-} from '@phosphor-icons/react'
-import type { User } from '@/types/user'
+} from '@phosphor-icons/react';
+import type { User } from '@/types/user';
 
 interface RedTeamCampaign {
   id: string
@@ -164,18 +164,18 @@ interface Props {
 }
 
 export function RedTeamDashboard({ currentUser }: Props) {
-  const [campaigns, setCampaigns] = useKVWithFallback<RedTeamCampaign[]>('redteam-campaigns', [])
-  const [findings, setFindings] = useKVWithFallback<RedTeamFinding[]>('redteam-findings', [])
-  const [tools, setTools] = useKVWithFallback<RedTeamTool[]>('redteam-tools', [])
-  const [c2Frameworks, setC2Frameworks] = useKVWithFallback<C2Framework[]>('redteam-c2', [])
-  const [payloads, setPayloads] = useKVWithFallback<Payload[]>('redteam-payloads', [])
-  const [techniques, setTechniques] = useKVWithFallback<RedTeamTechnique[]>('redteam-techniques', [])
-  const [activeTab, setActiveTab] = useState('campaigns')
-  const [selectedCampaign, setSelectedCampaign] = useState<RedTeamCampaign | null>(null)
-  const [selectedTechnique, setSelectedTechnique] = useState<RedTeamTechnique | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [showNewCampaign, setShowNewCampaign] = useState(false)
-  const [showNewPayload, setShowNewPayload] = useState(false)
+  const [campaigns, setCampaigns] = useKVWithFallback<RedTeamCampaign[]>('redteam-campaigns', []);
+  const [findings, setFindings] = useKVWithFallback<RedTeamFinding[]>('redteam-findings', []);
+  const [tools, setTools] = useKVWithFallback<RedTeamTool[]>('redteam-tools', []);
+  const [c2Frameworks, setC2Frameworks] = useKVWithFallback<C2Framework[]>('redteam-c2', []);
+  const [payloads, setPayloads] = useKVWithFallback<Payload[]>('redteam-payloads', []);
+  const [techniques, setTechniques] = useKVWithFallback<RedTeamTechnique[]>('redteam-techniques', []);
+  const [activeTab, setActiveTab] = useState('campaigns');
+  const [selectedCampaign, setSelectedCampaign] = useState<RedTeamCampaign | null>(null);
+  const [selectedTechnique, setSelectedTechnique] = useState<RedTeamTechnique | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showNewCampaign, setShowNewCampaign] = useState(false);
+  const [showNewPayload, setShowNewPayload] = useState(false);
 
   // Initialize sample data
   useEffect(() => {
@@ -273,8 +273,8 @@ export function RedTeamDashboard({ currentUser }: Props) {
             alertsGenerated: 15
           }
         }
-      ]
-      setCampaigns(sampleCampaigns)
+      ];
+      setCampaigns(sampleCampaigns);
     }
 
     if (c2Frameworks.length === 0) {
@@ -315,8 +315,8 @@ export function RedTeamDashboard({ currentUser }: Props) {
           encryption: false,
           malleable: true
         }
-      ]
-      setC2Frameworks(sampleC2)
+      ];
+      setC2Frameworks(sampleC2);
     }
 
     if (payloads.length === 0) {
@@ -354,8 +354,8 @@ export function RedTeamDashboard({ currentUser }: Props) {
           deployments: 6,
           createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
         }
-      ]
-      setPayloads(samplePayloads)
+      ];
+      setPayloads(samplePayloads);
     }
 
     if (techniques.length === 0) {
@@ -418,8 +418,8 @@ export function RedTeamDashboard({ currentUser }: Props) {
             }
           ]
         }
-      ]
-      setTechniques(sampleTechniques)
+      ];
+      setTechniques(sampleTechniques);
     }
 
     // Existing initialization code...
@@ -457,8 +457,8 @@ export function RedTeamDashboard({ currentUser }: Props) {
           discoveredAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
           status: 'new'
         }
-      ]
-      setFindings(sampleFindings)
+      ];
+      setFindings(sampleFindings);
     }
 
     if (tools.length === 0) {
@@ -507,88 +507,88 @@ export function RedTeamDashboard({ currentUser }: Props) {
           isInstalled: true,
           version: '1.5.41'
         }
-      ]
-      setTools(sampleTools)
+      ];
+      setTools(sampleTools);
     }
-  }, [campaigns.length, findings.length, tools.length, c2Frameworks.length, payloads.length, techniques.length, setCampaigns, setFindings, setTools, setC2Frameworks, setPayloads, setTechniques, currentUser.id])
+  }, [campaigns.length, findings.length, tools.length, c2Frameworks.length, payloads.length, techniques.length, setCampaigns, setFindings, setTools, setC2Frameworks, setPayloads, setTechniques, currentUser.id]);
 
   const getStatusColor = (status: RedTeamCampaign['status']) => {
     switch (status) {
-      case 'planning': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-      case 'reconnaissance': return 'bg-purple-500/20 text-purple-400 border-purple-500/30'
-      case 'initial-access': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'persistence': return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
-      case 'privilege-escalation': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      case 'lateral-movement': return 'bg-pink-500/20 text-pink-400 border-pink-500/30'
-      case 'collection': return 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30'
-      case 'exfiltration': return 'bg-violet-500/20 text-violet-400 border-violet-500/30'
-      case 'completed': return 'bg-green-500/20 text-green-400 border-green-500/30'
-      case 'failed': return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
-      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+      case 'planning': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'reconnaissance': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+      case 'initial-access': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'persistence': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+      case 'privilege-escalation': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      case 'lateral-movement': return 'bg-pink-500/20 text-pink-400 border-pink-500/30';
+      case 'collection': return 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30';
+      case 'exfiltration': return 'bg-violet-500/20 text-violet-400 border-violet-500/30';
+      case 'completed': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'failed': return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
     }
-  }
+  };
 
   const getSeverityColor = (severity: RedTeamFinding['severity']) => {
     switch (severity) {
-      case 'critical': return 'bg-red-600 text-white'
-      case 'high': return 'bg-red-500 text-white'
-      case 'medium': return 'bg-yellow-500 text-black'
-      case 'low': return 'bg-blue-500 text-white'
-      case 'info': return 'bg-gray-500 text-white'
-      default: return 'bg-gray-500 text-white'
+      case 'critical': return 'bg-red-600 text-white';
+      case 'high': return 'bg-red-500 text-white';
+      case 'medium': return 'bg-yellow-500 text-black';
+      case 'low': return 'bg-blue-500 text-white';
+      case 'info': return 'bg-gray-500 text-white';
+      default: return 'bg-gray-500 text-white';
     }
-  }
+  };
 
   const getPhaseIcon = (phase: RedTeamCampaign['phase']) => {
     switch (phase) {
-      case 'reconnaissance': return <Eye className="w-4 h-4" />
-      case 'weaponization': return <Zap className="w-4 h-4" />
-      case 'delivery': return <Target className="w-4 h-4" />
-      case 'exploitation': return <Bug className="w-4 h-4" />
-      case 'installation': return <Database className="w-4 h-4" />
-      case 'command-control': return <Network className="w-4 h-4" />
-      case 'actions-objectives': return <Crosshair className="w-4 h-4" />
-      default: return <Activity className="w-4 h-4" />
+      case 'reconnaissance': return <Eye className="w-4 h-4" />;
+      case 'weaponization': return <Zap className="w-4 h-4" />;
+      case 'delivery': return <Target className="w-4 h-4" />;
+      case 'exploitation': return <Bug className="w-4 h-4" />;
+      case 'installation': return <Database className="w-4 h-4" />;
+      case 'command-control': return <Network className="w-4 h-4" />;
+      case 'actions-objectives': return <Crosshair className="w-4 h-4" />;
+      default: return <Activity className="w-4 h-4" />;
     }
-  }
+  };
 
   const simulateProgress = async (campaignId: string) => {
-    setIsLoading(true)
+    setIsLoading(true);
     setCampaigns(current => 
       current.map(campaign => 
         campaign.id === campaignId 
           ? { ...campaign, progress: Math.min(campaign.progress + 10, 100) }
           : campaign
       )
-    )
+    );
     
     // Simulate some delay
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setIsLoading(false)
-  }
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    setIsLoading(false);
+  };
 
   const getStealthLevelColor = (level: C2Framework['stealthLevel']) => {
     switch (level) {
-      case 'stealth': return 'bg-purple-500/20 text-purple-400 border-purple-500/30'
-      case 'high': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-      case 'medium': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'low': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+      case 'stealth': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+      case 'high': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'medium': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'low': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
     }
-  }
+  };
 
   const getDifficultyColor = (difficulty: RedTeamTechnique['difficulty']) => {
     switch (difficulty) {
-      case 'beginner': return 'bg-green-500/20 text-green-400 border-green-500/30'
-      case 'intermediate': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'advanced': return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
-      case 'expert': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+      case 'beginner': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'intermediate': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'advanced': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+      case 'expert': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
     }
-  }
+  };
 
   const createPayload = async (data: { name: string; type: Payload['type']; platform: Payload['platform']; evasionTechniques: string[] }) => {
-    setIsLoading(true)
+    setIsLoading(true);
     
     try {
       const newPayload: Payload = {
@@ -601,17 +601,17 @@ export function RedTeamDashboard({ currentUser }: Props) {
         detectionRate: Math.floor(Math.random() * 20),
         deployments: 0,
         createdAt: new Date().toISOString()
-      }
+      };
       
-      setPayloads(current => [...current, newPayload])
-      setShowNewPayload(false)
+      setPayloads(current => [...current, newPayload]);
+      setShowNewPayload(false);
       
       // Simulate payload generation
-      await new Promise(resolve => setTimeout(resolve, 3000))
+      await new Promise(resolve => setTimeout(resolve, 3000));
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="p-6 space-y-6 relative">
@@ -714,8 +714,8 @@ export function RedTeamDashboard({ currentUser }: Props) {
                       size="sm" 
                       className="flex-1 glass-button hover-red-glow"
                       onClick={(e) => {
-                        e.stopPropagation()
-                        simulateProgress(campaign.id)
+                        e.stopPropagation();
+                        simulateProgress(campaign.id);
                       }}
                     >
                       <Play className="w-4 h-4 mr-2" />
@@ -1170,5 +1170,5 @@ export function RedTeamDashboard({ currentUser }: Props) {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

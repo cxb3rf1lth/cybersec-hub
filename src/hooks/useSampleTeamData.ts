@@ -1,11 +1,11 @@
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { useEffect } from 'react'
-import { Team, TeamRole, Permission, TeamType } from '@/types/teams'
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { useEffect } from 'react';
+import { Team, TeamRole, Permission, TeamType } from '@/types/teams';
 
 export function useSampleTeamData() {
-  const [teams = [], setTeams] = useKVWithFallback<Team[]>('teams', [])
-  const [teamRoles = [], setTeamRoles] = useKVWithFallback<TeamRole[]>('teamRoles', [])
-  const [permissions = [], setPermissions] = useKVWithFallback<Permission[]>('permissions', [])
+  const [teams = [], setTeams] = useKVWithFallback<Team[]>('teams', []);
+  const [teamRoles = [], setTeamRoles] = useKVWithFallback<TeamRole[]>('teamRoles', []);
+  const [permissions = [], setPermissions] = useKVWithFallback<Permission[]>('permissions', []);
 
   useEffect(() => {
     if (permissions.length === 0) {
@@ -35,8 +35,8 @@ export function useSampleTeamData() {
         { id: 'delete-team', name: 'Delete Team', description: 'Permanently delete the team', category: 'admin' },
         { id: 'transfer-ownership', name: 'Transfer Ownership', description: 'Transfer team ownership to another member', category: 'admin' },
         { id: 'view-analytics', name: 'View Analytics', description: 'Access team performance analytics', category: 'admin' }
-      ]
-      setPermissions(samplePermissions)
+      ];
+      setPermissions(samplePermissions);
     }
 
     if (teamRoles.length === 0) {
@@ -133,19 +133,19 @@ export function useSampleTeamData() {
           priority: 50,
           color: '#8E44AD'
         }
-      ]
-      setTeamRoles(sampleRoles)
+      ];
+      setTeamRoles(sampleRoles);
     }
 
     if (teams.length === 0 && teamRoles.length > 0) {
-      const teamLeaderRole = teamRoles.find(r => r.id === 'team-leader')
-      const seniorEngineerRole = teamRoles.find(r => r.id === 'senior-security-engineer')
-      const penTesterRole = teamRoles.find(r => r.id === 'penetration-tester')
-      const securityAnalystRole = teamRoles.find(r => r.id === 'security-analyst')
-      const securityEngineerRole = teamRoles.find(r => r.id === 'security-engineer')
+      const teamLeaderRole = teamRoles.find(r => r.id === 'team-leader');
+      const seniorEngineerRole = teamRoles.find(r => r.id === 'senior-security-engineer');
+      const penTesterRole = teamRoles.find(r => r.id === 'penetration-tester');
+      const securityAnalystRole = teamRoles.find(r => r.id === 'security-analyst');
+      const securityEngineerRole = teamRoles.find(r => r.id === 'security-engineer');
 
       if (!teamLeaderRole || !seniorEngineerRole || !penTesterRole || !securityAnalystRole || !securityEngineerRole) {
-        return
+        return;
       }
 
       const sampleTeams: Team[] = [
@@ -334,10 +334,10 @@ export function useSampleTeamData() {
           requiredCertifications: [],
           applicationRequired: true
         }
-      ]
-      setTeams(sampleTeams)
+      ];
+      setTeams(sampleTeams);
     }
-  }, [teams, teamRoles, permissions, setTeams, setTeamRoles, setPermissions])
+  }, [teams, teamRoles, permissions, setTeams, setTeamRoles, setPermissions]);
 
-  return { teams, teamRoles, permissions }
+  return { teams, teamRoles, permissions };
 }

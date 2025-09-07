@@ -1,10 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { StatusIndicator } from '@/components/ui/StatusIndicator'
-import { BadgeGrid } from '@/components/ui/SecurityBadge'
-import { CertificationList } from '@/components/ui/CertificationBadge'
-import { UserCard } from '@/components/ui/UserCard'
-import { User, UserStatus, SecurityBadge, SecurityCertification } from '@/types/user'
-import { Users, Trophy, Certificate } from '@phosphor-icons/react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { StatusIndicator } from '@/components/ui/StatusIndicator';
+import { BadgeGrid } from '@/components/ui/SecurityBadge';
+import { CertificationList } from '@/components/ui/CertificationBadge';
+import { UserCard } from '@/components/ui/UserCard';
+import { User, UserStatus, SecurityBadge, SecurityCertification } from '@/types/user';
+import { Users, Trophy, Certificate } from '@phosphor-icons/react';
 
 const sampleUser: User = {
   id: 'demo_user',
@@ -113,7 +113,7 @@ const sampleUser: User = {
     isActive: true,
     expiryDate: '2025-06-15'
   }
-}
+};
 
 const statusTypes: UserStatus[] = [
   { type: 'available', customMessage: 'Ready for collaboration' },
@@ -123,7 +123,7 @@ const statusTypes: UserStatus[] = [
   { type: 'on-hunt', customMessage: 'Actively hunting bugs', isActivelyHunting: true },
   { type: 'analyzing', customMessage: 'Binary analysis in progress' },
   { type: 'offline', lastSeen: '2024-01-15T10:00:00.000Z' }
-]
+];
 
 export function StatusBadgeDemo() {
   return (
@@ -241,5 +241,5 @@ export function StatusBadgeDemo() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   TrendUp, 
   TrendDown, 
@@ -18,42 +18,42 @@ import {
   Clock,
   CheckCircle,
   XCircle
-} from '@phosphor-icons/react'
-import { User } from '@/types/user'
-import { Earning, EarningsAnalytics, TeamEarningsAnalytics, PaymentStatus } from '@/types/earnings'
-import { EarningsOverview } from '@/components/earnings/EarningsOverview'
-import { PaymentHistoryView } from '@/components/earnings/PaymentHistoryView'
-import { TeamPerformanceView } from '@/components/earnings/TeamPerformanceView'
-import { EarningsGoalsView } from '@/components/earnings/EarningsGoalsView'
-import { AnalyticsView } from '@/components/earnings/AnalyticsView'
+} from '@phosphor-icons/react';
+import { User } from '@/types/user';
+import { Earning, EarningsAnalytics, TeamEarningsAnalytics, PaymentStatus } from '@/types/earnings';
+import { EarningsOverview } from '@/components/earnings/EarningsOverview';
+import { PaymentHistoryView } from '@/components/earnings/PaymentHistoryView';
+import { TeamPerformanceView } from '@/components/earnings/TeamPerformanceView';
+import { EarningsGoalsView } from '@/components/earnings/EarningsGoalsView';
+import { AnalyticsView } from '@/components/earnings/AnalyticsView';
 
 interface EarningsViewProps {
   currentUser: User
 }
 
 export function EarningsView({ currentUser }: EarningsViewProps) {
-  const [activeTab, setActiveTab] = useState('overview')
-  const [earnings] = useKVWithFallback<Earning[]>(`earnings-${currentUser.id}`, [])
-  const [analytics] = useKVWithFallback<EarningsAnalytics | null>(`analytics-${currentUser.id}`, null)
+  const [activeTab, setActiveTab] = useState('overview');
+  const [earnings] = useKVWithFallback<Earning[]>(`earnings-${currentUser.id}`, []);
+  const [analytics] = useKVWithFallback<EarningsAnalytics | null>(`analytics-${currentUser.id}`, null);
 
   // Calculate quick stats
-  const totalEarnings = earnings.reduce((sum, earning) => sum + earning.amount, 0)
-  const paidEarnings = earnings.filter(e => e.status === 'paid').reduce((sum, e) => sum + e.amount, 0)
-  const pendingEarnings = earnings.filter(e => e.status === 'pending').reduce((sum, e) => sum + e.amount, 0)
+  const totalEarnings = earnings.reduce((sum, earning) => sum + earning.amount, 0);
+  const paidEarnings = earnings.filter(e => e.status === 'paid').reduce((sum, e) => sum + e.amount, 0);
+  const pendingEarnings = earnings.filter(e => e.status === 'pending').reduce((sum, e) => sum + e.amount, 0);
   const thisMonthEarnings = earnings.filter(e => {
-    const earnedDate = new Date(e.earnedAt)
-    const now = new Date()
-    return earnedDate.getMonth() === now.getMonth() && earnedDate.getFullYear() === now.getFullYear()
-  }).reduce((sum, e) => sum + e.amount, 0)
+    const earnedDate = new Date(e.earnedAt);
+    const now = new Date();
+    return earnedDate.getMonth() === now.getMonth() && earnedDate.getFullYear() === now.getFullYear();
+  }).reduce((sum, e) => sum + e.amount, 0);
 
   const lastMonthEarnings = earnings.filter(e => {
-    const earnedDate = new Date(e.earnedAt)
-    const now = new Date()
-    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-    return earnedDate.getMonth() === lastMonth.getMonth() && earnedDate.getFullYear() === lastMonth.getFullYear()
-  }).reduce((sum, e) => sum + e.amount, 0)
+    const earnedDate = new Date(e.earnedAt);
+    const now = new Date();
+    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    return earnedDate.getMonth() === lastMonth.getMonth() && earnedDate.getFullYear() === lastMonth.getFullYear();
+  }).reduce((sum, e) => sum + e.amount, 0);
 
-  const monthlyGrowth = lastMonthEarnings > 0 ? ((thisMonthEarnings - lastMonthEarnings) / lastMonthEarnings) * 100 : 0
+  const monthlyGrowth = lastMonthEarnings > 0 ? ((thisMonthEarnings - lastMonthEarnings) / lastMonthEarnings) * 100 : 0;
 
   return (
     <div className="flex-1 overflow-auto bg-background">
@@ -167,5 +167,5 @@ export function EarningsView({ currentUser }: EarningsViewProps) {
         </Tabs>
       </div>
     </div>
-  )
+  );
 }

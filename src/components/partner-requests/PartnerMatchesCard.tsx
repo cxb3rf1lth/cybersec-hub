@@ -1,10 +1,10 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { PartnerMatch, User } from '@/types'
-import { Star, Target, ArrowRight, TrendUp } from '@phosphor-icons/react'
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { PartnerMatch, User } from '@/types';
+import { Star, Target, ArrowRight, TrendUp } from '@phosphor-icons/react';
 
 interface PartnerMatchesCardProps {
   matches: PartnerMatch[]
@@ -14,18 +14,18 @@ interface PartnerMatchesCardProps {
 
 export function PartnerMatchesCard({ matches, currentUser, onViewRequest }: PartnerMatchesCardProps) {
   const getMatchScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-400'
-    if (score >= 60) return 'text-yellow-400'
-    if (score >= 40) return 'text-orange-400'
-    return 'text-red-400'
-  }
+    if (score >= 80) {return 'text-green-400';}
+    if (score >= 60) {return 'text-yellow-400';}
+    if (score >= 40) {return 'text-orange-400';}
+    return 'text-red-400';
+  };
 
   const getMatchScoreBackground = (score: number) => {
-    if (score >= 80) return 'bg-green-500/20'
-    if (score >= 60) return 'bg-yellow-500/20'
-    if (score >= 40) return 'bg-orange-500/20'
-    return 'bg-red-500/20'
-  }
+    if (score >= 80) {return 'bg-green-500/20';}
+    if (score >= 60) {return 'bg-yellow-500/20';}
+    if (score >= 40) {return 'bg-orange-500/20';}
+    return 'bg-red-500/20';
+  };
 
   if (matches.length === 0) {
     return (
@@ -42,7 +42,7 @@ export function PartnerMatchesCard({ matches, currentUser, onViewRequest }: Part
           </p>
         </div>
       </Card>
-    )
+    );
   }
 
   return (
@@ -145,5 +145,5 @@ export function PartnerMatchesCard({ matches, currentUser, onViewRequest }: Part
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

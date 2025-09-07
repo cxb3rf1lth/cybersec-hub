@@ -1,13 +1,13 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Star, GitFork, List, Wrench, CalendarBlank, Terminal } from '@phosphor-icons/react'
-import { ToolRepository, Tool } from '@/types/templates'
-import { User } from '@/types/user'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Star, GitFork, List, Wrench, CalendarBlank, Terminal } from '@phosphor-icons/react';
+import { ToolRepository, Tool } from '@/types/templates';
+import { User } from '@/types/user';
 
 interface RepositoryDetailModalProps {
   repository: ToolRepository
@@ -19,45 +19,45 @@ interface RepositoryDetailModalProps {
 export function RepositoryDetailModal({ repository, currentUser, onClose, onFork }: RepositoryDetailModalProps) {
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'reconnaissance': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-      case 'exploitation': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      case 'post-exploitation': return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
-      case 'defense': return 'bg-green-500/20 text-green-400 border-green-500/30'
-      case 'analysis': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'automation': return 'bg-purple-500/20 text-purple-400 border-purple-500/30'
-      default: return 'bg-muted'
+      case 'reconnaissance': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'exploitation': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      case 'post-exploitation': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+      case 'defense': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'analysis': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'automation': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+      default: return 'bg-muted';
     }
-  }
+  };
 
   const getToolComplexityColor = (complexity: string) => {
     switch (complexity) {
-      case 'simple': return 'bg-green-500/20 text-green-400 border-green-500/30'
-      case 'moderate': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'complex': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      default: return 'bg-muted'
+      case 'simple': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'moderate': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'complex': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      default: return 'bg-muted';
     }
-  }
+  };
 
   const getToolCategoryColor = (category: string) => {
     switch (category) {
-      case 'scanner': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-      case 'exploit': return 'bg-red-500/20 text-red-400 border-red-500/30'
-      case 'payload': return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
-      case 'encoder': return 'bg-purple-500/20 text-purple-400 border-purple-500/30'
-      case 'decoder': return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'
-      case 'analyzer': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      case 'monitor': return 'bg-green-500/20 text-green-400 border-green-500/30'
-      default: return 'bg-muted'
+      case 'scanner': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'exploit': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      case 'payload': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+      case 'encoder': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+      case 'decoder': return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30';
+      case 'analyzer': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'monitor': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      default: return 'bg-muted';
     }
-  }
+  };
 
   const groupedTools = repository.tools.reduce((acc, tool) => {
     if (!acc[tool.category]) {
-      acc[tool.category] = []
+      acc[tool.category] = [];
     }
-    acc[tool.category].push(tool)
-    return acc
-  }, {} as Record<string, Tool[]>)
+    acc[tool.category].push(tool);
+    return acc;
+  }, {} as Record<string, Tool[]>);
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -257,5 +257,5 @@ export function RepositoryDetailModal({ repository, currentUser, onClose, onFork
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

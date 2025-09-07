@@ -1,62 +1,62 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Check, Palette, Keyboard } from '@phosphor-icons/react'
-import { useTheme, THEME_CONFIGS, ThemeColor } from '@/hooks/useTheme'
-import { toast } from 'sonner'
-import { useEffect } from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Check, Palette, Keyboard } from '@phosphor-icons/react';
+import { useTheme, THEME_CONFIGS, ThemeColor } from '@/hooks/useTheme';
+import { toast } from 'sonner';
+import { useEffect } from 'react';
 
 export function ThemeSelector() {
-  const { currentTheme, changeTheme, availableThemes } = useTheme()
+  const { currentTheme, changeTheme, availableThemes } = useTheme();
 
   const handleThemeChange = (themeId: ThemeColor) => {
-    changeTheme(themeId)
+    changeTheme(themeId);
     toast.success(`Theme changed to ${THEME_CONFIGS[themeId].name}`, {
       description: 'Your cyberpunk interface has been updated with the new color scheme.',
       duration: 2000
-    })
-  }
+    });
+  };
 
   const quickSwitchToNextTheme = () => {
-    const themes: ThemeColor[] = ['red', 'purple', 'blue', 'green']
-    const currentIndex = themes.indexOf(currentTheme)
-    const nextIndex = (currentIndex + 1) % themes.length
-    handleThemeChange(themes[nextIndex])
-  }
+    const themes: ThemeColor[] = ['red', 'purple', 'blue', 'green'];
+    const currentIndex = themes.indexOf(currentTheme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    handleThemeChange(themes[nextIndex]);
+  };
 
   // Keyboard shortcuts for theme switching
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.shiftKey) {
-        const themes: ThemeColor[] = ['red', 'purple', 'blue', 'green']
+        const themes: ThemeColor[] = ['red', 'purple', 'blue', 'green'];
         switch (event.key) {
           case 'R':
-            event.preventDefault()
-            handleThemeChange('red')
-            break
+            event.preventDefault();
+            handleThemeChange('red');
+            break;
           case 'P':
-            event.preventDefault()
-            handleThemeChange('purple')
-            break
+            event.preventDefault();
+            handleThemeChange('purple');
+            break;
           case 'B':
-            event.preventDefault()
-            handleThemeChange('blue')
-            break
+            event.preventDefault();
+            handleThemeChange('blue');
+            break;
           case 'G':
-            event.preventDefault()
-            handleThemeChange('green')
-            break
+            event.preventDefault();
+            handleThemeChange('green');
+            break;
           case 'T':
-            event.preventDefault()
-            quickSwitchToNextTheme()
-            break
+            event.preventDefault();
+            quickSwitchToNextTheme();
+            break;
         }
       }
-    }
+    };
 
-    window.addEventListener('keydown', handleKeyPress)
-    return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [currentTheme])
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [currentTheme]);
 
   return (
     <Card className="panel-dark">
@@ -152,8 +152,8 @@ export function ThemeSelector() {
                       boxShadow: `0 0 8px ${theme.colors.primary}50`
                     }}
                     onClick={(e) => {
-                      e.stopPropagation()
-                      handleThemeChange(theme.id)
+                      e.stopPropagation();
+                      handleThemeChange(theme.id);
                     }}
                   >
                     Primary
@@ -234,5 +234,5 @@ export function ThemeSelector() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

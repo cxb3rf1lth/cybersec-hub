@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-import { MatrixDots, CyberProgress } from '@/components/ui/loading-animations'
-import { User, Specialization } from '@/types/user'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { MatrixDots, CyberProgress } from '@/components/ui/loading-animations';
+import { User, Specialization } from '@/types/user';
 
 interface AuthModalProps {
   onClose: () => void
@@ -18,18 +18,18 @@ const SPECIALIZATIONS: Specialization[] = [
   'Red Team', 'Blue Team', 'Bug Bounty', 'Penetration Testing',
   'Ethical Hacking', 'Malware Analysis', 'Incident Response',
   'Security Research', 'OSINT', 'Reverse Engineering'
-]
+];
 
 export function AuthModal({ onClose, onLogin }: AuthModalProps) {
-  const [allUsers, setAllUsers] = useKVWithFallback<User[]>('allUsers', [])
-  const [isSignUp, setIsSignUp] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [allUsers, setAllUsers] = useKVWithFallback<User[]>('allUsers', []);
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     bio: '',
     specializations: [] as Specialization[]
-  })
+  });
 
   const handleSpecializationToggle = (spec: Specialization) => {
     setFormData(prev => ({
@@ -37,30 +37,30 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
       specializations: prev.specializations.includes(spec)
         ? prev.specializations.filter(s => s !== spec)
         : [...prev.specializations, spec]
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     
-    if (!formData.username || !formData.email) return
+    if (!formData.username || !formData.email) {return;}
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     // Simulate authentication delay
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     if (isSignUp) {
       // Check if user already exists
       const existingUser = allUsers.find(user => 
         user.username === formData.username || user.email === formData.email
-      )
+      );
       
       if (existingUser) {
         // User exists, log them in
-        onLogin(existingUser)
-        setIsLoading(false)
-        return
+        onLogin(existingUser);
+        setIsLoading(false);
+        return;
       }
 
       // Create new user
@@ -73,29 +73,29 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
         followers: [],
         following: [],
         joinedAt: new Date().toISOString()
-      }
+      };
 
       // Add to global users list
-      setAllUsers((prevUsers) => [...prevUsers, user])
-      onLogin(user)
+      setAllUsers((prevUsers) => [...prevUsers, user]);
+      onLogin(user);
     } else {
       // Sign in - find existing user
       const existingUser = allUsers.find(user => 
         user.username === formData.username || user.email === formData.email
-      )
+      );
       
       if (existingUser) {
-        onLogin(existingUser)
+        onLogin(existingUser);
       } else {
         // If user doesn't exist, switch to sign up
-        setIsSignUp(true)
-        setIsLoading(false)
-        return
+        setIsSignUp(true);
+        setIsLoading(false);
+        return;
       }
     }
     
-    setIsLoading(false)
-  }
+    setIsLoading(false);
+  };
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -198,5 +198,5 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

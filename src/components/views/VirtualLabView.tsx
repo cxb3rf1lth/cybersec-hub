@@ -1,24 +1,24 @@
-import { useState } from 'react'
-import { Plus, Play, Stop, Trash } from '@phosphor-icons/react'
-import { useVirtualLab } from '@/hooks/useVirtualLab'
-import type { User } from '@/types/user'
-import type { VM } from '@/types/virtual-lab'
-import { CreateVMForm } from '@/components/virtual-lab/CreateVMForm'
-import { VMConsole } from '@/components/virtual-lab/VMConsole'
+import { useState } from 'react';
+import { Plus, Play, Stop, Trash } from '@phosphor-icons/react';
+import { useVirtualLab } from '@/hooks/useVirtualLab';
+import type { User } from '@/types/user';
+import type { VM } from '@/types/virtual-lab';
+import { CreateVMForm } from '@/components/virtual-lab/CreateVMForm';
+import { VMConsole } from '@/components/virtual-lab/VMConsole';
 
 interface Props {
   currentUser: User
 }
 
 export function VirtualLabView({ currentUser }: Props) {
-  const { vms, provision, start, stop, destroy } = useVirtualLab(currentUser.id)
-  const [showCreate, setShowCreate] = useState(vms.length === 0)
-  const [selected, setSelected] = useState<VM | null>(vms[0] ?? null)
+  const { vms, provision, start, stop, destroy } = useVirtualLab(currentUser.id);
+  const [showCreate, setShowCreate] = useState(vms.length === 0);
+  const [selected, setSelected] = useState<VM | null>(vms[0] ?? null);
 
   function handleCreate(data: { name: string; distro: 'kali' | 'arch'; notes?: string }) {
-    const vm = provision(data)
-    setShowCreate(false)
-    setSelected(vm)
+    const vm = provision(data);
+    setShowCreate(false);
+    setSelected(vm);
   }
 
   return (
@@ -55,15 +55,15 @@ export function VirtualLabView({ currentUser }: Props) {
                   </div>
                   <div className="flex items-center gap-2">
                     {vm.status !== 'running' ? (
-                      <button className="px-2 py-1 text-xs rounded-md glass-button" onClick={(e) => { e.stopPropagation(); start(vm.id) }}>
+                      <button className="px-2 py-1 text-xs rounded-md glass-button" onClick={(e) => { e.stopPropagation(); start(vm.id); }}>
                         <Play />
                       </button>
                     ) : (
-                      <button className="px-2 py-1 text-xs rounded-md glass-button" onClick={(e) => { e.stopPropagation(); stop(vm.id) }}>
+                      <button className="px-2 py-1 text-xs rounded-md glass-button" onClick={(e) => { e.stopPropagation(); stop(vm.id); }}>
                         <Stop />
                       </button>
                     )}
-                    <button className="px-2 py-1 text-xs rounded-md glass-button" onClick={(e) => { e.stopPropagation(); destroy(vm.id); if (selected?.id === vm.id) setSelected(null) }}>
+                    <button className="px-2 py-1 text-xs rounded-md glass-button" onClick={(e) => { e.stopPropagation(); destroy(vm.id); if (selected?.id === vm.id) {setSelected(null);} }}>
                       <Trash />
                     </button>
                   </div>
@@ -103,5 +103,5 @@ export function VirtualLabView({ currentUser }: Props) {
         </div>
       </div>
     </div>
-  )
+  );
 }

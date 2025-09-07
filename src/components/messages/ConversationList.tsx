@@ -1,8 +1,8 @@
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Conversation, User } from '@/types/user'
-import { formatDistanceToNow } from 'date-fns'
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Conversation, User } from '@/types/user';
+import { formatDistanceToNow } from 'date-fns';
 
 interface ConversationListProps {
   conversations: Conversation[]
@@ -17,16 +17,16 @@ export function ConversationList({
   selectedConversationId, 
   onSelectConversation 
 }: ConversationListProps) {
-  const [users] = useKVWithFallback<User[]>('allUsers', [])
+  const [users] = useKVWithFallback<User[]>('allUsers', []);
 
   const getOtherParticipant = (conversation: Conversation) => {
-    const otherParticipantId = conversation.participants.find(id => id !== currentUserId)
-    return users.find(user => user.id === otherParticipantId)
-  }
+    const otherParticipantId = conversation.participants.find(id => id !== currentUserId);
+    return users.find(user => user.id === otherParticipantId);
+  };
 
   const sortedConversations = [...conversations].sort((a, b) => 
     new Date(b.lastMessageAt).getTime() - new Date(a.lastMessageAt).getTime()
-  )
+  );
 
   if (conversations.length === 0) {
     return (
@@ -36,16 +36,16 @@ export function ConversationList({
           <p className="text-sm">Start a new conversation to get started</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="flex-1 overflow-y-auto">
       {sortedConversations.map((conversation) => {
-        const otherParticipant = getOtherParticipant(conversation)
-        const isSelected = conversation.id === selectedConversationId
+        const otherParticipant = getOtherParticipant(conversation);
+        const isSelected = conversation.id === selectedConversationId;
         
-        if (!otherParticipant) return null
+        if (!otherParticipant) {return null;}
 
         return (
           <div
@@ -97,8 +97,8 @@ export function ConversationList({
               </div>
             </div>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

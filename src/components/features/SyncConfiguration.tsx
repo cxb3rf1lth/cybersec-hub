@@ -3,14 +3,14 @@
  * Advanced settings for managing real-time data synchronization
  */
 
-import React, { useState } from 'react'
-import { useAutoSync } from '@/hooks/useAutoSync'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Switch } from '@/components/ui/switch'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { toast } from 'sonner'
+import React, { useState } from 'react';
+import { useAutoSync } from '@/hooks/useAutoSync';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { toast } from 'sonner';
 import { 
   Zap, 
   Settings, 
@@ -26,7 +26,7 @@ import {
   Timer,
   Bell,
   Target
-} from '@phosphor-icons/react'
+} from '@phosphor-icons/react';
 
 interface SyncConfigurationProps {
   onClose?: () => void
@@ -37,13 +37,13 @@ const PLATFORM_OPTIONS = [
   { id: 'bugcrowd', name: 'Bugcrowd', color: 'bg-purple-500' },
   { id: 'intigriti', name: 'Intigriti', color: 'bg-green-500' },
   { id: 'yeswehack', name: 'YesWeHack', color: 'bg-orange-500' }
-]
+];
 
 const DATA_TYPE_OPTIONS = [
   { id: 'programs', name: 'Bug Bounty Programs', icon: Target },
   { id: 'reports', name: 'Vulnerability Reports', icon: Shield },
   { id: 'earnings', name: 'Earnings & Bounties', icon: BarChart3 }
-]
+];
 
 const INTERVAL_OPTIONS = [
   { value: 60000, label: '1 minute', description: 'High frequency' },
@@ -51,7 +51,7 @@ const INTERVAL_OPTIONS = [
   { value: 600000, label: '10 minutes', description: 'Balanced' },
   { value: 1800000, label: '30 minutes', description: 'Low frequency' },
   { value: 3600000, label: '1 hour', description: 'Minimal' }
-]
+];
 
 export function SyncConfiguration({ onClose }: SyncConfigurationProps) {
   const {
@@ -72,76 +72,76 @@ export function SyncConfiguration({ onClose }: SyncConfigurationProps) {
     disconnectedPlatforms,
     nextSyncFormatted,
     calculateSuccessRate
-  } = useAutoSync()
+  } = useAutoSync();
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [selectedTab, setSelectedTab] = useState<'general' | 'platforms' | 'data' | 'advanced'>('general')
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedTab, setSelectedTab] = useState<'general' | 'platforms' | 'data' | 'advanced'>('general');
 
   const handleToggleSync = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     
     try {
       if (isEnabled) {
-        disableSync()
+        disableSync();
       } else {
-        const success = await enableSync()
+        const success = await enableSync();
         if (!success) {
-          toast.error('Failed to enable sync - check platform connections')
+          toast.error('Failed to enable sync - check platform connections');
         }
       }
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleForceSync = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     
     try {
-      const success = await forceSync()
+      const success = await forceSync();
       if (success) {
-        toast.success('Manual sync completed successfully')
+        toast.success('Manual sync completed successfully');
       }
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handlePlatformToggle = (platformId: string, enabled: boolean) => {
     const newPlatforms = enabled 
       ? [...config.platforms, platformId]
-      : config.platforms.filter(p => p !== platformId)
+      : config.platforms.filter(p => p !== platformId);
     
-    updatePlatforms(newPlatforms)
-  }
+    updatePlatforms(newPlatforms);
+  };
 
   const handleDataTypeToggle = (dataType: 'programs' | 'reports' | 'earnings', enabled: boolean) => {
     const newDataTypes = enabled
       ? [...config.dataTypes, dataType]
-      : config.dataTypes.filter(t => t !== dataType)
+      : config.dataTypes.filter(t => t !== dataType);
     
-    updateDataTypes(newDataTypes)
-  }
+    updateDataTypes(newDataTypes);
+  };
 
   const getPlatformStatus = (platformId: string) => {
-    const status = connectionStatus[platformId]
-    const isSelected = config.platforms.includes(platformId)
+    const status = connectionStatus[platformId];
+    const isSelected = config.platforms.includes(platformId);
     
-    if (!isSelected) return { status: 'disabled', color: 'bg-muted', icon: XCircle }
+    if (!isSelected) {return { status: 'disabled', color: 'bg-muted', icon: XCircle };}
     
     switch (status) {
       case 'connected':
-        return { status: 'connected', color: 'bg-green-500', icon: CheckCircle }
+        return { status: 'connected', color: 'bg-green-500', icon: CheckCircle };
       case 'error':
-        return { status: 'error', color: 'bg-red-500', icon: AlertTriangle }
+        return { status: 'error', color: 'bg-red-500', icon: AlertTriangle };
       default:
-        return { status: 'disconnected', color: 'bg-yellow-500', icon: XCircle }
+        return { status: 'disconnected', color: 'bg-yellow-500', icon: XCircle };
     }
-  }
+  };
 
   const getSuccessRate = () => {
-    return calculateSuccessRate()
-  }
+    return calculateSuccessRate();
+  };
 
   return (
     <div className="space-y-6">
@@ -357,8 +357,8 @@ export function SyncConfiguration({ onClose }: SyncConfigurationProps) {
             </div>
             
             {PLATFORM_OPTIONS.map(platform => {
-              const platformStatus = getPlatformStatus(platform.id)
-              const isSelected = config.platforms.includes(platform.id)
+              const platformStatus = getPlatformStatus(platform.id);
+              const isSelected = config.platforms.includes(platform.id);
               
               return (
                 <Card key={platform.id} className="p-4">
@@ -384,7 +384,7 @@ export function SyncConfiguration({ onClose }: SyncConfigurationProps) {
                     />
                   </div>
                 </Card>
-              )
+              );
             })}
           </div>
         )}
@@ -392,7 +392,7 @@ export function SyncConfiguration({ onClose }: SyncConfigurationProps) {
         {selectedTab === 'data' && (
           <div className="space-y-4">
             {DATA_TYPE_OPTIONS.map(dataType => {
-              const isSelected = config.dataTypes.includes(dataType.id as any)
+              const isSelected = config.dataTypes.includes(dataType.id as any);
               
               return (
                 <Card key={dataType.id} className="p-4">
@@ -417,7 +417,7 @@ export function SyncConfiguration({ onClose }: SyncConfigurationProps) {
                     />
                   </div>
                 </Card>
-              )
+              );
             })}
           </div>
         )}
@@ -477,7 +477,7 @@ export function SyncConfiguration({ onClose }: SyncConfigurationProps) {
         )}
       </Card>
     </div>
-  )
+  );
 }
 
-export default SyncConfiguration
+export default SyncConfiguration;

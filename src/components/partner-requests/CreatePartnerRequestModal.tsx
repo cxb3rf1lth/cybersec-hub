@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import { usePartnerRequests } from '@/hooks/usePartnerRequests'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Checkbox } from '@/components/ui/checkbox'
-import { PartnerRequest, User } from '@/types'
-import { X, Plus, Tag } from '@phosphor-icons/react'
-import { toast } from 'sonner'
+import { useState } from 'react';
+import { usePartnerRequests } from '@/hooks/usePartnerRequests';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
+import { PartnerRequest, User } from '@/types';
+import { X, Plus, Tag } from '@phosphor-icons/react';
+import { toast } from 'sonner';
 
 interface CreatePartnerRequestModalProps {
   currentUser: User
@@ -19,7 +19,7 @@ interface CreatePartnerRequestModalProps {
 }
 
 export function CreatePartnerRequestModal({ currentUser, onClose }: CreatePartnerRequestModalProps) {
-  const { createPartnerRequest, skillCategories } = usePartnerRequests()
+  const { createPartnerRequest, skillCategories } = usePartnerRequests();
   
   const [formData, setFormData] = useState({
     title: '',
@@ -29,13 +29,13 @@ export function CreatePartnerRequestModal({ currentUser, onClose }: CreatePartne
     commitment: '' as PartnerRequest['commitment'],
     compensation: '' as PartnerRequest['compensation'],
     estimatedDuration: ''
-  })
+  });
   
-  const [skillsOffered, setSkillsOffered] = useState<string[]>([])
-  const [skillsNeeded, setSkillsNeeded] = useState<string[]>([])
-  const [tags, setTags] = useState<string[]>([])
-  const [currentTag, setCurrentTag] = useState('')
-  const [activeSkillTab, setActiveSkillTab] = useState<'offered' | 'needed'>('offered')
+  const [skillsOffered, setSkillsOffered] = useState<string[]>([]);
+  const [skillsNeeded, setSkillsNeeded] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
+  const [currentTag, setCurrentTag] = useState('');
+  const [activeSkillTab, setActiveSkillTab] = useState<'offered' | 'needed'>('offered');
 
   const handleSkillToggle = (skill: string, type: 'offered' | 'needed') => {
     if (type === 'offered') {
@@ -43,53 +43,53 @@ export function CreatePartnerRequestModal({ currentUser, onClose }: CreatePartne
         current.includes(skill) 
           ? current.filter(s => s !== skill)
           : [...current, skill]
-      )
+      );
     } else {
       setSkillsNeeded(current => 
         current.includes(skill) 
           ? current.filter(s => s !== skill)
           : [...current, skill]
-      )
+      );
     }
-  }
+  };
 
   const addTag = () => {
     if (currentTag.trim() && !tags.includes(currentTag.trim())) {
-      setTags([...tags, currentTag.trim().toLowerCase()])
-      setCurrentTag('')
+      setTags([...tags, currentTag.trim().toLowerCase()]);
+      setCurrentTag('');
     }
-  }
+  };
 
   const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter(tag => tag !== tagToRemove))
-  }
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     
     if (!formData.title.trim()) {
-      toast.error('Please provide a title for your partner request')
-      return
+      toast.error('Please provide a title for your partner request');
+      return;
     }
     
     if (!formData.description.trim()) {
-      toast.error('Please provide a description')
-      return
+      toast.error('Please provide a description');
+      return;
     }
     
     if (!formData.projectType) {
-      toast.error('Please select a project type')
-      return
+      toast.error('Please select a project type');
+      return;
     }
     
     if (skillsOffered.length === 0) {
-      toast.error('Please select at least one skill you can offer')
-      return
+      toast.error('Please select at least one skill you can offer');
+      return;
     }
     
     if (skillsNeeded.length === 0) {
-      toast.error('Please select at least one skill you need')
-      return
+      toast.error('Please select at least one skill you need');
+      return;
     }
 
     const newRequest = createPartnerRequest({
@@ -106,11 +106,11 @@ export function CreatePartnerRequestModal({ currentUser, onClose }: CreatePartne
       compensation: formData.compensation,
       estimatedDuration: formData.estimatedDuration.trim(),
       tags
-    })
+    });
 
-    toast.success('Partner request created successfully!')
-    onClose()
-  }
+    toast.success('Partner request created successfully!');
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -364,5 +364,5 @@ export function CreatePartnerRequestModal({ currentUser, onClose }: CreatePartne
         </div>
       </div>
     </div>
-  )
+  );
 }

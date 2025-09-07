@@ -1,21 +1,21 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
 import { 
   Dialog, 
   DialogContent, 
   DialogHeader, 
   DialogTitle 
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Team, User, TeamContract, EarningsDistribution } from '@/types'
-import { useSampleTeamData } from '@/hooks/useSampleTeamData'
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Team, User, TeamContract, EarningsDistribution } from '@/types';
+import { useSampleTeamData } from '@/hooks/useSampleTeamData';
 import { 
   DollarSign, 
   Plus, 
@@ -25,8 +25,8 @@ import {
   Eye,
   Settings,
   Download
-} from '@phosphor-icons/react'
-import { toast } from 'sonner'
+} from '@phosphor-icons/react';
+import { toast } from 'sonner';
 
 interface EarningsManagementModalProps {
   team: Team
@@ -35,9 +35,9 @@ interface EarningsManagementModalProps {
 }
 
 export function EarningsManagementModal({ team, currentUser, onClose }: EarningsManagementModalProps) {
-  const [activeTab, setActiveTab] = useState('overview')
-  const [contracts] = useKVWithFallback<TeamContract[]>('teamContracts', [])
-  const [distributions] = useKVWithFallback<EarningsDistribution[]>('earningsDistributions', [])
+  const [activeTab, setActiveTab] = useState('overview');
+  const [contracts] = useKVWithFallback<TeamContract[]>('teamContracts', []);
+  const [distributions] = useKVWithFallback<EarningsDistribution[]>('earningsDistributions', []);
   const [newContract, setNewContract] = useState({
     title: '',
     description: '',
@@ -46,23 +46,23 @@ export function EarningsManagementModal({ team, currentUser, onClose }: Earnings
     budget: 0,
     deadline: '',
     assignedMembers: [] as string[]
-  })
-  const [showCreateContract, setShowCreateContract] = useState(false)
+  });
+  const [showCreateContract, setShowCreateContract] = useState(false);
 
-  const teamContracts = contracts.filter(contract => contract.teamId === team.id)
-  const teamDistributions = distributions.filter(dist => dist.teamId === team.id)
+  const teamContracts = contracts.filter(contract => contract.teamId === team.id);
+  const teamDistributions = distributions.filter(dist => dist.teamId === team.id);
   
-  const activeContracts = teamContracts.filter(c => c.status === 'active')
-  const completedContracts = teamContracts.filter(c => c.status === 'completed')
+  const activeContracts = teamContracts.filter(c => c.status === 'active');
+  const completedContracts = teamContracts.filter(c => c.status === 'completed');
   
   const totalPending = teamDistributions
     .filter(d => d.distributions.some(dist => dist.status === 'pending'))
-    .reduce((sum, d) => sum + d.amount, 0)
+    .reduce((sum, d) => sum + d.amount, 0);
 
   const handleCreateContract = () => {
     if (!newContract.title.trim() || !newContract.client.trim() || newContract.budget <= 0) {
-      toast.error('Please fill in all required fields')
-      return
+      toast.error('Please fill in all required fields');
+      return;
     }
 
     const contract: TeamContract = {
@@ -84,11 +84,11 @@ export function EarningsManagementModal({ team, currentUser, onClose }: Earnings
         role: member.role.name
       })),
       createdAt: new Date().toISOString()
-    }
+    };
 
     // TODO: Save contract
-    toast.success('Contract created successfully')
-    setShowCreateContract(false)
+    toast.success('Contract created successfully');
+    setShowCreateContract(false);
     setNewContract({
       title: '',
       description: '',
@@ -97,12 +97,12 @@ export function EarningsManagementModal({ team, currentUser, onClose }: Earnings
       budget: 0,
       deadline: '',
       assignedMembers: []
-    })
-  }
+    });
+  };
 
   const handleDistributeEarnings = (contractId: string) => {
-    const contract = teamContracts.find(c => c.id === contractId)
-    if (!contract) return
+    const contract = teamContracts.find(c => c.id === contractId);
+    if (!contract) {return;}
 
     const distribution: EarningsDistribution = {
       id: `dist-${Date.now()}`,
@@ -121,11 +121,11 @@ export function EarningsManagementModal({ team, currentUser, onClose }: Earnings
         status: 'pending'
       })),
       createdAt: new Date().toISOString()
-    }
+    };
 
     // TODO: Save distribution
-    toast.success('Earnings distribution initiated')
-  }
+    toast.success('Earnings distribution initiated');
+  };
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -559,5 +559,5 @@ export function EarningsManagementModal({ team, currentUser, onClose }: Earnings
         </Tabs>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

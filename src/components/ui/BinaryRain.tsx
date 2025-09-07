@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react';
 
 interface BinaryRainProps {
   className?: string
@@ -13,22 +13,22 @@ export function BinaryRain({
   speed = 1,
   density = 0.8 
 }: BinaryRainProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
+    const container = containerRef.current;
+    if (!container) {return;}
 
-    const columns = Math.floor(container.offsetWidth / 12) // 12px per column
-    const rows = Math.floor(container.offsetHeight / 16) // 16px per row
+    const columns = Math.floor(container.offsetWidth / 12); // 12px per column
+    const rows = Math.floor(container.offsetHeight / 16); // 16px per row
 
     // Clear existing content
-    container.innerHTML = ''
+    container.innerHTML = '';
 
     // Create columns
     for (let i = 0; i < columns; i++) {
-      const column = document.createElement('div')
-      column.className = 'binary-column'
+      const column = document.createElement('div');
+      column.className = 'binary-column';
       column.style.cssText = `
         position: absolute;
         left: ${i * 12}px;
@@ -39,19 +39,19 @@ export function BinaryRain({
         flex-direction: column;
         animation: binary-fall ${4 + Math.random() * 2}s linear infinite;
         animation-delay: ${Math.random() * 2}s;
-      `
+      `;
 
       // Generate binary characters for this column
-      const charCount = rows + 10 // Extra chars for smooth animation
+      const charCount = rows + 10; // Extra chars for smooth animation
       for (let j = 0; j < charCount; j++) {
-        const char = document.createElement('span')
-        const isOne = Math.random() > 0.5
-        char.textContent = isOne ? '1' : '0'
-        char.className = 'binary-char'
+        const char = document.createElement('span');
+        const isOne = Math.random() > 0.5;
+        char.textContent = isOne ? '1' : '0';
+        char.className = 'binary-char';
         
         // Add special effects for certain characters
         if (immersive && Math.random() < 0.1) {
-          char.classList.add('binary-highlight')
+          char.classList.add('binary-highlight');
         }
         
         char.style.cssText = `
@@ -67,16 +67,16 @@ export function BinaryRain({
             '0 0 8px oklch(0.65 0.22 15 / 0.7)' : 
             '0 0 5px oklch(0.55 0.18 15 / 0.4)'};
           font-weight: ${immersive ? '600' : '500'};
-        `
+        `;
 
-        column.appendChild(char)
+        column.appendChild(char);
       }
 
-      container.appendChild(column)
+      container.appendChild(column);
     }
 
     // Add CSS animations
-    const style = document.createElement('style')
+    const style = document.createElement('style');
     style.textContent = `
       .binary-column {
         animation-duration: ${4 / speed}s !important;
@@ -119,13 +119,13 @@ export function BinaryRain({
           transform: scale(1.1);
         }
       }
-    `
-    document.head.appendChild(style)
+    `;
+    document.head.appendChild(style);
 
     return () => {
-      document.head.removeChild(style)
-    }
-  }, [immersive, speed, density])
+      document.head.removeChild(style);
+    };
+  }, [immersive, speed, density]);
 
   return (
     <div 
@@ -133,5 +133,5 @@ export function BinaryRain({
       className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}
       style={{ zIndex: 1 }}
     />
-  )
+  );
 }

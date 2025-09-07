@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
+import { useState } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { 
   TrendUp, 
   CalendarDots, 
@@ -13,65 +13,65 @@ import {
   Timer,
   Star,
   ShieldCheck
-} from '@phosphor-icons/react'
-import { User } from '@/types/user'
-import { Earning, EarningsGoal } from '@/types/earnings'
-import { Team } from '@/types/teams'
+} from '@phosphor-icons/react';
+import { User } from '@/types/user';
+import { Earning, EarningsGoal } from '@/types/earnings';
+import { Team } from '@/types/teams';
 
 interface EarningsOverviewProps {
   currentUser: User
 }
 
 export function EarningsOverview({ currentUser }: EarningsOverviewProps) {
-  const [earnings] = useKVWithFallback<Earning[]>(`earnings-${currentUser.id}`, [])
-  const [goals] = useKVWithFallback<EarningsGoal[]>(`goals-${currentUser.id}`, [])
-  const [teams] = useKVWithFallback<Team[]>('teams', [])
+  const [earnings] = useKVWithFallback<Earning[]>(`earnings-${currentUser.id}`, []);
+  const [goals] = useKVWithFallback<EarningsGoal[]>(`goals-${currentUser.id}`, []);
+  const [teams] = useKVWithFallback<Team[]>('teams', []);
 
   // Get recent earnings (last 5)
   const recentEarnings = [...earnings]
     .sort((a, b) => new Date(b.earnedAt).getTime() - new Date(a.earnedAt).getTime())
-    .slice(0, 5)
+    .slice(0, 5);
 
   // Get active goals
-  const activeGoals = goals.filter(goal => goal.status === 'active').slice(0, 3)
+  const activeGoals = goals.filter(goal => goal.status === 'active').slice(0, 3);
 
   // Get user's teams
   const userTeams = teams.filter(team => 
     team.members.some(member => member.userId === currentUser.id)
-  ).slice(0, 4)
+  ).slice(0, 4);
 
   // Calculate earnings by type for this month
-  const thisMonth = new Date()
+  const thisMonth = new Date();
   const thisMonthEarnings = earnings.filter(e => {
-    const earnedDate = new Date(e.earnedAt)
+    const earnedDate = new Date(e.earnedAt);
     return earnedDate.getMonth() === thisMonth.getMonth() && 
-           earnedDate.getFullYear() === thisMonth.getFullYear()
-  })
+           earnedDate.getFullYear() === thisMonth.getFullYear();
+  });
 
   const earningsByType = thisMonthEarnings.reduce((acc, earning) => {
-    acc[earning.type] = (acc[earning.type] || 0) + earning.amount
-    return acc
-  }, {} as Record<string, number>)
+    acc[earning.type] = (acc[earning.type] || 0) + earning.amount;
+    return acc;
+  }, {} as Record<string, number>);
 
   const topEarningTypes = Object.entries(earningsByType)
     .sort(([,a], [,b]) => b - a)
-    .slice(0, 3)
+    .slice(0, 3);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'paid': return 'bg-accent text-accent-foreground'
-      case 'pending': return 'bg-secondary text-secondary-foreground'
-      case 'processing': return 'bg-primary text-primary-foreground'
-      case 'failed': return 'bg-destructive text-destructive-foreground'
-      default: return 'bg-muted text-muted-foreground'
+      case 'paid': return 'bg-accent text-accent-foreground';
+      case 'pending': return 'bg-secondary text-secondary-foreground';
+      case 'processing': return 'bg-primary text-primary-foreground';
+      case 'failed': return 'bg-destructive text-destructive-foreground';
+      default: return 'bg-muted text-muted-foreground';
     }
-  }
+  };
 
   const formatEarningType = (type: string) => {
     return type.split('-').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ')
-  }
+    ).join(' ');
+  };
 
   return (
     <div className="space-y-6">
@@ -118,7 +118,7 @@ export function EarningsOverview({ currentUser }: EarningsOverviewProps) {
           <CardContent className="space-y-4">
             {activeGoals.length > 0 ? (
               activeGoals.map(goal => {
-                const progress = (goal.currentAmount / goal.targetAmount) * 100
+                const progress = (goal.currentAmount / goal.targetAmount) * 100;
                 return (
                   <div key={goal.id} className="space-y-2">
                     <div className="flex items-center justify-between">
@@ -129,7 +129,7 @@ export function EarningsOverview({ currentUser }: EarningsOverviewProps) {
                     </div>
                     <Progress value={progress} className="h-2" />
                   </div>
-                )
+                );
               })
             ) : (
               <p className="text-sm text-muted-foreground text-center py-4">
@@ -234,5 +234,5 @@ export function EarningsOverview({ currentUser }: EarningsOverviewProps) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

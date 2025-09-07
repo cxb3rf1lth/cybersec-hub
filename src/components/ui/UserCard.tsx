@@ -1,11 +1,11 @@
-import { User } from '@/types/user'
-import { Card } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { StatusIndicator } from '@/components/ui/StatusIndicator'
-import { BadgeGrid } from '@/components/ui/SecurityBadge'
-import { CertificationList } from '@/components/ui/CertificationBadge'
-import { Users, Star, Target, Calendar, MapPin, Shield } from '@phosphor-icons/react'
+import { User } from '@/types/user';
+import { Card } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { StatusIndicator } from '@/components/ui/StatusIndicator';
+import { BadgeGrid } from '@/components/ui/SecurityBadge';
+import { CertificationList } from '@/components/ui/CertificationBadge';
+import { Users, Star, Target, Calendar, MapPin, Shield } from '@phosphor-icons/react';
 
 interface UserCardProps {
   user: User
@@ -29,12 +29,12 @@ export function UserCard({
   
   const getSecurityClearanceColor = (level: string) => {
     switch (level) {
-      case 'confidential': return 'text-blue-400'
-      case 'secret': return 'text-yellow-400'
-      case 'top-secret': return 'text-red-400'
-      default: return 'text-gray-400'
+      case 'confidential': return 'text-blue-400';
+      case 'secret': return 'text-yellow-400';
+      case 'top-secret': return 'text-red-400';
+      default: return 'text-gray-400';
     }
-  }
+  };
 
   if (variant === 'minimal') {
     return (
@@ -77,7 +77,7 @@ export function UserCard({
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (variant === 'compact') {
@@ -153,7 +153,7 @@ export function UserCard({
           </div>
         </div>
       </Card>
-    )
+    );
   }
 
   // Detailed variant
@@ -278,5 +278,5 @@ export function UserCard({
         </div>
       </div>
     </Card>
-  )
+  );
 }

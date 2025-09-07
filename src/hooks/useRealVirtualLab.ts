@@ -3,9 +3,9 @@
  * Real integrations with container orchestration, cloud providers, and virtualization platforms
  */
 
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { useState, useEffect } from 'react'
-import { toast } from 'sonner'
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 
 export interface VirtualMachine {
   id: string
@@ -96,18 +96,18 @@ export interface VMTemplate {
 
 // AWS EC2 Integration
 class AWSProvider {
-  private accessKey: string
-  private secretKey: string
-  private region: string
+  private accessKey: string;
+  private secretKey: string;
+  private region: string;
 
   constructor(accessKey: string, secretKey: string, region: string = 'us-east-1') {
-    this.accessKey = accessKey
-    this.secretKey = secretKey
-    this.region = region
+    this.accessKey = accessKey;
+    this.secretKey = secretKey;
+    this.region = region;
   }
 
   async createInstance(template: VMTemplate, specs: VirtualMachine['specs']): Promise<VirtualMachine> {
-    const instanceType = this.getInstanceType(specs)
+    const instanceType = this.getInstanceType(specs);
     
     // AWS SDK integration would go here
     const instanceData = await this.makeAWSRequest('RunInstances', {
@@ -125,7 +125,7 @@ class AWSProvider {
           { Key: 'Template', Value: template.id }
         ]
       }]
-    })
+    });
 
     const vm: VirtualMachine = {
       id: instanceData.InstanceId,
@@ -147,20 +147,20 @@ class AWSProvider {
       instanceType,
       securityGroups: ['sg-cybersec-lab'],
       userData: template.setupScript
-    }
+    };
 
-    return vm
+    return vm;
   }
 
   async destroyInstance(instanceId: string): Promise<boolean> {
     try {
       await this.makeAWSRequest('TerminateInstances', {
         InstanceIds: [instanceId]
-      })
-      return true
+      });
+      return true;
     } catch (error) {
-      console.error('Failed to destroy AWS instance:', error)
-      return false
+      console.error('Failed to destroy AWS instance:', error);
+      return false;
     }
   }
 
@@ -168,25 +168,25 @@ class AWSProvider {
     try {
       const response = await this.makeAWSRequest('DescribeInstances', {
         InstanceIds: [instanceId]
-      })
+      });
       
-      const instance = response.Reservations?.[0]?.Instances?.[0]
-      return instance?.State?.Name || 'unknown'
+      const instance = response.Reservations?.[0]?.Instances?.[0];
+      return instance?.State?.Name || 'unknown';
     } catch (error) {
-      console.error('Failed to get instance status:', error)
-      return 'error'
+      console.error('Failed to get instance status:', error);
+      return 'error';
     }
   }
 
   private async makeAWSRequest(action: string, params: any): Promise<any> {
     // This would use the actual AWS SDK
-    const endpoint = `https://ec2.${this.region}.amazonaws.com/`
+    const endpoint = `https://ec2.${this.region}.amazonaws.com/`;
     
     const awsParams = {
       Action: action,
       Version: '2016-11-15',
       ...params
-    }
+    };
 
     // AWS signature v4 would be implemented here
     const response = await fetch(endpoint, {
@@ -196,29 +196,29 @@ class AWSProvider {
         'Authorization': await this.generateAWSAuth(action, awsParams)
       },
       body: new URLSearchParams(awsParams).toString()
-    })
+    });
 
     if (!response.ok) {
-      throw new Error(`AWS API Error: ${response.statusText}`)
+      throw new Error(`AWS API Error: ${response.statusText}`);
     }
 
-    return await response.json()
+    return await response.json();
   }
 
   private async generateAWSAuth(action: string, params: any): Promise<string> {
     // AWS signature v4 implementation would go here
-    return `AWS4-HMAC-SHA256 Credential=${this.accessKey}/...`
+    return `AWS4-HMAC-SHA256 Credential=${this.accessKey}/...`;
   }
 
   private getInstanceType(specs: VirtualMachine['specs']): string {
     if (specs.cpu >= 8 && parseFloat(specs.memory) >= 16) {
-      return 'c5.2xlarge'
+      return 'c5.2xlarge';
     } else if (specs.cpu >= 4 && parseFloat(specs.memory) >= 8) {
-      return 'c5.xlarge'
+      return 'c5.xlarge';
     } else if (specs.cpu >= 2 && parseFloat(specs.memory) >= 4) {
-      return 'c5.large'
+      return 'c5.large';
     }
-    return 't3.medium'
+    return 't3.medium';
   }
 
   private calculateHourlyCost(instanceType: string): number {
@@ -227,15 +227,15 @@ class AWSProvider {
       'c5.large': 0.085,
       'c5.xlarge': 0.17,
       'c5.2xlarge': 0.34
-    }
-    return pricing[instanceType] || 0.05
+    };
+    return pricing[instanceType] || 0.05;
   }
 }
 
 // Docker Provider for local/lightweight VMs
 class DockerProvider {
   async createContainer(template: VMTemplate, specs: VirtualMachine['specs']): Promise<VirtualMachine> {
-    const containerName = `cyberconnect-lab-${Date.now()}`
+    const containerName = `cyberconnect-lab-${Date.now()}`;
     
     // Docker API integration
     const createResponse = await fetch('/api/docker/containers/create', {
@@ -259,14 +259,14 @@ class DockerProvider {
         ],
         Cmd: template.setupScript ? ['/bin/bash', '-c', template.setupScript] : undefined
       })
-    })
+    });
 
-    const container = await createResponse.json()
+    const container = await createResponse.json();
 
     // Start the container
     await fetch(`/api/docker/containers/${container.Id}/start`, {
       method: 'POST'
-    })
+    });
 
     const vm: VirtualMachine = {
       id: container.Id,
@@ -286,9 +286,9 @@ class DockerProvider {
       region: 'local',
       instanceType: 'docker-container',
       securityGroups: []
-    }
+    };
 
-    return vm
+    return vm;
   }
 
   async destroyContainer(containerId: string): Promise<boolean> {
@@ -296,37 +296,37 @@ class DockerProvider {
       // Stop container
       await fetch(`/api/docker/containers/${containerId}/stop`, {
         method: 'POST'
-      })
+      });
 
       // Remove container
       await fetch(`/api/docker/containers/${containerId}`, {
         method: 'DELETE'
-      })
+      });
 
-      return true
+      return true;
     } catch (error) {
-      console.error('Failed to destroy Docker container:', error)
-      return false
+      console.error('Failed to destroy Docker container:', error);
+      return false;
     }
   }
 
   private parseMemory(memory: string): number {
-    const value = parseFloat(memory)
+    const value = parseFloat(memory);
     if (memory.includes('GB')) {
-      return value * 1024 * 1024 * 1024
+      return value * 1024 * 1024 * 1024;
     } else if (memory.includes('MB')) {
-      return value * 1024 * 1024
+      return value * 1024 * 1024;
     }
-    return value
+    return value;
   }
 }
 
 // DigitalOcean Integration
 class DigitalOceanProvider {
-  private apiToken: string
+  private apiToken: string;
 
   constructor(apiToken: string) {
-    this.apiToken = apiToken
+    this.apiToken = apiToken;
   }
 
   async createDroplet(template: VMTemplate, specs: VirtualMachine['specs']): Promise<VirtualMachine> {
@@ -338,7 +338,7 @@ class DigitalOceanProvider {
       ssh_keys: [], // Would be populated with user's SSH keys
       user_data: template.setupScript,
       tags: ['cyberconnect', 'security-lab', template.category]
-    }
+    };
 
     const response = await fetch('https://api.digitalocean.com/v2/droplets', {
       method: 'POST',
@@ -347,14 +347,14 @@ class DigitalOceanProvider {
         'Authorization': `Bearer ${this.apiToken}`
       },
       body: JSON.stringify(dropletData)
-    })
+    });
 
     if (!response.ok) {
-      throw new Error(`DigitalOcean API Error: ${response.statusText}`)
+      throw new Error(`DigitalOcean API Error: ${response.statusText}`);
     }
 
-    const result = await response.json()
-    const droplet = result.droplet
+    const result = await response.json();
+    const droplet = result.droplet;
 
     const vm: VirtualMachine = {
       id: droplet.id.toString(),
@@ -375,9 +375,9 @@ class DigitalOceanProvider {
       region: dropletData.region,
       instanceType: dropletData.size,
       securityGroups: []
-    }
+    };
 
-    return vm
+    return vm;
   }
 
   async destroyDroplet(dropletId: string): Promise<boolean> {
@@ -387,19 +387,19 @@ class DigitalOceanProvider {
         headers: {
           'Authorization': `Bearer ${this.apiToken}`
         }
-      })
-      return response.ok
+      });
+      return response.ok;
     } catch (error) {
-      console.error('Failed to destroy DigitalOcean droplet:', error)
-      return false
+      console.error('Failed to destroy DigitalOcean droplet:', error);
+      return false;
     }
   }
 
   private getDropletSize(specs: VirtualMachine['specs']): string {
-    if (specs.cpu >= 8) return 'c-8'
-    if (specs.cpu >= 4) return 'c-4'
-    if (specs.cpu >= 2) return 'c-2'
-    return 's-1vcpu-1gb'
+    if (specs.cpu >= 8) {return 'c-8';}
+    if (specs.cpu >= 4) {return 'c-4';}
+    if (specs.cpu >= 2) {return 'c-2';}
+    return 's-1vcpu-1gb';
   }
 
   private calculateDropletCost(size: string): number {
@@ -409,23 +409,23 @@ class DigitalOceanProvider {
       'c-2': 0.036,
       'c-4': 0.071,
       'c-8': 0.143
-    }
-    return pricing[size] || 0.007
+    };
+    return pricing[size] || 0.007;
   }
 }
 
 export function useRealVirtualLab() {
-  const [vms, setVMs] = useKVWithFallback<VirtualMachine[]>('virtualMachines', [])
-  const [providers, setProviders] = useKVWithFallback<CloudProvider[]>('cloudProviders', [])
-  const [templates, setTemplates] = useKVWithFallback<VMTemplate[]>('vmTemplates', [])
-  const [isLoading, setIsLoading] = useState(false)
+  const [vms, setVMs] = useKVWithFallback<VirtualMachine[]>('virtualMachines', []);
+  const [providers, setProviders] = useKVWithFallback<CloudProvider[]>('cloudProviders', []);
+  const [templates, setTemplates] = useKVWithFallback<VMTemplate[]>('vmTemplates', []);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    initializeProviders()
-    initializeTemplates()
-    const cleanup = startStatusPolling()
-    return cleanup
-  }, [])
+    initializeProviders();
+    initializeTemplates();
+    const cleanup = startStatusPolling();
+    return cleanup;
+  }, []);
 
   const initializeProviders = () => {
     const defaultProviders: CloudProvider[] = [
@@ -469,12 +469,12 @@ export function useRealVirtualLab() {
           currency: 'USD'
         }
       }
-    ]
+    ];
 
     if (providers.length === 0) {
-      setProviders(defaultProviders)
+      setProviders(defaultProviders);
     }
-  }
+  };
 
   const initializeTemplates = async () => {
     const defaultTemplates: VMTemplate[] = [
@@ -590,167 +590,167 @@ apt-get update && apt-get upgrade -y
         lastUpdated: new Date().toISOString(),
         downloadCount: 5623
       }
-    ]
+    ];
 
     if (templates.length === 0) {
-      setTemplates(defaultTemplates)
+      setTemplates(defaultTemplates);
     }
-  }
+  };
 
   const startStatusPolling = () => {
     const interval = setInterval(async () => {
-      await updateVMStatuses()
-    }, 30000) // Poll every 30 seconds
+      await updateVMStatuses();
+    }, 30000); // Poll every 30 seconds
 
-    return () => clearInterval(interval)
-  }
+    return () => clearInterval(interval);
+  };
 
   const updateVMStatuses = async () => {
     setVMs(current => 
       current.map(vm => {
         if (vm.status === 'running' || vm.status === 'creating') {
-          let newStatus = vm.status
+          let newStatus = vm.status;
           
           if (vm.provider === 'aws' && vm.status === 'creating') {
             // Check AWS instance status
-            newStatus = 'running' // Simplified for demo
+            newStatus = 'running'; // Simplified for demo
           } else if (vm.provider === 'digitalocean' && vm.status === 'creating') {
             // Check DigitalOcean droplet status
-            newStatus = 'running' // Simplified for demo
+            newStatus = 'running'; // Simplified for demo
           }
 
-          return { ...vm, status: newStatus }
+          return { ...vm, status: newStatus };
         }
-        return vm
+        return vm;
       })
-    )
-  }
+    );
+  };
 
   const createVM = async (templateId: string, providerId: string, specs: VirtualMachine['specs'], name?: string): Promise<VirtualMachine> => {
-    setIsLoading(true)
+    setIsLoading(true);
     
     try {
-      const template = templates.find(t => t.id === templateId)
-      const provider = providers.find(p => p.id === providerId)
+      const template = templates.find(t => t.id === templateId);
+      const provider = providers.find(p => p.id === providerId);
       
       if (!template || !provider || !provider.connected) {
-        throw new Error('Template or provider not available')
+        throw new Error('Template or provider not available');
       }
 
-      let vm: VirtualMachine
+      let vm: VirtualMachine;
 
       if (provider.type === 'aws') {
         const awsProvider = new AWSProvider(
           provider.credentials.accessKey!,
           provider.credentials.secretKey!,
           provider.credentials.region
-        )
-        vm = await awsProvider.createInstance(template, specs)
+        );
+        vm = await awsProvider.createInstance(template, specs);
       } else if (provider.type === 'digitalocean') {
-        const doProvider = new DigitalOceanProvider(provider.credentials.accessKey!)
-        vm = await doProvider.createDroplet(template, specs)
+        const doProvider = new DigitalOceanProvider(provider.credentials.accessKey!);
+        vm = await doProvider.createDroplet(template, specs);
       } else if (provider.type === 'local-docker') {
-        const dockerProvider = new DockerProvider()
-        vm = await dockerProvider.createContainer(template, specs)
+        const dockerProvider = new DockerProvider();
+        vm = await dockerProvider.createContainer(template, specs);
       } else {
-        throw new Error('Unsupported provider')
+        throw new Error('Unsupported provider');
       }
 
       if (name) {
-        vm.name = name
+        vm.name = name;
       }
 
-      setVMs(current => [vm, ...current])
-      toast.success(`Virtual machine "${vm.name}" is being created`)
+      setVMs(current => [vm, ...current]);
+      toast.success(`Virtual machine "${vm.name}" is being created`);
       
-      return vm
+      return vm;
     } catch (error) {
-      console.error('Failed to create VM:', error)
-      toast.error(`Failed to create virtual machine: ${error instanceof Error ? error.message : 'Unknown error'}`)
-      throw error
+      console.error('Failed to create VM:', error);
+      toast.error(`Failed to create virtual machine: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw error;
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const destroyVM = async (vmId: string): Promise<boolean> => {
-    setIsLoading(true)
+    setIsLoading(true);
     
     try {
-      const vm = vms.find(v => v.id === vmId)
+      const vm = vms.find(v => v.id === vmId);
       if (!vm) {
-        throw new Error('VM not found')
+        throw new Error('VM not found');
       }
 
-      let success = false
+      let success = false;
 
       if (vm.provider === 'aws') {
-        const provider = providers.find(p => p.type === 'aws' && p.connected)
+        const provider = providers.find(p => p.type === 'aws' && p.connected);
         if (provider) {
           const awsProvider = new AWSProvider(
             provider.credentials.accessKey!,
             provider.credentials.secretKey!,
             provider.credentials.region
-          )
-          success = await awsProvider.destroyInstance(vm.id)
+          );
+          success = await awsProvider.destroyInstance(vm.id);
         }
       } else if (vm.provider === 'digitalocean') {
-        const provider = providers.find(p => p.type === 'digitalocean' && p.connected)
+        const provider = providers.find(p => p.type === 'digitalocean' && p.connected);
         if (provider) {
-          const doProvider = new DigitalOceanProvider(provider.credentials.accessKey!)
-          success = await doProvider.destroyDroplet(vm.id)
+          const doProvider = new DigitalOceanProvider(provider.credentials.accessKey!);
+          success = await doProvider.destroyDroplet(vm.id);
         }
       } else if (vm.provider === 'local-docker') {
-        const dockerProvider = new DockerProvider()
-        success = await dockerProvider.destroyContainer(vm.id)
+        const dockerProvider = new DockerProvider();
+        success = await dockerProvider.destroyContainer(vm.id);
       }
 
       if (success) {
-        setVMs(current => current.filter(v => v.id !== vmId))
-        toast.success(`Virtual machine "${vm.name}" destroyed`)
+        setVMs(current => current.filter(v => v.id !== vmId));
+        toast.success(`Virtual machine "${vm.name}" destroyed`);
       } else {
-        toast.error('Failed to destroy virtual machine')
+        toast.error('Failed to destroy virtual machine');
       }
 
-      return success
+      return success;
     } catch (error) {
-      console.error('Failed to destroy VM:', error)
-      toast.error(`Failed to destroy VM: ${error instanceof Error ? error.message : 'Unknown error'}`)
-      return false
+      console.error('Failed to destroy VM:', error);
+      toast.error(`Failed to destroy VM: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      return false;
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const connectProvider = async (providerId: string, credentials: any): Promise<boolean> => {
-    setIsLoading(true)
+    setIsLoading(true);
     
     try {
-      const provider = providers.find(p => p.id === providerId)
+      const provider = providers.find(p => p.id === providerId);
       if (!provider) {
-        throw new Error('Provider not found')
+        throw new Error('Provider not found');
       }
 
       // Test connection
-      let connectionTest = false
+      let connectionTest = false;
 
       if (provider.type === 'aws') {
-        const awsProvider = new AWSProvider(credentials.accessKey, credentials.secretKey, credentials.region)
+        const awsProvider = new AWSProvider(credentials.accessKey, credentials.secretKey, credentials.region);
         // Test with a simple API call
         try {
-          await awsProvider.getInstanceStatus('test') // This will fail but validate credentials
+          await awsProvider.getInstanceStatus('test'); // This will fail but validate credentials
         } catch (error) {
           // If it's an auth error, credentials are wrong
           if (error instanceof Error && error.message.includes('auth')) {
-            throw new Error('Invalid AWS credentials')
+            throw new Error('Invalid AWS credentials');
           }
-          connectionTest = true // Other errors mean credentials are valid
+          connectionTest = true; // Other errors mean credentials are valid
         }
       } else if (provider.type === 'digitalocean') {
         const response = await fetch('https://api.digitalocean.com/v2/account', {
           headers: { 'Authorization': `Bearer ${credentials.apiToken}` }
-        })
-        connectionTest = response.ok
+        });
+        connectionTest = response.ok;
       }
 
       if (connectionTest) {
@@ -760,21 +760,21 @@ apt-get update && apt-get upgrade -y
               ? { ...p, connected: true, credentials }
               : p
           )
-        )
-        toast.success(`Connected to ${provider.name}`)
-        return true
+        );
+        toast.success(`Connected to ${provider.name}`);
+        return true;
       } else {
-        toast.error('Failed to connect to provider')
-        return false
+        toast.error('Failed to connect to provider');
+        return false;
       }
     } catch (error) {
-      console.error('Provider connection failed:', error)
-      toast.error(`Connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
-      return false
+      console.error('Provider connection failed:', error);
+      toast.error(`Connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      return false;
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const uploadTemplate = async (template: Omit<VMTemplate, 'id' | 'createdBy' | 'lastUpdated' | 'downloadCount' | 'popularity'>): Promise<VMTemplate> => {
     const newTemplate: VMTemplate = {
@@ -784,12 +784,12 @@ apt-get update && apt-get upgrade -y
       lastUpdated: new Date().toISOString(),
       downloadCount: 0,
       popularity: 0
-    }
+    };
 
-    setTemplates(current => [newTemplate, ...current])
-    toast.success('Template uploaded successfully')
-    return newTemplate
-  }
+    setTemplates(current => [newTemplate, ...current]);
+    toast.success('Template uploaded successfully');
+    return newTemplate;
+  };
 
   return {
     vms,
@@ -801,11 +801,11 @@ apt-get update && apt-get upgrade -y
     connectProvider,
     uploadTemplate,
     updateVMStatuses
-  }
+  };
 }
 
 // Default export for compatibility  
-export default useRealVirtualLab
+export default useRealVirtualLab;
 
 // Named export for explicit usage
-export { useRealVirtualLab as realVirtualLab }
+export { useRealVirtualLab as realVirtualLab };

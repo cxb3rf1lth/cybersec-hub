@@ -1,25 +1,25 @@
-import { useState, useEffect } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
-import { ThreatFeed, BugBountyProgram, ThreatIntelligence, CyberSecNews } from '@/types/threat-feeds'
-import { useThreatSources } from './useThreatSources'
+import { useState, useEffect } from 'react';
+import { useKVWithFallback } from '@/lib/kv-fallback';
+import { ThreatFeed, BugBountyProgram, ThreatIntelligence, CyberSecNews } from '@/types/threat-feeds';
+import { useThreatSources } from './useThreatSources';
 
 export function useThreatFeeds() {
-  const [threatFeeds, setThreatFeeds] = useKVWithFallback<ThreatFeed[]>('threat-feeds', [])
-  const [bugBountyPrograms, setBugBountyPrograms] = useKVWithFallback<BugBountyProgram[]>('bug-bounty-programs', [])
-  const [threatIntel, setThreatIntel] = useKVWithFallback<ThreatIntelligence[]>('threat-intelligence', [])
-  const [cyberNews, setCyberNews] = useKVWithFallback<CyberSecNews[]>('cyber-news', [])
-  const [lastUpdate, setLastUpdate] = useKVWithFallback<string>('feeds-last-update', '')
-  const [isUpdating, setIsUpdating] = useState(false)
+  const [threatFeeds, setThreatFeeds] = useKVWithFallback<ThreatFeed[]>('threat-feeds', []);
+  const [bugBountyPrograms, setBugBountyPrograms] = useKVWithFallback<BugBountyProgram[]>('bug-bounty-programs', []);
+  const [threatIntel, setThreatIntel] = useKVWithFallback<ThreatIntelligence[]>('threat-intelligence', []);
+  const [cyberNews, setCyberNews] = useKVWithFallback<CyberSecNews[]>('cyber-news', []);
+  const [lastUpdate, setLastUpdate] = useKVWithFallback<string>('feeds-last-update', '');
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const { sources, fetchFromSource } = useThreatSources()
+  const { sources, fetchFromSource } = useThreatSources();
 
   // Fetch data from active custom sources
   const fetchFromCustomSources = async () => {
-    const activeSources = sources.filter(source => source.isActive)
+    const activeSources = sources.filter(source => source.isActive);
     
     for (const source of activeSources) {
       try {
-        const data = await fetchFromSource(source)
+        const data = await fetchFromSource(source);
         
         // Process and categorize data based on source category
         switch (source.category) {
@@ -28,9 +28,9 @@ export function useThreatFeeds() {
               ...item,
               category: 'vulnerability' as const,
               tags: [...(item.tags || []), `source:${source.name}`]
-            }))
-            setThreatFeeds(current => [...newThreats, ...current.slice(0, 47)])
-            break
+            }));
+            setThreatFeeds(current => [...newThreats, ...current.slice(0, 47)]);
+            break;
             
           case 'bug-bounty':
             const newBounties = data.map(item => ({
@@ -43,9 +43,9 @@ export function useThreatFeeds() {
               difficulty: item.difficulty || 'intermediate',
               participants: item.participants || Math.floor(Math.random() * 500) + 50,
               lastUpdated: item.timestamp || new Date().toISOString()
-            }))
-            setBugBountyPrograms(current => [...newBounties, ...current.slice(0, 23)])
-            break
+            }));
+            setBugBountyPrograms(current => [...newBounties, ...current.slice(0, 23)]);
+            break;
             
           case 'threat-intel':
             const newIntel = data.map(item => ({
@@ -54,9 +54,9 @@ export function useThreatFeeds() {
               confidence: item.confidence || 'medium',
               tlpLevel: item.tlpLevel || 'white',
               indicators: item.indicators || []
-            }))
-            setThreatIntel(current => [...newIntel, ...current.slice(0, 19)])
-            break
+            }));
+            setThreatIntel(current => [...newIntel, ...current.slice(0, 19)]);
+            break;
             
           case 'news':
             const newNews = data.map(item => ({
@@ -68,27 +68,27 @@ export function useThreatFeeds() {
               category: item.category || 'general',
               readTime: Math.ceil((item.description?.length || 500) / 200),
               tags: [...(item.tags || []), `source:${source.name}`]
-            }))
-            setCyberNews(current => [...newNews, ...current.slice(0, 23)])
-            break
+            }));
+            setCyberNews(current => [...newNews, ...current.slice(0, 23)]);
+            break;
         }
       } catch (error) {
-        console.error(`Failed to fetch from source ${source.name}:`, error)
+        console.error(`Failed to fetch from source ${source.name}:`, error);
       }
     }
-  }
+  };
 
   // Enhanced feed generation combining mock data and custom sources
   const generateMockFeeds = async () => {
-    setIsUpdating(true)
+    setIsUpdating(true);
     
     // Simulate realistic API delay for threat intelligence feeds (demonstrate binary rain)
-    await new Promise(resolve => setTimeout(resolve, 3000))
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
-    const currentTime = new Date().toISOString()
+    const currentTime = new Date().toISOString();
 
     // Fetch from custom sources first
-    await fetchFromCustomSources()
+    await fetchFromCustomSources();
 
     // Then add some mock data to supplement
     const newThreatFeeds: ThreatFeed[] = [
@@ -127,7 +127,7 @@ export function useThreatFeeds() {
         timestamp: new Date(Date.now() - 600000).toISOString(),
         tags: ['exploit-kit', 'zero-day', 'browser', 'evasion']
       }
-    ]
+    ];
 
     // Mock Bug Bounty Programs
     const newBugBountyPrograms: BugBountyProgram[] = [
@@ -161,7 +161,7 @@ export function useThreatFeeds() {
         description: 'Critical financial application requiring extensive security testing.',
         url: 'https://bugcrowd.com/financesecure'
       }
-    ]
+    ];
 
     // Mock Threat Intelligence
     const newThreatIntel: ThreatIntelligence[] = [
@@ -181,7 +181,7 @@ export function useThreatFeeds() {
         ],
         mitreAttack: ['T1566.001', 'T1055.012']
       }
-    ]
+    ];
 
     // Mock Cyber Security News
     const newCyberNews: CyberSecNews[] = [
@@ -212,37 +212,37 @@ export function useThreatFeeds() {
         url: 'https://securityweek.com/cisa-advisory',
         tags: ['cisa', 'critical-infrastructure', 'policy']
       }
-    ]
+    ];
 
     // Update feeds with new data while preserving existing (from custom sources)
-    setThreatFeeds(current => [...newThreatFeeds, ...current.slice(0, 47)]) // Keep last 50 items
-    setBugBountyPrograms(current => [...newBugBountyPrograms, ...current.slice(0, 23)]) // Keep last 25 items
-    setThreatIntel(current => [...newThreatIntel, ...current.slice(0, 19)]) // Keep last 20 items
-    setCyberNews(current => [...newCyberNews, ...current.slice(0, 23)]) // Keep last 25 items
+    setThreatFeeds(current => [...newThreatFeeds, ...current.slice(0, 47)]); // Keep last 50 items
+    setBugBountyPrograms(current => [...newBugBountyPrograms, ...current.slice(0, 23)]); // Keep last 25 items
+    setThreatIntel(current => [...newThreatIntel, ...current.slice(0, 19)]); // Keep last 20 items
+    setCyberNews(current => [...newCyberNews, ...current.slice(0, 23)]); // Keep last 25 items
     
-    setLastUpdate(currentTime)
-    setIsUpdating(false)
-  }
+    setLastUpdate(currentTime);
+    setIsUpdating(false);
+  };
 
   // Auto-refresh feeds
   useEffect(() => {
     // Initial load if no data
     if (threatFeeds.length === 0) {
-      generateMockFeeds()
+      generateMockFeeds();
     }
 
     // Set up periodic updates (every 5 minutes)
     const interval = setInterval(() => {
-      generateMockFeeds()
-    }, 300000) // 5 minutes
+      generateMockFeeds();
+    }, 300000); // 5 minutes
 
-    return () => clearInterval(interval)
-  }, [])
+    return () => clearInterval(interval);
+  }, []);
 
   // Manual refresh function
   const refreshFeeds = () => {
-    generateMockFeeds()
-  }
+    generateMockFeeds();
+  };
 
   return {
     threatFeeds,
@@ -252,5 +252,5 @@ export function useThreatFeeds() {
     lastUpdate,
     isUpdating,
     refreshFeeds
-  }
+  };
 }
