@@ -3,7 +3,7 @@
  * Secure configuration and management of external service API keys
  */
 
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { toast } from 'sonner'
 
 // API Key Types and Interfaces

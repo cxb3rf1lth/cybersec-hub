@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -21,8 +21,8 @@ interface ProfileViewProps {
 
 export function ProfileView({ currentUser, onUserUpdate }: ProfileViewProps) {
   const [showEditModal, setShowEditModal] = useState(false)
-  const [posts] = useKV<Post[]>('posts', [])
-  const [allUsers] = useKV<User[]>('allUsers', [])
+  const [posts] = useKVWithFallback<Post[]>('posts', [])
+  const [allUsers] = useKVWithFallback<User[]>('allUsers', [])
 
   const userPosts = posts.filter(post => post.authorId === currentUser.id)
   const followers = allUsers.filter(user => user.following.includes(currentUser.id))

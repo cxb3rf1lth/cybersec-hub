@@ -3,7 +3,7 @@
  * Handles API keys, environment variables, and security settings
  */
 
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 
 export interface APIKeyConfig {
   platform: string
@@ -132,8 +132,8 @@ export const ENVIRONMENT_CONFIG = {
  * Secure API Key Management Hook
  */
 export function useAPIKeys() {
-  const [encryptedKeys, setEncryptedKeys] = useKV<Record<string, string>>('encrypted_api_keys', {})
-  const [keyMetadata, setKeyMetadata] = useKV<Record<string, { 
+  const [encryptedKeys, setEncryptedKeys] = useKVWithFallback<Record<string, string>>('encrypted_api_keys', {})
+  const [keyMetadata, setKeyMetadata] = useKVWithFallback<Record<string, { 
     created: string
     lastUsed: string
     rotationDue: boolean
@@ -363,7 +363,7 @@ export const quotaManager = new QuotaManager()
  * Secure Configuration Store
  */
 export function useSecureConfig() {
-  const [config, setConfig] = useKV<{
+  const [config, setConfig] = useKVWithFallback<{
     security: SecurityConfig
     enabledPlatforms: string[]
     lastSync: Record<string, string>

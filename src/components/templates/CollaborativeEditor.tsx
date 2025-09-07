@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -46,8 +46,8 @@ interface CollaborativeEditorProps {
 }
 
 export function CollaborativeEditor({ template, currentUser, onClose, onTemplateUpdated }: CollaborativeEditorProps) {
-  const [templates, setTemplates] = useKV<Template[]>('templates', [])
-  const [pullRequests, setPullRequests] = useKV<PullRequest[]>('pullRequests', [])
+  const [templates, setTemplates] = useKVWithFallback<Template[]>('templates', [])
+  const [pullRequests, setPullRequests] = useKVWithFallback<PullRequest[]>('pullRequests', [])
   const [activeTab, setActiveTab] = useState('editor')
   const [selectedBranch, setSelectedBranch] = useState(template.branches?.[0]?.name || 'main')
   const [selectedFile, setSelectedFile] = useState<TemplateFile | null>(template.files[0] || null)

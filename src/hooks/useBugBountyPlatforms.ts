@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { BugBountyPlatform, BugBountyProgram, LiveBountyFeed, PlatformConfiguration } from '@/types/bug-bounty'
 
 // Production-ready bug bounty platforms with real integrations
@@ -530,10 +530,10 @@ const SAMPLE_LIVE_FEED: LiveBountyFeed[] = [
 ]
 
 export function useBugBountyPlatforms() {
-  const [platforms, setPlatforms] = useKV<BugBountyPlatform[]>('bug-bounty-platforms', [])
-  const [programs, setPrograms] = useKV<BugBountyProgram[]>('bug-bounty-programs', [])
-  const [liveFeed, setLiveFeed] = useKV<LiveBountyFeed[]>('bug-bounty-live-feed', [])
-  const [configurations, setConfigurations] = useKV<PlatformConfiguration[]>('platform-configurations', [])
+  const [platforms, setPlatforms] = useKVWithFallback<BugBountyPlatform[]>('bug-bounty-platforms', [])
+  const [programs, setPrograms] = useKVWithFallback<BugBountyProgram[]>('bug-bounty-programs', [])
+  const [liveFeed, setLiveFeed] = useKVWithFallback<LiveBountyFeed[]>('bug-bounty-live-feed', [])
+  const [configurations, setConfigurations] = useKVWithFallback<PlatformConfiguration[]>('platform-configurations', [])
 
   useEffect(() => {
     if (platforms.length === 0) {

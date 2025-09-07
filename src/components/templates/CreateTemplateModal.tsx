@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,7 +23,7 @@ interface CreateTemplateModalProps {
 }
 
 export function CreateTemplateModal({ currentUser, onClose }: CreateTemplateModalProps) {
-  const [templates, setTemplates] = useKV<Template[]>('templates', [])
+  const [templates, setTemplates] = useKVWithFallback<Template[]>('templates', [])
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState<string>('')

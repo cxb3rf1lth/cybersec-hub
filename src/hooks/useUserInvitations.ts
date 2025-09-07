@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { TeamInvitation } from '@/types/teams'
 import { User } from '@/types/user'
 
 export function useUserInvitations(currentUser: User | null) {
-  const [invitations, setInvitations] = useKV<TeamInvitation[]>('teamInvitations', [])
+  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
 
   useEffect(() => {
     if (!currentUser) return

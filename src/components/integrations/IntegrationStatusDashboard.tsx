@@ -31,7 +31,7 @@ import {
 import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
 import { useAutoSync } from '@/hooks/useAutoSync'
 import { SyncConfiguration } from '@/components/features/SyncConfiguration'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { toast } from 'sonner'
 
 interface MetricData {
@@ -76,8 +76,8 @@ export function IntegrationStatusDashboard() {
     disconnectedPlatforms = []
   } = useAutoSync()
 
-  const [healthMetrics = [], setHealthMetrics] = useKV<ConnectionHealth[]>('connection_health', [])
-  const [realTimeData = [], setRealTimeData] = useKV<MetricData[]>('realtime_metrics', [])
+  const [healthMetrics = [], setHealthMetrics] = useKVWithFallback<ConnectionHealth[]>('connection_health', [])
+  const [realTimeData = [], setRealTimeData] = useKVWithFallback<MetricData[]>('realtime_metrics', [])
   const [monitoringEnabled, setMonitoringEnabled] = useState(true)
   const [showSyncConfig, setShowSyncConfig] = useState(false)
   const [isLoadingAction, setIsLoadingAction] = useState(false)

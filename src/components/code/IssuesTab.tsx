@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -19,7 +19,7 @@ interface IssuesTabProps {
 }
 
 export function IssuesTab({ repository, currentUser, isOwner }: IssuesTabProps) {
-  const [repositories, setRepositories] = useKV<Repository[]>('repositories', [])
+  const [repositories, setRepositories] = useKVWithFallback<Repository[]>('repositories', [])
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [filterStatus, setFilterStatus] = useState<'all' | 'open' | 'closed'>('all')
   

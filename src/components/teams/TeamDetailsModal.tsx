@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { 
   Dialog, 
   DialogContent, 
@@ -39,8 +39,8 @@ interface TeamDetailsModalProps {
 
 export function TeamDetailsModal({ team, currentUser, onClose }: TeamDetailsModalProps) {
   const [activeTab, setActiveTab] = useState('overview')
-  const [applications] = useKV<TeamApplication[]>('teamApplications', [])
-  const [invitations] = useKV<TeamInvitation[]>('teamInvitations', [])
+  const [applications] = useKVWithFallback<TeamApplication[]>('teamApplications', [])
+  const [invitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
   const [showInviteModal, setShowInviteModal] = useState(false)
   const [showInvitationManager, setShowInvitationManager] = useState(false)
   

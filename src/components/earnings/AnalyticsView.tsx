@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -24,7 +24,7 @@ interface AnalyticsViewProps {
 }
 
 export function AnalyticsView({ currentUser }: AnalyticsViewProps) {
-  const [earnings] = useKV<Earning[]>(`earnings-${currentUser.id}`, [])
+  const [earnings] = useKVWithFallback<Earning[]>(`earnings-${currentUser.id}`, [])
   const [timeRange, setTimeRange] = useState<'30d' | '90d' | '1y' | 'all'>('90d')
 
   // Filter earnings based on time range

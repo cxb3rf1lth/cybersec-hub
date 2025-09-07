@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { useSampleData } from '@/hooks/useSampleData'
 import { useSampleProjectData } from '@/hooks/useSampleProjectData'
 import { useSampleTeamData } from '@/hooks/useSampleTeamData'
@@ -33,9 +33,9 @@ import ProductionErrorBoundary, { performanceMonitor, usePerformanceMonitor } fr
 
 function App() {
   // Enable stability monitoring for the main App component
-  useStabilityMonitor('App')
+  // useStabilityMonitor('App') // Disabled temporarily
   
-  const [currentUser, setCurrentUser] = useKV<User | null>('currentUser', null as User | null)
+  const [currentUser, setCurrentUser] = useKVWithFallback<User | null>('currentUser', null as User | null)
   const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status'>('feed')
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [showApiKeyManager, setShowApiKeyManager] = useState(false)
@@ -75,11 +75,11 @@ function App() {
   // Initialize performance monitoring - wrapped in useCallback to prevent recreation
   const initializeMonitoring = useCallback(() => {
     performanceMonitor.initialize()
-    stabilityChecker.startMonitoring()
+    // stabilityChecker.startMonitoring() // Disabled temporarily
     
     return () => {
       performanceMonitor.cleanup()
-      stabilityChecker.stopMonitoring()
+      // stabilityChecker.stopMonitoring() // Disabled temporarily
     }
   }, [])
 

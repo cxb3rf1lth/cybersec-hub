@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -16,7 +16,7 @@ interface TemplateCardProps {
 }
 
 export function TemplateCard({ template, currentUser }: TemplateCardProps) {
-  const [templates, setTemplates] = useKV<Template[]>('templates', [])
+  const [templates, setTemplates] = useKVWithFallback<Template[]>('templates', [])
   const [showDetail, setShowDetail] = useState(false)
   const [isStarred, setIsStarred] = useState(false) // In real app, track user's stars
 

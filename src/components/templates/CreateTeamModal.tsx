@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -17,7 +17,7 @@ interface CreateTeamModalProps {
 }
 
 export function CreateTeamModal({ currentUser, onClose, onTeamCreated }: CreateTeamModalProps) {
-  const [teams] = useKV<TeamInfo[]>('teams', [])
+  const [teams] = useKVWithFallback<TeamInfo[]>('teams', [])
   const [formData, setFormData] = useState({
     name: '',
     description: '',

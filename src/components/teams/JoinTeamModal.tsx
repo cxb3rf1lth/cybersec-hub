@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { 
   Dialog, 
   DialogContent, 
@@ -34,7 +34,7 @@ export function JoinTeamModal({ onClose, currentUser }: JoinTeamModalProps) {
   const [submitting, setSubmitting] = useState(false)
 
   const { teams, teamRoles } = useSampleTeamData()
-  const [applications, setApplications] = useKV<TeamApplication[]>('teamApplications', [])
+  const [applications, setApplications] = useKVWithFallback<TeamApplication[]>('teamApplications', [])
 
   // Filter teams where user is not already a member
   const availableTeams = teams.filter(team => 

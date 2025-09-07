@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -22,7 +22,7 @@ interface CreateRepositoryModalProps {
 }
 
 export function CreateRepositoryModal({ currentUser, onClose }: CreateRepositoryModalProps) {
-  const [repositories, setRepositories] = useKV<ToolRepository[]>('toolRepositories', [])
+  const [repositories, setRepositories] = useKVWithFallback<ToolRepository[]>('toolRepositories', [])
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState<string>('')

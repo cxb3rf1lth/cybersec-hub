@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -29,7 +29,7 @@ interface EarningsGoalsViewProps {
 }
 
 export function EarningsGoalsView({ currentUser }: EarningsGoalsViewProps) {
-  const [goals, setGoals] = useKV<EarningsGoal[]>(`goals-${currentUser.id}`, [])
+  const [goals, setGoals] = useKVWithFallback<EarningsGoal[]>(`goals-${currentUser.id}`, [])
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [editingGoal, setEditingGoal] = useState<EarningsGoal | null>(null)
 

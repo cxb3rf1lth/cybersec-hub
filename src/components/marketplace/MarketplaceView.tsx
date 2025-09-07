@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Search, Filter, Star, Clock, DollarSign, Users, Award, TrendingUp } from '@/lib/phosphor-icons-wrapper'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,8 +20,8 @@ interface MarketplaceViewProps {
 }
 
 export function MarketplaceView({ currentUser, onTabChange }: MarketplaceViewProps) {
-  const [listings] = useKV<MarketplaceListing[]>('marketplaceListings', [])
-  const [teams] = useKV<Team[]>('teams', [])
+  const [listings] = useKVWithFallback<MarketplaceListing[]>('marketplaceListings', [])
+  const [teams] = useKVWithFallback<Team[]>('teams', [])
   const [searchQuery, setSearchQuery] = useState('')
   const [filters, setFilters] = useState<MarketplaceFilters>({})
   const [sortBy, setSortBy] = useState<'rating' | 'price' | 'recent' | 'popular'>('rating')

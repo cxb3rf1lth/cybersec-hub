@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { useProductionAPI } from '@/lib/production-api'
 import { bugBountySyncService, SyncedBugBountyData, BugBountyProgram, BugBountyReport } from '@/lib/real-time-sync'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -25,7 +25,7 @@ import {
 import { BinaryRain } from '@/components/ui/BinaryRain'
 
 export function RealTimeBugBountyDashboard() {
-  const [syncData, setSyncData] = useKV<SyncedBugBountyData | null>('synced_bug_bounty_data', null)
+  const [syncData, setSyncData] = useKVWithFallback<SyncedBugBountyData | null>('synced_bug_bounty_data', null)
   const [isAutoSyncEnabled, setIsAutoSyncEnabled] = useKV('auto_sync_enabled', false)
   const [syncInterval, setSyncInterval] = useKV('sync_interval_minutes', 5)
   const [isLoading, setIsLoading] = useState(false)

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { ThreatSource, SourceTemplate, SourceLog, SourceStats } from '@/types/threat-sources'
 import { toast } from 'sonner'
 
@@ -147,10 +147,10 @@ const DEFAULT_SOURCE_TEMPLATES: SourceTemplate[] = [
 ]
 
 export function useThreatSources() {
-  const [sources, setSources] = useKV<ThreatSource[]>('threat-sources', [])
-  const [sourceTemplates] = useKV<SourceTemplate[]>('source-templates', DEFAULT_SOURCE_TEMPLATES)
-  const [sourceLogs, setSourceLogs] = useKV<SourceLog[]>('source-logs', [])
-  const [sourceStats, setSourceStats] = useKV<SourceStats[]>('source-stats', [])
+  const [sources, setSources] = useKVWithFallback<ThreatSource[]>('threat-sources', [])
+  const [sourceTemplates] = useKVWithFallback<SourceTemplate[]>('source-templates', DEFAULT_SOURCE_TEMPLATES)
+  const [sourceLogs, setSourceLogs] = useKVWithFallback<SourceLog[]>('source-logs', [])
+  const [sourceStats, setSourceStats] = useKVWithFallback<SourceStats[]>('source-stats', [])
   const [isLoading, setIsLoading] = useState(false)
 
   // Initialize default templates if not present

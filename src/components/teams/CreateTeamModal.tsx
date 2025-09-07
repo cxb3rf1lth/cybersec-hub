@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { 
   Dialog, 
   DialogContent, 
@@ -42,7 +42,7 @@ export function CreateTeamModal({ currentUser, onClose }: CreateTeamModalProps) 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { teamRoles } = useSampleTeamData()
-  const [teams, setTeams] = useKV<Team[]>('teams', [])
+  const [teams, setTeams] = useKVWithFallback<Team[]>('teams', [])
 
   const teamTypes: { value: TeamType; label: string; description: string }[] = [
     { value: 'red-team', label: 'Red Team', description: 'Offensive security and penetration testing' },

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -33,8 +33,8 @@ interface EarningsViewProps {
 
 export function EarningsView({ currentUser }: EarningsViewProps) {
   const [activeTab, setActiveTab] = useState('overview')
-  const [earnings] = useKV<Earning[]>(`earnings-${currentUser.id}`, [])
-  const [analytics] = useKV<EarningsAnalytics | null>(`analytics-${currentUser.id}`, null)
+  const [earnings] = useKVWithFallback<Earning[]>(`earnings-${currentUser.id}`, [])
+  const [analytics] = useKVWithFallback<EarningsAnalytics | null>(`analytics-${currentUser.id}`, null)
 
   // Calculate quick stats
   const totalEarnings = earnings.reduce((sum, earning) => sum + earning.amount, 0)

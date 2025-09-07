@@ -1,6 +1,6 @@
 import { Shield, House, Compass, User, Code, SignOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, BugBeetle, Handshake, DesktopTower, CaretRight, Target, Terminal, Globe, Activity } from '@phosphor-icons/react'
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -16,8 +16,8 @@ interface SidebarProps {
 }
 
 export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: SidebarProps) {
-  const [conversations] = useKV<Conversation[]>('conversations', [])
-  const [teamInvitations] = useKV<TeamInvitation[]>('teamInvitations', [])
+  const [conversations] = useKVWithFallback<Conversation[]>('conversations', [])
+  const [teamInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
   const [expandedSections, setExpandedSections] = useState({
     operations: true,
     collaboration: false,
