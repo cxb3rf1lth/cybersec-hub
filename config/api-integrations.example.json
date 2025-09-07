@@ -1,0 +1,112 @@
+{
+  "platforms": {
+    "hackerone": {
+      "name": "HackerOne",
+      "baseUrl": "https://api.hackerone.com",
+      "authType": "bearer",
+      "requiredScopes": ["program:read", "report:read"],
+      "rateLimits": {
+        "requests": 100,
+        "period": "hour"
+      },
+      "endpoints": {
+        "programs": "/v1/programs",
+        "reports": "/v1/reports",
+        "bounties": "/v1/bounties"
+      },
+      "webhookSupport": true,
+      "documentation": "https://api.hackerone.com/docs/"
+    },
+    "bugcrowd": {
+      "name": "Bugcrowd",
+      "baseUrl": "https://api.bugcrowd.com",
+      "authType": "api_key",
+      "requiredScopes": ["read:programs", "read:submissions"],
+      "rateLimits": {
+        "requests": 1000,
+        "period": "hour"
+      },
+      "endpoints": {
+        "programs": "/programs",
+        "submissions": "/submissions",
+        "bounties": "/bounties"
+      },
+      "webhookSupport": false,
+      "documentation": "https://docs.bugcrowd.com/api/"
+    },
+    "intigriti": {
+      "name": "Intigriti",
+      "baseUrl": "https://api.intigriti.com",
+      "authType": "bearer",
+      "requiredScopes": ["external_api"],
+      "rateLimits": {
+        "requests": 500,
+        "period": "hour"
+      },
+      "endpoints": {
+        "programs": "/external/programs",
+        "submissions": "/external/submissions"
+      },
+      "webhookSupport": true,
+      "documentation": "https://app.intigriti.com/researcher/docs"
+    },
+    "yeswehack": {
+      "name": "YesWeHack",
+      "baseUrl": "https://api.yeswehack.com",
+      "authType": "bearer",
+      "rateLimits": {
+        "requests": 200,
+        "period": "hour"
+      },
+      "endpoints": {
+        "programs": "/programs",
+        "reports": "/reports"
+      },
+      "webhookSupport": false,
+      "documentation": "https://docs.yeswehack.com/"
+    }
+  },
+  "threatIntelligence": {
+    "shodan": {
+      "name": "Shodan",
+      "baseUrl": "https://api.shodan.io",
+      "authType": "api_key",
+      "rateLimits": {
+        "requests": 100,
+        "period": "month"
+      },
+      "endpoints": {
+        "search": "/shodan/host/search",
+        "host": "/shodan/host"
+      }
+    },
+    "virustotal": {
+      "name": "VirusTotal",
+      "baseUrl": "https://www.virustotal.com/api/v3",
+      "authType": "api_key",
+      "rateLimits": {
+        "requests": 500,
+        "period": "day"
+      }
+    }
+  },
+  "cloudProviders": {
+    "aws": {
+      "name": "Amazon Web Services",
+      "regions": ["us-east-1", "us-west-2", "eu-west-1", "eu-central-1", "ap-southeast-1"],
+      "instanceTypes": ["t3.micro", "t3.small", "t3.medium", "t3.large"],
+      "supportedImages": ["ami-0abcdef1234567890"]
+    },
+    "digitalocean": {
+      "name": "DigitalOcean",
+      "regions": ["nyc1", "sfo3", "ams3", "sgp1", "lon1"],
+      "sizes": ["s-1vcpu-1gb", "s-2vcpu-2gb", "s-4vcpu-8gb"],
+      "supportedImages": ["ubuntu-20-04-x64", "debian-11-x64"]
+    },
+    "gcp": {
+      "name": "Google Cloud Platform",
+      "regions": ["us-central1", "us-east1", "europe-west1", "asia-southeast1"],
+      "machineTypes": ["e2-micro", "e2-small", "e2-medium", "e2-standard-2"]
+    }
+  }
+}

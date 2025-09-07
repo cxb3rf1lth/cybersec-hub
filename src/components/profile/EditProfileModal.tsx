@@ -6,8 +6,8 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ApiKeySettings } from '@/components/settings/ApiKeySettings'
-import { ApiIntegrationTester } from '@/components/settings/ApiIntegrationTester'
+import { APIKeySettings } from '@/components/settings/APIKeySettings'
+import { APIIntegrationTester } from '@/components/settings/APIIntegrationTester'
 import { ThemeSelector } from '@/components/profile/ThemeSelector'
 import { User, Specialization } from '@/types/user'
 import { Key, User as UserIcon, Palette } from '@phosphor-icons/react'
@@ -155,7 +155,7 @@ export function EditProfileModal({ user, onClose, onSave }: EditProfileModalProp
                     </Button>
                   </div>
                   
-                  <ApiIntegrationTester />
+                  <APIIntegrationTester />
                 </div>
               </TabsContent>
 
@@ -178,7 +178,7 @@ export function EditProfileModal({ user, onClose, onSave }: EditProfileModalProp
         </DialogContent>
       </Dialog>
 
-      <ApiKeySettings 
+      <APIKeySettings 
         open={showApiKeySettings} 
         onOpenChange={setShowApiKeySettings} 
       />

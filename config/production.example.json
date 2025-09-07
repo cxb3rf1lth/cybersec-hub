@@ -1,0 +1,77 @@
+{
+  "apiBaseUrl": "https://api.cyberconnect.io",
+  "wsBaseUrl": "wss://api.cyberconnect.io",
+  "environment": "production",
+  "debugging": {
+    "enabled": false,
+    "logLevel": "error",
+    "enableSourceMaps": false
+  },
+  "features": {
+    "virtualLab": true,
+    "teamHunts": true,
+    "codeCollaboration": true,
+    "threatIntelligence": true,
+    "bugBountyIntegration": true
+  },
+  "security": {
+    "requireApiKeys": true,
+    "enforceRateLimit": true,
+    "enableCORS": false,
+    "allowedOrigins": ["https://cyberconnect.io", "https://app.cyberconnect.io"]
+  },
+  "integrations": {
+    "hackerone": {
+      "enabled": true,
+      "sandbox": false,
+      "rateLimitPerMinute": 60
+    },
+    "bugcrowd": {
+      "enabled": true,
+      "sandbox": false,
+      "rateLimitPerMinute": 30
+    },
+    "intigriti": {
+      "enabled": true,
+      "sandbox": false,
+      "rateLimitPerMinute": 40
+    },
+    "github": {
+      "enabled": true,
+      "usePersonalTokens": false,
+      "rateLimitPerHour": 5000
+    }
+  },
+  "virtualLab": {
+    "provider": "aws",
+    "maxInstances": 10,
+    "autoShutdown": 7200,
+    "allowedImages": [
+      "kali-linux",
+      "ubuntu-20.04", 
+      "parrot-os",
+      "pentestbox",
+      "blackarch"
+    ],
+    "regions": ["us-east-1", "us-west-2", "eu-west-1"]
+  },
+  "monitoring": {
+    "enableMetrics": true,
+    "enableErrorTracking": true,
+    "performanceLogging": true,
+    "alerting": {
+      "enabled": true,
+      "channels": ["slack", "email"],
+      "thresholds": {
+        "errorRate": 0.05,
+        "responseTime": 2000
+      }
+    }
+  },
+  "backup": {
+    "enabled": true,
+    "schedule": "0 2 * * *",
+    "retention": "30d",
+    "encryption": true
+  }
+}

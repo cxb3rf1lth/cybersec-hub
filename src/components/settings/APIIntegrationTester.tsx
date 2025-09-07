@@ -26,7 +26,7 @@ interface TestResult {
   data?: any
 }
 
-export function ApiIntegrationTester() {
+export function APIIntegrationTester() {
   const { getAllApiKeys, isServiceEnabled } = useApiKeys()
   const [testing, setTesting] = useState(false)
   const [results, setResults] = useState<TestResult[]>([])

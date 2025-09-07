@@ -23,12 +23,12 @@ import {
   Info
 } from '@phosphor-icons/react'
 
-interface ApiKeySettingsProps {
+interface APIKeySettingsProps {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function ApiKeySettings({ open, onOpenChange }: ApiKeySettingsProps) {
+export function APIKeySettings({ open, onOpenChange }: APIKeySettingsProps) {
   const {
     saveApiKey,
     removeApiKey,

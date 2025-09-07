@@ -24,7 +24,7 @@ import { stabilityChecker, useStabilityMonitor } from '@/lib/stability-checker';
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MainContent } from '@/components/layout/MainContent'
 import { AuthModal } from '@/components/auth/AuthModal'
-import { ApiKeyManager } from '@/components/ui/ApiKeyManager'
+import { ApiKeyManager } from '@/components/ui/APIKeyManager'
 import { NeuralNetwork } from '@/components/ui/NeuralNetwork'
 import { FloatingParticles } from '@/components/ui/FloatingParticles'
 import { Toaster } from '@/components/ui/sonner'

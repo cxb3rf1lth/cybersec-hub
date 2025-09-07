@@ -1,0 +1,48 @@
+{
+  "apiBaseUrl": "https://api.cyberconnect.dev",
+  "wsBaseUrl": "wss://api.cyberconnect.dev",
+  "environment": "development",
+  "debugging": {
+    "enabled": true,
+    "logLevel": "debug",
+    "enableSourceMaps": true
+  },
+  "features": {
+    "virtualLab": true,
+    "teamHunts": true,
+    "codeCollaboration": true,
+    "threatIntelligence": true,
+    "bugBountyIntegration": true
+  },
+  "security": {
+    "requireApiKeys": false,
+    "enforceRateLimit": false,
+    "enableCORS": true,
+    "allowedOrigins": ["http://localhost:5173", "http://127.0.0.1:5173"]
+  },
+  "integrations": {
+    "hackerone": {
+      "enabled": false,
+      "sandbox": true
+    },
+    "bugcrowd": {
+      "enabled": false,
+      "sandbox": true
+    },
+    "github": {
+      "enabled": true,
+      "usePersonalTokens": true
+    }
+  },
+  "virtualLab": {
+    "provider": "local",
+    "maxInstances": 3,
+    "autoShutdown": 3600,
+    "allowedImages": ["kali-linux", "ubuntu-20.04", "parrot-os"]
+  },
+  "monitoring": {
+    "enableMetrics": true,
+    "enableErrorTracking": true,
+    "performanceLogging": true
+  }
+}
