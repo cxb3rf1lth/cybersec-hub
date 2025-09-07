@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -28,7 +28,7 @@ export function TeamsView({ currentUser }: TeamsViewProps) {
   const [filter, setFilter] = useState<'all' | 'my-teams' | 'recruiting' | 'proposals'>('all')
   
   const { teams } = useSampleTeamData()
-  const [myTeams] = useKV<string[]>('userTeams', [])
+  const [myTeams] = useKVWithFallback<string[]>('userTeams', [])
 
   const userTeams = teams.filter(team => 
     team.members.some(member => member.userId === currentUser.id)

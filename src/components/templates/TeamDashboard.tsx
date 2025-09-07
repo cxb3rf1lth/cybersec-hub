@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
@@ -29,8 +29,8 @@ interface TeamDashboardProps {
 }
 
 export function TeamDashboard({ currentUser }: TeamDashboardProps) {
-  const [teams] = useKV<TeamInfo[]>('teams', [])
-  const [teamProjects] = useKV<TeamProject[]>('teamProjects', [])
+  const [teams] = useKVWithFallback<TeamInfo[]>('teams', [])
+  const [teamProjects] = useKVWithFallback<TeamProject[]>('teamProjects', [])
   const [searchQuery, setSearchQuery] = useState('')
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedTeam, setSelectedTeam] = useState<TeamInfo | null>(null)

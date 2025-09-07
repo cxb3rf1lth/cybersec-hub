@@ -3,7 +3,7 @@
  * Real implementations for all platform integrations and features
  */
 
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { toast } from 'sonner'
 import { CONFIG, ENDPOINTS, FEATURE_FLAGS, LIMITS, TIMEOUTS } from './environment'
 import { authenticatedApiService, apiKeyManager, type ApiServiceKey } from './api-keys'

@@ -3,7 +3,7 @@
  * Real integrations with container orchestration, cloud providers, and virtualization platforms
  */
 
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 
@@ -415,9 +415,9 @@ class DigitalOceanProvider {
 }
 
 export function useRealVirtualLab() {
-  const [vms, setVMs] = useKV<VirtualMachine[]>('virtualMachines', [])
-  const [providers, setProviders] = useKV<CloudProvider[]>('cloudProviders', [])
-  const [templates, setTemplates] = useKV<VMTemplate[]>('vmTemplates', [])
+  const [vms, setVMs] = useKVWithFallback<VirtualMachine[]>('virtualMachines', [])
+  const [providers, setProviders] = useKVWithFallback<CloudProvider[]>('cloudProviders', [])
+  const [templates, setTemplates] = useKVWithFallback<VMTemplate[]>('vmTemplates', [])
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {

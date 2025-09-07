@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Plus, Code } from '@phosphor-icons/react'
@@ -17,8 +17,8 @@ interface FeedViewProps {
 
 export function FeedView({ currentUser }: FeedViewProps) {
   const [showCreatePost, setShowCreatePost] = useState(false)
-  const [posts, setPosts] = useKV<Post[]>('posts', [])
-  const [activities, setActivities] = useKV<Activity[]>('activities', [])
+  const [posts, setPosts] = useKVWithFallback<Post[]>('posts', [])
+  const [activities, setActivities] = useKVWithFallback<Activity[]>('activities', [])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {

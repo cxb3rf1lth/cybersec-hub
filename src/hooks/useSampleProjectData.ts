@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Project, Team, Task } from '@/types'
 
 export function useSampleProjectData() {
-  const [projects, setProjects] = useKV<Project[]>('projects', [])
-  const [teams, setTeams] = useKV<Team[]>('teams', [])
+  const [projects, setProjects] = useKVWithFallback<Project[]>('projects', [])
+  const [teams, setTeams] = useKVWithFallback<Team[]>('teams', [])
 
   useEffect(() => {
     // Only initialize if no projects exist

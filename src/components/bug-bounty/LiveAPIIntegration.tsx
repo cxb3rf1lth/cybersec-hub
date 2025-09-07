@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { useProductionAPI, PLATFORM_CONFIGS, APIConnection } from '@/lib/production-api'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -31,9 +31,9 @@ interface RealTimeStats {
 }
 
 export function LiveAPIIntegration() {
-  const [connections, setConnections] = useKV<APIConnection[]>('live_api_connections', [])
-  const [livePrograms, setLivePrograms] = useKV<LiveProgram[]>('live_bug_bounty_programs', [])
-  const [stats, setStats] = useKV<RealTimeStats>('live_bb_stats', {
+  const [connections, setConnections] = useKVWithFallback<APIConnection[]>('live_api_connections', [])
+  const [livePrograms, setLivePrograms] = useKVWithFallback<LiveProgram[]>('live_bug_bounty_programs', [])
+  const [stats, setStats] = useKVWithFallback<RealTimeStats>('live_bb_stats', {
     totalPrograms: 0,
     activeBounties: 0,
     totalRewards: 0,

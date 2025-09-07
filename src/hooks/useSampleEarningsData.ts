@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Earning, EarningsGoal, EarningType, EarningSource, PaymentStatus } from '@/types/earnings'
 
 export function useSampleEarningsData() {
-  const [earnings, setEarnings] = useKV<Earning[]>('sample-earnings', [])
-  const [goals, setGoals] = useKV<EarningsGoal[]>('sample-goals', [])
+  const [earnings, setEarnings] = useKVWithFallback<Earning[]>('sample-earnings', [])
+  const [goals, setGoals] = useKVWithFallback<EarningsGoal[]>('sample-goals', [])
 
   useEffect(() => {
     // Only generate sample data if none exists

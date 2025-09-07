@@ -1,5 +1,5 @@
-import { useKV } from '@github/spark/hooks'
 import { useEffect } from 'react'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 
 export type ThemeColor = 'red' | 'purple' | 'blue' | 'green'
 
@@ -73,7 +73,7 @@ export const THEME_CONFIGS: Record<ThemeColor, ThemeConfig> = {
 }
 
 export function useTheme() {
-  const [currentTheme, setCurrentTheme] = useKV<ThemeColor>('theme-color', 'red')
+  const [currentTheme, setCurrentTheme] = useKVWithFallback<ThemeColor>('theme-color', 'red')
 
   useEffect(() => {
     const theme = THEME_CONFIGS[currentTheme]

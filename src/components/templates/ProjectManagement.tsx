@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -41,7 +41,7 @@ interface ProjectManagementProps {
 }
 
 export function ProjectManagement({ team, currentUser, onClose }: ProjectManagementProps) {
-  const [teamProjects, setTeamProjects] = useKV<TeamProject[]>('teamProjects', [])
+  const [teamProjects, setTeamProjects] = useKVWithFallback<TeamProject[]>('teamProjects', [])
   const [activeTab, setActiveTab] = useState('overview')
   const [selectedProject, setSelectedProject] = useState<TeamProject | null>(null)
   const [showCreateProject, setShowCreateProject] = useState(false)

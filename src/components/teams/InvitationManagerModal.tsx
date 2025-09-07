@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import {
   Dialog,
   DialogContent,
@@ -31,9 +31,9 @@ interface InvitationManagerModalProps {
 }
 
 export function InvitationManagerModal({ team, currentUser, onClose }: InvitationManagerModalProps) {
-  const [invitations, setInvitations] = useKV<TeamInvitation[]>('teamInvitations', [])
-  const [teamRoles] = useKV<TeamRole[]>('teamRoles', [])
-  const [users] = useKV<User[]>('users', [])
+  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
+  const [teamRoles] = useKVWithFallback<TeamRole[]>('teamRoles', [])
+  const [users] = useKVWithFallback<User[]>('users', [])
   const [activeTab, setActiveTab] = useState('pending')
 
   // Filter invitations for this team

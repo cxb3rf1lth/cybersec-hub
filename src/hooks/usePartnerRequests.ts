@@ -1,9 +1,9 @@
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { PartnerRequest, PartnerApplication, SkillCategory, PartnerMatch } from '@/types/partner-requests'
 
 export function usePartnerRequests() {
-  const [partnerRequests, setPartnerRequests] = useKV<PartnerRequest[]>('partner-requests', [])
-  const [skillCategories] = useKV<SkillCategory[]>('skill-categories', [
+  const [partnerRequests, setPartnerRequests] = useKVWithFallback<PartnerRequest[]>('partner-requests', [])
+  const [skillCategories] = useKVWithFallback<SkillCategory[]>('skill-categories', [
     {
       id: 'penetration-testing',
       name: 'Penetration Testing',

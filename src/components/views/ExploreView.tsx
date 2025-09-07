@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -22,10 +22,10 @@ const TRENDING_TOPICS = [
 export function ExploreView({ currentUser, onNavigateToMessages }: ExploreViewProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<Specialization | 'All'>('All')
-  const [users] = useKV<User[]>('allUsers', [])
-  const [posts] = useKV<Post[]>('posts', [])
-  const [following, setFollowing] = useKV<string[]>(`following-${currentUser.id}`, currentUser.following)
-  const [conversations, setConversations] = useKV<Conversation[]>('conversations', [])
+  const [users] = useKVWithFallback<User[]>('allUsers', [])
+  const [posts] = useKVWithFallback<Post[]>('posts', [])
+  const [following, setFollowing] = useKVWithFallback<string[]>(`following-${currentUser.id}`, currentUser.following)
+  const [conversations, setConversations] = useKVWithFallback<Conversation[]>('conversations', [])
 
   const categories: (Specialization | 'All')[] = [
     'All', 'Red Team', 'Blue Team', 'Bug Bounty', 'Penetration Testing',

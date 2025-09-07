@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -34,7 +34,7 @@ interface CountryStats {
 }
 
 export function LiveThreatMap() {
-  const [threats, setThreats] = useKV<ThreatAlert[]>('live-threats', [])
+  const [threats, setThreats] = useKVWithFallback<ThreatAlert[]>('live-threats', [])
   const [selectedThreat, setSelectedThreat] = useState<ThreatAlert | null>(null)
   const [filterType, setFilterType] = useState<string>('all')
   const [filterSeverity, setFilterSeverity] = useState<string>('all')

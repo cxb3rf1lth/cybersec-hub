@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { X, DollarSign, Calendar, FileText, Upload } from '@phosphor-icons/react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
@@ -22,7 +22,7 @@ interface CreateProposalModalProps {
 }
 
 export function CreateProposalModal({ listing, team, currentUser, isOpen, onClose }: CreateProposalModalProps) {
-  const [proposals, setProposals] = useKV<MarketplaceProposal[]>('marketplaceProposals', [])
+  const [proposals, setProposals] = useKVWithFallback<MarketplaceProposal[]>('marketplaceProposals', [])
   const [projectTitle, setProjectTitle] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
   const [budget, setBudget] = useState('')

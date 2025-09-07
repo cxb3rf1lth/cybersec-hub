@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -17,7 +17,7 @@ interface ChatInterfaceProps {
 }
 
 export function ChatInterface({ conversation, messages, currentUser, onSendMessage }: ChatInterfaceProps) {
-  const [users] = useKV<User[]>('allUsers', [])
+  const [users] = useKVWithFallback<User[]>('allUsers', [])
   const [messageContent, setMessageContent] = useState('')
   const [messageType, setMessageType] = useState<'text' | 'code'>('text')
   const [codeLanguage, setCodeLanguage] = useState('javascript')

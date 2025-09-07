@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { ConversationList } from '@/components/messages/ConversationList'
 import { ChatInterface } from '@/components/messages/ChatInterface'
 import { NewMessageModal } from '@/components/messages/NewMessageModal'
@@ -13,8 +13,8 @@ interface MessagesViewProps {
 }
 
 export function MessagesView({ currentUser }: MessagesViewProps) {
-  const [conversations, setConversations] = useKV<Conversation[]>('conversations', [])
-  const [messages, setMessages] = useKV<Message[]>('messages', [])
+  const [conversations, setConversations] = useKVWithFallback<Conversation[]>('conversations', [])
+  const [messages, setMessages] = useKVWithFallback<Message[]>('messages', [])
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null)
   const [showNewMessage, setShowNewMessage] = useState(false)
 

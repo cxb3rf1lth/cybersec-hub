@@ -3,7 +3,7 @@
  * Real-time collaborative editing, version control, and code sharing
  */
 
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { toast } from 'sonner'
 import { codeCollaborationService, webSocketService } from '@/lib/production-services'
@@ -397,11 +397,11 @@ class GitHubIntegration {
 }
 
 export function useRealCodeCollaboration(currentUserId: string) {
-  const [projects, setProjects] = useKV<CodeProject[]>('codeProjects', [])
+  const [projects, setProjects] = useKVWithFallback<CodeProject[]>('codeProjects', [])
   const [activeProject, setActiveProject] = useState<CodeProject | null>(null)
   const [activeCursors, setActiveCursors] = useState<CursorPosition[]>([])
-  const [comments, setComments] = useKV<Record<string, CodeComment[]>>('codeComments', {})
-  const [commits, setCommits] = useKV<Record<string, CodeCommit[]>>('codeCommits', {})
+  const [comments, setComments] = useKVWithFallback<Record<string, CodeComment[]>>('codeComments', {})
+  const [commits, setCommits] = useKVWithFallback<Record<string, CodeCommit[]>>('codeCommits', {})
   const [collaborationStatus, setCollaborationStatus] = useState<'disconnected' | 'connecting' | 'connected' | 'error'>('disconnected')
   const [isLoading, setIsLoading] = useState(false)
 

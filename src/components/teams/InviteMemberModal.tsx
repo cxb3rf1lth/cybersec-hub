@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import {
   Dialog,
   DialogContent,
@@ -32,9 +32,9 @@ interface InviteMemberModalProps {
 }
 
 export function InviteMemberModal({ team, currentUser, onClose, onInvitationSent }: InviteMemberModalProps) {
-  const [users] = useKV<User[]>('users', [])
-  const [teamRoles] = useKV<TeamRole[]>('teamRoles', [])
-  const [invitations, setInvitations] = useKV<TeamInvitation[]>('teamInvitations', [])
+  const [users] = useKVWithFallback<User[]>('users', [])
+  const [teamRoles] = useKVWithFallback<TeamRole[]>('teamRoles', [])
+  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
   
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedUser, setSelectedUser] = useState<User | null>(null)

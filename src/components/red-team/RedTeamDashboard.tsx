@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -164,12 +164,12 @@ interface Props {
 }
 
 export function RedTeamDashboard({ currentUser }: Props) {
-  const [campaigns, setCampaigns] = useKV<RedTeamCampaign[]>('redteam-campaigns', [])
-  const [findings, setFindings] = useKV<RedTeamFinding[]>('redteam-findings', [])
-  const [tools, setTools] = useKV<RedTeamTool[]>('redteam-tools', [])
-  const [c2Frameworks, setC2Frameworks] = useKV<C2Framework[]>('redteam-c2', [])
-  const [payloads, setPayloads] = useKV<Payload[]>('redteam-payloads', [])
-  const [techniques, setTechniques] = useKV<RedTeamTechnique[]>('redteam-techniques', [])
+  const [campaigns, setCampaigns] = useKVWithFallback<RedTeamCampaign[]>('redteam-campaigns', [])
+  const [findings, setFindings] = useKVWithFallback<RedTeamFinding[]>('redteam-findings', [])
+  const [tools, setTools] = useKVWithFallback<RedTeamTool[]>('redteam-tools', [])
+  const [c2Frameworks, setC2Frameworks] = useKVWithFallback<C2Framework[]>('redteam-c2', [])
+  const [payloads, setPayloads] = useKVWithFallback<Payload[]>('redteam-payloads', [])
+  const [techniques, setTechniques] = useKVWithFallback<RedTeamTechnique[]>('redteam-techniques', [])
   const [activeTab, setActiveTab] = useState('campaigns')
   const [selectedCampaign, setSelectedCampaign] = useState<RedTeamCampaign | null>(null)
   const [selectedTechnique, setSelectedTechnique] = useState<RedTeamTechnique | null>(null)

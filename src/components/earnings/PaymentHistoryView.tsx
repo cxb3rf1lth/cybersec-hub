@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -25,7 +25,7 @@ interface PaymentHistoryViewProps {
 }
 
 export function PaymentHistoryView({ currentUser }: PaymentHistoryViewProps) {
-  const [earnings] = useKV<Earning[]>(`earnings-${currentUser.id}`, [])
+  const [earnings] = useKVWithFallback<Earning[]>(`earnings-${currentUser.id}`, [])
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<PaymentStatus | 'all'>('all')
   const [typeFilter, setTypeFilter] = useState<EarningType | 'all'>('all')

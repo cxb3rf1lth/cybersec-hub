@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -39,9 +39,9 @@ interface TeamDetailModalProps {
 }
 
 export function TeamDetailModal({ team, currentUser, onClose, onTeamUpdated }: TeamDetailModalProps) {
-  const [teams, setTeams] = useKV<TeamInfo[]>('teams', [])
-  const [templates] = useKV<Template[]>('templates', [])
-  const [teamProjects] = useKV<TeamProject[]>('teamProjects', [])
+  const [teams, setTeams] = useKVWithFallback<TeamInfo[]>('teams', [])
+  const [templates] = useKVWithFallback<Template[]>('templates', [])
+  const [teamProjects] = useKVWithFallback<TeamProject[]>('teamProjects', [])
   const [inviteEmail, setInviteEmail] = useState('')
   const [selectedRole, setSelectedRole] = useState<TeamMember['role']>('developer')
   const [activeTab, setActiveTab] = useState('overview')

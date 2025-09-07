@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { bugBountySyncService, SyncedBugBountyData } from '@/lib/real-time-sync'
 import { apiManager } from '@/lib/production-api'
 import { toast } from 'sonner'
@@ -50,7 +50,7 @@ const DEFAULT_CONFIG: AutoSyncConfig = {
 }
 
 export function useAutoSync() {
-  const [config, setConfig] = useKV<AutoSyncConfig>('auto_sync_config', DEFAULT_CONFIG)
+  const [config, setConfig] = useKVWithFallback<AutoSyncConfig>('auto_sync_config', DEFAULT_CONFIG)
   const [syncData, setSyncData] = useState<SyncedBugBountyData | null>(null)
   const [metrics, setMetrics] = useState<SyncMetrics>({
     programsCount: 0,

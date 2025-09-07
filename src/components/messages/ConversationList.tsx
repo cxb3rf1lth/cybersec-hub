@@ -1,4 +1,4 @@
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Conversation, User } from '@/types/user'
@@ -17,7 +17,7 @@ export function ConversationList({
   selectedConversationId, 
   onSelectConversation 
 }: ConversationListProps) {
-  const [users] = useKV<User[]>('allUsers', [])
+  const [users] = useKVWithFallback<User[]>('allUsers', [])
 
   const getOtherParticipant = (conversation: Conversation) => {
     const otherParticipantId = conversation.participants.find(id => id !== currentUserId)

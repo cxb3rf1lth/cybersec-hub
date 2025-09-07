@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -125,8 +125,8 @@ const THREAT_SOURCES: ThreatSource[] = [
 ]
 
 export function ProductionThreatIntegration() {
-  const [sources] = useKV<ThreatSource[]>('production-threat-sources', THREAT_SOURCES)
-  const [feeds, setFeeds] = useKV<ThreatFeed[]>('production-threat-feeds', [])
+  const [sources] = useKVWithFallback<ThreatSource[]>('production-threat-sources', THREAT_SOURCES)
+  const [feeds, setFeeds] = useKVWithFallback<ThreatFeed[]>('production-threat-feeds', [])
   const [selectedSource, setSelectedSource] = useState<ThreatSource | null>(null)
   const [activeTab, setActiveTab] = useState<'overview' | 'sources' | 'feeds' | 'analytics'>('overview')
 

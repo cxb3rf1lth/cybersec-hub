@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { User } from '@/types/user'
 import { 
   Template, 
@@ -635,11 +635,11 @@ const COLLABORATIVE_TEMPLATES: Template[] = SAMPLE_TEMPLATES.map((template, inde
 }))
 
 export function useSampleData() {
-  const [allUsers, setAllUsers] = useKV<User[]>('allUsers', [])
-  const [templates, setTemplates] = useKV<Template[]>('templates', [])
-  const [repositories, setRepositories] = useKV<ToolRepository[]>('toolRepositories', [])
-  const [teams, setTeams] = useKV<TeamInfo[]>('teams', [])
-  const [teamProjects, setTeamProjects] = useKV<TeamProject[]>('teamProjects', [])
+  const [allUsers, setAllUsers] = useKVWithFallback<User[]>('allUsers', [])
+  const [templates, setTemplates] = useKVWithFallback<Template[]>('templates', [])
+  const [repositories, setRepositories] = useKVWithFallback<ToolRepository[]>('toolRepositories', [])
+  const [teams, setTeams] = useKVWithFallback<TeamInfo[]>('teams', [])
+  const [teamProjects, setTeamProjects] = useKVWithFallback<TeamProject[]>('teamProjects', [])
 
   useEffect(() => {
     // Only initialize sample data if no users exist

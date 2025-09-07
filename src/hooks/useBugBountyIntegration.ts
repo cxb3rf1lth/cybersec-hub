@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { bugBountyService, threatIntelService, authService } from '@/lib/production-services'
 import { useAPIKeys, useSecureConfig, APIKeyValidator, quotaManager, API_CONFIGS } from '@/lib/config'
 import { apiManager, useProductionAPI, PLATFORM_CONFIGS } from '@/lib/production-api'
@@ -100,14 +100,14 @@ export interface PlatformIntegration {
 }
 
 export function useBugBountyIntegration() {
-  const [programs, setPrograms] = useKV<BugBountyProgram[]>('bugBountyPrograms', [])
-  const [threatFeed, setThreatFeed] = useKV<LiveThreatFeed[]>('liveThreatFeed', [])
-  const [teamHunts, setTeamHunts] = useKV<TeamHunt[]>('teamHunts', [])
-  const [partnerRequests, setPartnerRequests] = useKV<PartnerRequest[]>('partnerRequests', [])
-  const [integrations, setIntegrations] = useKV<PlatformIntegration[]>('platformIntegrations', [])
+  const [programs, setPrograms] = useKVWithFallback<BugBountyProgram[]>('bugBountyPrograms', [])
+  const [threatFeed, setThreatFeed] = useKVWithFallback<LiveThreatFeed[]>('liveThreatFeed', [])
+  const [teamHunts, setTeamHunts] = useKVWithFallback<TeamHunt[]>('teamHunts', [])
+  const [partnerRequests, setPartnerRequests] = useKVWithFallback<PartnerRequest[]>('partnerRequests', [])
+  const [integrations, setIntegrations] = useKVWithFallback<PlatformIntegration[]>('platformIntegrations', [])
   const [isLoading, setIsLoading] = useState(false)
   const [lastUpdate, setLastUpdate] = useState<string>('')
-  const [syncErrors, setSyncErrors] = useKV<Record<string, string>>('syncErrors', {})
+  const [syncErrors, setSyncErrors] = useKVWithFallback<Record<string, string>>('syncErrors', {})
   
   // Use production API manager
   const productionAPI = useProductionAPI()
@@ -122,8 +122,9 @@ export function useBugBountyIntegration() {
     startRealTimeUpdates()
     return () => {
       // Clean up real-time connections
-      const { webSocketService } = require('@/lib/production-services')
-      webSocketService.disconnect()
+      import('@/lib/production-services').then(({ webSocketService }) => {
+        webSocketService.disconnect()
+      }).catch(console.warn)
     }
   }, [])
 
@@ -189,16 +190,16 @@ export function useBugBountyIntegration() {
 
   const startRealTimeUpdates = () => {
     // Use production WebSocket service for real-time updates
-    const { webSocketService } = require('@/lib/production-services')
-    
-    webSocketService.on('threat_update', handleRealTimeThreatUpdate)
-    webSocketService.on('bounty_update', handleProgramUpdate)
-    webSocketService.on('team_hunt_update', handleTeamHuntUpdate)
-
-    // Subscribe to relevant channels
-    webSocketService.subscribe('threat-intelligence')
-    webSocketService.subscribe('bug-bounty-programs')
-    webSocketService.subscribe('team-hunts')
+    import('@/lib/production-services').then(({ webSocketService }) => {
+      webSocketService.on('threat_update', handleRealTimeThreatUpdate)
+      webSocketService.on('bounty_update', handleProgramUpdate)
+      webSocketService.on('team_hunt_update', handleTeamHuntUpdate)
+      
+      // Subscribe to relevant channels
+      webSocketService.subscribe('threat-intelligence')
+      webSocketService.subscribe('bug-bounty-programs')
+      webSocketService.subscribe('team-hunts')
+    }).catch(console.warn)
 
     // Set up periodic data refresh with production service
     const interval = setInterval(async () => {
@@ -631,7 +632,7 @@ export function useBugBountyIntegration() {
   const joinTeamHunt = async (huntId: string, userId: string) => {
     try {
       // Use production collaboration service
-      const { teamService } = require('@/lib/production-services')
+      const { teamService } = await import('@/lib/production-services')
       await teamService.joinTeam(huntId)
       
       setTeamHunts(current => 

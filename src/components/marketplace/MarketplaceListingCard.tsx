@@ -8,7 +8,7 @@ import { MarketplaceListing } from '@/types/marketplace'
 import type { Team } from '@/types/teams'
 import { CreateProposalModal } from './CreateProposalModal'
 import { User } from '@/types/user'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 
 interface MarketplaceListingCardProps {
   listing: MarketplaceListing
@@ -17,7 +17,7 @@ interface MarketplaceListingCardProps {
 }
 
 export function MarketplaceListingCard({ listing, team, featured = false }: MarketplaceListingCardProps) {
-  const [currentUser] = useKV<User>('currentUser', undefined)
+  const [currentUser] = useKVWithFallback<User>('currentUser', undefined)
   const [showProposalModal, setShowProposalModal] = useState(false)
   const getCategoryColor = (category: string) => {
     const colors = {

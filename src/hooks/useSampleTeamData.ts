@@ -1,11 +1,11 @@
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { useEffect } from 'react'
 import { Team, TeamRole, Permission, TeamType } from '@/types/teams'
 
 export function useSampleTeamData() {
-  const [teams = [], setTeams] = useKV<Team[]>('teams', [])
-  const [teamRoles = [], setTeamRoles] = useKV<TeamRole[]>('teamRoles', [])
-  const [permissions = [], setPermissions] = useKV<Permission[]>('permissions', [])
+  const [teams = [], setTeams] = useKVWithFallback<Team[]>('teams', [])
+  const [teamRoles = [], setTeamRoles] = useKVWithFallback<TeamRole[]>('teamRoles', [])
+  const [permissions = [], setPermissions] = useKVWithFallback<Permission[]>('permissions', [])
 
   useEffect(() => {
     if (permissions.length === 0) {

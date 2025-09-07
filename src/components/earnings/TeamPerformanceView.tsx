@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -27,9 +27,9 @@ interface TeamPerformanceViewProps {
 }
 
 export function TeamPerformanceView({ currentUser }: TeamPerformanceViewProps) {
-  const [teams] = useKV<Team[]>('teams', [])
-  const [earnings] = useKV<Earning[]>(`earnings-${currentUser.id}`, [])
-  const [teamAnalytics] = useKV<TeamEarningsAnalytics[]>(`team-analytics-${currentUser.id}`, [])
+  const [teams] = useKVWithFallback<Team[]>('teams', [])
+  const [earnings] = useKVWithFallback<Earning[]>(`earnings-${currentUser.id}`, [])
+  const [teamAnalytics] = useKVWithFallback<TeamEarningsAnalytics[]>(`team-analytics-${currentUser.id}`, [])
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null)
 
   // Get user's teams

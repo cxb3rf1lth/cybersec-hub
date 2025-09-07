@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -21,8 +21,8 @@ interface TemplatesViewProps {
 }
 
 export function TemplatesView({ currentUser }: TemplatesViewProps) {
-  const [templates] = useKV<Template[]>('templates', [])
-  const [repositories] = useKV<ToolRepository[]>('toolRepositories', [])
+  const [templates] = useKVWithFallback<Template[]>('templates', [])
+  const [repositories] = useKVWithFallback<ToolRepository[]>('toolRepositories', [])
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTab, setActiveTab] = useState<'templates' | 'repositories' | 'teams'>('templates')
   const [showCreateTemplate, setShowCreateTemplate] = useState(false)
