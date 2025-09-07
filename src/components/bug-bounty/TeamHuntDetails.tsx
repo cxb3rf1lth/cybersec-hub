@@ -21,7 +21,7 @@ import {
   Award,
   TrendingUp,
   Activity
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { TeamHunt, TeamHuntParticipant } from '@/types/bug-bounty';
 import { User } from '@/types/user';
 import { toast } from 'sonner';

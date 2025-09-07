@@ -22,7 +22,7 @@ import {
   X,
   Edit3,
   Trash
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { toast } from 'sonner';
 import { 
   TeamProject, 

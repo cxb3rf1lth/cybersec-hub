@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Play, Stop, Trash, Settings, Terminal, Network, Shield, DesktopTower, Code, Database, Eye, Target, Users, Clock, HardDrives, Cpu, Activity, Binoculars } from '@phosphor-icons/react';
+import { Plus, Play, Stop, Trash, Settings, Terminal, Network, Shield, DesktopTower, Code, Database, Eye, Target, Users, Clock, HardDrives, Cpu, Activity, Binoculars } from '@/lib/phosphor-icons-wrapper';
 import { useVirtualLab } from '@/hooks/useVirtualLab';
 import { useKVWithFallback } from '@/lib/kv-fallback';
 import type { User } from '@/types/user';

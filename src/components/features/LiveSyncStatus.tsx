@@ -29,7 +29,7 @@ import {
   Shield,
   Target,
   Globe
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 
 interface SyncActivity {
   id: string

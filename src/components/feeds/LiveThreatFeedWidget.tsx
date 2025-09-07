@@ -12,7 +12,7 @@ import {
   TrendingUp,
   DollarSign,
   Zap
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { formatDistanceToNow } from 'date-fns';
 
 interface ThreatFeedItem {

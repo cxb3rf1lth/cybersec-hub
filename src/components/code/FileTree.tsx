@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { File, Folder, FolderOpen, GitBranch, Calendar, User as UserIcon } from '@phosphor-icons/react';
+import { File, Folder, FolderOpen, GitBranch, Calendar, User as UserIcon } from '@/lib/phosphor-icons-wrapper';
 import { Repository, User, RepositoryFile } from '@/types/user';
 
 interface FileTreeProps {

@@ -1,6 +1,6 @@
 import { UserStatus } from '@/types/user';
 import { Badge } from '@/components/ui/badge';
-import { Circle, Target, Zap, Clock, Coffee, User } from '@phosphor-icons/react';
+import { Circle, Target, Zap, Clock, Coffee, User } from '@/lib/phosphor-icons-wrapper';
 
 interface StatusIndicatorProps {
   status: UserStatus

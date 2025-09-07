@@ -4,7 +4,7 @@ import { ConversationList } from '@/components/messages/ConversationList';
 import { ChatInterface } from '@/components/messages/ChatInterface';
 import { NewMessageModal } from '@/components/messages/NewMessageModal';
 import { Button } from '@/components/ui/button';
-import { PencilSimple } from '@phosphor-icons/react';
+import { PencilSimple } from '@/lib/phosphor-icons-wrapper';
 import { toast } from 'sonner';
 import { User, Conversation, Message } from '@/types/user';
 

@@ -20,7 +20,7 @@ import {
   Activity,
   Clock,
   DollarSign
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { BugBountyPlatform, PlatformConfiguration } from '@/types/bug-bounty';
 import { User } from '@/types/user';
 import { toast } from 'sonner';

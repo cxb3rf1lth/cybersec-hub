@@ -16,7 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import { Team, User, TeamType, TeamMember } from '@/types';
 import { useSampleTeamData } from '@/hooks/useSampleTeamData';
-import { X } from '@phosphor-icons/react';
+import { X } from '@/lib/phosphor-icons-wrapper';
 import { toast } from 'sonner';
 
 interface CreateTeamModalProps {

@@ -25,7 +25,7 @@ import {
   Calendar,
   Mail,
   Target
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { toast } from 'sonner';
 import { TeamInfo, TeamMember, User, TeamProject, Template } from '@/types';
 import { ProjectManagement } from './ProjectManagement';

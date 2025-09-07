@@ -3,8 +3,8 @@ export * from '@phosphor-icons/react';
 
 // Aliases for commonly used, non-existent names mapped to closest Phosphor icons
 export { MagnifyingGlass as Search } from '@phosphor-icons/react';
-export { TrendUp as TrendingUp } from '@phosphor-icons/react';
-export { TrendDown as TrendingDown } from '@phosphor-icons/react';
+export { ChartLineUp as TrendingUp } from '@phosphor-icons/react';
+export { ChartLineDown as TrendingDown } from '@phosphor-icons/react';
 export { PencilSimple as Edit } from '@phosphor-icons/react';
 export { PencilSimple as Edit3 } from '@phosphor-icons/react';
 export { Funnel as Filter } from '@phosphor-icons/react';

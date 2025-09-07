@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useKVWithFallback } from '@/lib/kv-fallback';
-import { Plus, Users, Star, Trophy, Search, Filter, Crown, Shield } from '@phosphor-icons/react';
+import { Plus, Users, Star, Trophy, Search, Filter, Crown, Shield } from '@/lib/phosphor-icons-wrapper';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

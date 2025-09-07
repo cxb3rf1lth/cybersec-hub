@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useApiKeys } from '@/lib/api-keys';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { CheckCircle, XCircle, Settings } from '@phosphor-icons/react';
+import { CheckCircle, XCircle, Settings } from '@/lib/phosphor-icons-wrapper';
 
 export function ApiStatusIndicator() {
   const { getAllApiKeys, getServiceStats } = useApiKeys();

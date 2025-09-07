@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { X, Users, Shield, Eye } from '@phosphor-icons/react';
+import { X, Users, Shield, Eye } from '@/lib/phosphor-icons-wrapper';
 import { toast } from 'sonner';
 import { TeamInfo, User } from '@/types';
 

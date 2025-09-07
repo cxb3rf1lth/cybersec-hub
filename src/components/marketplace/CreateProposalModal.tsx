@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useKVWithFallback } from '@/lib/kv-fallback';
-import { X, DollarSign, Calendar, FileText, Upload } from '@phosphor-icons/react';
+import { X, DollarSign, Calendar, FileText, Upload } from '@/lib/phosphor-icons-wrapper';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

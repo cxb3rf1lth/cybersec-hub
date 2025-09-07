@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useKVWithFallback } from '@/lib/kv-fallback';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Plus, Code } from '@phosphor-icons/react';
+import { Plus, Code } from '@/lib/phosphor-icons-wrapper';
 import { PostCard } from '@/components/posts/PostCard';
 import { CreatePostModal } from '@/components/posts/CreatePostModal';
 import { MatrixDots, ScanLine } from '@/components/ui/loading-animations';

@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { StatusIndicator } from '@/components/ui/StatusIndicator';
 import { BadgeGrid } from '@/components/ui/SecurityBadge';
 import { CertificationList } from '@/components/ui/CertificationBadge';
-import { Users, FileText, Code, Calendar, Edit, Gear, Trophy, Certificate, Shield } from '@phosphor-icons/react';
+import { Users, FileText, Code, Calendar, Edit, Gear, Trophy, Certificate, Shield } from '@/lib/phosphor-icons-wrapper';
 import { User, Post } from '@/types/user';
 import { PostCard } from '@/components/posts/PostCard';
 import { EditProfileModal } from '@/components/profile/EditProfileModal';

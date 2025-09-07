@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Calendar, Users, Target } from '@phosphor-icons/react';
+import { X, Calendar, Users, Target } from '@/lib/phosphor-icons-wrapper';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';

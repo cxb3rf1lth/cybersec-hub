@@ -16,7 +16,7 @@ import {
   XCircle,
   AlertCircle,
   ArrowUpDown
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { User } from '@/types/user';
 import { Earning, PaymentStatus, EarningType } from '@/types/earnings';
 

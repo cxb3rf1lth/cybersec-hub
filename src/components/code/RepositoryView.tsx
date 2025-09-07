@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Star, GitFork, Eye, Lock, Globe, File, Folder, GitBranch, Bug, GitPullRequest, Download, Clone } from '@phosphor-icons/react';
+import { ArrowLeft, Star, GitFork, Eye, Lock, Globe, File, Folder, GitBranch, Bug, GitPullRequest, Download, Clone } from '@/lib/phosphor-icons-wrapper';
 import { Repository, User, RepositoryFile } from '@/types/user';
 import { FileTree } from '@/components/code/FileTree';
 import { IssuesTab } from '@/components/code/IssuesTab';

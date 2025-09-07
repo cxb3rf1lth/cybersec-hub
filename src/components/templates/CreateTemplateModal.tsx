@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-import { Plus, X, FileText, Settings, Code } from '@phosphor-icons/react';
+import { Plus, X, FileText, Settings, Code } from '@/lib/phosphor-icons-wrapper';
 import { Template, TemplateFile } from '@/types/templates';
 import { User } from '@/types/user';
 import { CodeBlock } from '@/components/code/CodeBlock';

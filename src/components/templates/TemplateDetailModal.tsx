@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Star, Download, Copy, Code, FileText, List, CalendarBlank, Users, GitBranch, Edit3 } from '@phosphor-icons/react';
+import { Star, Download, Copy, Code, FileText, List, CalendarBlank, Users, GitBranch, Edit3 } from '@/lib/phosphor-icons-wrapper';
 import { Template } from '@/types/templates';
 import { User } from '@/types/user';
 import { CodeBlock } from '@/components/code/CodeBlock';

@@ -12,7 +12,7 @@ import {
   Search,
   Clock,
   ExternalLink
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useKVWithFallback } from '@/lib/kv-fallback';
-import { X, Calendar, User, AlertTriangle } from '@phosphor-icons/react';
+import { X, Calendar, User, AlertTriangle } from '@/lib/phosphor-icons-wrapper';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';

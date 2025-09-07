@@ -18,7 +18,7 @@ import {
   GitBranch,
   Calendar,
   Activity
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { TeamInfo, TeamMember, User, TeamProject } from '@/types';
 import { CreateTeamModal } from './CreateTeamModal';
 import { TeamDetailModal } from './TeamDetailModal';

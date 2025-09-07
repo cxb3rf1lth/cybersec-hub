@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { BinaryRain, ImmersiveBinaryRain } from '@/components/ui/loading-animations';
-import { ArrowLeft, Play, Save, Share, Users, GitBranch, Clock, Download, Copy, Bug, GitCommit, History, Eye, EyeClosed } from '@phosphor-icons/react';
+import { ArrowLeft, Play, Save, Share, Users, GitBranch, Clock, Download, Copy, Bug, GitCommit, History, Eye, EyeClosed } from '@/lib/phosphor-icons-wrapper';
 import { toast } from 'sonner';
 
 interface CodeEditorProps {

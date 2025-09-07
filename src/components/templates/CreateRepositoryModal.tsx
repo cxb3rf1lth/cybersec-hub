@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-import { Plus, X, Wrench, Settings, List } from '@phosphor-icons/react';
+import { Plus, X, Wrench, Settings, List } from '@/lib/phosphor-icons-wrapper';
 import { ToolRepository, Tool } from '@/types/templates';
 import { User } from '@/types/user';
 import { toast } from 'sonner';

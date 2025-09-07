@@ -13,7 +13,7 @@ import {
   Timer,
   Star,
   ShieldCheck
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { User } from '@/types/user';
 import { Earning, EarningsGoal } from '@/types/earnings';
 import { Team } from '@/types/teams';

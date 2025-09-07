@@ -17,7 +17,7 @@ import {
   Star,
   Clock,
   MapPin
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 
 interface TeamCardProps {
   team: Team

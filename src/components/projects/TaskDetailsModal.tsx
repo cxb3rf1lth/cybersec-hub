@@ -1,4 +1,4 @@
-import { X } from '@phosphor-icons/react';
+import { X } from '@/lib/phosphor-icons-wrapper';
 import { Button } from '@/components/ui/button';
 import { Task, Project, User } from '@/types';
 

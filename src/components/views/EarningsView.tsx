@@ -18,7 +18,7 @@ import {
   Clock,
   CheckCircle,
   XCircle
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { User } from '@/types/user';
 import { Earning, EarningsAnalytics, TeamEarningsAnalytics, PaymentStatus } from '@/types/earnings';
 import { EarningsOverview } from '@/components/earnings/EarningsOverview';

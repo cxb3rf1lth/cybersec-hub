@@ -36,7 +36,7 @@ import {
   TrendingUp,
   Zap,
   BarChart
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 

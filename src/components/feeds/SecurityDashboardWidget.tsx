@@ -9,7 +9,7 @@ import {
   Activity,
   AlertTriangle,
   CheckCircle
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { formatDistanceToNow } from 'date-fns';
 
 interface SecurityMetric {

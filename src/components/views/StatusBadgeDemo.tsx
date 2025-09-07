@@ -4,7 +4,7 @@ import { BadgeGrid } from '@/components/ui/SecurityBadge';
 import { CertificationList } from '@/components/ui/CertificationBadge';
 import { UserCard } from '@/components/ui/UserCard';
 import { User, UserStatus, SecurityBadge, SecurityCertification } from '@/types/user';
-import { Users, Trophy, Certificate } from '@phosphor-icons/react';
+import { Users, Trophy, Certificate } from '@/lib/phosphor-icons-wrapper';
 
 const sampleUser: User = {
   id: 'demo_user',

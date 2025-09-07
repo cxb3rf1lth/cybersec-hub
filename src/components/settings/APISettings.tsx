@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { Progress } from '@/components/ui/progress';
-import { AlertCircle, CheckCircle, ExternalLink, Shield, Clock, Zap, Key, RefreshCw, BookOpen } from '@phosphor-icons/react';
+import { AlertCircle, CheckCircle, ExternalLink, Shield, Clock, Zap, Key, RefreshCw, BookOpen } from '@/lib/phosphor-icons-wrapper';
 import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration';
 import { API_CONFIGS, APIKeyValidator } from '@/lib/config';
 import { APIConfigurationGuide } from './APIConfigurationGuide';

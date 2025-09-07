@@ -10,7 +10,7 @@ import {
   BinaryRain, 
   CyberpunkLoader 
 } from '@/components/ui/loading-animations';
-import { Play, Pause } from '@phosphor-icons/react';
+import { Play, Pause } from '@/lib/phosphor-icons-wrapper';
 
 export function LoadingAnimationsDemo() {
   const [showFullLoader, setShowFullLoader] = useState(false);

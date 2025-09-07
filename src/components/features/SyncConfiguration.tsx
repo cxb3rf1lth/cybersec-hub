@@ -26,7 +26,7 @@ import {
   Timer,
   Bell,
   Target
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 
 interface SyncConfigurationProps {
   onClose?: () => void

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Terminal, Monitor, Globe, FileCode, Copy, Download, Upload, Settings, Maximize, Minimize } from '@phosphor-icons/react';
+import { Terminal, Monitor, Globe, FileCode, Copy, Download, Upload, Settings, Maximize, Minimize } from '@/lib/phosphor-icons-wrapper';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

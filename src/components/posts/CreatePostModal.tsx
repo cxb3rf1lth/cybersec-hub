@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Code, FileText, X } from '@phosphor-icons/react';
+import { Code, FileText, X } from '@/lib/phosphor-icons-wrapper';
 import { MatrixDots } from '@/components/ui/loading-animations';
 import { User, Post } from '@/types/user';
 

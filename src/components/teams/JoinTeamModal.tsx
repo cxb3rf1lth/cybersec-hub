@@ -15,7 +15,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { TeamCard } from './TeamCard';
 import { Team, User, TeamApplication } from '@/types';
 import { useSampleTeamData } from '@/hooks/useSampleTeamData';
-import { Search, Filter, Users, Star, TrendingUp } from '@phosphor-icons/react';
+import { Search, Filter, Users, Star, TrendingUp } from '@/lib/phosphor-icons-wrapper';
 import { toast } from 'sonner';
 
 interface JoinTeamModalProps {

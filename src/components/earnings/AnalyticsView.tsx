@@ -15,7 +15,7 @@ import {
   Target,
   ArrowUpRight,
   ArrowDownRight
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { User } from '@/types/user';
 import { Earning, EarningType, EarningSource } from '@/types/earnings';
 

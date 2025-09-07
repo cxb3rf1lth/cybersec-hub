@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { StatusIndicator } from '@/components/ui/StatusIndicator';
 import { BadgeGrid } from '@/components/ui/SecurityBadge';
 import { CertificationList } from '@/components/ui/CertificationBadge';
-import { Users, Star, Target, Calendar, MapPin, Shield } from '@phosphor-icons/react';
+import { Users, Star, Target, Calendar, MapPin, Shield } from '@/lib/phosphor-icons-wrapper';
 
 interface UserCardProps {
   user: User

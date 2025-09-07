@@ -1,4 +1,4 @@
-import { Star, Trophy, DollarSign, Users, Target, TrendUp } from '@phosphor-icons/react';
+import { Star, Trophy, DollarSign, Users, Target, TrendUp } from '@/lib/phosphor-icons-wrapper';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';

@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PartnerMatch, User } from '@/types';
-import { Star, Target, ArrowRight, TrendUp } from '@phosphor-icons/react';
+import { Star, Target, ArrowRight, TrendUp } from '@/lib/phosphor-icons-wrapper';
 
 interface PartnerMatchesCardProps {
   matches: PartnerMatch[]

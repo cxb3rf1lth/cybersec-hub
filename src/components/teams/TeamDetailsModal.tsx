@@ -26,7 +26,7 @@ import {
   Trophy,
   Clock,
   Mail
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { toast } from 'sonner';
 import { InviteMemberModal } from './InviteMemberModal';
 import { InvitationManagerModal } from './InvitationManagerModal';

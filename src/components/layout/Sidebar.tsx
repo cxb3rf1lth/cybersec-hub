@@ -1,4 +1,4 @@
-import { Shield, House, Compass, User, Code, SignOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, BugBeetle, Handshake, DesktopTower, CaretRight, Target, Terminal, Globe, Activity } from '@phosphor-icons/react';
+import { Shield, House, Compass, User, Code, SignOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, BugBeetle, Handshake, DesktopTower, CaretRight, Target, Terminal, Globe, Activity } from '@/lib/phosphor-icons-wrapper';
 import { useState } from 'react';
 import { useKVWithFallback } from '@/lib/kv-fallback';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';

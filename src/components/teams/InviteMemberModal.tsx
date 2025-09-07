@@ -22,7 +22,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Team, User, TeamInvitation, TeamRole } from '@/types';
 import { MatrixDots } from '@/components/ui/loading-animations';
-import { Search, UserPlus, Send } from '@phosphor-icons/react';
+import { Search, UserPlus, Send } from '@/lib/phosphor-icons-wrapper';
 
 interface InviteMemberModalProps {
   team: Team

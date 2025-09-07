@@ -14,7 +14,7 @@ import {
   X, Clock, Users, DollarSign, Target, Calendar, 
   Check, X as Reject, User as UserIcon, MessageCircle,
   Portfolio, Skills
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { toast } from 'sonner';
 
 interface PartnerRequestDetailsModalProps {

@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Star, GitFork, List, Wrench, CalendarBlank, Terminal } from '@phosphor-icons/react';
+import { Star, GitFork, List, Wrench, CalendarBlank, Terminal } from '@/lib/phosphor-icons-wrapper';
 import { ToolRepository, Tool } from '@/types/templates';
 import { User } from '@/types/user';
 

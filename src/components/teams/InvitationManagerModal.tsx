@@ -21,7 +21,7 @@ import {
   Calendar,
   AlertCircle,
   CheckCircle
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { toast } from 'sonner';
 
 interface InvitationManagerModalProps {

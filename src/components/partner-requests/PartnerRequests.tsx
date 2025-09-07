@@ -9,7 +9,7 @@ import { CreatePartnerRequestModal } from './CreatePartnerRequestModal';
 import { PartnerRequestDetailsModal } from './PartnerRequestDetailsModal';
 import { PartnerMatchesCard } from './PartnerMatchesCard';
 import { PartnerRequest, User } from '@/types';
-import { Plus, Users, Target, Clock, DollarSign, Star } from '@phosphor-icons/react';
+import { Plus, Users, Target, Clock, DollarSign, Star } from '@/lib/phosphor-icons-wrapper';
 
 interface PartnerRequestsProps {
   currentUser: User

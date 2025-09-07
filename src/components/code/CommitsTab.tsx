@@ -1,7 +1,7 @@
 import { Repository, Commit } from '@/types/user';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { GitCommit, User, Calendar, FileText, Plus, Minus } from '@phosphor-icons/react';
+import { GitCommit, User, Calendar, FileText, Plus, Minus } from '@/lib/phosphor-icons-wrapper';
 
 interface CommitsTabProps {
   repository: Repository

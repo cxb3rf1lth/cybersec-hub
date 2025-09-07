@@ -15,7 +15,7 @@ import { MatrixDots, BinaryRain } from '@/components/ui/loading-animations';
 import { Team } from '@/types/teams';
 import { User } from '@/types/user';
 import { useSampleTeamData } from '@/hooks/useSampleTeamData';
-import { Plus, Users, TrendingUp, Star, Filter } from '@phosphor-icons/react';
+import { Plus, Users, TrendingUp, Star, Filter } from '@/lib/phosphor-icons-wrapper';
 
 interface TeamsViewProps {
   currentUser: User

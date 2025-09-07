@@ -21,7 +21,7 @@ import {
   Play,
   Pause,
   Settings
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { BinaryRain } from '@/components/ui/BinaryRain';
 
 export function RealTimeBugBountyDashboard() {

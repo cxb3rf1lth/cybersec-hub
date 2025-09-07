@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Check, Palette, Keyboard } from '@phosphor-icons/react';
+import { Check, Palette, Keyboard } from '@/lib/phosphor-icons-wrapper';
 import { useTheme, THEME_CONFIGS, ThemeColor } from '@/hooks/useTheme';
 import { toast } from 'sonner';
 import { useEffect } from 'react';

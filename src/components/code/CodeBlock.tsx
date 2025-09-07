@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Copy, Check } from '@phosphor-icons/react';
+import { Copy, Check } from '@/lib/phosphor-icons-wrapper';
 
 interface CodeBlockProps {
   code: string

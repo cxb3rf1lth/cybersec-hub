@@ -21,7 +21,7 @@ import {
   Activity,
   AlertTriangle,
   Info
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 
 interface ApiKeySettingsProps {
   open: boolean

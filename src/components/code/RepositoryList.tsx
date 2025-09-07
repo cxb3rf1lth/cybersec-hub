@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Plus, Search, Star, GitFork, Eye, Lock, Globe } from '@phosphor-icons/react';
+import { Plus, Search, Star, GitFork, Eye, Lock, Globe } from '@/lib/phosphor-icons-wrapper';
 import { User, Repository } from '@/types/user';
 import { toast } from 'sonner';
 

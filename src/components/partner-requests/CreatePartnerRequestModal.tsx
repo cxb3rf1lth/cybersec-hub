@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { PartnerRequest, User } from '@/types';
-import { X, Plus, Tag } from '@phosphor-icons/react';
+import { X, Plus, Tag } from '@/lib/phosphor-icons-wrapper';
 import { toast } from 'sonner';
 
 interface CreatePartnerRequestModalProps {

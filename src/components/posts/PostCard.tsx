@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Heart, MessageCircle, Copy, Clock } from '@phosphor-icons/react';
+import { Heart, MessageCircle, Copy, Clock } from '@/lib/phosphor-icons-wrapper';
 import { Post, User } from '@/types/user';
 import { toast } from 'sonner';
 

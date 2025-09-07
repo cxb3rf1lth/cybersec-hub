@@ -24,7 +24,7 @@ import {
   X,
   Check,
   Clock
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { toast } from 'sonner';
 import { 
   Template, 

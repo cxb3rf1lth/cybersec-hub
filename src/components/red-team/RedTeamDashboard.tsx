@@ -44,7 +44,7 @@ import {
   Code,
   Robot,
   Crown
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import type { User } from '@/types/user';
 
 interface RedTeamCampaign {

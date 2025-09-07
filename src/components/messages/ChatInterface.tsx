@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card } from '@/components/ui/card';
-import { PaperPlaneTilt, Code, User as UserIcon, Check, Checks } from '@phosphor-icons/react';
+import { PaperPlaneTilt, Code, User as UserIcon, Check, Checks } from '@/lib/phosphor-icons-wrapper';
 import { Conversation, Message, User } from '@/types/user';
 import { formatDistanceToNow } from 'date-fns';
 

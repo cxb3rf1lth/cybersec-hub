@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useKVWithFallback } from '@/lib/kv-fallback';
-import { Plus, Calendar, User, AlertCircle, Clock, MessageCircle } from '@phosphor-icons/react';
+import { Plus, Calendar, User, AlertCircle, Clock, MessageCircle } from '@/lib/phosphor-icons-wrapper';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

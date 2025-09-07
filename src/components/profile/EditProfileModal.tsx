@@ -10,7 +10,7 @@ import { ApiKeySettings } from '@/components/settings/ApiKeySettings';
 import { ApiIntegrationTester } from '@/components/settings/ApiIntegrationTester';
 import { ThemeSelector } from '@/components/profile/ThemeSelector';
 import { User, Specialization } from '@/types/user';
-import { Key, User as UserIcon, Palette } from '@phosphor-icons/react';
+import { Key, User as UserIcon, Palette } from '@/lib/phosphor-icons-wrapper';
 
 interface EditProfileModalProps {
   user: User

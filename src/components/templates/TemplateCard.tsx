@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Star, Download, Code, Copy, Eye, Users, GitBranch } from '@phosphor-icons/react';
+import { Star, Download, Code, Copy, Eye, Users, GitBranch } from '@/lib/phosphor-icons-wrapper';
 import { Template } from '@/types/templates';
 import { User } from '@/types/user';
 import { TemplateDetailModal } from './TemplateDetailModal';

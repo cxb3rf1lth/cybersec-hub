@@ -19,7 +19,7 @@ import {
   FileText,
   ShareNetwork,
   Medal
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 
 interface SecurityBadgeProps {
   badge: SecurityBadgeType

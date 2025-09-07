@@ -17,7 +17,7 @@ import {
   Calendar,
   BarChart,
   PieChart
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { User } from '@/types/user';
 import { Team, TeamMember } from '@/types/teams';
 import { Earning, TeamEarningsAnalytics } from '@/types/earnings';

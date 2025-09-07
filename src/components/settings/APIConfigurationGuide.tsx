@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Key, Shield, CheckCircle, AlertTriangle, Info } from '@phosphor-icons/react';
+import { ExternalLink, Key, Shield, CheckCircle, AlertTriangle, Info } from '@/lib/phosphor-icons-wrapper';
 import { API_CONFIGS } from '@/lib/config';
 
 export function APIConfigurationGuide() {

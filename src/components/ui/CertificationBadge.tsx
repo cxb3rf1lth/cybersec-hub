@@ -1,7 +1,7 @@
 import { SecurityCertification } from '@/types/user';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Certificate, Link, Calendar, CheckCircle, WarningCircle } from '@phosphor-icons/react';
+import { Certificate, Link, Calendar, CheckCircle, WarningCircle } from '@/lib/phosphor-icons-wrapper';
 
 interface CertificationBadgeProps {
   certification: SecurityCertification

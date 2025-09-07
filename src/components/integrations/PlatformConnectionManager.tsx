@@ -26,7 +26,7 @@ import {
   AlertTriangle,
   Database,
   Code
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration';
 import { API_CONFIGS, useAPIKeys, APIKeyValidator } from '@/lib/config';
 import { toast } from 'sonner';

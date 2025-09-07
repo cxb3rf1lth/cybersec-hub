@@ -26,7 +26,7 @@ import {
   UserPlus,
   Gear,
   Key
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { useBugBountyPlatforms } from '@/hooks/useBugBountyPlatforms';
 import { useTeamHunts } from '@/hooks/useTeamHunts';
 import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration';

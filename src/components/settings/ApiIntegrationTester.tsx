@@ -16,7 +16,7 @@ import {
   Shield,
   Bug,
   Database
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 
 interface TestResult {
   service: ApiServiceKey

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Play, Stop, Trash } from '@phosphor-icons/react';
+import { Plus, Play, Stop, Trash } from '@/lib/phosphor-icons-wrapper';
 import { useVirtualLab } from '@/hooks/useVirtualLab';
 import type { User } from '@/types/user';
 import type { VM } from '@/types/virtual-lab';

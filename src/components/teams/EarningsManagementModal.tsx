@@ -25,7 +25,7 @@ import {
   Eye,
   Settings,
   Download
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { toast } from 'sonner';
 
 interface EarningsManagementModalProps {

@@ -13,7 +13,7 @@ import {
   TrendingUp,
   Clock,
   Zap
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { formatDistanceToNow } from 'date-fns';
 
 export function ThreatSourceDashboard() {

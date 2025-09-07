@@ -19,7 +19,7 @@ import {
   CheckCircle,
   Clock,
   AlertCircle
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { User } from '@/types/user';
 import { EarningsGoal } from '@/types/earnings';
 import { toast } from 'sonner';

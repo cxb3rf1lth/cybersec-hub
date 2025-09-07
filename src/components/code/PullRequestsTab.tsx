@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, GitPullRequest, Clock, CheckCircle, X, User, Calendar, GitBranch, GitMerge } from '@phosphor-icons/react';
+import { Plus, GitPullRequest, Clock, CheckCircle, X, User, Calendar, GitBranch, GitMerge } from '@/lib/phosphor-icons-wrapper';
 import { Repository, User as UserType, PullRequest } from '@/types/user';
 import { toast } from 'sonner';
 

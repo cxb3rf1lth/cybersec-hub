@@ -26,7 +26,7 @@ import {
   Zap,
   Settings,
   Database
-} from '@phosphor-icons/react';
+} from '@/lib/phosphor-icons-wrapper';
 import { useState, useMemo, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 
