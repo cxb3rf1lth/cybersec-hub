@@ -21,6 +21,7 @@ import {
 } from '@/lib/production-services'
 import { initializeProductionServices, useServiceStatus } from '@/lib/production-init'
 import { stabilityChecker, useStabilityMonitor } from '@/lib/stability-checker';
+import { initializeSecurityServices } from '@/lib/enhanced-security'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MainContent } from '@/components/layout/MainContent'
 import { AuthModal } from '@/components/auth/AuthModal'
@@ -28,6 +29,7 @@ import { ApiKeyManager } from '@/components/ui/ApiKeyManager'
 import { NeuralNetwork } from '@/components/ui/NeuralNetwork'
 import { FloatingParticles } from '@/components/ui/FloatingParticles'
 import { Toaster } from '@/components/ui/sonner'
+import TUIInterface from '@/components/tui/TUIInterface'
 import { User } from '@/types/user'
 import ProductionErrorBoundary, { performanceMonitor, usePerformanceMonitor } from '@/lib/production-monitoring'
 
@@ -36,7 +38,7 @@ function App() {
   // useStabilityMonitor('App') // Disabled temporarily
   
   const [currentUser, setCurrentUser] = useKVWithFallback<User | null>('currentUser', null as User | null)
-  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status'>('feed')
+  const [activeTab, setActiveTab] = useState<'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status' | 'tui'>('tui')
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [showApiKeyManager, setShowApiKeyManager] = useState(false)
   const [apiKey, setApiKey] = useState<string | null>(null)
@@ -93,6 +95,9 @@ function App() {
     if (!currentUser || servicesInitialized) return
 
     try {
+      // Initialize security services first
+      await initializeSecurityServices()
+      
       // Use the production initialization system
       await initializeProductionServices(currentUser.id)
       setServicesInitialized(true)

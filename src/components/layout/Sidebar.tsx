@@ -10,8 +10,8 @@ import { TeamInvitation } from '@/types/teams'
 
 interface SidebarProps {
   currentUser: UserType
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status'
-  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status') => void
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status' | 'tui'
+  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status' | 'tui') => void
   onLogout: () => void
 }
 
@@ -42,6 +42,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
 
   const navigationSections = {
     main: [
+      { id: 'tui' as const, label: 'Terminal (TUI)', icon: Terminal },
       { id: 'feed' as const, label: 'Feed', icon: House },
       { id: 'explore' as const, label: 'Explore', icon: Compass },
       { id: 'profile' as const, label: 'Profile', icon: User },

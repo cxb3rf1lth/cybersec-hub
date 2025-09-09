@@ -20,13 +20,14 @@ import { EnhancedVirtualLabView } from '@/components/virtual-lab/EnhancedVirtual
 import { PlatformConnectionManager } from '@/components/integrations/PlatformConnectionManager'
 import { IntegrationStatusDashboard } from '@/components/integrations/IntegrationStatusDashboard'
 import { LiveSyncStatus } from '@/components/features/LiveSyncStatus'
+import TUIInterface from '@/components/tui/TUIInterface'
 import { User } from '@/types/user'
 
 interface MainContentProps {
   currentUser: User
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status'
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status' | 'tui'
   onUserUpdate: (user: User) => void
-  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status') => void
+  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status' | 'tui') => void
 }
 
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
@@ -38,6 +39,9 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
 
   return (
     <div className="flex-1 overflow-hidden">
+      {activeTab === 'tui' && (
+        <TUIInterface />
+      )}
       {activeTab === 'feed' && (
         <FeedView currentUser={currentUser} />
       )}
