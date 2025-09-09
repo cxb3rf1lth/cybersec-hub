@@ -22,6 +22,7 @@ import {
 import { initializeProductionServices, useServiceStatus } from '@/lib/production-init'
 import { stabilityChecker, useStabilityMonitor } from '@/lib/stability-checker';
 import { initializeSecurityServices } from '@/lib/enhanced-security'
+import { initializePerformanceOptimization } from '@/lib/performance-optimization'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { MainContent } from '@/components/layout/MainContent'
 import { AuthModal } from '@/components/auth/AuthModal'
@@ -97,6 +98,9 @@ function App() {
     try {
       // Initialize security services first
       await initializeSecurityServices()
+      
+      // Initialize performance optimization
+      initializePerformanceOptimization()
       
       // Use the production initialization system
       await initializeProductionServices(currentUser.id)
