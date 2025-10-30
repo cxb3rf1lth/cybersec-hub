@@ -1,0 +1,242 @@
+{
+  "React Functional Component": {
+    "prefix": "rfc",
+    "body": [
+      "import { FC } from 'react';",
+      "",
+      "interface ${1:ComponentName}Props {",
+      "  $2",
+      "}",
+      "",
+      "export const ${1:ComponentName}: FC<${1:ComponentName}Props> = ({ $3 }) => {",
+      "  return (",
+      "    <div>",
+      "      $0",
+      "    </div>",
+      "  );",
+      "};",
+      ""
+    ],
+    "description": "Create a React functional component with TypeScript"
+  },
+  "React Component with State": {
+    "prefix": "rfcs",
+    "body": [
+      "import { FC, useState } from 'react';",
+      "",
+      "interface ${1:ComponentName}Props {",
+      "  $2",
+      "}",
+      "",
+      "export const ${1:ComponentName}: FC<${1:ComponentName}Props> = ({ $3 }) => {",
+      "  const [${4:state}, set${4/(.*)/${1:/capitalize}/}] = useState$5($6);",
+      "",
+      "  return (",
+      "    <div>",
+      "      $0",
+      "    </div>",
+      "  );",
+      "};",
+      ""
+    ],
+    "description": "Create a React functional component with state"
+  },
+  "React Component with Effect": {
+    "prefix": "rfce",
+    "body": [
+      "import { FC, useEffect } from 'react';",
+      "",
+      "interface ${1:ComponentName}Props {",
+      "  $2",
+      "}",
+      "",
+      "export const ${1:ComponentName}: FC<${1:ComponentName}Props> = ({ $3 }) => {",
+      "  useEffect(() => {",
+      "    $4",
+      "  }, [$5]);",
+      "",
+      "  return (",
+      "    <div>",
+      "      $0",
+      "    </div>",
+      "  );",
+      "};",
+      ""
+    ],
+    "description": "Create a React functional component with useEffect"
+  },
+  "Custom Hook": {
+    "prefix": "hook",
+    "body": [
+      "import { useState, useEffect } from 'react';",
+      "",
+      "export const use${1:HookName} = ($2) => {",
+      "  const [${3:state}, set${3/(.*)/${1:/capitalize}/}] = useState$4($5);",
+      "",
+      "  useEffect(() => {",
+      "    $6",
+      "  }, [$7]);",
+      "",
+      "  return { ${3:state}, set${3/(.*)/${1:/capitalize}/} };",
+      "};",
+      ""
+    ],
+    "description": "Create a custom React hook"
+  },
+  "TypeScript Interface": {
+    "prefix": "tsi",
+    "body": [
+      "export interface ${1:InterfaceName} {",
+      "  $0",
+      "}",
+      ""
+    ],
+    "description": "Create a TypeScript interface"
+  },
+  "TypeScript Type": {
+    "prefix": "tst",
+    "body": [
+      "export type ${1:TypeName} = {",
+      "  $0",
+      "};",
+      ""
+    ],
+    "description": "Create a TypeScript type"
+  },
+  "Async Function": {
+    "prefix": "afn",
+    "body": [
+      "const ${1:functionName} = async ($2): Promise<${3:void}> => {",
+      "  try {",
+      "    $0",
+      "  } catch (error) {",
+      "    console.error('Error in ${1:functionName}:', error);",
+      "  }",
+      "};",
+      ""
+    ],
+    "description": "Create an async function with try-catch"
+  },
+  "Try-Catch Block": {
+    "prefix": "try",
+    "body": [
+      "try {",
+      "  $0",
+      "} catch (error) {",
+      "  console.error('${1:Error message}:', error);",
+      "}",
+      ""
+    ],
+    "description": "Create a try-catch block"
+  },
+  "Console Log": {
+    "prefix": "cl",
+    "body": [
+      "console.log('${1:label}:', $2);$0"
+    ],
+    "description": "Console log with label"
+  },
+  "Import Component": {
+    "prefix": "imc",
+    "body": [
+      "import { ${1:ComponentName} } from '@/components/${2:path}';$0"
+    ],
+    "description": "Import a component using path alias"
+  },
+  "Tailwind Container": {
+    "prefix": "twc",
+    "body": [
+      "<div className=\"container mx-auto px-4 py-8\">",
+      "  $0",
+      "</div>"
+    ],
+    "description": "Create a Tailwind container div"
+  },
+  "Tailwind Card": {
+    "prefix": "twcard",
+    "body": [
+      "<div className=\"bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6\">",
+      "  $0",
+      "</div>"
+    ],
+    "description": "Create a Tailwind card"
+  },
+  "Security Command Handler": {
+    "prefix": "cmdh",
+    "body": [
+      "case '${1:command}': {",
+      "  try {",
+      "    $2",
+      "    return {",
+      "      output: '${3:Success message}',",
+      "      error: false",
+      "    };",
+      "  } catch (error) {",
+      "    return {",
+      "      output: 'Error: ' + (error as Error).message,",
+      "      error: true",
+      "    };",
+      "  }",
+      "}$0"
+    ],
+    "description": "Create a command handler for TUI"
+  },
+  "API Fetch": {
+    "prefix": "apif",
+    "body": [
+      "const ${1:fetchData} = async () => {",
+      "  try {",
+      "    const response = await fetch('${2:url}', {",
+      "      method: '${3:GET}',",
+      "      headers: {",
+      "        'Content-Type': 'application/json',",
+      "      },",
+      "    });",
+      "",
+      "    if (!response.ok) {",
+      "      throw new Error('${4:Request failed}');",
+      "    }",
+      "",
+      "    const data = await response.json();",
+      "    $0",
+      "  } catch (error) {",
+      "    console.error('Error fetching data:', error);",
+      "  }",
+      "};",
+      ""
+    ],
+    "description": "Create an API fetch function"
+  },
+  "React Context": {
+    "prefix": "ctx",
+    "body": [
+      "import { createContext, useContext, FC, ReactNode } from 'react';",
+      "",
+      "interface ${1:Context}ContextType {",
+      "  $2",
+      "}",
+      "",
+      "const ${1:Context}Context = createContext<${1:Context}ContextType | undefined>(undefined);",
+      "",
+      "export const ${1:Context}Provider: FC<{ children: ReactNode }> = ({ children }) => {",
+      "  $3",
+      "",
+      "  return (",
+      "    <${1:Context}Context.Provider value={{ $4 }}>",
+      "      {children}",
+      "    </${1:Context}Context.Provider>",
+      "  );",
+      "};",
+      "",
+      "export const use${1:Context} = () => {",
+      "  const context = useContext(${1:Context}Context);",
+      "  if (context === undefined) {",
+      "    throw new Error('use${1:Context} must be used within a ${1:Context}Provider');",
+      "  }",
+      "  return context;",
+      "};",
+      ""
+    ],
+    "description": "Create a React context with provider and hook"
+  }
+}
