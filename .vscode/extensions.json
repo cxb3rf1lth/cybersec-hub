@@ -1,0 +1,40 @@
+{
+  "recommendations": [
+    // Essential Extensions
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-typescript-next",
+
+    // UI & Theme
+    "pkief.material-icon-theme",
+    "usernamehw.errorlens",
+
+    // Code Quality
+    "streetsidesoftware.code-spell-checker",
+    "yoavbls.pretty-ts-errors",
+
+    // Git & GitHub
+    "eamodio.gitlens",
+    "github.copilot",
+    "github.vscode-pull-request-github",
+
+    // Developer Productivity
+    "christian-kohler.path-intellisense",
+    "formulahendry.auto-rename-tag",
+    "wix.vscode-import-cost",
+
+    // DevOps & Infrastructure
+    "ms-azuretools.vscode-docker",
+    "redhat.vscode-yaml",
+
+    // Security (for cybersecurity project)
+    "ms-python.python",
+    "tamasfe.even-better-toml"
+  ],
+  "unwantedRecommendations": [
+    "hookyqr.beautify",
+    "dbaeumer.jshint",
+    "ms-vscode.vscode-typescript-tslint-plugin"
+  ]
+}

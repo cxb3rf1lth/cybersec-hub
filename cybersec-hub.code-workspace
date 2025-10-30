@@ -1,0 +1,213 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "🛡️ CyberConnect Hub"
+    }
+  ],
+  "settings": {
+    // Editor Configuration
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.rulers": [80, 120],
+    "editor.wordWrap": "on",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": true,
+    "editor.inlineSuggest.enabled": true,
+    "editor.minimap.enabled": true,
+    "editor.minimap.renderCharacters": false,
+    "editor.minimap.maxColumn": 120,
+
+    // TypeScript & JavaScript
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "typescript.suggest.autoImports": true,
+    "javascript.suggest.autoImports": true,
+
+    // File associations
+    "files.associations": {
+      "*.css": "tailwindcss"
+    },
+
+    // ESLint
+    "eslint.validate": [
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact"
+    ],
+    "eslint.workingDirectories": [
+      {
+        "mode": "auto"
+      }
+    ],
+
+    // Tailwind CSS
+    "tailwindCSS.experimental.classRegex": [
+      ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+      ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+    ],
+    "tailwindCSS.includeLanguages": {
+      "typescript": "javascript",
+      "typescriptreact": "javascript"
+    },
+
+    // File exclusions
+    "files.exclude": {
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/.vite": true,
+      "**/.tmp": true
+    },
+
+    // Search exclusions
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/.vite": true,
+      "**/package-lock.json": true
+    },
+
+    // Terminal
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "terminal.integrated.fontSize": 13,
+    "terminal.integrated.cursorStyle": "line",
+
+    // Git
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
+
+    // Security & Privacy
+    "security.workspace.trust.untrustedFiles": "prompt",
+
+    // Emmet
+    "emmet.includeLanguages": {
+      "typescript": "html",
+      "typescriptreact": "html"
+    },
+
+    // Auto Save
+    "files.autoSave": "onFocusChange",
+
+    // Format specific files
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[markdown]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.wordWrap": "on"
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "bradlc.vscode-tailwindcss",
+      "ms-vscode.vscode-typescript-next",
+      "PKief.material-icon-theme",
+      "usernamehw.errorlens",
+      "streetsidesoftware.code-spell-checker",
+      "eamodio.gitlens",
+      "github.copilot",
+      "github.vscode-pull-request-github",
+      "ms-azuretools.vscode-docker",
+      "redhat.vscode-yaml",
+      "yoavbls.pretty-ts-errors",
+      "christian-kohler.path-intellisense",
+      "formulahendry.auto-rename-tag",
+      "wix.vscode-import-cost"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "chrome",
+        "request": "launch",
+        "name": "🚀 Launch Chrome for CyberConnect",
+        "url": "http://localhost:5000",
+        "webRoot": "${workspaceFolder}",
+        "sourceMaps": true,
+        "sourceMapPathOverrides": {
+          "webpack:///src/*": "${webRoot}/src/*"
+        }
+      },
+      {
+        "type": "chrome",
+        "request": "attach",
+        "name": "🔗 Attach to Chrome",
+        "port": 9222,
+        "webRoot": "${workspaceFolder}"
+      }
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Dev Server",
+        "type": "npm",
+        "script": "dev",
+        "problemMatcher": [],
+        "isBackground": true,
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated"
+        }
+      },
+      {
+        "label": "Build",
+        "type": "npm",
+        "script": "build",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": ["$tsc"]
+      },
+      {
+        "label": "Lint",
+        "type": "npm",
+        "script": "lint",
+        "problemMatcher": ["$eslint-stylish"]
+      },
+      {
+        "label": "Preview Build",
+        "type": "npm",
+        "script": "preview",
+        "problemMatcher": []
+      },
+      {
+        "label": "Kill Port 5000",
+        "type": "npm",
+        "script": "kill",
+        "problemMatcher": []
+      }
+    ]
+  }
+}
