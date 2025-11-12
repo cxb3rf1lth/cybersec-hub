@@ -4,6 +4,9 @@
  */
 
 import { toast } from 'sonner'
+import { SecureAPIKeyManager } from '@/lib/secure-api-keys'
+import { CircuitBreakerManager } from '@/lib/circuit-breaker'
+import productionConfig from '@/lib/production-config'
 
 export interface APIConnection {
   platform: string
@@ -107,6 +110,8 @@ export const PLATFORM_CONFIGS: Record<string, PlatformConfig> = {
 class ProductionAPIManager {
   private connections: Map<string, APIConnection> = new Map()
   private rateLimiters: Map<string, { count: number; resetTime: number }> = new Map()
+  private keyManager: SecureAPIKeyManager = SecureAPIKeyManager.getInstance()
+  private circuitBreaker: CircuitBreakerManager = CircuitBreakerManager.getInstance()
 
   /**
    * Validate API key format for a platform
@@ -351,15 +356,22 @@ class ProductionAPIManager {
    * Connect to a platform with validated API key
    */
   async connectPlatform(platform: string, apiKey: string): Promise<APIConnection> {
-    const testResult = await this.testConnection(platform, apiKey)
-    
+    // Use circuit breaker for API calls
+    const testResult = await this.circuitBreaker.execute(
+      `${platform}_connect`,
+      async () => this.testConnection(platform, apiKey)
+    )
+
     if (!testResult.success) {
       throw new Error(testResult.error || 'Connection failed')
     }
 
+    // Store key using secure key manager (proper encryption)
+    await this.keyManager.storeKey(platform, apiKey)
+
     const connection: APIConnection = {
       platform,
-      apiKey: this.encryptKey(apiKey), // Encrypt before storing
+      apiKey: '[ENCRYPTED]', // Don't store actual key in connection object
       status: 'connected',
       lastTested: new Date().toISOString(),
       capabilities: testResult.capabilities || [],
@@ -371,10 +383,10 @@ class ProductionAPIManager {
     }
 
     this.connections.set(platform, connection)
-    
-    // Store in KV for persistence
+
+    // Store connection metadata only (not the key)
     await spark.kv.set(`api_connection_${platform}`, connection)
-    
+
     toast.success(`Successfully connected to ${PLATFORM_CONFIGS[platform]?.name || platform}`)
     return connection
   }
@@ -384,6 +396,7 @@ class ProductionAPIManager {
    */
   async disconnectPlatform(platform: string): Promise<void> {
     this.connections.delete(platform)
+    await this.keyManager.removeKey(platform)
     await spark.kv.delete(`api_connection_${platform}`)
     toast.success(`Disconnected from ${PLATFORM_CONFIGS[platform]?.name || platform}`)
   }
@@ -411,14 +424,25 @@ class ProductionAPIManager {
       throw new Error(`Not connected to ${platform}`)
     }
 
-    const decryptedKey = this.decryptKey(connection.apiKey)
-    const response = await this.makeAuthenticatedRequest(platform, decryptedKey, endpoint, options)
-    
-    if (!response.ok) {
-      throw new Error(`API request failed: ${response.status} ${response.statusText}`)
+    // Get decrypted key from secure key manager
+    const decryptedKey = await this.keyManager.getKey(platform)
+    if (!decryptedKey) {
+      throw new Error(`API key not found for ${platform}`)
     }
 
-    return await response.json()
+    // Use circuit breaker for API calls
+    return await this.circuitBreaker.execute(
+      `${platform}_api`,
+      async () => {
+        const response = await this.makeAuthenticatedRequest(platform, decryptedKey, endpoint, options)
+
+        if (!response.ok) {
+          throw new Error(`API request failed: ${response.status} ${response.statusText}`)
+        }
+
+        return await response.json()
+      }
+    )
   }
 
   /**
@@ -516,17 +540,17 @@ class ProductionAPIManager {
   }
 
   /**
-   * Simple encryption for API keys (in production, use proper encryption)
+   * Initialize key manager with user password
    */
-  private encryptKey(key: string): string {
-    return btoa(key).split('').reverse().join('')
+  async initializeKeyManager(userPassword?: string): Promise<void> {
+    await this.keyManager.initialize(userPassword)
   }
 
   /**
-   * Simple decryption for API keys
+   * Get circuit breaker stats for monitoring
    */
-  private decryptKey(encryptedKey: string): string {
-    return atob(encryptedKey.split('').reverse().join(''))
+  getCircuitBreakerStats() {
+    return this.circuitBreaker.getAllStats()
   }
 
   /**
