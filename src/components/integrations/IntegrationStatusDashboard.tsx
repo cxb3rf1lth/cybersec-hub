@@ -33,6 +33,7 @@ import { useAutoSync } from '@/hooks/useAutoSync'
 import { SyncConfiguration } from '@/components/features/SyncConfiguration'
 import { useKVWithFallback } from '@/lib/kv-fallback'
 import { toast } from 'sonner'
+import { realApiService } from '@/lib/real-api-service'
 
 interface MetricData {
   timestamp: string
@@ -97,27 +98,24 @@ export function IntegrationStatusDashboard() {
   const updateHealthMetrics = async () => {
     const newHealthMetrics: ConnectionHealth[] = []
 
-  for (const integration of (integrations ?? []).filter(int => int.connected)) {
+    for (const integration of (integrations ?? []).filter(int => int.connected)) {
       try {
-        const startTime = Date.now()
-        
-        // Simulate health check - in production, this would ping the actual API
-        const healthResponse = await simulateHealthCheck(integration.name)
-        const responseTime = Date.now() - startTime
+        // Real API health check - no simulation
+        const healthResponse = await realApiService.checkApiHealth(integration.name.toLowerCase())
 
-  const existingHealth = (healthMetrics ?? []).find(h => h.platform === integration.name)
-        
+        const existingHealth = (healthMetrics ?? []).find(h => h.platform === integration.name)
+
         newHealthMetrics.push({
           platform: integration.name,
           status: healthResponse.status,
-          responseTime,
-          uptime: existingHealth ? existingHealth.uptime + 30 : 30, // Increment uptime
+          responseTime: healthResponse.responseTime || 0,
+          uptime: existingHealth ? existingHealth.uptime + 30 : 30,
           lastError: healthResponse.error,
           dataPoints: [
-            ...(existingHealth?.dataPoints || []).slice(-20), // Keep last 20 data points
+            ...(existingHealth?.dataPoints || []).slice(-20),
             {
               timestamp: new Date().toISOString(),
-              value: responseTime,
+              value: healthResponse.responseTime || 0,
               platform: integration.name,
               type: 'requests'
             }
@@ -125,8 +123,8 @@ export function IntegrationStatusDashboard() {
         })
       } catch (error) {
         console.error(`Health check failed for ${integration.name}:`, error)
-        
-  const existingHealth = (healthMetrics ?? []).find(h => h.platform === integration.name)
+
+        const existingHealth = (healthMetrics ?? []).find(h => h.platform === integration.name)
         newHealthMetrics.push({
           platform: integration.name,
           status: 'down',
@@ -139,24 +137,6 @@ export function IntegrationStatusDashboard() {
     }
 
     setHealthMetrics(newHealthMetrics)
-  }
-
-  const simulateHealthCheck = async (platform: string): Promise<{ status: 'healthy' | 'degraded' | 'down', error?: string }> => {
-    // Simulate API health check with random delays and occasional failures
-    const delay = Math.random() * 1000 + 200 // 200ms to 1.2s
-    await new Promise(resolve => setTimeout(resolve, delay))
-
-    // 5% chance of failure for demo purposes
-    if (Math.random() < 0.05) {
-      throw new Error('Connection timeout')
-    }
-
-    // 10% chance of degraded performance
-    if (Math.random() < 0.1) {
-      return { status: 'degraded', error: 'High response time detected' }
-    }
-
-    return { status: 'healthy' }
   }
 
   // Auto-sync control functions

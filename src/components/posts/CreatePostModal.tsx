@@ -10,6 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Code, FileText, X } from '@phosphor-icons/react'
 import { MatrixDots } from '@/components/ui/loading-animations'
 import { User, Post } from '@/types/user'
+import { db, STORES } from '@/lib/database'
+import { toast } from 'sonner'
 
 interface CreatePostModalProps {
   currentUser: User
@@ -49,29 +51,39 @@ export function CreatePostModal({ currentUser, onClose, onCreatePost }: CreatePo
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    if (!content.trim()) return
 
-    setIsPublishing(true)
-    
-    // Simulate posting delay
-    await new Promise(resolve => setTimeout(resolve, 1500))
-
-    const post: Post = {
-      id: Date.now().toString(),
-      authorId: currentUser.id,
-      content: content.trim(),
-      type: postType,
-      codeLanguage: postType === 'code' ? codeLanguage : undefined,
-      tags,
-      likes: [],
-      comments: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+    if (!content.trim()) {
+      toast.error('Post content cannot be empty')
+      return
     }
 
-    onCreatePost(post)
-    setIsPublishing(false)
+    setIsPublishing(true)
+
+    try {
+      const post: Post = {
+        id: crypto.randomUUID(),
+        authorId: currentUser.id,
+        content: content.trim(),
+        type: postType,
+        codeLanguage: postType === 'code' ? codeLanguage : undefined,
+        tags,
+        likes: [],
+        comments: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+
+      // Save to database
+      await db.add(STORES.POSTS, post)
+
+      onCreatePost(post)
+      toast.success('Post created successfully!')
+    } catch (error) {
+      console.error('Failed to create post:', error)
+      toast.error('Failed to create post')
+    } finally {
+      setIsPublishing(false)
+    }
   }
 
   return (

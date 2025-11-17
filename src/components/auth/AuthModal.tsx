@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,6 +7,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { MatrixDots, CyberProgress } from '@/components/ui/loading-animations'
 import { User, Specialization } from '@/types/user'
+import { authService } from '@/lib/auth-service'
+import { toast } from 'sonner'
 
 interface AuthModalProps {
   onClose: () => void
@@ -21,12 +22,13 @@ const SPECIALIZATIONS: Specialization[] = [
 ]
 
 export function AuthModal({ onClose, onLogin }: AuthModalProps) {
-  const [allUsers, setAllUsers] = useKVWithFallback<User[]>('allUsers', [])
   const [isSignUp, setIsSignUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     username: '',
     email: '',
+    password: '',
+    confirmPassword: '',
     bio: '',
     specializations: [] as Specialization[]
   })
@@ -42,64 +44,79 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    if (!formData.username || !formData.email) return
 
-    setIsLoading(true)
-
-    // Simulate authentication delay
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    if (!formData.email || !formData.password) {
+      toast.error('Please fill in all required fields')
+      return
+    }
 
     if (isSignUp) {
-      // Check if user already exists
-      const existingUser = allUsers.find(user => 
-        user.username === formData.username || user.email === formData.email
-      )
-      
-      if (existingUser) {
-        // User exists, log them in
-        onLogin(existingUser)
-        setIsLoading(false)
+      if (!formData.username) {
+        toast.error('Username is required')
         return
       }
 
-      // Create new user
-      const user: User = {
-        id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        username: formData.username,
-        email: formData.email,
-        bio: formData.bio,
-        specializations: formData.specializations,
-        followers: [],
-        following: [],
-        joinedAt: new Date().toISOString()
+      if (formData.password !== formData.confirmPassword) {
+        toast.error('Passwords do not match')
+        return
       }
 
-      // Add to global users list
-      setAllUsers((prevUsers) => [...prevUsers, user])
-      onLogin(user)
-    } else {
-      // Sign in - find existing user
-      const existingUser = allUsers.find(user => 
-        user.username === formData.username || user.email === formData.email
-      )
-      
-      if (existingUser) {
-        onLogin(existingUser)
-      } else {
-        // If user doesn't exist, switch to sign up
-        setIsSignUp(true)
-        setIsLoading(false)
+      if (formData.password.length < 8) {
+        toast.error('Password must be at least 8 characters')
         return
       }
     }
-    
-    setIsLoading(false)
+
+    setIsLoading(true)
+
+    try {
+      if (isSignUp) {
+        // Real user registration
+        const result = await authService.register({
+          email: formData.email,
+          username: formData.username,
+          password: formData.password,
+          fullName: formData.username
+        })
+
+        if (result.success && result.user) {
+          // Update user profile with bio and specializations
+          const updatedUser = {
+            ...result.user,
+            bio: formData.bio,
+            specializations: formData.specializations
+          }
+
+          onLogin(updatedUser)
+          toast.success('Account created successfully!')
+        } else {
+          toast.error(result.error || 'Registration failed')
+        }
+      } else {
+        // Real user login
+        const result = await authService.login({
+          email: formData.email,
+          password: formData.password
+        })
+
+        if (result.success && result.user) {
+          onLogin(result.user)
+          toast.success('Welcome back!')
+        } else {
+          toast.error(result.error || 'Login failed')
+        }
+      }
+    } catch (error) {
+      console.error('Authentication error:', error)
+      toast.error('An error occurred during authentication')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-md bg-card border border-border">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-card border border-border">
         <DialogHeader>
           <DialogTitle className="text-foreground terminal-cursor">
             {isSignUp ? 'Join CyberConnect' : 'Welcome Back'}
@@ -131,6 +148,36 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
               required
             />
           </div>
+
+          <div>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+              placeholder="Enter your password"
+              className="hover-border-flow"
+              required
+              minLength={8}
+            />
+          </div>
+
+          {isSignUp && (
+            <div>
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                value={formData.confirmPassword}
+                onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                placeholder="Confirm your password"
+                className="hover-border-flow"
+                required
+                minLength={8}
+              />
+            </div>
+          )}
 
           {isSignUp && (
             <>
