@@ -7,6 +7,7 @@ import { useKVWithFallback } from '@/lib/kv-fallback'
 import { toast } from 'sonner'
 import { CONFIG, ENDPOINTS, FEATURE_FLAGS, LIMITS, TIMEOUTS } from './environment'
 import { authenticatedApiService, apiKeyManager, type ApiServiceKey } from './api-keys'
+import { authService as realAuthService } from './auth-service'
 
 // Environment detection
 const API_BASE_URL = ENDPOINTS.API_BASE_URL
@@ -25,45 +26,24 @@ export class AuthService {
   }
 
   async getAuthToken(): Promise<string> {
-    const stored = localStorage.getItem('auth_token')
-    if (stored) {
-      const parsed = JSON.parse(stored)
-      if (parsed.expires > Date.now()) {
-        return parsed.token
-      }
+    // Use real authentication service - no demo tokens
+    const token = await realAuthService.getAuthToken()
+    if (token) {
+      return token
     }
 
-    // In production, this would authenticate with the real backend
-    const newToken = await this.refreshToken()
-    return newToken
+    // User not authenticated
+    throw new Error('User not authenticated. Please login.')
   }
 
   private async refreshToken(): Promise<string> {
-    try {
-      const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include'
-      })
-
-      if (!response.ok) {
-        throw new Error('Token refresh failed')
-      }
-
-      const data = await response.json()
-      const tokenData = {
-        token: data.token,
-        expires: Date.now() + (data.expiresIn * 1000)
-      }
-
-      localStorage.setItem('auth_token', JSON.stringify(tokenData))
-      return data.token
-    } catch (error) {
-      console.error('Token refresh failed:', error)
-      // Fallback to demo token for development
-      const demoToken = 'demo_' + btoa(Date.now().toString())
-      return demoToken
+    // Use real authentication service for token refresh
+    const token = await realAuthService.getAuthToken()
+    if (token) {
+      return token
     }
+
+    throw new Error('Token refresh failed. Please login again.')
   }
 
   async validateAPIKey(platform: string, apiKey: string): Promise<boolean> {
