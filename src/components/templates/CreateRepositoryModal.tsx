@@ -205,7 +205,7 @@ export function CreateRepositoryModal({ currentUser, onClose }: CreateRepository
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] p-0">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
         <DialogHeader className="p-6 pb-0">
           <DialogTitle className="text-2xl font-bold flex items-center gap-2">
             <Wrench className="w-6 h-6 text-accent" />

@@ -101,6 +101,13 @@ nuclei run cve-2023-1234       # Run specific nuclei template
 # Data Management
 export targets                 # Export target list
 import bulk                    # Import multiple targets
+import file <content>          # Import targets from text content
+
+# 🔥 Azazel Auto-Scan Pipeline
+azazel auto                    # Auto-scan all configured targets
+azazel file <content>          # Import from text and auto-scan
+
+# General
 clear                         # Clear terminal
 help                          # Show all commands
 ```
@@ -111,6 +118,27 @@ help                          # Show all commands
 - **Code Collaboration**: Share and review security code with teams  
 - **API Integrations**: Configure keys for external security platforms
 - **Team Management**: Create teams, invite members, track contributions
+
+### 🔥 Azazel Auto-Scan Pipeline:
+The Azazel pipeline provides fully automated vulnerability scanning with advanced target management integration:
+
+```bash
+# Auto-scan all configured targets
+azazel auto
+
+# Import targets from text and auto-scan
+azazel file "example.com\n192.168.1.1\n10.0.0.0/24"
+
+# Import targets from file content
+import file "target1.com\ntarget2.com\n192.168.1.0/24"
+```
+
+**Features:**
+- 🎯 **Auto-targeting**: Automatically selects and scans all configured targets
+- 📄 **File Import**: Supports .txt target lists with newline-separated entries
+- 🔍 **Comprehensive Scanning**: Integrates with existing vulnerability detection
+- 📊 **Progress Tracking**: Real-time scan progress with visual indicators
+- ✅ **Validation**: Automatic target validation for domains, IPs, and CIDR ranges
 
 ## 🏗️ Architecture
 
