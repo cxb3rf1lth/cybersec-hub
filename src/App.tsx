@@ -1,16 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useKVWithFallback } from '@/lib/kv-fallback'
-import { useSampleData } from '@/hooks/useSampleData'
-import { useSampleProjectData } from '@/hooks/useSampleProjectData'
-import { useSampleTeamData } from '@/hooks/useSampleTeamData'
-import { useSampleEarningsData } from '@/hooks/useSampleEarningsData'
+import { useRealData } from '@/hooks/useRealData'
 import { useUserInvitations } from '@/hooks/useUserInvitations'
-import { useSampleMarketplaceData } from '@/hooks/useSampleMarketplaceData'
 import { useBugBountyPlatforms } from '@/hooks/useBugBountyPlatforms'
 import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
 import { useTeamHunts } from '@/hooks/useTeamHunts'
-import { useSamplePartnerRequests } from '@/hooks/useSamplePartnerRequests'
-import { useSampleStatusData } from '@/hooks/useSampleStatusData'
+import { useRealThreatFeeds } from '@/hooks/useRealThreatFeeds'
 import { useTheme } from '@/hooks/useTheme'
 import { useVirtualLab } from '@/hooks/useVirtualLab'
 import { useRealMessaging } from '@/hooks/useRealMessaging'
@@ -54,20 +49,12 @@ function App() {
   // Initialize automatic synchronization
   const autoSyncHook = useAutoSync()
 
-  // Memoize sample data initialization to prevent unnecessary re-runs
-  const sampleDataInitialized = useMemo(() => {
-    useSampleData()
-    useSampleProjectData()
-    useSampleTeamData()
-    useSampleEarningsData()
-    useSampleMarketplaceData()
-    useBugBountyPlatforms()
-    useBugBountyIntegration()
-    useTeamHunts()
-    useSamplePartnerRequests()
-    useSampleStatusData()
-    return true
-  }, [])
+  // Initialize real data hooks - no more sample/mock data
+  const realData = useRealData()
+  const threatFeeds = useRealThreatFeeds()
+  const bugBountyPlatforms = useBugBountyPlatforms()
+  const bugBountyIntegration = useBugBountyIntegration()
+  const teamHunts = useTeamHunts()
 
   // Initialize user-dependent hooks with proper dependency management
   const userInvitations = useUserInvitations(currentUser ?? null)
