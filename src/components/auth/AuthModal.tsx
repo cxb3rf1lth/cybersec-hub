@@ -116,7 +116,7 @@ export function AuthModal({ onClose, onLogin }: AuthModalProps) {
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-md bg-card border border-border">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-card border border-border">
         <DialogHeader>
           <DialogTitle className="text-foreground terminal-cursor">
             {isSignUp ? 'Join CyberConnect' : 'Welcome Back'}
