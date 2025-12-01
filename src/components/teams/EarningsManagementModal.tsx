@@ -36,8 +36,8 @@ interface EarningsManagementModalProps {
 
 export function EarningsManagementModal({ team, currentUser, onClose }: EarningsManagementModalProps) {
   const [activeTab, setActiveTab] = useState('overview')
-  const [contracts] = useKVWithFallback<TeamContract[]>('teamContracts', [])
-  const [distributions] = useKVWithFallback<EarningsDistribution[]>('earningsDistributions', [])
+  const [contracts, setContracts] = useKVWithFallback<TeamContract[]>('teamContracts', [])
+  const [distributions, setDistributions] = useKVWithFallback<EarningsDistribution[]>('earningsDistributions', [])
   const [newContract, setNewContract] = useState({
     title: '',
     description: '',
@@ -86,7 +86,7 @@ export function EarningsManagementModal({ team, currentUser, onClose }: Earnings
       createdAt: new Date().toISOString()
     }
 
-    // TODO: Save contract
+    setContracts(prev => [...prev, contract])
     toast.success('Contract created successfully')
     setShowCreateContract(false)
     setNewContract({
@@ -123,7 +123,7 @@ export function EarningsManagementModal({ team, currentUser, onClose }: Earnings
       createdAt: new Date().toISOString()
     }
 
-    // TODO: Save distribution
+    setDistributions(prev => [...prev, distribution])
     toast.success('Earnings distribution initiated')
   }
 
