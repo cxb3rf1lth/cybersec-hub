@@ -1,8 +1,33 @@
 {
-    "name": "spark-template",
-    "private": true,
-    "version": "0.0.0",
+    "name": "cyberconnect-platform",
+    "description": "Advanced cybersecurity social platform with Terminal UI, bug bounty integration, virtual labs, and team collaboration",
+    "version": "1.0.0",
+    "private": false,
     "type": "module",
+    "license": "MIT",
+    "author": "CyberConnect Team",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/yourusername/cyberconnect-platform.git"
+    },
+    "bugs": {
+        "url": "https://github.com/yourusername/cyberconnect-platform/issues"
+    },
+    "homepage": "https://github.com/yourusername/cyberconnect-platform#readme",
+    "keywords": [
+        "cybersecurity",
+        "bug-bounty",
+        "terminal",
+        "tui",
+        "security",
+        "penetration-testing",
+        "virtual-labs",
+        "threat-intelligence",
+        "collaboration",
+        "react",
+        "typescript",
+        "github-spark"
+    ],
     "scripts": {
         "dev": "vite",
         "kill": "fuser -k 5000/tcp",

@@ -1,6 +1,13 @@
 # 🛡️ CyberConnect - Advanced Cybersecurity Social Platform
 
+> **Production-ready cybersecurity platform built with React, TypeScript, and GitHub Spark**
+
 CyberConnect is a comprehensive cybersecurity platform that combines the power of a **Terminal User Interface (TUI)** with advanced social networking capabilities for security professionals. Built with React, TypeScript, and GitHub Spark, it provides real-time bug bounty integration, virtual security labs, threat intelligence, and collaborative tools.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
+[![React](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-6.4-purple.svg)](https://vitejs.dev)
 
 ## 🚀 Primary Interface: Terminal User Interface (TUI)
 
@@ -48,15 +55,26 @@ Beyond the powerful TUI, CyberConnect offers a full web interface with:
 
 ## 📦 Installation & Setup
 
+### Quick Start (5 minutes)
+```bash
+git clone https://github.com/yourusername/cyberconnect-platform.git
+cd cyberconnect-platform
+npm install
+npm run dev
+# Visit http://localhost:5000
+```
+
+👉 **See [QUICKSTART.md](./QUICKSTART.md) for detailed first steps**
+
 ### Prerequisites:
 - Node.js 18+ and npm
 - Modern web browser with Web Crypto API support
 
-### Quick Installation:
+### Full Installation:
 ```bash
 # Clone the repository
-git clone https://github.com/cxb3rf1lth/cybersec-hub.git
-cd cybersec-hub
+git clone https://github.com/yourusername/cyberconnect-platform.git
+cd cyberconnect-platform
 
 # Install dependencies (takes ~1 minute)
 npm install
@@ -74,6 +92,8 @@ This application is optimized for GitHub Spark platform with:
 - Cloud provider integrations (AWS, DigitalOcean, GCP, Azure)
 - Real-time WebSocket communications
 - KV storage for user data and application state
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for production deployment guides.
 
 ## 🎯 Getting Started
 
@@ -157,10 +177,23 @@ import file "target1.com\ntarget2.com\n192.168.1.0/24"
 
 ## 📚 Documentation
 
+### Quick Links
+- **[⚡ Quick Start](./QUICKSTART.md)**: Get running in 5 minutes
+- **[📊 Project Summary](./PROJECT_SUMMARY.md)**: Complete project overview
+
+### For Users
+- **[Getting Started Guide](./SETUP_GUIDE.md)**: Installation and first steps
+- **[Deployment Guide](./DEPLOYMENT.md)**: 🚀 **Deploy to production (GitHub Spark, Vercel, Docker)**
 - **[API Documentation](./API_DOCUMENTATION.md)**: Complete API reference
 - **[Production Setup](./PRODUCTION_API_SETUP.md)**: External service configuration
 - **[Security Guide](./SECURITY.md)**: Security best practices and policies
 - **[Live Integration](./LIVE_API_INTEGRATION.md)**: Real-time API setup
+- **[Changelog](./CHANGELOG.md)**: Version history and updates
+
+### For Developers & AI Assistants
+- **[Contributing Guide](./CONTRIBUTING.md)**: How to contribute to the project
+- **[Claude Developer Onboarding](./CLAUDE_DEVELOPER_ONBOARDING.md)**: 🤖 **Comprehensive guide for Claude Code and AI assistants**
+- **[PRD](./PRD.md)**: Product Requirements Document
 
 ## 🤝 Contributing
 
@@ -169,6 +202,27 @@ We welcome contributions! The codebase follows these principles:
 - **TUI Priority**: Terminal interface improvements are prioritized
 - **Performance**: Optimize for speed and efficiency
 - **Documentation**: Clear documentation for all features
+
+### For AI Assistants (Claude Code)
+If you're an AI assistant working on this codebase, **start here**:
+👉 **[Claude Developer Onboarding Guide](./CLAUDE_DEVELOPER_ONBOARDING.md)** 👈
+
+This comprehensive guide includes:
+- Complete project architecture overview
+- Technology stack and patterns
+- Component guidelines and best practices
+- Data persistence with Spark KV storage
+- Design system and styling conventions
+- Common patterns and examples
+- Debugging tips and testing strategies
+
+### For Human Developers
+1. Fork the repository
+2. Read the [PRD](./PRD.md) and [Developer Guide](./CLAUDE_DEVELOPER_ONBOARDING.md)
+3. Create a feature branch (`git checkout -b feature/amazing-feature`)
+4. Make your changes following our conventions
+5. Test thoroughly (see testing checklist in dev guide)
+6. Submit a pull request
 
 ## 🔐 Security
 
@@ -185,5 +239,18 @@ Report security issues to: security@cyberconnect.com
 MIT License - see [LICENSE](./LICENSE) for details.
 
 ---
+
+## 🌟 Features at a Glance
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| 🖥️ Terminal UI | Command-line interface for security operations | ✅ Active |
+| 🐛 Bug Bounty | Integration with HackerOne, Bugcrowd, Intigriti | ✅ Active |
+| 🧪 Virtual Labs | Cloud-based penetration testing environments | ✅ Active |
+| 👥 Team Collab | Real-time code editing and messaging | ✅ Active |
+| 📊 Threat Intel | Aggregated security feeds and custom sources | ✅ Active |
+| 💰 Earnings | Track bug bounty rewards and team performance | ✅ Active |
+| 🛒 Marketplace | Security services and tools marketplace | ✅ Active |
+| 🔐 Security | AES-GCM encryption, rate limiting, CSRF protection | ✅ Active |
 
 **🎯 Pro Tip**: Start with the TUI interface for the most efficient cybersecurity workflow, then explore the web interface for collaboration and advanced features!
