@@ -3,7 +3,7 @@
  * WebSocket-based messaging with encryption, file sharing, and security features
  */
 
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { toast } from 'sonner'
 import { messagingService, webSocketService } from '@/lib/production-services'
@@ -317,8 +317,8 @@ class FileUploadService {
 }
 
 export function useRealMessaging(currentUserId: string) {
-  const [chats, setChats] = useKV<Chat[]>('userChats', [])
-  const [messages, setMessages] = useKV<Record<string, Message[]>>('chatMessages', {})
+  const [chats, setChats] = useKVWithFallback<Chat[]>('userChats', [])
+  const [messages, setMessages] = useKVWithFallback<Record<string, Message[]>>('chatMessages', {})
   const [typingIndicators, setTypingIndicators] = useState<TypingIndicator[]>([])
   const [onlineUsers, setOnlineUsers] = useState<OnlineStatus[]>([])
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected' | 'error'>('connecting')

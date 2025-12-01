@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { TeamHunt, BountyPartnerRequest, PartnerApplication } from '@/types/bug-bounty'
 import { User } from '@/types/user'
 
@@ -299,8 +299,8 @@ const SAMPLE_PARTNER_REQUESTS: BountyPartnerRequest[] = [
 ]
 
 export function useTeamHunts() {
-  const [teamHunts, setTeamHunts] = useKV<TeamHunt[]>('team-hunts', [])
-  const [partnerRequests, setPartnerRequests] = useKV<BountyPartnerRequest[]>('partner-requests', [])
+  const [teamHunts, setTeamHunts] = useKVWithFallback<TeamHunt[]>('team-hunts', [])
+  const [partnerRequests, setPartnerRequests] = useKVWithFallback<BountyPartnerRequest[]>('partner-requests', [])
 
   useEffect(() => {
     if (teamHunts.length === 0) {

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -16,7 +16,7 @@ interface RepositoryCardProps {
 }
 
 export function RepositoryCard({ repository, currentUser }: RepositoryCardProps) {
-  const [repositories, setRepositories] = useKV<ToolRepository[]>('toolRepositories', [])
+  const [repositories, setRepositories] = useKVWithFallback<ToolRepository[]>('toolRepositories', [])
   const [showDetail, setShowDetail] = useState(false)
   const [isStarred, setIsStarred] = useState(false) // In real app, track user's stars
 

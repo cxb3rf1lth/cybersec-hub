@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Plus, Calendar, Users, Target, Filter, Search, MoreHorizontal } from '@/lib/phosphor-icons-wrapper'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,8 +20,8 @@ interface ProjectsViewProps {
 }
 
 export function ProjectsView({ currentUser }: ProjectsViewProps) {
-  const [projects, setProjects] = useKV<Project[]>('projects', [])
-  const [teams] = useKV<Team[]>('teams', [])
+  const [projects, setProjects] = useKVWithFallback<Project[]>('projects', [])
+  const [teams] = useKVWithFallback<Team[]>('teams', [])
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [view, setView] = useState<'grid' | 'kanban'>('grid')

@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { ThreatFeed, BugBountyProgram, ThreatIntelligence, CyberSecNews } from '@/types/threat-feeds'
 import { useThreatSources } from './useThreatSources'
 
 export function useThreatFeeds() {
-  const [threatFeeds, setThreatFeeds] = useKV<ThreatFeed[]>('threat-feeds', [])
-  const [bugBountyPrograms, setBugBountyPrograms] = useKV<BugBountyProgram[]>('bug-bounty-programs', [])
-  const [threatIntel, setThreatIntel] = useKV<ThreatIntelligence[]>('threat-intelligence', [])
-  const [cyberNews, setCyberNews] = useKV<CyberSecNews[]>('cyber-news', [])
-  const [lastUpdate, setLastUpdate] = useKV<string>('feeds-last-update', '')
+  const [threatFeeds, setThreatFeeds] = useKVWithFallback<ThreatFeed[]>('threat-feeds', [])
+  const [bugBountyPrograms, setBugBountyPrograms] = useKVWithFallback<BugBountyProgram[]>('bug-bounty-programs', [])
+  const [threatIntel, setThreatIntel] = useKVWithFallback<ThreatIntelligence[]>('threat-intelligence', [])
+  const [cyberNews, setCyberNews] = useKVWithFallback<CyberSecNews[]>('cyber-news', [])
+  const [lastUpdate, setLastUpdate] = useKVWithFallback<string>('feeds-last-update', '')
   const [isUpdating, setIsUpdating] = useState(false)
 
   const { sources, fetchFromSource } = useThreatSources()

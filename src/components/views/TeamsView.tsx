@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Plus, Users, Star, Trophy, Search, Filter, Crown, Shield } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,9 +18,9 @@ interface TeamsViewProps {
 }
 
 export function TeamsView({ currentUser }: TeamsViewProps) {
-  const [teams, setTeams] = useKV<Team[]>('teams', [])
-  const [allUsers] = useKV<User[]>('allUsers', [])
-  const [projects] = useKV<Project[]>('projects', [])
+  const [teams, setTeams] = useKVWithFallback<Team[]>('teams', [])
+  const [allUsers] = useKVWithFallback<User[]>('allUsers', [])
+  const [projects] = useKVWithFallback<Project[]>('projects', [])
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null)
   const [searchQuery, setSearchQuery] = useState('')

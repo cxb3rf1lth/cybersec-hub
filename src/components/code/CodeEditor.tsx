@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -21,9 +21,9 @@ interface CodeEditorProps {
 }
 
 export function CodeEditor({ repository, filePath, currentUser, onBack }: CodeEditorProps) {
-  const [repositories, setRepositories] = useKV<Repository[]>('repositories', [])
-  const [editorState, setEditorState] = useKV<CodeEditorType[]>('editorSessions', [])
-  const [allUsers] = useKV<User[]>('allUsers', [])
+  const [repositories, setRepositories] = useKVWithFallback<Repository[]>('repositories', [])
+  const [editorState, setEditorState] = useKVWithFallback<CodeEditorType[]>('editorSessions', [])
+  const [allUsers] = useKVWithFallback<User[]>('allUsers', [])
   const [showShareDialog, setShowShareDialog] = useState(false)
   const [showCommitDialog, setShowCommitDialog] = useState(false)
   const [showVersionHistory, setShowVersionHistory] = useState(false)

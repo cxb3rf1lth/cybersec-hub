@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { v4 as uuidv4 } from 'uuid'
 import { virtualLabService, webSocketService } from '@/lib/production-services'
 import { toast } from 'sonner'
@@ -8,7 +8,7 @@ import type { VM, VMProvisionRequest, VirtualLabState } from '@/types/virtual-la
 const STORAGE_KEY = 'virtualLabState'
 
 export function useVirtualLab(currentUserId: string) {
-  const [stateRaw, setState] = useKV<VirtualLabState>(STORAGE_KEY, { vms: [] })
+  const [stateRaw, setState] = useKVWithFallback<VirtualLabState>(STORAGE_KEY, { vms: [] })
   const [isProvisioning, setIsProvisioning] = useState(false)
   const state: VirtualLabState = stateRaw ?? { vms: [] }
 

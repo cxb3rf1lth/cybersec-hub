@@ -1,8 +1,8 @@
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { PartnerRequest } from '@/types/partner-requests'
 
 export function useSamplePartnerRequests() {
-  const [partnerRequests, setPartnerRequests] = useKV<PartnerRequest[]>('partner-requests', [])
+  const [partnerRequests, setPartnerRequests] = useKVWithFallback<PartnerRequest[]>('partner-requests', [])
 
   // Initialize with sample data only if empty
   if (partnerRequests.length === 0) {

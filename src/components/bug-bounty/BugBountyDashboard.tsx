@@ -41,6 +41,8 @@ import { useBugBountyIntegration } from '@/hooks/useBugBountyIntegration'
     MessageCircle,
     // ...existing code...
   } from '@/lib/phosphor-icons-wrapper'
+
+export function BugBountyDashboard() {
   const { teamHunts, partnerRequests, joinTeamHunt, createPartnerRequest } = useTeamHunts()
   const { integrations, programs: realPrograms, threatFeed } = useBugBountyIntegration()
   const [activeTab, setActiveTab] = useState('overview')

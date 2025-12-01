@@ -3,7 +3,8 @@
  * Handles API keys, environment variables, and security settings
  */
 
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
+import { useEnhancedSecurity } from '@/lib/enhanced-security'
 
 export interface APIKeyConfig {
   platform: string
@@ -129,28 +130,41 @@ export const ENVIRONMENT_CONFIG = {
 }
 
 /**
- * Secure API Key Management Hook
+ * Secure API Key Management Hook with Enhanced Encryption
  */
 export function useAPIKeys() {
-  const [encryptedKeys, setEncryptedKeys] = useKV<Record<string, string>>('encrypted_api_keys', {})
-  const [keyMetadata, setKeyMetadata] = useKV<Record<string, { 
+  const [encryptedKeys, setEncryptedKeys] = useKVWithFallback<Record<string, string>>('encrypted_api_keys', {})
+  const [keyMetadata, setKeyMetadata] = useKVWithFallback<Record<string, { 
     created: string
     lastUsed: string
     rotationDue: boolean
     usage: number
   }>>('api_key_metadata', {})
 
-  // Simple encryption for client-side storage (in production, use proper encryption)
-  const encryptKey = (key: string): string => {
-    return btoa(key).split('').reverse().join('')
+  // Import enhanced security for proper encryption
+  const { encryptData, decryptData, logSecurityEvent } = useEnhancedSecurity()
+
+  // Enhanced encryption functions
+  const encryptKey = async (key: string): Promise<string> => {
+    try {
+      return await encryptData(key)
+    } catch (error) {
+      logSecurityEvent('api_key_encryption_failed', 'high', { error: error.message })
+      throw error
+    }
   }
 
-  const decryptKey = (encryptedKey: string): string => {
-    return atob(encryptedKey.split('').reverse().join(''))
+  const decryptKey = async (encryptedKey: string): Promise<string> => {
+    try {
+      return await decryptData(encryptedKey)
+    } catch (error) {
+      logSecurityEvent('api_key_decryption_failed', 'high', { error: error.message })
+      throw error
+    }
   }
 
-  const setAPIKey = (platform: string, apiKey: string) => {
-    const encrypted = encryptKey(apiKey)
+  const setAPIKey = async (platform: string, apiKey: string) => {
+    const encrypted = await encryptKey(apiKey)
     const now = new Date().toISOString()
     
     setEncryptedKeys(current => ({
@@ -167,24 +181,34 @@ export function useAPIKeys() {
         usage: (current[platform]?.usage || 0) + 1
       }
     }))
+
+    logSecurityEvent('api_key_stored', 'low', { platform, timestamp: now })
   }
 
-  const getAPIKey = (platform: string): string | null => {
+  const getAPIKey = async (platform: string): Promise<string | null> => {
     const encrypted = encryptedKeys[platform]
     if (!encrypted) return null
 
-    // Update last used timestamp
-    const now = new Date().toISOString()
-    setKeyMetadata(current => ({
-      ...current,
-      [platform]: {
-        ...current[platform],
-        lastUsed: now,
-        usage: (current[platform]?.usage || 0) + 1
-      }
-    }))
+    try {
+      const decrypted = await decryptKey(encrypted)
+      
+      // Update last used timestamp
+      const now = new Date().toISOString()
+      setKeyMetadata(current => ({
+        ...current,
+        [platform]: {
+          ...current[platform],
+          lastUsed: now,
+          usage: (current[platform]?.usage || 0) + 1
+        }
+      }))
 
-    return decryptKey(encrypted)
+      logSecurityEvent('api_key_accessed', 'low', { platform, timestamp: now })
+      return decrypted
+    } catch (error) {
+      logSecurityEvent('api_key_access_failed', 'medium', { platform, error: error.message })
+      return null
+    }
   }
 
   const removeAPIKey = (platform: string) => {
@@ -363,7 +387,7 @@ export const quotaManager = new QuotaManager()
  * Secure Configuration Store
  */
 export function useSecureConfig() {
-  const [config, setConfig] = useKV<{
+  const [config, setConfig] = useKVWithFallback<{
     security: SecurityConfig
     enabledPlatforms: string[]
     lastSync: Record<string, string>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Plus, Play, Stop, Trash, Settings, Terminal, Network, Shield, DesktopTower, Code, Database, Eye, Target, Users, Clock, HardDrives, Cpu, Activity, Binoculars } from '@phosphor-icons/react'
 import { useVirtualLab } from '@/hooks/useVirtualLab'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import type { User } from '@/types/user'
 import type { VM } from '@/types/virtual-lab'
 import { CreateVMForm } from '@/components/virtual-lab/CreateVMForm'
@@ -57,8 +57,8 @@ interface Props {
 
 export function EnhancedVirtualLabView({ currentUser }: Props) {
   const { vms, provision, start, stop, destroy } = useVirtualLab(currentUser.id)
-  const [templates, setTemplates] = useKV<VMTemplate[]>('vm-templates', [])
-  const [topologies, setTopologies] = useKV<NetworkTopology[]>('network-topologies', [])
+  const [templates, setTemplates] = useKVWithFallback<VMTemplate[]>('vm-templates', [])
+  const [topologies, setTopologies] = useKVWithFallback<NetworkTopology[]>('network-topologies', [])
   const [showCreate, setShowCreate] = useState(vms.length === 0)
   const [selected, setSelected] = useState<VM | null>(vms[0] ?? null)
   const [activeTab, setActiveTab] = useState('lab')

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { X, Calendar, User, AlertTriangle } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,8 +18,8 @@ interface CreateTaskModalProps {
 }
 
 export function CreateTaskModal({ project, currentUser, onClose, onCreateTask }: CreateTaskModalProps) {
-  const [allUsers] = useKV<UserType[]>('allUsers', [])
-  const [teams] = useKV<Team[]>('teams', [])
+  const [allUsers] = useKVWithFallback<UserType[]>('allUsers', [])
+  const [teams] = useKVWithFallback<Team[]>('teams', [])
   const [formData, setFormData] = useState({
     title: '',
     description: '',

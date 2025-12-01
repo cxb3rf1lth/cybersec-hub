@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -21,7 +21,7 @@ const SPECIALIZATIONS: Specialization[] = [
 ]
 
 export function AuthModal({ onClose, onLogin }: AuthModalProps) {
-  const [allUsers, setAllUsers] = useKV<User[]>('allUsers', [])
+  const [allUsers, setAllUsers] = useKVWithFallback<User[]>('allUsers', [])
   const [isSignUp, setIsSignUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({

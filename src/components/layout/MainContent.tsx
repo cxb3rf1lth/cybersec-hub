@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react'
 import { FeedView } from '@/components/views/FeedView'
 import { ExploreView } from '@/components/views/ExploreView'
 import { ProfileView } from '@/components/views/ProfileView'
@@ -8,25 +9,32 @@ import { ProjectsView } from '@/components/views/ProjectsView'
 import { EarningsView } from '@/components/views/EarningsView'
 import { TeamsView } from '@/components/teams/TeamsView'
 import { TeamInvitationsView } from '@/components/teams/TeamInvitationsView'
-import { MarketplaceView } from '@/components/marketplace/MarketplaceView'
-import { BugBountyDashboard } from '@/components/bug-bounty/BugBountyDashboard'
 import { BugBountyPlatform } from '@/components/features/BugBountyPlatform'
 import { LiveAPIIntegration } from '@/components/bug-bounty/LiveAPIIntegration'
 import { LiveVulnerabilityFeed } from '@/components/bug-bounty/LiveVulnerabilityFeed'
 import { RealTimeBugBountyDashboard } from '@/components/bug-bounty/RealTimeBugBountyDashboard'
 import { PartnerRequests } from '@/components/partner-requests/PartnerRequests'
-import { RedTeamDashboard } from '@/components/red-team/RedTeamDashboard'
-import { EnhancedVirtualLabView } from '@/components/virtual-lab/EnhancedVirtualLabView'
 import { PlatformConnectionManager } from '@/components/integrations/PlatformConnectionManager'
 import { IntegrationStatusDashboard } from '@/components/integrations/IntegrationStatusDashboard'
 import { LiveSyncStatus } from '@/components/features/LiveSyncStatus'
+import { LazyComponents } from '@/lib/performance-optimization'
 import { User } from '@/types/user'
+
+// Loading component for lazy-loaded components
+function LoadingSpinner() {
+  return (
+    <div className="flex items-center justify-center h-96">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <span className="ml-4 text-gray-600">Loading...</span>
+    </div>
+  )
+}
 
 interface MainContentProps {
   currentUser: User
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status'
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status' | 'tui'
   onUserUpdate: (user: User) => void
-  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status') => void
+  onTabChange?: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status' | 'tui') => void
 }
 
 export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange }: MainContentProps) {
@@ -38,17 +46,26 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
 
   return (
     <div className="flex-1 overflow-hidden">
+      {activeTab === 'tui' && (
+        <Suspense fallback={<LoadingSpinner />}>
+          <LazyComponents.TUIInterface />
+        </Suspense>
+      )}
       {activeTab === 'feed' && (
         <FeedView currentUser={currentUser} />
       )}
       {activeTab === 'red-team' && (
         <div className="p-6">
-          <RedTeamDashboard currentUser={currentUser} />
+          <Suspense fallback={<LoadingSpinner />}>
+            <LazyComponents.RedTeamDashboard currentUser={currentUser} />
+          </Suspense>
         </div>
       )}
       {(activeTab === 'bug-bounty' || activeTab === 'team-hunts') && (
         <div className="p-6">
-          <RealTimeBugBountyDashboard />
+          <Suspense fallback={<LoadingSpinner />}>
+            <LazyComponents.BugBountyDashboard />
+          </Suspense>
         </div>
       )}
       {activeTab === 'messages' && (
@@ -73,13 +90,19 @@ export function MainContent({ currentUser, activeTab, onUserUpdate, onTabChange 
         <EarningsView currentUser={currentUser} />
       )}
       {activeTab === 'marketplace' && (
-        <MarketplaceView 
-          currentUser={currentUser} 
-          onTabChange={(tab) => onTabChange && onTabChange(tab as any)}
-        />
+        <Suspense fallback={<LoadingSpinner />}>
+          <LazyComponents.MarketplaceView 
+            currentUser={currentUser} 
+            onTabChange={(tab) => onTabChange && onTabChange(tab as any)}
+          />
+        </Suspense>
       )}
       {activeTab === 'virtual-lab' && (
-        <EnhancedVirtualLabView currentUser={currentUser} />
+        <div className="p-6">
+          <Suspense fallback={<LoadingSpinner />}>
+            <LazyComponents.VirtualLabView currentUser={currentUser} />
+          </Suspense>
+        </div>
       )}
       {activeTab === 'explore' && (
         <ExploreView 

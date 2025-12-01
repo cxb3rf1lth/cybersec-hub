@@ -1,12 +1,12 @@
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { TrendingUp, Users, Star, CheckCircle } from '@/lib/phosphor-icons-wrapper'
 import { Card, CardContent } from '@/components/ui/card'
 import { MarketplaceListing } from '@/types/marketplace'
 import { Team } from '@/types/teams'
 
 export function MarketplaceStats() {
-  const [listings] = useKV<MarketplaceListing[]>('marketplaceListings', [])
-  const [teams] = useKV<Team[]>('teams', [])
+  const [listings] = useKVWithFallback<MarketplaceListing[]>('marketplaceListings', [])
+  const [teams] = useKVWithFallback<Team[]>('teams', [])
 
   const activeListings = (listings ?? []).filter(listing => listing.status === 'active')
   const totalProjects = activeListings.reduce((sum, listing) => sum + listing.completedProjects, 0)

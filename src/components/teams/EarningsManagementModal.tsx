@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { 
   Dialog, 
   DialogContent, 
@@ -36,8 +36,8 @@ interface EarningsManagementModalProps {
 
 export function EarningsManagementModal({ team, currentUser, onClose }: EarningsManagementModalProps) {
   const [activeTab, setActiveTab] = useState('overview')
-  const [contracts] = useKV<TeamContract[]>('teamContracts', [])
-  const [distributions] = useKV<EarningsDistribution[]>('earningsDistributions', [])
+  const [contracts] = useKVWithFallback<TeamContract[]>('teamContracts', [])
+  const [distributions] = useKVWithFallback<EarningsDistribution[]>('earningsDistributions', [])
   const [newContract, setNewContract] = useState({
     title: '',
     description: '',

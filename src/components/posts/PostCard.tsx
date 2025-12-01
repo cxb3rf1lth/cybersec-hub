@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -15,7 +15,7 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, currentUser, onLike }: PostCardProps) {
-  const [allUsers] = useKV<User[]>('allUsers', [])
+  const [allUsers] = useKVWithFallback<User[]>('allUsers', [])
   const [showComments, setShowComments] = useState(false)
   
   const author = allUsers.find(user => user.id === post.authorId) || currentUser

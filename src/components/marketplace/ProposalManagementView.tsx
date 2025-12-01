@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { CheckCircle, X, Eye, DollarSign, Calendar, Clock, Filter } from '@phosphor-icons/react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -19,8 +19,8 @@ interface ProposalManagementViewProps {
 }
 
 export function ProposalManagementView({ currentUser, userTeams }: ProposalManagementViewProps) {
-  const [proposals, setProposals] = useKV<MarketplaceProposal[]>('marketplaceProposals', [])
-  const [allUsers] = useKV<User[]>('allUsers', [])
+  const [proposals, setProposals] = useKVWithFallback<MarketplaceProposal[]>('marketplaceProposals', [])
+  const [allUsers] = useKVWithFallback<User[]>('allUsers', [])
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected' | 'in-progress' | 'completed'>('all')
   const [selectedProposal, setSelectedProposal] = useState<MarketplaceProposal | null>(null)
   const [response, setResponse] = useState('')

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -23,9 +23,9 @@ interface InvitationCardProps {
 }
 
 export function InvitationCard({ invitation, currentUser, onResponseSent }: InvitationCardProps) {
-  const [teams, setTeams] = useKV<Team[]>('teams', [])
-  const [teamRoles] = useKV<TeamRole[]>('teamRoles', [])
-  const [invitations, setInvitations] = useKV<TeamInvitation[]>('teamInvitations', [])
+  const [teams, setTeams] = useKVWithFallback<Team[]>('teams', [])
+  const [teamRoles] = useKVWithFallback<TeamRole[]>('teamRoles', [])
+  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
   const [isLoading, setIsLoading] = useState(false)
 
   const team = teams.find(t => t.id === invitation.teamId)
@@ -274,7 +274,7 @@ interface TeamInvitationsViewProps {
 }
 
 export function TeamInvitationsView({ currentUser }: TeamInvitationsViewProps) {
-  const [invitations, setInvitations] = useKV<TeamInvitation[]>('teamInvitations', [])
+  const [invitations, setInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
   const [refreshKey, setRefreshKey] = useState(0)
 
   // Filter invitations for current user

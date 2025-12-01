@@ -1,6 +1,6 @@
 import { Shield, House, Compass, User, Code, SignOut, ChatCircle, FolderOpen, Kanban, Users, CurrencyDollar, EnvelopeSimple, Storefront, BugBeetle, Handshake, DesktopTower, CaretRight, Target, Terminal, Globe, Activity } from '@phosphor-icons/react'
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -10,14 +10,14 @@ import { TeamInvitation } from '@/types/teams'
 
 interface SidebarProps {
   currentUser: UserType
-  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status'
-  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status') => void
+  activeTab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status' | 'tui'
+  onTabChange: (tab: 'feed' | 'explore' | 'profile' | 'messages' | 'code' | 'templates' | 'projects' | 'teams' | 'invitations' | 'earnings' | 'marketplace' | 'bug-bounty' | 'team-hunts' | 'partner-requests' | 'virtual-lab' | 'red-team' | 'integrations' | 'api-status' | 'live-feed' | 'live-api' | 'sync-status' | 'tui') => void
   onLogout: () => void
 }
 
 export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: SidebarProps) {
-  const [conversations] = useKV<Conversation[]>('conversations', [])
-  const [teamInvitations] = useKV<TeamInvitation[]>('teamInvitations', [])
+  const [conversations] = useKVWithFallback<Conversation[]>('conversations', [])
+  const [teamInvitations] = useKVWithFallback<TeamInvitation[]>('teamInvitations', [])
   const [expandedSections, setExpandedSections] = useState({
     operations: true,
     collaboration: false,
@@ -42,6 +42,7 @@ export function Sidebar({ currentUser, activeTab, onTabChange, onLogout }: Sideb
 
   const navigationSections = {
     main: [
+      { id: 'tui' as const, label: 'Terminal (TUI)', icon: Terminal },
       { id: 'feed' as const, label: 'Feed', icon: House },
       { id: 'explore' as const, label: 'Explore', icon: Compass },
       { id: 'profile' as const, label: 'Profile', icon: User },

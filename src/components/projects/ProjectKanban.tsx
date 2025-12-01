@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Plus, Calendar, User, AlertCircle, Clock, MessageCircle } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -16,7 +16,7 @@ interface ProjectKanbanProps {
 }
 
 export function ProjectKanban({ project, currentUser, onUpdateProject }: ProjectKanbanProps) {
-  const [allUsers] = useKV<UserType[]>('allUsers', [])
+  const [allUsers] = useKVWithFallback<UserType[]>('allUsers', [])
   const [showCreateTaskModal, setShowCreateTaskModal] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [draggedTask, setDraggedTask] = useState<Task | null>(null)

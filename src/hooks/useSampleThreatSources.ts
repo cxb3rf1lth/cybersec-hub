@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { ThreatSource, SourceStats } from '@/types/threat-sources'
 
 // Initialize with sample threat intelligence sources for demonstration
@@ -211,8 +211,8 @@ const SAMPLE_STATS: SourceStats[] = [
 ]
 
 export function useSampleThreatSources() {
-  const [sources, setSources] = useKV<ThreatSource[]>('threat-sources', [])
-  const [sourceStats, setSourceStats] = useKV<SourceStats[]>('source-stats', [])
+  const [sources, setSources] = useKVWithFallback<ThreatSource[]>('threat-sources', [])
+  const [sourceStats, setSourceStats] = useKVWithFallback<SourceStats[]>('source-stats', [])
 
   useEffect(() => {
     // Initialize with sample sources if none exist

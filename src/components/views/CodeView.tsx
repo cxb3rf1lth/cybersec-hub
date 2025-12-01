@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { RepositoryList } from '@/components/code/RepositoryList'
 import { RepositoryView } from '@/components/code/RepositoryView'
 import { CodeEditor } from '@/components/code/CodeEditor'

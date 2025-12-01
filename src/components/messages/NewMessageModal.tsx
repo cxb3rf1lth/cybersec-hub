@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -15,7 +15,7 @@ interface NewMessageModalProps {
 }
 
 export function NewMessageModal({ currentUser, onClose, onStartConversation }: NewMessageModalProps) {
-  const [users] = useKV<User[]>('allUsers', [])
+  const [users] = useKVWithFallback<User[]>('allUsers', [])
   const [searchQuery, setSearchQuery] = useState('')
 
   // Filter users excluding current user and based on search query

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -19,7 +19,7 @@ interface RepositoryListProps {
 }
 
 export function RepositoryList({ currentUser, onRepositorySelect }: RepositoryListProps) {
-  const [repositories, setRepositories] = useKV<Repository[]>('repositories', [])
+  const [repositories, setRepositories] = useKVWithFallback<Repository[]>('repositories', [])
   const [searchQuery, setSearchQuery] = useState('')
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [filterType, setFilterType] = useState<'all' | 'owned' | 'starred' | 'forked'>('all')

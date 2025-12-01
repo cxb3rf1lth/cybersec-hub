@@ -1,11 +1,11 @@
-import { useKV } from '@github/spark/hooks'
+import { useKVWithFallback } from '@/lib/kv-fallback'
 import { useEffect } from 'react'
 import { MarketplaceListing, MarketplaceProposal, MarketplaceReview } from '@/types/marketplace'
 
 export function useSampleMarketplaceData() {
-  const [listings, setListings] = useKV<MarketplaceListing[]>('marketplaceListings', [])
-  const [proposals, setProposals] = useKV<MarketplaceProposal[]>('marketplaceProposals', [])
-  const [reviews, setReviews] = useKV<MarketplaceReview[]>('marketplaceReviews', [])
+  const [listings, setListings] = useKVWithFallback<MarketplaceListing[]>('marketplaceListings', [])
+  const [proposals, setProposals] = useKVWithFallback<MarketplaceProposal[]>('marketplaceProposals', [])
+  const [reviews, setReviews] = useKVWithFallback<MarketplaceReview[]>('marketplaceReviews', [])
 
   useEffect(() => {
     if (listings.length === 0) {
