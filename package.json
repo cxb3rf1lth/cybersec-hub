@@ -29,13 +29,15 @@
         "github-spark"
     ],
     "scripts": {
-        "dev": "vite --force",
-        "kill": "fuser -k 5000/tcp",
+        "dev": "vite --force --clearScreen false",
+        "kill": "fuser -k 5000/tcp || true",
         "build": "tsc -b --noCheck && vite build",
         "lint": "eslint .",
         "optimize": "vite optimize --force",
         "preview": "vite preview",
-        "clean": "rm -rf node_modules/.vite && rm -rf node_modules/.tmp"
+        "clean": "rm -rf node_modules/.vite && rm -rf node_modules/.tmp && rm -rf dist",
+        "clean:full": "rm -rf node_modules && npm install",
+        "postinstall": "npm run clean"
     },
     "dependencies": {
         "@github/spark": "^0.39.0",

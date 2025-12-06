@@ -61,10 +61,21 @@ git clone https://github.com/yourusername/cyberconnect-platform.git
 cd cyberconnect-platform
 npm install
 npm run dev
-# Visit http://localhost:5000
+# Visit http://localhost:5173
 ```
 
 👉 **See [QUICKSTART.md](./QUICKSTART.md) for detailed first steps**
+
+### ⚠️ Troubleshooting
+
+If you encounter a Vite module resolution error during startup:
+```bash
+npm run clean && npm run dev
+```
+
+For detailed troubleshooting guides, see:
+- **[VITE_ERROR_FIX.md](./VITE_ERROR_FIX.md)** - Quick fix for Vite errors
+- **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** - Complete troubleshooting guide
 
 ### Prerequisites:
 - Node.js 18+ and npm
@@ -84,7 +95,7 @@ npm run build
 
 # Start development server
 npm run dev
-# Access at http://localhost:5000
+# Access at http://localhost:5173
 ```
 
 ### GitHub Spark Deployment:
@@ -97,7 +108,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for production deployment guides.
 
 ## 🎯 Getting Started
 
-1. **Launch the Application**: Navigate to http://localhost:5000
+1. **Launch the Application**: Navigate to http://localhost:5173
 2. **Access TUI**: Click "Terminal (TUI)" in the sidebar (primary interface)
 3. **Start Scanning**: Use `target add <domain>` and `scan start` commands
 4. **Explore Web Features**: Navigate through other sidebar options
