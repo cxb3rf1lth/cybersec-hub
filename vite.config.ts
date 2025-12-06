@@ -26,7 +26,9 @@ export default defineConfig({
     alias: {
       '@': resolve(projectRoot, 'src')
     },
-    extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json']
+    extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+    preserveSymlinks: false,
+    dedupe: ['react', 'react-dom']
   },
   optimizeDeps: {
     include: [
@@ -38,7 +40,8 @@ export default defineConfig({
     exclude: [],
     force: true,
     esbuildOptions: {
-      target: 'esnext'
+      target: 'esnext',
+      platform: 'browser'
     }
   },
   server: {
@@ -69,5 +72,6 @@ export default defineConfig({
     }
   },
   cacheDir: 'node_modules/.vite',
-  clearScreen: false
+  clearScreen: false,
+  logLevel: 'info'
 });

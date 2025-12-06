@@ -7,6 +7,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const dirsToClean = [
   'node_modules/.vite',
@@ -30,6 +31,19 @@ dirsToClean.forEach(dir => {
     console.log(`ℹ️  Not found: ${dir}`);
   }
 });
+
+console.log('\n🔄 Killing any running Vite processes...');
+try {
+  if (process.platform === 'win32') {
+    execSync('taskkill /F /IM node.exe /FI "WINDOWTITLE eq vite*" 2>nul', { stdio: 'ignore' });
+  } else {
+    execSync('pkill -f vite || true', { stdio: 'ignore' });
+    execSync('fuser -k 5173/tcp 2>/dev/null || true', { stdio: 'ignore' });
+  }
+  console.log('✅ Processes cleaned');
+} catch (error) {
+  console.log('ℹ️  No running processes found');
+}
 
 console.log('\n✨ Cache cleanup complete!');
 console.log('💡 Run "npm run dev" to start the development server\n');
