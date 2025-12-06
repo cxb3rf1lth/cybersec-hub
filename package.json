@@ -30,15 +30,16 @@
     ],
     "scripts": {
         "dev": "vite --force --clearScreen false",
-        "kill": "fuser -k 5000/tcp || true",
+        "kill": "fuser -k 5000/tcp 2>/dev/null || true && fuser -k 5173/tcp 2>/dev/null || true && pkill -f vite 2>/dev/null || true",
         "build": "tsc -b --noCheck && vite build",
         "lint": "eslint .",
         "optimize": "vite optimize --force",
         "preview": "vite preview",
-        "clean": "rm -rf node_modules/.vite && rm -rf node_modules/.tmp && rm -rf dist && rm -rf .vite",
+        "clean": "rm -rf node_modules/.vite && rm -rf node_modules/.tmp && rm -rf node_modules/.cache && rm -rf dist && rm -rf .vite && rm -rf .cache",
         "clean:full": "rm -rf node_modules && rm -rf package-lock.json && npm install",
         "fix:vite": "node .vite-cache-fix.js",
-        "fix:vite:complete": "node fix-vite-complete.js"
+        "fix:vite:complete": "node fix-vite-complete.js",
+        "fix:error": "npm run clean && npm run kill && npm uninstall vite && npm install vite@^6.4.1"
     },
     "dependencies": {
         "@github/spark": "^0.39.0",
