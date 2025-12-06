@@ -12,18 +12,22 @@ const { execSync } = require('child_process');
 const dirsToClean = [
   'node_modules/.vite',
   'node_modules/.tmp',
+  'node_modules/.cache',
   'dist',
-  '.vite'
+  '.vite',
+  '.cache'
 ];
 
 console.log('🔧 Cleaning Vite cache and build artifacts...\n');
 
+let cleanedCount = 0;
 dirsToClean.forEach(dir => {
   const fullPath = path.join(process.cwd(), dir);
   if (fs.existsSync(fullPath)) {
     try {
       fs.rmSync(fullPath, { recursive: true, force: true });
       console.log(`✅ Cleaned: ${dir}`);
+      cleanedCount++;
     } catch (error) {
       console.log(`⚠️  Could not clean ${dir}: ${error.message}`);
     }
@@ -39,11 +43,18 @@ try {
   } else {
     execSync('pkill -f vite || true', { stdio: 'ignore' });
     execSync('fuser -k 5173/tcp 2>/dev/null || true', { stdio: 'ignore' });
+    execSync('fuser -k 5000/tcp 2>/dev/null || true', { stdio: 'ignore' });
   }
   console.log('✅ Processes cleaned');
 } catch (error) {
   console.log('ℹ️  No running processes found');
 }
 
-console.log('\n✨ Cache cleanup complete!');
+if (cleanedCount > 0) {
+  console.log('\n✨ Cache cleanup complete! Cleaned', cleanedCount, 'directories.');
+} else {
+  console.log('\n✨ No cache files found to clean.');
+}
+
 console.log('💡 Run "npm run dev" to start the development server\n');
+

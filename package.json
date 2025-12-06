@@ -38,8 +38,7 @@
         "clean": "rm -rf node_modules/.vite && rm -rf node_modules/.tmp && rm -rf dist && rm -rf .vite",
         "clean:full": "rm -rf node_modules && rm -rf package-lock.json && npm install",
         "fix:vite": "node .vite-cache-fix.js",
-        "fix:vite:full": "node fix-vite-error.js --full",
-        "postinstall": "node .vite-cache-fix.js"
+        "fix:vite:complete": "node fix-vite-complete.js"
     },
     "dependencies": {
         "@github/spark": "^0.39.0",

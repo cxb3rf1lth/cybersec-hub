@@ -28,7 +28,7 @@ export default defineConfig({
     },
     extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
     preserveSymlinks: false,
-    dedupe: ['react', 'react-dom']
+    dedupe: ['react', 'react-dom', 'vite']
   },
   optimizeDeps: {
     include: [
@@ -37,8 +37,8 @@ export default defineConfig({
       'react/jsx-runtime',
       'react/jsx-dev-runtime',
     ],
-    exclude: [],
-    force: true,
+    exclude: ['@github/spark'],
+    force: false,
     esbuildOptions: {
       target: 'esnext',
       platform: 'browser'
@@ -51,11 +51,11 @@ export default defineConfig({
     },
     fs: {
       strict: false,
-      allow: ['..']
+      allow: ['..', '../..']
     },
     watch: {
       usePolling: false,
-      ignored: ['**/node_modules/**', '**/.git/**']
+      ignored: ['**/node_modules/**', '**/.git/**', '**/dist/**']
     }
   },
   build: {
@@ -68,7 +68,8 @@ export default defineConfig({
       }
     },
     commonjsOptions: {
-      transformMixedEsModules: true
+      transformMixedEsModules: true,
+      include: [/node_modules/]
     }
   },
   cacheDir: 'node_modules/.vite',
