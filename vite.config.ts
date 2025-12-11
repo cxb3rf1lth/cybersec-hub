@@ -28,7 +28,7 @@ export default defineConfig({
     },
     extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
     preserveSymlinks: false,
-    dedupe: ['react', 'react-dom', 'vite']
+    dedupe: ['react', 'react-dom']
   },
   optimizeDeps: {
     include: [
@@ -38,7 +38,7 @@ export default defineConfig({
       'react/jsx-dev-runtime',
     ],
     exclude: ['@github/spark'],
-    force: false,
+    force: true,
     esbuildOptions: {
       target: 'esnext',
       platform: 'browser'
