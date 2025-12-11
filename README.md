@@ -68,14 +68,21 @@ npm run dev
 
 ### ⚠️ Troubleshooting
 
-If you encounter a Vite module resolution error during startup:
+**Common Issue**: `Cannot find module 'vite/dist/node/chunks/dist.js'`
+
+If you encounter Vite module errors during startup:
 ```bash
-npm run clean && npm run dev
+# Quick automated fix
+npm run fix
+
+# Or run directly
+node quick-fix-vite.js
 ```
 
 For detailed troubleshooting guides, see:
-- **[VITE_ERROR_FIX.md](./VITE_ERROR_FIX.md)** - Quick fix for Vite errors
-- **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** - Complete troubleshooting guide
+- **[VITE_MODULE_ERROR_RESOLUTION.md](./VITE_MODULE_ERROR_RESOLUTION.md)** - Complete fix guide
+- **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** - General troubleshooting
+- **[CLAUDE_DEVELOPER_ONBOARDING.md](./CLAUDE_DEVELOPER_ONBOARDING.md)** - Developer guide
 
 ### Prerequisites:
 - Node.js 18+ and npm

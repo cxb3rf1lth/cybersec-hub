@@ -2,6 +2,23 @@
 
 Welcome, Claude! This guide will help you quickly understand and contribute to the **CyberConnect** platform - an advanced cybersecurity social network built with React, TypeScript, and GitHub Spark.
 
+## ⚡ Quick Start - Fix Common Issues First
+
+If you encounter the Vite module error on startup:
+
+```bash
+# Quick fix for Vite module errors
+npm run fix
+
+# Or run the quick fix directly
+node quick-fix-vite.js
+```
+
+**Common Error**: `Cannot find module 'vite/dist/node/chunks/dist.js'`  
+**Solution**: This is a known issue with Vite dependency resolution. Run the fix script above.
+
+See [VITE_MODULE_ERROR_RESOLUTION.md](./VITE_MODULE_ERROR_RESOLUTION.md) for detailed troubleshooting.
+
 ## 🎯 Project Overview
 
 **CyberConnect** is a comprehensive cybersecurity platform combining:

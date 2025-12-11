@@ -37,9 +37,9 @@
         "preview": "vite preview",
         "clean": "rm -rf node_modules/.vite && rm -rf node_modules/.tmp && rm -rf node_modules/.cache && rm -rf dist && rm -rf .vite && rm -rf .cache",
         "clean:full": "rm -rf node_modules && rm -rf package-lock.json && npm install",
-        "fix": "node emergency-fix.js",
-        "fix:module": "node fix-vite-module.js",
-        "fix:error": "npm run clean && npm run kill && npm install vite@^6.4.1 --force"
+        "fix": "node fix-vite-comprehensive.js",
+        "fix:module": "node fix-vite-comprehensive.js",
+        "fix:error": "node fix-vite-comprehensive.js"
     },
     "dependencies": {
         "@github/spark": "^0.39.0",
