@@ -72,15 +72,15 @@ npm run dev
 
 If you encounter Vite module errors during startup:
 ```bash
-# Quick automated fix
+# Quick automated fix (RECOMMENDED)
 npm run fix
 
-# Or run directly
-node quick-fix-vite.js
+# Alternative manual fix
+npm run clean:full
 ```
 
 For detailed troubleshooting guides, see:
-- **[VITE_MODULE_ERROR_RESOLUTION.md](./VITE_MODULE_ERROR_RESOLUTION.md)** - Complete fix guide
+- **[VITE_MODULE_ERROR_FIX.md](./VITE_MODULE_ERROR_FIX.md)** - ⭐ Complete Vite error fix guide
 - **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** - General troubleshooting
 - **[CLAUDE_DEVELOPER_ONBOARDING.md](./CLAUDE_DEVELOPER_ONBOARDING.md)** - Developer guide
 

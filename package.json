@@ -36,10 +36,11 @@
         "optimize": "vite optimize --force",
         "preview": "vite preview",
         "clean": "rm -rf node_modules/.vite && rm -rf node_modules/.tmp && rm -rf node_modules/.cache && rm -rf dist && rm -rf .vite && rm -rf .cache",
-        "clean:full": "rm -rf node_modules && rm -rf package-lock.json && npm install",
-        "fix": "node fix-vite-comprehensive.js",
-        "fix:module": "node fix-vite-comprehensive.js",
-        "fix:error": "node fix-vite-comprehensive.js"
+        "clean:full": "rm -rf node_modules && rm -rf package-lock.json && npm install --legacy-peer-deps",
+        "fix": "node fix-vite-workspace.js",
+        "fix:module": "node fix-vite-workspace.js",
+        "fix:error": "node fix-vite-workspace.js",
+        "postinstall": "mkdir -p node_modules/.vite && mkdir -p node_modules/.cache"
     },
     "dependencies": {
         "@github/spark": "^0.39.0",
@@ -115,7 +116,7 @@
         "@types/three": "^0.179.0",
         "@types/uuid": "^10.0.0",
         "@vitejs/plugin-react": "^4.3.4",
-        "@vitejs/plugin-react-swc": "^3.10.1",
+        "@vitejs/plugin-react-swc": "^3.11.0",
         "eslint": "^9.39.1",
         "eslint-plugin-react-hooks": "^5.2.0",
         "eslint-plugin-react-refresh": "^0.4.19",
