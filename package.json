@@ -37,9 +37,10 @@
         "preview": "vite preview",
         "clean": "rm -rf node_modules/.vite && rm -rf node_modules/.tmp && rm -rf node_modules/.cache && rm -rf dist && rm -rf .vite && rm -rf .cache",
         "clean:full": "rm -rf node_modules && rm -rf package-lock.json && npm install --legacy-peer-deps",
-        "fix": "node fix-vite-workspace.js",
-        "fix:module": "node fix-vite-workspace.js",
-        "fix:error": "node fix-vite-workspace.js",
+        "fix": "node fix-vite-corruption.js",
+        "fix:module": "node fix-vite-corruption.js",
+        "fix:error": "node fix-vite-corruption.js",
+        "fix:vite": "node fix-vite-corruption.js",
         "postinstall": "mkdir -p node_modules/.vite && mkdir -p node_modules/.cache"
     },
     "dependencies": {
